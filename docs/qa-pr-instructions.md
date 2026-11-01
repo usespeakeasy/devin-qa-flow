@@ -170,6 +170,9 @@ When a flow needs a text or point fallback because the element has no ID:
    (`git_create_pr` with `author_user_id` set to that author's Devin user). Then comment
    `@codex review` on it as the ID PR's author, not as Devin's bot: Codex declines the bot's
    request. Check the PR's and the comment's author; if either is the bot, say so in the report.
+   Request a review from the `qa-devin` team
+   (`gh api -X POST repos/usespeakeasy/speak-<platform>/pulls/<n>/requested_reviewers -f 'team_reviewers[]=qa-devin'`).
+   If it fails, say so in the report.
 4. Post the PR link as a reply in the QA request's thread, with "Also send to channel" on, so it
    shows in #devin-qa-request-mobile too. Don't make a separate top-level post. Neither
    `message_user` nor the Slack MCP's `slack_reply_to_thread` can set that flag, so call
