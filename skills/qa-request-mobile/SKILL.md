@@ -2,7 +2,7 @@
 name: qa-request-mobile
 description: Run a QA request on a Speak mobile PR (speak-android or speak-ios). Read the PR's "How to test?" section, build the base and the branch against dev or prod, record both runs, and write the Before | After result into the PR description. Use when someone asks for QA, a no-diff check, a before and after recording, or writes "qa-request-mobile <PR link>" in Slack, a PR comment or a Linear issue. Also use it for every @Devin request with a PR or ticket link in #devin-qa-request-mobile, whatever the wording ("test <link>", "check this").
 metadata:
-  version: 2026.11.01.3
+  version: 2026.11.01.4
 ---
 
 # qa-request-mobile
@@ -252,7 +252,7 @@ Use a pool account for every dev run, on both builds. The pool is onboarded dev 
 4. If every account is leased, sign up a fresh account as before and say so in the toggle.
 5. If a pool account can't reach Home (deleted, stuck in a state), set its `note` and `holder = 'broken'` so nobody leases it, and tell the requester in the toggle.
 6. To refill the pool: `qa_android.py bridge signUp email=devin+qa-pool-NN@usespeak.com password=$QA_POOL_PASSWORD name=QAPoolNN`, relaunch, run `qa_onboard.py` (next to `qa_android.py`) until it prints HOME, then insert the row with `platform='android', env='dev'`.
-7. Sign up a fresh account only when a case needs a new user (signup, onboarding, first-run prompts). Don't leave an account in state the next run would trip on: undo a changed course or setting before releasing, or put one line in the row's `note` when you can't.
+7. Sign up a fresh account only when a case needs a new user (signup, onboarding, first-run prompts). Run those cases as pre-auth flows: `qa_android.py fresh` clears the app, `qa_android.py newuser` prints a throwaway email for the flow's `-e EMAIL`, and devin-qa-flow's "Pre-auth flows" section has the rest. A throwaway account never joins the pool. Don't leave an account in state the next run would trip on: undo a changed course or setting before releasing, or put one line in the row's `note` when you can't.
 
 ### Prod (`env=prod`)
 
