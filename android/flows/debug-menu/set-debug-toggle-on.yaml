@@ -1,0 +1,35 @@
+# Debug Menu: turn one switch row on (e.g. "Debug features enabled", which shows the series
+# lesson's debug Skip card / Skip lesson buttons). Leaves it on when it already is.
+# Entry: any state, signed in. Exit: on the Debug Menu. Check the switch with harness `dump`
+# afterwards (checked state of the switch on the LABEL row).
+# maestro test -e LABEL="Debug features enabled" -e PREV="Chucker enabled" -e NEXT="Debug recognition enabled" set-debug-toggle-on.yaml
+# Selectors: the switches have no resource-id or text. `rightOf` alone matches another row's
+# switch, so the switch is pinned between the labels of the rows above (PREV) and below (NEXT).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible: "Subscription override"
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      text: ${NEXT}
+- runFlow:
+    when:
+      notVisible:
+        rightOf: ${LABEL}
+        below: ${PREV}
+        above: ${NEXT}
+        checked: true
+    commands:
+      - tapOn:
+          rightOf: ${LABEL}
+          below: ${PREV}
+          above: ${NEXT}
+- assertVisible:
+    rightOf: ${LABEL}
+    below: ${PREV}
+    above: ${NEXT}
+    checked: true

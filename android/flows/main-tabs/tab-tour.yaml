@@ -1,5 +1,6 @@
 # Bottom nav tour: Home -> Profile -> Challenge -> Home.
-# Entry: cold start. Precondition: signed-in dev account with Leagues locked.
+# Entry: cold start, signed in. The Challenge tab shows the Leagues placeholder (placeholder_title)
+# when Leagues are locked, or the league tier list (tier_list) when they are open.
 # Selectors: Profile/Challenge/Home tab items have no resource-id yet (text fallback).
 appId: ${APP_ID}
 env:
@@ -10,8 +11,10 @@ env:
 - assertVisible:
     id: stat_streak_title
 - tapOn: "Challenge"
-- assertVisible:
-    id: placeholder_title
+- extendedWaitUntil:
+    visible:
+      id: "placeholder_title|tier_list"
+    timeout: 15000
 - tapOn: "Home"
 - assertVisible:
     id: learning_path_ready

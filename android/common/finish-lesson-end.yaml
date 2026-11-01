@@ -1,0 +1,31 @@
+# Walk the rest of the lesson end flow to Home: the readout (lesson_end_reskin_root) Continue,
+# streak goal setting (pick 7 days), the home screen widget prompt (Maybe later), level progress
+# and any other step with a primary button. The steps after the readout depend on the server.
+# Entry: any lesson end step after the review dialog and the streak step. Exit: home_root_ready.
+# Selectors: the widget prompt has no resource-id (text fallback "Maybe later").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- repeat:
+    while:
+      notVisible:
+        id: home_root_ready
+    times: 12
+    commands:
+      - tapOn:
+          id: lesson_end_reskin_continue_button
+          optional: true
+      - tapOn:
+          id: goal_7days
+          optional: true
+      - tapOn:
+          id: primary_button
+          optional: true
+      - tapOn:
+          text: "Maybe later"
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000

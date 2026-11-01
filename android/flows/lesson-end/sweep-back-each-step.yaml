@@ -1,0 +1,22 @@
+# Lesson end sweep with Back: review dialog Back closes it and the flow goes on to the streak
+# step; Back on the streak step closes the whole lesson end flow and returns Home.
+# Entry: the first review dialog over the confetti (run ../../common/open-lesson-end.yaml first;
+# Premium override and the QA-only lesson end patch).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_streak_progress_continue_button
+    timeout: 30000
+- assertNotVisible: "Are you enjoying learning languages with Speak\\?"
+- assertNotVisible: "Glad to hear it\\..*"
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: lesson_end_streak_progress_root

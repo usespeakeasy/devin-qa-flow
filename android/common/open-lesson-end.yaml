@@ -1,0 +1,43 @@
+# Open a lesson by deep link and skip to the lesson end, up to the first review dialog
+# ("Are you enjoying learning languages with Speak?") over the confetti.
+# Drill and Tutor lessons (drill_lesson_skip) skip card by card; series lessons use the debug
+# Skip lesson button (Debug Menu > Debug features enabled, see flows/debug-menu/set-debug-toggle-on.yaml).
+# Entry: Home, signed in, Debug Menu > Subscription override > Premium.
+# Preconditions: the QA-only lesson end patch on the build (STREAK_PROGRESS first with fixed data,
+# Screen.AskForReview after the first screen), so the order is confetti, review dialog, streak step.
+# maestro test -e LESSON_ID=EN_ES_A1-1_quetal_SP open-lesson-end.yaml
+# Selectors: the review dialog message has no resource-id on the controller path (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: "drill_lesson_skip|tap_to_continue"
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: tap_to_continue
+    commands:
+      - tapOn:
+          id: tap_to_continue
+      - extendedWaitUntil:
+          visible:
+            id: debug_skip_lesson
+          timeout: 30000
+      - tapOn:
+          id: debug_skip_lesson
+- repeat:
+    while:
+      notVisible: "Are you enjoying learning languages with Speak\\?"
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible: "Are you enjoying learning languages with Speak\\?"
+    timeout: 30000

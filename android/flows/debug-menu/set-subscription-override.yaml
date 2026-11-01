@@ -1,0 +1,16 @@
+# Debug Menu > Subscription override: pick TIER (Real, Free, Premium, Plus).
+# Entry: any state, signed in. Exit: on the Debug Menu with the tier's description line showing.
+# maestro test -e TIER=Premium set-subscription-override.yaml
+# Selectors: the radio options have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible: "Subscription override"
+    timeout: 30000
+- tapOn: "^${TIER}$"
+- extendedWaitUntil:
+    visible: "This device behaves as a ${TIER} subscriber.*|No override.*"
+    timeout: 10000
