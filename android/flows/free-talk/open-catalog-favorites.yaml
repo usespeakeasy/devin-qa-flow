@@ -1,0 +1,17 @@
+# Free Talk tab > Favorites (toolbar heart): the favorites list shows TOPIC (a saved community
+# scenario) and LESSON (a saved catalog lesson). Exit: on the list, nothing tapped.
+# Entry: cold start (launch-home). Precondition: signed-in dev account whose Favorites has both;
+# QA runs serve them with the QA-only FreeTalkCatalogRepositoryImpl patch (catalogEnabled = true).
+# Selectors: the bottom tab and both cards have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn: "Free Talk"
+- tapOn:
+    id: ai_tutor_favorites_button
+- extendedWaitUntil:
+    visible: ${TOPIC}
+    timeout: 20000
+- assertVisible: ${LESSON}

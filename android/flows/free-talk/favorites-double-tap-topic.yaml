@@ -1,0 +1,13 @@
+# Favorites list > double tap TOPIC: one community details sheet opens. Exit: on the sheet.
+# The case script then presses back once and asserts the list (one sheet, not two).
+# Entry: cold start (open-catalog-favorites). Precondition: as open-catalog-favorites.
+# Selectors: the topic card and Start chatting have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: open-catalog-favorites.yaml
+- doubleTapOn: ${TOPIC}
+- extendedWaitUntil:
+    visible: "Start chatting"
+    timeout: 10000
