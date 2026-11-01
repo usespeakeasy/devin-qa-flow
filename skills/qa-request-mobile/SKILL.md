@@ -2,7 +2,7 @@
 name: qa-request-mobile
 description: Run a QA request on a Speak mobile PR (speak-android or speak-ios). Read the PR's "How to test?" section, build the base and the branch against dev or prod, record both runs, and write the Before | After result into the PR description. Use when someone asks for QA, a no-diff check, a before and after recording, or writes "qa-request-mobile <PR link>" in Slack, a PR comment or a Linear issue. Also use it for every @Devin request with a PR or ticket link in #devin-qa-request-mobile, whatever the wording ("test <link>", "check this").
 metadata:
-  version: 2026.11.01.3
+  version: 2026.11.01.4
 ---
 
 # qa-request-mobile
@@ -106,7 +106,7 @@ A run's cost follows its number of agent steps and the screenshots it opens, not
 2. One script per build. Write all cases as one script and run it in one exec. Don't drive a case step by step in separate tool calls. Rerun only the case that failed, alone.
 3. Check arrival with text, not images. `wait`, `has` and `dump` print the matched node; that is the assertion. Don't open a screenshot (`view_image`, the desktop) to confirm a tap, a load or where you are. When lost, read `dump` first; open a screenshot only when the tree can't explain it.
 4. Open each case's full resolution screenshot pair once, at write-up, to compare the builds.
-5. The iOS macOS child follows the same rules: one XCUITest or AXe script per build, arrival asserted from the accessibility tree, screenshot pairs opened once at write-up, and one report at the end. It messages the parent before then only when it is blocked.
+5. The iOS macOS child follows the same rules: one script per build that runs Maestro flows from devin-qa-flow (see "Reusable flows"), arrival asserted from the accessibility tree, screenshot pairs opened once at write-up, and one report at the end. It messages the parent before then only when it is blocked.
 
 ## Steps
 
@@ -156,9 +156,9 @@ In `mode=review`, post the proposals in the thread and stop. Start the proposals
 ### 4. Record
 
 1. One recording per build, every case in order, one timestamp per case written down as you go. Playback at 4x is fine; say so in the status line.
-2. Drive the UI with one script per build and assert each arrival from the view hierarchy (see Cost). On Android, the taps and waits come from Maestro flows in devin-qa-flow, reused or added there (see "Reusable flows"), and the rest from the bundled harness (see "Android harness"); never write a new harness per run. On iOS: the accessibility tree or XCUITest. Record that scripted run; do not record a separate pass by hand. Keep each case's assertion output; the toggle cites it.
+2. Drive the UI with one script per build and assert each arrival from the view hierarchy (see Cost). On Android, the taps and waits come from Maestro flows in devin-qa-flow, reused or added there (see "Reusable flows"), and the rest from the bundled harness (see "Android harness"); never write a new harness per run. On iOS, the macOS child does the same with the iOS flows in devin-qa-flow, following its `docs/qa-pr-instructions.md` "iOS runs". Record that scripted run; do not record a separate pass by hand. Keep each case's assertion output; the toggle cites it.
 3. At each case's arrival point take a full resolution screenshot on both builds (`adb exec-out screencap -p`, or `xcrun simctl io <simulator> screenshot <file>`). Compare the pair, not the webp, for small visual differences. Keep the lifecycle log streaming for the whole run on both builds (see Lifecycle check).
-4. On Android, run `adb shell screenrecord` per case and concatenate the files. On iOS, run `xcrun simctl io <simulator> recordVideo <file>`.
+4. On Android, run `adb shell screenrecord` per case and concatenate the files. On iOS, run `xcrun simctl io <simulator> recordVideo --codec h264 --force <file>` per case, stop it with `kill -INT` and wait for the process to exit.
 5. A case you cannot reach is recorded as "unreachable" on both sides. Never skip one silently. Any unreachable case makes the verdict `QA incomplete.`
 6. GitHub renders an animated webp or gif inside `<img src="..." height="500" />`. It does not render an mp4 inline, and the PR update tool rejects mp4 paths. Convert each recording to an animated webp (for example `setpts=PTS/4,fps=5,scale=320:-1`, libwebp q60, under 10 MB) and embed it by local path; the PR update tool uploads it to GitHub.
 7. Link the mp4 under the table only when it has a host whose link still works a month later (on iOS, the `artifact-upload` skill's GCS bucket). Never use a presigned link that expires in days, or a Devin attachment link, which needs a Devin login. Without such a host, attach the mp4s to the thread reply only.

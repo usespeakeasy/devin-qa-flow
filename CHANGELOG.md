@@ -21,6 +21,9 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-01
 
+- **qa-request-mobile 2026.11.01.4**: iOS runs drive cases with Maestro flows from this repo
+  instead of an AXe or XCUITest script, and record with `recordVideo --codec h264 --force`.
+  Found by the iOS dry run of speak-ios#9662.
 - **Instructions**: iOS run steps corrected after the dry run of speak-ios#9662 (first real
   iOS run): build env vars, AXe path, pool sign-in by deep link and first-run prompts, one
   account per simulator for settings cases, switch selectors, notification permission through
