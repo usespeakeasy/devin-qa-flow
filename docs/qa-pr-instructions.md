@@ -222,19 +222,13 @@ When a flow needs a text or point fallback because the element has no ID:
 4. Post the PR link as a reply in the QA request's thread, with "Also send to channel" on, so it
    shows in #devin-qa-request-mobile too, and tag Sean Kim in it (`<@U06CM4TRNBX>`, a real
    mention, not plain text). Don't make a separate top-level post. Example text:
-   `<@U06CM4TRNBX> ID PR for the Free Talk community details, report and report confirmation sheets, ready for review: <PR URL>` Neither
-   `message_user` nor the Slack MCP's `slack_reply_to_thread` can set that flag, so call
-   `chat.postMessage` with `reply_broadcast` and the Slack MCP server's token (it posts as
-   `devin_mcp`):
-
-   ```bash
-   SLACK_TOKEN=$(tr '\0' '\n' < /proc/$(pgrep -f 'node .*mcp-server-slack' | head -1)/environ \
-     | sed -n 's/^SLACK_BOT_TOKEN=//p')
-   jq -n --arg ts "$THREAD_TS" --arg text "$TEXT" \
-     '{channel: "C0C8G9VS2KX", thread_ts: $ts, reply_broadcast: true, text: $text}' \
-     | curl -s -H "Authorization: Bearer $SLACK_TOKEN" -H 'Content-Type: application/json; charset=utf-8' \
-       --data @- https://slack.com/api/chat.postMessage | jq '{ok, ts, error}'
-   ```
+   `<@U06CM4TRNBX> ID PR for the Free Talk community details, report and report confirmation sheets, ready for review: <PR URL>`.
+   Post it with `scripts/slack-id-pr-broadcast.sh <thread_ts> "<text>"`. Never use the Slack MCP's
+   `slack_reply_to_thread` or `message_user` for this post: neither can turn on "Also send to
+   channel". The script reads the Slack MCP server's token (it posts as `devin_mcp`), calls
+   `chat.postMessage` with `reply_broadcast: true`, refuses text that doesn't start with Sean's
+   tag, and exits non-zero unless Slack returns a `thread_broadcast`. If it fails, say so in the
+   report.
 
    Never print the token. Write the text as in Writing PRs and Slack posts. Don't block the QA
    run on it. Switch the flow and the INDEX.md row to the ID once the PR is on develop.

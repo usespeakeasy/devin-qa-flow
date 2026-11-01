@@ -21,6 +21,11 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-01
 
+- **qa-request-mobile 2026.11.01.8**: the ID PR post goes through a new script,
+  `scripts/slack-id-pr-broadcast.sh`, and the skill's `ID PR:` step names it. The script rejects
+  text without Sean's tag and fails unless Slack sends the reply to the channel. Why: the
+  speak-android#8669 run read Missing IDs step 4 but posted with `slack_reply_to_thread` anyway,
+  with no broadcast and no tag.
 - **qa-request-mobile 2026.11.01.8**: iOS runs drive cases with Maestro flows from this repo
   instead of an AXe or XCUITest script, and record with `recordVideo --codec h264 --force`.
   Found by the iOS dry run of speak-ios#9662.
