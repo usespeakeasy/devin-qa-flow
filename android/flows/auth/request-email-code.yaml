@@ -1,0 +1,36 @@
+# Speak session with email_otp_enabled ON: "Continue with Email Code" -> Send code reaches the code step,
+# then Back returns to the signed-out storybook. The code itself arrives by real email on dev.
+# Entry: `onboarding_storybook_sign_in_button` on a Speak session. Param: EMAIL (run time only).
+# Selectors: the "Continue with Email Code" row has no resource-id yet (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: onboarding_storybook_sign_in_button
+- extendedWaitUntil:
+    visible: "Continue with Email Code"
+    timeout: 15000
+- tapOn: "Continue with Email Code"
+- assertVisible:
+    id: otp_sign_in_entry_screen
+- tapOn:
+    id: otp_sign_in_destination_field
+- inputText: ${EMAIL}
+- tapOn:
+    id: otp_sign_in_send_code_button
+- extendedWaitUntil:
+    visible:
+      id: otp_sign_in_code_screen
+    timeout: 30000
+- assertVisible:
+    id: otp_sign_in_code_field
+- repeat:
+    times: 4
+    while:
+      notVisible:
+        id: onboarding_storybook_sign_in_button
+    commands:
+      - back
+- assertVisible:
+    id: onboarding_storybook_sign_in_button

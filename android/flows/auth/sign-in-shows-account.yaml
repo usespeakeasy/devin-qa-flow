@@ -1,0 +1,36 @@
+# Email sign-in from the signed-out storybook, then Home, Profile and Settings show this account and not OTHER_NAME.
+# Entry: `onboarding_storybook_sign_in_button`. Params (run time only): EMAIL, PASSWORD, NAME, TIME (Profile
+# "TIME STUDIED", e.g. "93 min"), PAIR (language pair id, e.g. english-spanish), COURSE (Settings "Language Course"
+# subtitle), OTHER_NAME (the account that must not show).
+# Selectors: Profile tab, Settings rows and their subtitles have no resource-id yet (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/open-email-sign-in.yaml
+- runFlow: ../../common/submit-email-sign-in.yaml
+- runFlow: ../../common/dismiss-premium-intro.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_language_pair_${PAIR}
+    timeout: 30000
+- tapOn: "Profile"
+- extendedWaitUntil:
+    visible:
+      id: stat_time_title
+      text: ${TIME}
+    timeout: 15000
+- assertVisible:
+    id: title
+    text: ${NAME}
+- assertNotVisible: ${OTHER_NAME}
+- tapOn:
+    id: action_settings
+- assertVisible: ${EMAIL}
+- scrollUntilVisible:
+    element: ${COURSE}
+    direction: DOWN
+- back
+- tapOn: "Home"
+- assertVisible:
+    id: home_root_ready
