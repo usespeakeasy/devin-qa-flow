@@ -9,6 +9,8 @@
   qa_android.py release                   free the leased account (run after the report is posted)
   qa_android.py bridge <cmd> [k=v ...]    DebugBridge command, prints the JSON, exit 1 on err
   qa_android.py launch                    force-stop and cold-start SpeakActivity
+  qa_android.py fresh [--no-grant]        pm clear, re-grant permissions, cold start, wait for the welcome screen
+  qa_android.py newuser                   print a throwaway sign-up email (never joins the pool)
   qa_android.py wait <sel> [--timeout S]  re-dump until a node matches; prints its bounds
   qa_android.py tap <sel> [--timeout S]   wait, then tap the node's center from that same dump
   qa_android.py type <text>               type into the focused field (spaces kept)
@@ -122,13 +124,21 @@ def cmd_emu(a):
     print(f"emulator ready ({serial or 'default'})")
 
 
+PERMS = ("android.permission.POST_NOTIFICATIONS", "android.permission.RECORD_AUDIO")
+WELCOME = "id:onboarding_storybook_sign_in_button"
+
+
+def grant(pkg):
+    for perm in PERMS:
+        adb("shell", "pm", "grant", pkg, perm, check=False)
+
+
 def cmd_install(a):
     apk = a[0]
     pkg = a[a.index("--pkg") + 1] if "--pkg" in a else PKG
     adb("install", "-r", "-t", apk, timeout=600)
     adb("shell", "am", "force-stop", pkg)
-    for perm in ("android.permission.POST_NOTIFICATIONS", "android.permission.RECORD_AUDIO"):
-        adb("shell", "pm", "grant", pkg, perm, check=False)
+    grant(pkg)
     print(f"installed {apk}")
 
 
@@ -156,6 +166,21 @@ def launch():
 def cmd_launch(_):
     launch()
     print("launched")
+
+
+def cmd_fresh(a):
+    out = adb("shell", "pm", "clear", PKG)
+    if "Success" not in out:
+        sys.exit(f"pm clear failed: {out.strip()}")
+    if "--no-grant" not in a:
+        grant(PKG)
+    launch()
+    wait(WELCOME, timeout_of(a, 60))
+    print("app data cleared; welcome screen ready")
+
+
+def cmd_newuser(_):
+    print(f"devin+qa-new-{time.strftime('%Y%m%d%H%M%S')}-{os.urandom(3).hex()}@usespeak.com")
 
 
 def bq(sql, **params):

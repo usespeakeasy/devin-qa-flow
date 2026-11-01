@@ -47,6 +47,27 @@ share the CPU and recordings drop frames.
 - Keep each case under 180 s (`screenrecord` stops there). Split a longer case into two flows.
 - Find selectors with harness `dump` on the base build, only while no flow is running.
 
+## Pre-auth flows
+
+Flows in `android/flows/auth/` and `android/flows/onboarding/` start signed out (header
+`Entry: app data cleared`). Cases for the welcome screen, sign-in, sign-up, onboarding steps
+and first-run prompts go there.
+
+1. Reset the app with `qa_android.py fresh` before each pre-auth flow. It runs `pm clear`,
+   grants the notification and microphone permissions again (`--no-grant` keeps them unset
+   for a case about the permission prompt) and cold-starts the app on the welcome screen.
+   Don't `launchApp` with `clearState` in the flow; `fresh` does it once, outside the recording.
+2. Cases that don't need an account (welcome screen, onboarding steps before account creation,
+   the paywall shown before sign-up) need no lease. Stop the flow before the account step.
+3. Sign-in cases use the leased pool account: `-e EMAIL=<leased email> -e PASSWORD="$QA_POOL_PASSWORD"`.
+4. Sign-up cases need a new user. `qa_android.py newuser` prints a throwaway
+   `devin+qa-new-<time>-<random>@usespeak.com`; pass it as `-e EMAIL=...` with
+   `-e PASSWORD="$QA_POOL_PASSWORD"`. Use a new one per build and per run, so base and branch
+   don't share server state. Never add a throwaway account to the pool, and never put its email
+   in a file, the PR or the thread. Set `account_source` to `fresh_signup` in the run record.
+5. A signed-in case after a pre-auth flow needs `qa_android.py login` again, because `fresh`
+   signed the app out.
+
 ## Two emulators
 
 Base and branch can run at the same time, one build per emulator, with the same AVD config,
