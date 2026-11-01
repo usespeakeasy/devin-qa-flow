@@ -1,0 +1,20 @@
+# Notifications Opt-In search results -> one preview -> back to the results.
+# Params: PREVIEW (the suffix after "Notifications Opt-In - "), SHOT (screenshot name).
+# Entry: the search results. The preview's art, copy and buttons have no identifier; arrival is
+# the Enable and Set up later buttons.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn: "Notifications Opt-In - ${PREVIEW}"
+- extendedWaitUntil:
+    visible: "Set up later"
+    timeout: 10000
+- assertVisible: "Enable"
+- assertNotVisible: "Notifications Opt-In - ${PREVIEW}"
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: "BackButton"
+- extendedWaitUntil:
+    visible: "Notifications Opt-In - ${PREVIEW}"
+    timeout: 10000

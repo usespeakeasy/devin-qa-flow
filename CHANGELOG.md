@@ -21,6 +21,12 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-01
 
+- **Instructions**: iOS run steps corrected after the dry run of speak-ios#9662 (first real
+  iOS run): build env vars, AXe path, pool sign-in by deep link and first-run prompts, one
+  account per simulator for settings cases, switch selectors, notification permission through
+  iOS Settings, `takeScreenshot` location, date picker and popover points, two-simulator load.
+  Recording 44 → about 6 min for both builds in parallel.
+
 - **qa-request-mobile 2026.11.01.3**: the skill's source now lives in this repo under
   `skills/`. Runs write `skill_version` and `flow_repo_sha` to the run record. Change the skill
   with a PR here; after merge, Devin saves it with `manage_plugin` and posts the PSA.

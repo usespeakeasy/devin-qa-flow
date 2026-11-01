@@ -1,0 +1,20 @@
+# iOS Settings: turn Allow Notifications on for Speak Dev. A new simulator may never have been
+# asked, and the Notifications switches render off without permission, so cases that compare
+# those screens start here. Entry: any state. Exit: the Settings app, notifications on.
+appId: com.apple.Preferences
+---
+- runFlow: system-open-app-notifications.yaml
+- runFlow:
+    when:
+      visible:
+        text: "0"
+        rightOf: "Allow Notifications"
+    commands:
+      - tapOn:
+          text: "0"
+          rightOf: "Allow Notifications"
+- extendedWaitUntil:
+    visible:
+      text: "1"
+      rightOf: "Allow Notifications"
+    timeout: 5000

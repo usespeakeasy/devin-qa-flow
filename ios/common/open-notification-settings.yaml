@@ -1,0 +1,16 @@
+# Home -> Settings -> Notifications (CompactNotificationSettingsVC).
+# Entry: Home. Rows come from the server; "Daily Reminders" and "Marketing Communications" are
+# the two navigation rows.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: open-settings.yaml
+- tapOn: "Notifications"
+- extendedWaitUntil:
+    visible:
+      id: "Notifications"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "Daily Reminders"
+    timeout: 10000

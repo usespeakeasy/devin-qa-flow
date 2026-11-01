@@ -1,0 +1,11 @@
+# B1 (speak-ios#9662): Settings -> Previews, search "Notifications Opt-In" lists the Streak,
+# Smart Review, Challenges and Habit Formation previews.
+# Entry: signed in dev build, any state.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow: ../../common/open-previews.yaml
+- runFlow: ../../common/search-notifications-opt-in.yaml
+- takeScreenshot: opt-in-search

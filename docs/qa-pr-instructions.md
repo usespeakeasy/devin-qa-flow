@@ -71,24 +71,70 @@ account and flags.
 iOS builds and runs only on macOS. A Linux QA session hands the run to one macOS child, and
 the child clones this repo and follows this file. The child prompt says so.
 
+- Setup: if the speak-ios snapshot step fails with `SPEAK_DERIVED_DATA: unbound variable`,
+  export `DEVELOPER_DIR` (the Xcode the blueprint names), `SPEAK_DERIVED_DATA` and
+  `SPEAK_SOURCE_PACKAGES` yourself, then build each SHA with `xcodebuild -scheme Speak-Dev
+  -configuration Debug-Dev -derivedDataPath "$SPEAK_DERIVED_DATA" -clonedSourcePackagesDirPath
+  "$SPEAK_SOURCE_PACKAGES" build` and copy `Debug-Dev-iphonesimulator/Speak*.app` aside before
+  checking out the other SHA. Two builds take about 13 min with a warm package cache.
 - Flows: `ios/common/` and `ios/flows/<area>/<case>.yaml`, with the same `<area>/<case>` name
   as the Android flow for the same product case. Run with
-  `maestro --device <simulator UDID> test -e APP_ID=com.selabs.speak-v2.dev <flow>`.
+  `maestro --device <simulator UDID> test --debug-output /tmp/maestro-<side>/<case> <flow>`.
+  `APP_ID` defaults to `com.selabs.speak-v2.dev` in every flow, so `-e APP_ID` is only for prod.
 - Selectors: accessibility identifiers first (`id:` in Maestro matches them), then text.
-  Read the tree with `axe describe-ui --udid <UDID>` on the base build, only while no flow is
-  running.
-- Automation markers are off unless the app launches with `SPEAK_AUTOMATION_MARKERS=1` in its
-  launch environment. Launch with
+  Read the tree with `axe describe-ui --udid <UDID>` (AXe ships inside the xcodebuildmcp npx
+  package: `ls ~/.npm/_npx/*/node_modules/xcodebuildmcp/bundled/axe`) or
+  `maestro --device <UDID> hierarchy`, on the base build, only while no flow runs on that
+  simulator.
+- Unlabelled switches (UIKit cells and SwiftUI `Toggle`) show up as a CheckBox whose Maestro
+  text is its value, `0` or `1`. Select one as `text: "[01]"` plus `rightOf: "<row title>"`,
+  and add `above:`/`below:` a neighbouring title when several rows have switches. On a SwiftUI
+  `Toggle` only the inner switch toggles; a tap on the labelled outer element does nothing.
+- Flows that change server-side settings must not depend on the starting state: read the
+  current value (`copyTextFrom`, `runFlow: when:`) and set it first, as
+  `daily-reminders-toggle.yaml` and `marketing-push-toggle.yaml` do.
+- `home.root.ready` is an accessibility identifier and is there on a plain `launchApp`.
+  Automation markers are a separate set: they are off unless the app launches with
+  `SPEAK_AUTOMATION_MARKERS=1` in its launch environment. Launch with
   `SIMCTL_CHILD_SPEAK_AUTOMATION_MARKERS=1 xcrun simctl launch <UDID> com.selabs.speak-v2.dev`
   before a flow that reads markers, and start that flow without `launchApp`.
 - Install each build with `xcrun simctl install`. Installing over the same bundle ID keeps the
-  signed-in account, so one pool account serves both builds.
-- Record with `xcrun simctl io <UDID> recordVideo --codec h264 <file>` and stop it with
-  `kill -INT`. It has no 180 s limit; keep one file per case anyway so the packet timestamps
-  stay simple.
+  signed-in account.
+- Accounts: lease from the dev pool with the harness `lease` (it works on macOS; only `login`
+  is Android-only). Sign in with
+  `xcrun simctl openurl <UDID> "speak-dev://email-login?email=<url-encoded>&password=<url-encoded>"`
+  from a script that reads `QA_POOL_PASSWORD` (bind `secret:org:QA_POOL_PASSWORD` in the exec
+  env; it is not in the shell by default). First launch shows the App Tracking Transparency
+  sheet ("Ask App Not to Track") and the first deep link shows "Open in Speak Dev?" ("Open").
+  If the app then sits on the splash spinner for over 20 s, terminate and relaunch it. A pool
+  account that never signed in on iOS shows "How Speak uses AI" once;
+  `common/launch-home.yaml` accepts it.
+- Notification permission: Maestro `launchApp` `permissions: {notifications: deny}` does
+  nothing on the iOS 27 simulator, and `simctl privacy` has no notifications service. Turn it
+  off in iOS Settings with `common/system-notifications-off.yaml`. A new or cloned simulator may
+  never have asked for permission, and the Notifications switches render off without it, so
+  flows that compare those screens start with `common/system-notifications-on.yaml`. After the app's "open
+  Settings" alert, iOS Settings reopens on its last page, so accept either the app page or
+  its Notifications page. Return to the app with `tapOn: {id: breadcrumb}` ("Return to Speak
+  Dev"), which is what a user does; a new `launchApp` is not the same path.
+- Screenshots: Maestro `takeScreenshot: <name>` writes a full resolution PNG (1206x2622 on
+  iPhone 18 Pro) to `<debug-output>/.maestro/tests/<timestamp>/<flow>/takeScreenshot/`. Copy
+  it out before deleting the debug folder. Put one at each case's arrival.
+- Compact `UIDatePicker`: the element spans the whole row and its centre is empty, so tap the
+  time pill with a commented point. Its popover's `PopoverDismissRegion` covers the screen,
+  popover included; dismiss with a point near the bottom of the screen, not `id:`.
+- Record with `xcrun simctl io <UDID> recordVideo --codec h264 --force <file>` and stop it with
+  `kill -INT`, then `wait` for the process so the file is finalized. It has no 180 s limit; keep
+  one file per case anyway so the packet timestamps stay simple.
 - Two simulators: base and branch can run at once on two booted simulators of the same device
   type and runtime (`xcrun simctl clone <UDID> <name>`), one `maestro --device` per simulator.
-  The same rules for timing cases and shared server state apply as on Android.
+  On a 12-core, 16 GB Mac two iPhone simulators running Maestro peaked at a load of about 12
+  and 11.3 GB used. Don't run `axe` or `maestro hierarchy` on one simulator while a flow starts
+  on the other; that once failed with "Timed out creating the simulator remote automation
+  session".
+- Two simulators share server state when they share an account. When cases change settings
+  (notifications, profile, progress), lease one pool account per simulator (separate
+  `QA_LEASE_FILE`s) and release both. The same rules for timing cases apply as on Android.
 - Missing IDs: the draft ID PR goes to speak-ios. Follow its `AGENTS.md` and
   `agent_docs/workflows/git-pr-workflow.md` (branch prefix, draft, template).
 
@@ -220,5 +266,8 @@ This applies to ID PRs, PRs in this repo, and every Slack post about them.
 - `tapOn` hits the element's centre, so in a text field the cursor can land mid-text and
   `eraseText` leaves a tail. Retype only short values, or reopen the screen.
 - Two emulators at once: one `maestro --device <serial>` per emulator works in parallel.
+- iOS: Maestro installs its XCTest driver on each simulator on the first run (about 20 s).
+  `copyTextFrom` plus `evalScript: ${output.x = maestro.copiedText}` stores a value; quote
+  an `evalScript` that contains `?` and `:` or check-syntax fails.
 - Install Maestro with `curl -fsSL "https://get.maestro.mobile.dev" | bash` (needs Java 17+);
   the binary lands in `~/.maestro/bin/maestro`.

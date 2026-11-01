@@ -1,0 +1,13 @@
+# Home -> Profile tab -> Settings.
+# Entry: Home (home.root.ready). The Profile tab and the gear have no identifier; the gear's
+# label is its image name.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn: "Profile"
+- tapOn: "settings tab icon"
+- extendedWaitUntil:
+    visible:
+      id: "Settings"
+    timeout: 10000

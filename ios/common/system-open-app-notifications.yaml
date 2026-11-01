@@ -1,0 +1,26 @@
+# iOS Settings -> Apps -> Speak Dev -> Notifications.
+# Entry: any state. Exit: the Settings app on Speak Dev > Notifications.
+appId: com.apple.Preferences
+---
+- launchApp:
+    appId: com.apple.Preferences
+    stopApp: true
+- scrollUntilVisible:
+    element:
+      id: "com.apple.settings.apps"
+    direction: DOWN
+- tapOn:
+    id: "com.apple.settings.apps"
+- scrollUntilVisible:
+    element: "Speak Dev"
+    direction: DOWN
+- tapOn: "Speak Dev"
+- extendedWaitUntil:
+    visible:
+      id: "Speak Dev"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "Notifications"
+    direction: DOWN
+- tapOn: "Notifications"
+- runFlow: system-allow-notifications.yaml

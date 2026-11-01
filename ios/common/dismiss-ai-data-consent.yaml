@@ -1,0 +1,17 @@
+# "How Speak uses AI" consent shows once per account after sign-in, before Home.
+# Entry: the consent screen or Home. Exit: Home (home.root.ready).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow:
+    when:
+      visible:
+        id: "ai-data-consent.action.agree"
+    commands:
+      - tapOn:
+          id: "ai-data-consent.action.agree"
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready"
+    timeout: 30000

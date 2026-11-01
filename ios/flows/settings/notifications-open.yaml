@@ -1,0 +1,12 @@
+# A1 (speak-ios#9662): Settings -> Notifications shows the notification categories and the
+# Daily Reminders and Marketing Communications rows.
+# Entry: signed in, any state (turns notification permission on first).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/system-notifications-on.yaml
+- runFlow: ../../common/launch-home.yaml
+- runFlow: ../../common/open-notification-settings.yaml
+- assertVisible: "Marketing Communications"
+- takeScreenshot: notifications-open

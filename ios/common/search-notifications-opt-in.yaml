@@ -1,0 +1,13 @@
+# Previews catalog -> search "Notifications Opt-In". Entry: Previews. Exit: the four results.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn: "Search"
+- inputText: "Notifications Opt-In"
+- extendedWaitUntil:
+    visible: "Notifications Opt-In - Streak"
+    timeout: 10000
+- assertVisible: "Notifications Opt-In - Smart Review"
+- assertVisible: "Notifications Opt-In - Challenges"
+- assertVisible: "Notifications Opt-In - Habit Formation"

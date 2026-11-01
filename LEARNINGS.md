@@ -21,4 +21,10 @@ describes.
 
 ## iOS
 
-None yet.
+- The permission-off case (A4) did not get the "Allow notifications" alert, and about 15 min
+  went to finding out why. Cause: Maestro `launchApp` `permissions: {notifications: deny}` has
+  no effect on the iOS 27 simulator and `simctl privacy` has no notifications service. Rule:
+  turn notifications off in iOS Settings; `ios/common/system-notifications-off.yaml` does
+  this. Use a toggle on a UIKit screen that refreshes on foreground
+  (`CompactNotificationSettingsVC`), not Marketing Communications, which does not.
+  ([dry run of speak-ios#9662](https://github.com/usespeakeasy/speak-ios/pull/9662), 2026-11-01)
