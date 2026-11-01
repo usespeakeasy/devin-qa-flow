@@ -1,0 +1,41 @@
+# Changelog
+
+What changed in the QA system, newest first. One entry per change to a skill under `skills/` or to
+the run instructions (`docs/`, `AGENTS.md`). Flow and `LEARNINGS.md` pushes are not listed here;
+`git log` has them.
+
+Skill versions are `YYYY.MM.DD.N`, set in `metadata.version` of the skill's `SKILL.md`. Every QA
+run writes `skill_version` and `flow_repo_sha` (this repo's `main` SHA at run start) to
+`devin_qa.qa_request_mobile_runs`, so you can compare runs before and after a change:
+
+```sql
+SELECT skill_version, platform, COUNT(*) AS runs,
+  APPROX_QUANTILES(record_min, 2)[OFFSET(1)] AS record_p50,
+  APPROX_QUANTILES(total_min, 2)[OFFSET(1)] AS total_p50
+FROM `speak-v2-2a1f1.devin_qa.qa_request_mobile_runs`
+WHERE request_at > TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 60 DAY)
+GROUP BY 1, 2 ORDER BY 1 DESC, 2
+```
+
+Runs before 2026-11-01 have no `skill_version`.
+
+## 2026-11-01
+
+- **qa-request-mobile 2026.11.01.3**: the skill's source now lives in this repo under
+  `skills/`. Runs write `skill_version` and `flow_repo_sha` to the run record. Change the skill
+  with a PR here; after merge, Devin saves it with `manage_plugin` and posts the PSA.
+  Harness `qa-android-harness` is 2026.11.01.1 (same content as the saved revision).
+- **Instructions**: iOS run steps and `LEARNINGS.md`, which runs push to directly after a major
+  failure ([#4](https://github.com/usespeakeasy/devin-qa-flow/pull/4)). iOS steps not yet tested
+  on a real run.
+- **qa-request-mobile 2026.11.01.2**: the skill's flow sections became one pointer to this repo's
+  `AGENTS.md` and `docs/qa-pr-instructions.md`; the repo wins if they disagree
+  ([#3](https://github.com/usespeakeasy/devin-qa-flow/pull/3), plugin revision
+  `83bd5ed2c8c011ebb6a5696a3c2a54e3`). Instructions moved to `docs/qa-pr-instructions.md`, with
+  PR and Slack writing rules and the vendored i-have-adhd and humanizer skills.
+- **qa-request-mobile 2026.11.01.1**: Android cases run as Maestro flows from this repo, base and
+  branch on two emulators at once. Harness `emu` takes `--avd`/`--port` and clears stale crash
+  data before boot. Dry run of speak-android#8617: recording 30.5 → 6.4 min for both builds
+  ([PSA](https://usespeak.slack.com/archives/C0C8G9VS2KX/p1793504506833249)).
+- **Instructions**: seed Android flows, `AGENTS.md` and `README.md`
+  ([#1](https://github.com/usespeakeasy/devin-qa-flow/pull/1)).

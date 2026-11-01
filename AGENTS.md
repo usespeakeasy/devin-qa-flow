@@ -12,7 +12,13 @@ writing, and Maestro gotchas. This file has the rules for flow files and INDEX.m
 ## Changing these instructions
 
 QA runs push only `android/`, `ios/`, `INDEX.md` and `LEARNINGS.md` changes to `main`. Changes to `AGENTS.md`,
-`README.md`, `docs/` and `.agents/` go through a PR to Sean Kim.
+`README.md`, `CHANGELOG.md`, `docs/`, `skills/` and `.agents/` go through a PR to Sean Kim.
+
+`skills/` holds the source of the `qa-request-mobile` skill and the `qa-mobile-harness` plugin.
+A PR that changes a skill bumps its `metadata.version` (`YYYY.MM.DD.N`). A PR that changes a
+skill or the run instructions adds a `CHANGELOG.md` entry: version, what changed, why, PR link.
+After merge, Devin saves the changed skill with `manage_plugin` and posts the PSA in
+#devin-qa-request-mobile.
 
 ## Flow rules
 
