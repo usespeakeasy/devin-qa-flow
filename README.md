@@ -30,5 +30,5 @@ Flows assume the app is installed and signed in. Account lease, login, screen re
 the Before | After packet come from the `qa-request-mobile` skill and its Android harness,
 not from this repo.
 
-Agent rules (selectors, reuse, base vs branch, committing, missing IDs) are in
+Agent rules (selectors, reuse, base vs branch, committing, conflicts, missing and stale IDs) are in
 [AGENTS.md](AGENTS.md).
