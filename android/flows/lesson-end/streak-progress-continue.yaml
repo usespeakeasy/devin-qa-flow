@@ -1,0 +1,18 @@
+# Lesson end streak progress step: Continue moves the flow on to its next step (the lesson end
+# summary, `lesson_end_reskin_root`, when the server order has it next).
+# Entry: the streak progress step is showing (run `android/common/open-streak-progress.yaml` first;
+# it needs the QA-only STREAK_PROGRESS patch and a premium account, Debug Menu > Subscription override > Premium).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: lesson_end_streak_progress_root
+- tapOn:
+    id: lesson_end_streak_progress_continue_button
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 30000
+- assertNotVisible:
+    id: lesson_end_streak_progress_root
