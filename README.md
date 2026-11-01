@@ -16,6 +16,8 @@ INDEX.md                         screen -> flow lookup (start here)
 android/common/                  shared subflows (launch to Home, deep link, prompts)
 android/flows/<area>/<case>.yaml one QA case per file
 ios/common/, ios/flows/          same structure for the iOS Simulator
+skills/                          source of the qa-request-mobile skill and Android harness
+CHANGELOG.md                     what changed in the skills and instructions, by version
 ```
 
 ## Running a flow
@@ -36,3 +38,7 @@ and read [LEARNINGS.md](LEARNINGS.md), where runs record what went wrong. Flow-f
 are in [AGENTS.md](AGENTS.md). `.agents/skills/` vendors the
 [i-have-adhd](https://github.com/ayghri/i-have-adhd) and [humanizer](https://github.com/blader/humanizer)
 writing skills (MIT).
+
+The `qa-request-mobile` skill and its Android harness are kept in [skills/](skills/) and
+versioned; [CHANGELOG.md](CHANGELOG.md) lists each change. Each QA run records the skill version
+and this repo's SHA in BigQuery (`devin_qa.qa_request_mobile_runs`).
