@@ -21,6 +21,10 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-01
 
+- **qa-request-mobile 2026.11.01.6**: ID PRs open ready for review, not as drafts, under Sean's
+  GitHub account, then get an `@codex review` comment from Sean's account. Why: Sean asked for it
+  after speak-android#8660 opened as a draft ("For ID PRs, you should always open it for review
+  and comment `@codex review` using my gh").
 - **qa-request-mobile 2026.11.01.5**: the Slack report needs an `ID PR:` line, with the draft ID
   PR link for each screen, or `ID PR: none needed`. The per-run workflow now has an ID PR step,
   for Android and iOS. Why: the speak-android#8630 rerun used text selectors on the review dialogs
