@@ -2,7 +2,7 @@
 name: qa-request-mobile
 description: Run a QA request on a Speak mobile PR (speak-android or speak-ios). Read the PR's "How to test?" section, build the base and the branch against dev or prod, record both runs, and write the Before | After result into the PR description. Use when someone asks for QA, a no-diff check, a before and after recording, or writes "qa-request-mobile <PR link>" in Slack, a PR comment or a Linear issue. Also use it for every @Devin request with a PR or ticket link in #devin-qa-request-mobile, whatever the wording ("test <link>", "check this").
 metadata:
-  version: 2026.11.01.5
+  version: 2026.11.01.6
 ---
 
 # qa-request-mobile
@@ -191,7 +191,7 @@ Reply in the same thread, comment or issue, tagging the requester. In Slack, the
 2. One line per case: label, result, same or differs, what you saw, the check behind the result, and lifecycle same or differs. Start each line with the case's timestamps in the attached full speed mp4s, base then branch (`1. 0:00 / 0:00`). These are not the 4x webp timestamps from the PR table; take them from the mp4s. A note line says what both builds did. Then the `Lifecycle:` lines, if any.
 3. The PR link.
 4. In `mode=run`, the "Not covered by the list" lines, if any.
-5. The `ID PR:` line: the draft ID PR this run opened or commented on for each screen (see Missing IDs in devin-qa-flow's `docs/qa-pr-instructions.md`), or `ID PR: none needed` when no flow used a text or point fallback. Don't post the report until this line is true.
+5. The `ID PR:` line: the ID PR this run opened or commented on for each screen (see Missing IDs in devin-qa-flow's `docs/qa-pr-instructions.md`), or `ID PR: none needed` when no flow used a text or point fallback. Don't post the report until this line is true.
 6. The `Run time:` line (see Run record).
 
 When the request did not come from a PR comment, also leave a one-line PR comment, for example "QA passed (4/4). Results in Can I see?", so the author gets a notification; a description edit sends none.

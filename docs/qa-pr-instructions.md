@@ -25,7 +25,7 @@ INDEX.md row are in [AGENTS.md](../AGENTS.md).
    Maestro flow is running; both drive UiAutomator.
 7. Add or update the INDEX.md row (format in [AGENTS.md](../AGENTS.md#indexmd)), then commit
    and push (see Committing).
-8. If a flow this run wrote or ran uses a text or point fallback, open the draft ID PR or
+8. If a flow this run wrote or ran uses a text or point fallback, open the ID PR or
    comment on the open one (see Missing IDs). This is for Android and iOS runs.
 9. If the run hit a major failure, add a learning (see Learnings).
 
@@ -112,8 +112,9 @@ the child clones this repo and follows this file. The child prompt says so.
 - Two simulators: base and branch can run at once on two booted simulators of the same device
   type and runtime (`xcrun simctl clone <UDID> <name>`), one `maestro --device` per simulator.
   The same rules for timing cases and shared server state apply as on Android.
-- Missing IDs: the draft ID PR goes to speak-ios instead of speak-android. Follow its `AGENTS.md` and
-  `agent_docs/workflows/git-pr-workflow.md` (branch prefix, draft, template).
+- Missing IDs: the ID PR goes to speak-ios instead of speak-android. Follow its `AGENTS.md` and
+  `agent_docs/workflows/git-pr-workflow.md` (branch prefix, template), but open it ready for review
+  as in Missing IDs.
 
 ## Committing
 
@@ -156,7 +157,7 @@ rebase changed and this run uses. Never leave the run's flows unpushed.
 When a flow needs a text or point fallback because the element has no ID:
 
 1. List the fallback in the flow's INDEX.md row.
-2. Open a draft PR in speak-android or speak-ios that adds the ID, following
+2. Open a PR in speak-android or speak-ios that adds the ID, following
    `agent_docs/patterns/automation-resource-ids.md` (Android) or
    `agent_docs/coding-standards/automation-accessibility-identifiers.md` (iOS) and that
    repo's PR rules. One PR per screen: search open PRs for the screen first
@@ -164,8 +165,12 @@ When a flow needs a text or point fallback because the element has no ID:
    comment on an existing one with the extra IDs instead of opening a second. Use the names
    that repo's standard produces
    (feature-prefixed `snake_case` on Android, dotted namespace on iOS). A committed flow never
-   relies on an ID from a draft PR until it is on develop.
-3. Post the draft PR link in #devin-qa-request-mobile for review (see Writing PRs and Slack
+   relies on an ID from an open PR until it is on develop.
+3. Open it ready for review, not as a draft, under Sean Kim's GitHub account (`git_create_pr`
+   with `author_user_id` set to Sean's Devin user). Then comment `@codex review` on it as Sean,
+   not as Devin's bot: Codex declines the bot's request. Check the comment's author; if it
+   posted as the bot, say so in the report.
+4. Post the PR link in #devin-qa-request-mobile for review (see Writing PRs and Slack
    posts). Don't block the QA run on
    it. Switch the flow and the INDEX.md row to the ID once the PR is on develop.
 
