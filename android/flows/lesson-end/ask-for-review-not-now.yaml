@@ -1,0 +1,13 @@
+# Play Store ask: "Not now" closes it and the lesson end flow moves on.
+# Entry: Play Store ask open (run after ../../common/open-ask-for-review.yaml, then ask-for-review-yes.yaml).
+# Selectors: the review dialogs have no resource-id on the Navigation 3 entries (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Not now"
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 30000
+- assertNotVisible: "Are you enjoying learning languages with Speak\\?"
