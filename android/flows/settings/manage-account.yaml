@@ -1,12 +1,12 @@
 # Profile -> Settings -> Manage Account shows the account rows, then Back to Profile.
 # Entry: `home_root_ready`. Param: EMAIL (the signed-in account).
-# Selectors: Settings rows have no resource-id yet (text fallback "Manage Account").
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
 - runFlow: ../../common/open-settings.yaml
-- tapOn: "Manage Account"
+- tapOn:
+    id: settings_manage_account_option
 - extendedWaitUntil:
     visible:
       id: manage_account_screen

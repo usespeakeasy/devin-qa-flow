@@ -1,0 +1,11 @@
+# Report Confirmation dialog > Okay: the dialog closes and the details sheet is still up.
+# Entry: report-spam.yaml.
+# Selectors: Okay and Start chatting have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "^Okay$"
+- assertNotVisible: "Report Confirmation"
+- assertVisible: "Start chatting"
+- assertVisible: "See something wrong\\? Report this topic\\."

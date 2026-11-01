@@ -1,0 +1,17 @@
+# App language sheet -> "Keep English": the sheet closes, the app stays English and onboarding goes
+# on to the "Create an account" options.
+# Entry: `onboarding_app_language_sheet` open for Korean (open-app-language-sheet.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: onboarding_app_language_keep_button
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 30000
+- assertNotVisible:
+    id: onboarding_app_language_sheet
+- assertVisible:
+    text: "Continue with Email"

@@ -7,5 +7,6 @@ env:
 - tapOn:
     id: action_settings
 - extendedWaitUntil:
-    visible: "Manage Account"
+    visible:
+      id: settings_manage_account_option
     timeout: 15000

@@ -1,0 +1,18 @@
+# App language sheet -> tap above the sheet: it closes, nothing is sent and the native language step
+# stays, in English.
+# Entry: `onboarding_app_language_sheet` open for Korean (open-app-language-sheet.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+# Point: the scrim (`touch_outside`) fills the screen under the sheet, so its centre can land on the
+# sheet. 20% from the top is above the sheet on a phone.
+- tapOn:
+    point: 50%,20%
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding_app_language_sheet
+    timeout: 10000
+- assertVisible: "What is your native language\\?"
+- assertNotVisible:
+    id: auth_options_screen

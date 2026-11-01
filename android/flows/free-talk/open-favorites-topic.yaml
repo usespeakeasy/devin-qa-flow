@@ -1,0 +1,19 @@
+# Free Talk tab > Favorites (toolbar heart) > tap a saved topic: the community details sheet opens.
+# Entry: cold start (launch-home). Precondition: signed-in dev account with TOPIC in Favorites.
+# Seed it once by tapping the heart count on TOPIC's card on the Community tab.
+# Selectors: the bottom tab, the topic card and Start chatting have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn: "Free Talk"
+- tapOn:
+    id: ai_tutor_favorites_button
+- extendedWaitUntil:
+    visible: ${TOPIC}
+    timeout: 20000
+- tapOn: ${TOPIC}
+- extendedWaitUntil:
+    visible: "Start chatting"
+    timeout: 10000

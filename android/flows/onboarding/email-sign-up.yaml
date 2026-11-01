@@ -1,0 +1,23 @@
+# "Create an account" options sheet -> Continue with Email -> sign up -> onboarding chat.
+# Entry: `auth_options_screen` on screen. Pass a throwaway account at run time:
+# maestro test -e EMAIL=$(qa_android.py newuser) -e PASSWORD=... (never commit them).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: button_email
+- assertVisible:
+    id: onboarding_sign_up_screen
+- tapOn:
+    id: onboarding_sign_up_email_field
+- inputText: ${EMAIL}
+- tapOn:
+    id: onboarding_sign_up_password_field
+- inputText: ${PASSWORD}
+- tapOn:
+    id: onboarding_sign_up_submit_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_.*
+    timeout: 60000

@@ -1,0 +1,17 @@
+# Signed-out storybook -> Get started -> learning language step.
+# Entry: app data cleared (`qa_android.py fresh`), `onboarding_storybook_screen` on screen.
+# The language check can show a progress dialog first; the wait covers it.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_get_started_button
+    timeout: 60000
+- tapOn:
+    id: onboarding_storybook_get_started_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_screen
+    timeout: 30000

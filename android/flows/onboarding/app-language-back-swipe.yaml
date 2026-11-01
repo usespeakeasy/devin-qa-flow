@@ -1,0 +1,41 @@
+# App language sheet -> system back, then reopen -> swipe down: each closes the sheet and the native
+# language step stays, in English. Ends with the sheet open again.
+# Entry: `onboarding_app_language_sheet` open for Korean (open-app-language-sheet.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  NATIVE: korean_english
+---
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding_app_language_sheet
+    timeout: 10000
+- assertVisible: "What is your native language\\?"
+- assertNotVisible:
+    id: auth_options_screen
+- tapOn:
+    id: onboarding_language_option_${NATIVE}
+- extendedWaitUntil:
+    visible:
+      id: onboarding_app_language_sheet
+    timeout: 15000
+# Points: `swipe from: id` starts at the sheet's centre and is too short to pass the hide threshold
+# (it left the controller sheet open). The sheet's top is near 56% on a phone.
+- swipe:
+    start: 50%,60%
+    end: 50%,99%
+    duration: 500
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding_app_language_sheet
+    timeout: 10000
+- assertVisible: "What is your native language\\?"
+- assertNotVisible:
+    id: auth_options_screen
+- tapOn:
+    id: onboarding_language_option_${NATIVE}
+- extendedWaitUntil:
+    visible:
+      id: onboarding_app_language_sheet
+    timeout: 15000

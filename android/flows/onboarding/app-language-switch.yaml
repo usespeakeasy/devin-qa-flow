@@ -1,0 +1,18 @@
+# App language sheet -> "Switch to Korean": the sheet closes, the app turns Korean and onboarding
+# goes on to the "Create an account" options.
+# Entry: `onboarding_app_language_sheet` open for Korean (open-app-language-sheet.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: onboarding_app_language_switch_button
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 30000
+- assertNotVisible:
+    id: onboarding_app_language_sheet
+# The email option's label in Korean ("이메일 주소로 계속하기").
+- assertVisible:
+    text: "이메일.*"

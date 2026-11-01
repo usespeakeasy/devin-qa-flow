@@ -1,0 +1,14 @@
+# Force-stop and cold start while signed out: the signed-out storybook shows, no Home.
+# Entry: signed out.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_sign_in_button
+    timeout: 60000
+- assertNotVisible:
+    id: home_root_ready

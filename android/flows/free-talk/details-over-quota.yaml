@@ -1,0 +1,15 @@
+# Community details sheet > Start chatting with no chats left: the over quota sheet opens.
+# Entry: open-favorites-topic.yaml. Precondition: free account out of Free Talk chats (on a pool
+# account this needs a QA-only patch that returns Exhausted usage).
+# Selectors: Start chatting has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Start chatting"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_over_quota_screen
+    timeout: 15000
+- assertVisible:
+    id: learn_more_button
