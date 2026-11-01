@@ -1,0 +1,41 @@
+# Settings > App Language > pick Spanish: the confirm sheet shows; Cancel keeps English. Back returns to Settings.
+# Entry: Home tab. Precondition: signed-in dev account with app language English.
+# Selectors: the Settings row, the language rows and the sheet have no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: arrival
+---
+# 4.72 has no resource-id on the Manage Account row, so Settings is found by its rows' text.
+- tapOn: "Profile"
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible: "Clear Cache"
+    timeout: 15000
+- tapOn: "App Language"
+- extendedWaitUntil:
+    visible:
+      id: language_change_screen
+    timeout: 15000
+- takeScreenshot: ${SHOT}_list
+- tapOn: "Español"
+- extendedWaitUntil:
+    visible: "Please confirm app language change"
+    timeout: 10000
+- takeScreenshot: ${SHOT}
+- tapOn: "Cancel"
+- extendedWaitUntil:
+    visible:
+      id: language_change_screen
+    timeout: 10000
+- assertNotVisible: "Please confirm app language change"
+- back
+- extendedWaitUntil:
+    visible: "Clear Cache"
+    timeout: 10000
+- back
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 10000

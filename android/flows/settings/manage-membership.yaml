@@ -1,0 +1,32 @@
+# Settings > Manage Membership: the member card and the list rows show. Back returns to Settings.
+# Entry: Home tab. Precondition: signed-in dev account.
+# Selectors: the Settings row has no resource-id (text fallback "Manage Membership").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: arrival
+---
+# 4.72 has no resource-id on the Manage Account row, so Settings is found by its rows' text.
+- tapOn: "Profile"
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible: "Clear Cache"
+    timeout: 15000
+- tapOn: "Manage Membership"
+- extendedWaitUntil:
+    visible:
+      id: member_card
+    timeout: 20000
+- assertVisible:
+    id: item_see_all_subscriptions
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible: "Clear Cache"
+    timeout: 10000
+- back
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 10000

@@ -1,0 +1,14 @@
+# Practice tab: the Practice hub shows (Quick lessons, Review).
+# Entry: Home tab. Precondition: signed-in dev account with the Practice tab.
+# Selectors: the bottom tab and the hub sections have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: arrival
+---
+- tapOn: "Practice"
+- extendedWaitUntil:
+    visible: "Quick lessons"
+    timeout: 20000
+- assertVisible: "Review"
+- takeScreenshot: ${SHOT}

@@ -1,0 +1,11 @@
+# Select one bottom tab and wait for text on it. Used to park on a tab before rotation or process death.
+# Entry: any main tab. Params: TAB (tab label), ARRIVAL (text regex on the tab).
+# Selectors: the bottom tab items have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: ${TAB}
+- extendedWaitUntil:
+    visible: ${ARRIVAL}
+    timeout: 20000

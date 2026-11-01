@@ -1,0 +1,20 @@
+# Challenge tab with Leagues off (ChallengeOverview): Active, Upcoming and Completed.
+# Entry: Home tab. Precondition: signed-in dev account whose tabs include CHALLENGES (no leagues).
+# Selectors: the bottom tab has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: arrival
+---
+- tapOn: "Challenge"
+- extendedWaitUntil:
+    visible:
+      id: challenges_active_button
+    timeout: 20000
+- tapOn:
+    id: challenges_upcoming_button
+- tapOn:
+    id: challenges_active_button
+- assertVisible:
+    id: challenge_overview_list_screen
+- takeScreenshot: ${SHOT}

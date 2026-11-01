@@ -6,6 +6,7 @@ describes.
 
 ## Android
 
+- A run lost its base screenshots and had to rerun the base light and dark passes (about 15 min). Cause: a flow's `env:` default (`SHOT: arrival`) won over `maestro test -e SHOT=<path>`, so `takeScreenshot: ${SHOT}` wrote `arrival.png` inside the `--debug-output` folder, and the case script deleted that folder at the end. Rule: copy `<debug-output>/**/takeScreenshot/*.png` into the run folder right after each `maestro test`, before deleting the debug folder. (QA of the speak-android 4.73 Navigation 3 release sweep, 2026-11-01)
 - A process death case relaunched with `adb shell monkey -p com.selabs.speak.dev -c android.intent.category.LAUNCHER 1` and opened LeakCanary's launcher activity on one build, so that build's restore check was invalid and both builds had to be rerun. Cause: the dev app has two LAUNCHER activities and monkey picks one at random. Rule: relaunch after `am kill` with `adb shell am start -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000 -n com.selabs.speak.dev/com.selabs.speak.SpeakActivity`, which brings the killed task back with its saved state. ([QA of speak-android#8665](https://github.com/usespeakeasy/speak-android/pull/8665), 2026-11-01)
 - Second emulator hung on boot, waiting on a crash-report consent dialog. Cause: crash data
   left by a force-killed emulator under `/tmp/android-*/emu-crash-*.db`. Rule: delete it before

@@ -1,0 +1,16 @@
+# Profile tab: stats and the Settings button show.
+# Entry: Home tab. Precondition: signed-in dev account.
+# Selectors: the bottom tab has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: arrival
+---
+- tapOn: "Profile"
+- extendedWaitUntil:
+    visible:
+      id: stat_streak_title
+    timeout: 20000
+- assertVisible:
+    id: action_settings
+- takeScreenshot: ${SHOT}

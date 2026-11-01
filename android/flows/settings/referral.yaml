@@ -1,0 +1,22 @@
+# speak-dev://refer opens the referral screen (share link, earnings). Close returns to Home.
+# Entry: Home tab. Precondition: referral program active for the account; on dev accounts that needs the
+# QA-only referral patch (files/qa_referral, see the speak-android QA packet).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: arrival
+---
+- openLink: speak-dev://refer
+- extendedWaitUntil:
+    visible:
+      id: referral_screen
+    timeout: 20000
+- assertVisible:
+    id: share_link
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000

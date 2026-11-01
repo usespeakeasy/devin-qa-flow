@@ -1,0 +1,21 @@
+# Fast tab switching: taps every tab twice with no waits, then checks Profile.
+# Entry: Home tab. Precondition: signed-in dev account with Home, Free Talk, Practice, Challenge and Profile tabs.
+# Selectors: the bottom tab items have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: arrival
+---
+- repeat:
+    times: 2
+    commands:
+      - tapOn: "Free Talk"
+      - tapOn: "Practice"
+      - tapOn: "Challenge"
+      - tapOn: "Home"
+      - tapOn: "Profile"
+- extendedWaitUntil:
+    visible:
+      id: stat_streak_title
+    timeout: 20000
+- takeScreenshot: ${SHOT}

@@ -1,0 +1,19 @@
+# Free Talk tab (AI Tutor) > Topics: the topic category list shows.
+# Entry: Home tab. Precondition: signed-in dev account with the AI Tutor tab (Community and Topics).
+# Selectors: the bottom tab and the Topics tab have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: arrival
+---
+- tapOn: "Free Talk"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000
+- tapOn: "Topics"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_overview_root
+    timeout: 20000
+- takeScreenshot: ${SHOT}

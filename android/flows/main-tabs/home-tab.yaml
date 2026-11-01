@@ -1,0 +1,12 @@
+# Home tab: tap Home and the learning path shows.
+# Entry: any main tab. Precondition: signed-in dev account.
+# Selectors: the bottom tab item has no resource-id (text fallback "Home").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Home"
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000

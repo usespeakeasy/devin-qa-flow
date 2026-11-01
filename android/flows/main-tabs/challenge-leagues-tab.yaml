@@ -1,0 +1,24 @@
+# Challenge tab with Leagues on (ChallengeTab): Leagues tier list, then the Challenges segment.
+# Entry: Home tab. Precondition: signed-in dev account whose tabs include CHALLENGES_WITH_LEAGUES.
+# Selectors: the bottom tab and the Leagues/Challenges segments have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: arrival
+---
+- tapOn: "Challenge"
+- extendedWaitUntil:
+    visible:
+      id: tier_list
+    timeout: 20000
+- tapOn: "Challenges"
+- extendedWaitUntil:
+    visible:
+      id: challenges_active_button
+    timeout: 20000
+- tapOn: "Leagues"
+- extendedWaitUntil:
+    visible:
+      id: tier_list
+    timeout: 20000
+- takeScreenshot: ${SHOT}

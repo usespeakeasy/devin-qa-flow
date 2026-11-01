@@ -1,0 +1,25 @@
+# Free Talk tab > Favorites (toolbar heart) opens, Back returns to the tab.
+# Works for the AI Tutor tab (community favorites) and the Free Talk catalog tab (catalog favorites).
+# Entry: Home tab. Precondition: signed-in dev account.
+# Selectors: the bottom tab and the Favorites title have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: arrival
+---
+- tapOn: "Free Talk"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_favorites_button
+    timeout: 20000
+- tapOn:
+    id: ai_tutor_favorites_button
+- extendedWaitUntil:
+    visible: "Favorites"
+    timeout: 20000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000

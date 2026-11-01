@@ -1,0 +1,59 @@
+# Manage Membership > Cancel Subscription > reason > Continue > Yes: the cancellation offer shows.
+# Back from the offer returns to the reasons screen, then Manage Membership, then Settings. Never taps Accept or Cancel Anyway.
+# Entry: Home tab. Precondition: an active monthly Play subscription eligible for the offer. On dev
+# accounts that needs the QA-only fake subscription patch (files/qa_fakesub, see the speak-android QA packet).
+# Selectors: the Settings row and the Yes button have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: arrival
+---
+# 4.72 has no resource-id on the Manage Account row, so Settings is found by its rows' text.
+- tapOn: "Profile"
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible: "Clear Cache"
+    timeout: 15000
+- tapOn: "Manage Membership"
+- extendedWaitUntil:
+    visible:
+      id: item_subscription_change_cta
+    timeout: 20000
+- tapOn:
+    id: item_subscription_change_cta
+- extendedWaitUntil:
+    visible:
+      id: cancel_membership_screen
+    timeout: 15000
+- tapOn:
+    id: option_too_expensive
+- tapOn:
+    id: continue_button
+- extendedWaitUntil:
+    visible: "Are you sure you want to cancel your subscription\\?"
+    timeout: 15000
+- tapOn: "^Yes$"
+- extendedWaitUntil:
+    visible:
+      id: cancellation_offer_screen
+    timeout: 30000
+- assertVisible:
+    id: primary_button
+- assertVisible:
+    id: secondary_button
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: cancel_membership_screen
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible:
+      id: member_card
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible: "Clear Cache"
+    timeout: 10000

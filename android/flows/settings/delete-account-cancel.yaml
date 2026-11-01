@@ -1,0 +1,51 @@
+# Manage Account > Delete Account: the confirm dialog, then Delete Account opens the password dialog; Cancel closes it.
+# Nothing is deleted: the flow never types a password or taps Confirm. Back twice returns to Profile.
+# Entry: Home tab. Precondition: signed-in dev account (email sign-in, so the password dialog shows).
+# Selectors: the Settings rows and the dialogs have no resource-ids on 4.72 (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: arrival
+---
+# 4.72 has no resource-id on the Manage Account row, so Settings is found by its rows' text.
+- tapOn: "Profile"
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible: "Clear Cache"
+    timeout: 15000
+- tapOn: "Manage Account"
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 15000
+- takeScreenshot: ${SHOT}_account
+- tapOn:
+    id: edit_delete_account
+- extendedWaitUntil:
+    visible: "Confirm account deletion"
+    timeout: 10000
+- takeScreenshot: ${SHOT}_confirm
+- tapOn:
+    text: "Delete Account"
+    rightOf:
+      text: "Cancel"
+- extendedWaitUntil:
+    visible: "Enter your password to delete account\\."
+    timeout: 10000
+- takeScreenshot: ${SHOT}
+- tapOn: "Cancel"
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 10000
+- assertNotVisible: "Enter your password to delete account\\."
+- back
+- extendedWaitUntil:
+    visible: "Clear Cache"
+    timeout: 10000
+- back
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 10000
