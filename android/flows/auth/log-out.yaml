@@ -1,14 +1,16 @@
 # Settings -> Log out -> confirm -> signed-out storybook. Entry: `home_root_ready`.
-# Selectors: "Log out" row and the confirm dialog have no resource-id (text fallback).
+# Selectors: the confirm dialog has no resource-id (text fallback).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
 - runFlow: ../../common/open-settings.yaml
 - scrollUntilVisible:
-    element: "Log out"
+    element:
+      id: settings_log_out_option
     direction: DOWN
-- tapOn: "Log out"
+- tapOn:
+    id: settings_log_out_option
 - assertVisible: "Are you sure you want to sign out\\?"
 - tapOn:
     text: "Log out"
