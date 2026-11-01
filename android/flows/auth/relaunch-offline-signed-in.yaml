@@ -1,7 +1,7 @@
 # Cold start while signed in with the network off: the app stays signed in and shows the offline screen.
 # Entry: signed in. To force a session refresh, the run script first turns off automatic date and time and moves
 # the device clock ahead (adb, not Maestro). Exit: airplane mode still on; back-online-refresh.yaml undoes it.
-# Selectors: the offline screen has no resource-id (text fallback).
+# Selectors: `no_internet_root` needs develop 6d3b2b945a (speak-android#8669) or later.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
@@ -10,7 +10,10 @@ env:
 - launchApp:
     stopApp: true
 - extendedWaitUntil:
-    visible: "You.re offline"
+    visible:
+      id: no_internet_root
     timeout: 60000
+- assertVisible:
+    id: no_internet_refresh_button
 - assertNotVisible:
     id: onboarding_storybook_sign_in_button
