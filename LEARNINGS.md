@@ -6,6 +6,7 @@ describes.
 
 ## Android
 
+- A process death case relaunched with `adb shell monkey -p com.selabs.speak.dev -c android.intent.category.LAUNCHER 1` and opened LeakCanary's launcher activity on one build, so that build's restore check was invalid and both builds had to be rerun. Cause: the dev app has two LAUNCHER activities and monkey picks one at random. Rule: relaunch after `am kill` with `adb shell am start -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000 -n com.selabs.speak.dev/com.selabs.speak.SpeakActivity`, which brings the killed task back with its saved state. ([QA of speak-android#8665](https://github.com/usespeakeasy/speak-android/pull/8665), 2026-11-01)
 - Second emulator hung on boot, waiting on a crash-report consent dialog. Cause: crash data
   left by a force-killed emulator under `/tmp/android-*/emu-crash-*.db`. Rule: delete it before
   booting; harness `emu` now does this. ([dry run of speak-android#8617](https://github.com/usespeakeasy/speak-android/pull/8617), 2026-11-01)
