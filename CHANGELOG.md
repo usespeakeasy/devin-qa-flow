@@ -21,7 +21,7 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-01
 
-- **qa-request-mobile 2026.11.01.4**: iOS runs drive cases with Maestro flows from this repo
+- **qa-request-mobile 2026.11.01.5**: iOS runs drive cases with Maestro flows from this repo
   instead of an AXe or XCUITest script, and record with `recordVideo --codec h264 --force`.
   Found by the iOS dry run of speak-ios#9662.
 - **Instructions**: iOS run steps corrected after the dry run of speak-ios#9662 (first real
@@ -29,7 +29,11 @@ Runs before 2026-11-01 have no `skill_version`.
   account per simulator for settings cases, switch selectors, notification permission through
   iOS Settings, `takeScreenshot` location, date picker and popover points, two-simulator load.
   Recording 44 → about 6 min for both builds in parallel.
-
+- **qa-request-mobile 2026.11.01.4, qa-android-harness 2026.11.01.2**: pre-auth flows. Flows in
+  `auth/` and `onboarding/` start signed out and are the only ones that may sign in, sign up or
+  walk onboarding. Harness `fresh` clears app data and waits for the welcome screen; `newuser`
+  prints a throwaway sign-up email that never joins the pool. Why: sign-up and onboarding cases
+  had no reusable flows, so every run walked them by hand ([#6](https://github.com/usespeakeasy/devin-qa-flow/pull/6)).
 - **qa-request-mobile 2026.11.01.3**: the skill's source now lives in this repo under
   `skills/`. Runs write `skill_version` and `flow_repo_sha` to the run record. Change the skill
   with a PR here; after merge, Devin saves it with `manage_plugin` and posts the PSA.

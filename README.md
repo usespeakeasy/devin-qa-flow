@@ -28,9 +28,11 @@ maestro --device emulator-5554 test android/flows/main-tabs/tab-tour.yaml
 maestro --device emulator-5554 test -e APP_ID=com.selabs.speak.dev android/flows/<area>/<case>.yaml
 ```
 
-Flows assume the app is installed and signed in. Account lease, login, screen recording and
-the Before | After packet come from the `qa-request-mobile` skill and its Android harness,
-not from this repo.
+Most flows start signed in: the harness leases a pool account and logs in before they run.
+Pre-auth flows (`android/flows/auth/`, `android/flows/onboarding/`) start signed out instead;
+their header says `Entry: app data cleared` and the harness `fresh` command gets the app there.
+Account lease, login, screen recording and the Before | After packet come from the
+`qa-request-mobile` skill and its Android harness, not from this repo.
 
 QA runs follow [docs/qa-pr-instructions.md](docs/qa-pr-instructions.md) (workflow for Android and
 iOS, two emulators, committing, conflicts, missing and stale IDs, learnings, PR and Slack writing)

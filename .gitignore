@@ -3,3 +3,4 @@ out/
 *.webp
 *.png
 .maestro/
+__pycache__/
