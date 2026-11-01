@@ -21,6 +21,10 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-01
 
+- **qa-request-mobile 2026.11.01.10**: ID PRs are posted as a top-level message in #devin-qa-flow
+  instead of a broadcast reply in the QA thread. `scripts/slack-id-pr-broadcast.sh` is now
+  `scripts/slack-id-pr-post.sh "<text>"`, which posts there and prints the `ts` for the details
+  reply. Why: Sean asked to move ID PR posts out of #devin-qa-request-mobile.
 - **qa-request-mobile 2026.11.01.9**: the ID PR post goes through a new script,
   `scripts/slack-id-pr-broadcast.sh`, and the skill's `ID PR:` step names it. The script rejects
   text without Sean's tag and fails unless Slack sends the reply to the channel. Why: the

@@ -219,16 +219,16 @@ When a flow needs a text or point fallback because the element has no ID:
    Request a review from the `qa-devin` team
    (`gh api -X POST repos/usespeakeasy/speak-<platform>/pulls/<n>/requested_reviewers -f 'team_reviewers[]=qa-devin'`).
    If it fails, say so in the report.
-4. Post the PR link as a reply in the QA request's thread, with "Also send to channel" on, so it
-   shows in #devin-qa-request-mobile too, and tag Sean Kim in it (`<@U06CM4TRNBX>`, a real
-   mention, not plain text). Don't make a separate top-level post. Example text:
+4. Post the PR link as a top-level message in #devin-qa-flow (Slack channel `C0CDW7WKWGN`),
+   not in the QA request's thread or #devin-qa-request-mobile, and tag Sean Kim in it
+   (`<@U06CM4TRNBX>`, a real mention, not plain text). Example text:
    `<@U06CM4TRNBX> ID PR for the Free Talk community details, report and report confirmation sheets, ready for review: <PR URL>`.
-   Post it with `scripts/slack-id-pr-broadcast.sh <thread_ts> "<text>"`. Never use the Slack MCP's
-   `slack_reply_to_thread` or `message_user` for this post: neither can turn on "Also send to
-   channel". The script reads the Slack MCP server's token (it posts as `devin_mcp`), calls
-   `chat.postMessage` with `reply_broadcast: true`, refuses text that doesn't start with Sean's
-   tag, and exits non-zero unless Slack returns a `thread_broadcast`. If it fails, say so in the
-   report.
+   Post it with `scripts/slack-id-pr-post.sh "<text>"`. The script reads the Slack MCP server's
+   token (it posts as `devin_mcp`), calls `chat.postMessage` in #devin-qa-flow, refuses text that
+   doesn't start with Sean's tag, and prints the message `ts`. Then reply in that message's
+   thread (`slack_reply_to_thread`, channel `C0CDW7WKWGN`, that `ts`) with the details and a link
+   to the QA request. The QA report's `ID PR:` line carries the PR link back to the QA thread. If
+   the script fails, say so in the report.
 
    Never print the token. Write the text as in Writing PRs and Slack posts. Don't block the QA
    run on it. Switch the flow and the INDEX.md row to the ID once the PR is on develop.
@@ -295,9 +295,7 @@ This applies to ID PRs, PRs in this repo, and every Slack post about them.
 4. PR description: follow the target repo's PR template and PR rules.
 5. Slack: keep the top-level message to one or two lines with the PR link, and tag Sean Kim
    (`<@U06CM4TRNBX>`). Put the details in the first reply in the thread, written with steps 1 to 3.
-   An ID PR has no top-level message: its post is the broadcast thread reply from Missing IDs
-   step 4, one or two lines with the PR link and the Sean Kim tag, and the details go in the
-   next reply in the same thread.
+   An ID PR's top-level message goes to #devin-qa-flow (Missing IDs step 4).
 
 ## Gotchas
 
