@@ -4,13 +4,14 @@ Maestro flows that `qa-request-mobile` runs reuse across PRs. Only Devin QA runs
 developers don't write or review flows. Goal: a QA run reuses scripted cases instead of
 re-deriving taps from the PR's "How to test?" every time.
 
-QA runs: read [docs/qa-pr-instructions.md](docs/qa-pr-instructions.md) first. It has the per-run
-workflow, two emulators, committing, conflicts, missing and stale IDs, PR and Slack writing, and
-Maestro gotchas. This file has the rules for flow files and INDEX.md.
+QA runs: read [docs/qa-pr-instructions.md](docs/qa-pr-instructions.md) and
+[LEARNINGS.md](LEARNINGS.md) first. The instructions have the per-run workflow for Android and
+iOS, two emulators, committing, conflicts, missing and stale IDs, learnings, PR and Slack
+writing, and Maestro gotchas. This file has the rules for flow files and INDEX.md.
 
 ## Changing these instructions
 
-QA runs push only `android/`, `ios/` and `INDEX.md` changes to `main`. Changes to `AGENTS.md`,
+QA runs push only `android/`, `ios/`, `INDEX.md` and `LEARNINGS.md` changes to `main`. Changes to `AGENTS.md`,
 `README.md`, `docs/` and `.agents/` go through a PR to Sean Kim.
 
 ## Flow rules
