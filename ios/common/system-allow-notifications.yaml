@@ -1,0 +1,14 @@
+# iOS Settings, an app's Notifications page: wait for it and leave Allow Notifications as is.
+# Entry: Settings > <app> > Notifications. The switch is the "0"/"1" value right of
+# "Allow Notifications" (its row id ALLOW_NOTIFICATIONS_ID is shared by three elements).
+appId: com.apple.Preferences
+---
+- extendedWaitUntil:
+    visible:
+      id: "ALLOW_NOTIFICATIONS_ID"
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      text: "[01]"
+      rightOf: "Allow Notifications"
+    timeout: 5000

@@ -21,6 +21,14 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-01
 
+- **qa-request-mobile 2026.11.01.8**: iOS runs drive cases with Maestro flows from this repo
+  instead of an AXe or XCUITest script, and record with `recordVideo --codec h264 --force`.
+  Found by the iOS dry run of speak-ios#9662.
+- **Instructions**: iOS run steps corrected after the dry run of speak-ios#9662 (first real
+  iOS run): build env vars, AXe path, pool sign-in by deep link and first-run prompts, one
+  account per simulator for settings cases, switch selectors, notification permission through
+  iOS Settings, `takeScreenshot` location, date picker and popover points, two-simulator load.
+  Recording 44 → about 6 min for both builds in parallel.
 - **qa-request-mobile 2026.11.01.7**: the ID PR post goes in the QA request's thread with "Also
   send to channel" on (`chat.postMessage` with `reply_broadcast`), not as a separate top-level
   post in #devin-qa-request-mobile. Why: Sean asked for it after the speak-android#8664 post

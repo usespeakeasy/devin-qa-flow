@@ -1,0 +1,111 @@
+# A2 (speak-ios#9662): Daily Reminders off and on, change the timed reminder hour, Smart
+# Scheduling on and off. Starts from any saved state: turns reminders on and Smart Scheduling
+# off first. Ends with reminders on, Smart Scheduling off and the hour moved.
+# Entry: signed in, any state (turns notification permission on first). The switches have no
+# identifier or label: each is the CheckBox right of its row title, value 0 or 1.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/system-notifications-on.yaml
+- runFlow: ../../common/launch-home.yaml
+- runFlow: ../../common/open-daily-reminders.yaml
+- runFlow: ../../common/set-daily-reminders-on.yaml
+- runFlow:
+    when:
+      visible:
+        text: "1"
+        rightOf: "Smart Scheduling"
+        below: "Allow Daily Reminders"
+    commands:
+      - tapOn:
+          text: "1"
+          rightOf: "Smart Scheduling"
+          below: "Allow Daily Reminders"
+- runFlow:
+    when:
+      notVisible: "Time Picker"
+    commands:
+      - tapOn: "Timed"
+- extendedWaitUntil:
+    visible: "Time Picker"
+    timeout: 5000
+- takeScreenshot: daily-reminders-toggle
+# Reminders off, then on.
+- tapOn:
+    text: "1"
+    rightOf: "Allow Daily Reminders"
+    above: "Smart Scheduling"
+- extendedWaitUntil:
+    visible:
+      text: "0"
+      rightOf: "Allow Daily Reminders"
+      above: "Smart Scheduling"
+    timeout: 5000
+- tapOn:
+    text: "0"
+    rightOf: "Allow Daily Reminders"
+    above: "Smart Scheduling"
+- extendedWaitUntil:
+    visible:
+      text: "1"
+      rightOf: "Allow Daily Reminders"
+      above: "Smart Scheduling"
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "Time Picker"
+    timeout: 5000
+# Change the time. "Time Picker" is a compact UIDatePicker whose element spans the row; its
+# center is empty space, so the tap goes to the time pill on the right. Point fallback: no
+# identifier on the picker (NotificationSettingTimePickerCollectionViewCell.timePicker).
+- tapOn:
+    point: "73%,32%"
+- extendedWaitUntil:
+    visible: ".*o.clock"
+    timeout: 5000
+- copyTextFrom: ".*o.clock"
+- evalScript: ${output.hourBefore = maestro.copiedText}
+# Hour wheel: the ".*o.clock" column of the popover. Drag it up two rows.
+- swipe:
+    from: ".*o.clock"
+    direction: UP
+    duration: 400
+- copyTextFrom: ".*o.clock"
+- assertTrue: ${maestro.copiedText != output.hourBefore}
+# The dismiss region covers the screen, popover included, so its center lands on the wheels.
+# Point fallback: tap it near the bottom, outside the popover.
+- tapOn:
+    point: "50%,90%"
+- extendedWaitUntil:
+    notVisible:
+      id: "PopoverDismissRegion"
+    timeout: 5000
+# Smart Scheduling on, then off.
+- tapOn:
+    text: "0"
+    rightOf: "Smart Scheduling"
+    below: "Allow Daily Reminders"
+- extendedWaitUntil:
+    visible:
+      text: "1"
+      rightOf: "Smart Scheduling"
+      below: "Allow Daily Reminders"
+    timeout: 5000
+- tapOn:
+    text: "1"
+    rightOf: "Smart Scheduling"
+    below: "Allow Daily Reminders"
+- extendedWaitUntil:
+    visible:
+      text: "0"
+      rightOf: "Smart Scheduling"
+      below: "Allow Daily Reminders"
+    timeout: 5000
+- runFlow:
+    when:
+      notVisible: "Time Picker"
+    commands:
+      - tapOn: "Timed"
+- extendedWaitUntil:
+    visible: "Time Picker"
+    timeout: 5000

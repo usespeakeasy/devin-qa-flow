@@ -1,0 +1,14 @@
+# Cold start to Home on the signed-in pool account.
+# Entry: any state. Precondition: signed in (speak-dev://email-login before the run).
+# launchApp grants every permission unless the caller's flow passes its own launchApp.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|ai-data-consent.action.agree"
+    timeout: 30000
+- runFlow: dismiss-ai-data-consent.yaml

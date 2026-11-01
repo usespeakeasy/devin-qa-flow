@@ -1,0 +1,21 @@
+# iOS Settings: turn Allow Notifications off for Speak Dev.
+# Maestro's launchApp `permissions: {notifications: deny}` has no effect on the iOS 27
+# simulator and `simctl privacy` has no notifications service, so this goes through Settings.
+# Entry: any state. Exit: the Settings app, notifications off.
+appId: com.apple.Preferences
+---
+- runFlow: system-open-app-notifications.yaml
+- runFlow:
+    when:
+      visible:
+        text: "1"
+        rightOf: "Allow Notifications"
+    commands:
+      - tapOn:
+          text: "1"
+          rightOf: "Allow Notifications"
+- extendedWaitUntil:
+    visible:
+      text: "0"
+      rightOf: "Allow Notifications"
+    timeout: 5000

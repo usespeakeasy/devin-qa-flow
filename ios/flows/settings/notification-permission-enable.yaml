@@ -1,0 +1,68 @@
+# A4 (speak-ios#9662): with notification permission off the Notifications switches show off;
+# tapping Streak shows the "Allow notifications" alert, which opens iOS Settings. Notifications
+# are allowed there, "Return to Speak Dev" comes back and the switches and the Daily Reminders
+# value show the enabled state again (CompactNotificationSettingsVC.willEnterForeground).
+# Entry: signed in, any state; the Streak setting is on server-side (the pool default).
+# Marketing Communications is SwiftUI and has no foreground refresh, so it is not the toggle.
+# Ends with notifications allowed.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/system-notifications-off.yaml
+- runFlow: ../../common/launch-home.yaml
+- runFlow: ../../common/open-notification-settings.yaml
+# The Streak switch has no identifier: the "0"/"1" value right of the "Streak" title.
+- extendedWaitUntil:
+    visible:
+      text: "0"
+      rightOf: "Streak"
+      above: "Speak Tutor"
+    timeout: 10000
+- tapOn:
+    text: "0"
+    rightOf: "Streak"
+    above: "Speak Tutor"
+# UIAlertController buttons have no identifier.
+- extendedWaitUntil:
+    visible: "Allow notifications"
+    timeout: 5000
+- takeScreenshot: notification-permission-enable
+- tapOn: "Allow notifications"
+# Settings opens on Speak Dev, or on Speak Dev > Notifications when that was its last page.
+- extendedWaitUntil:
+    visible:
+      id: "Speak Dev|Notifications|ALLOW_NOTIFICATIONS_ID"
+    timeout: 10000
+- runFlow:
+    when:
+      notVisible:
+        id: "ALLOW_NOTIFICATIONS_ID"
+    commands:
+      - scrollUntilVisible:
+          element: "Notifications"
+          direction: DOWN
+      - tapOn: "Notifications"
+- runFlow: ../../common/system-allow-notifications.yaml
+- tapOn:
+    text: "0"
+    rightOf: "Allow Notifications"
+- extendedWaitUntil:
+    visible:
+      text: "1"
+      rightOf: "Allow Notifications"
+    timeout: 5000
+# Status bar "Return to Speak Dev" breadcrumb.
+- tapOn:
+    id: "breadcrumb"
+- extendedWaitUntil:
+    visible:
+      id: "Notifications"
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      text: "1"
+      rightOf: "Streak"
+      above: "Speak Tutor"
+    timeout: 10000
+- assertNotVisible: "OFF"

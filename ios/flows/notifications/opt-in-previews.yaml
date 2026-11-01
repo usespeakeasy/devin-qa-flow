@@ -1,0 +1,30 @@
+# B2 (speak-ios#9662): the Streak, Smart Review, Challenges and Habit Formation opt-in previews
+# each open with their art, copy, Enable and Set up later buttons, and Back returns to the list.
+# Entry: signed in dev build, any state. Compare the four screenshots across builds.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow: ../../common/open-previews.yaml
+- runFlow: ../../common/search-notifications-opt-in.yaml
+- runFlow:
+    file: ../../common/open-opt-in-preview.yaml
+    env:
+      PREVIEW: Streak
+      SHOT: opt-in-streak
+- runFlow:
+    file: ../../common/open-opt-in-preview.yaml
+    env:
+      PREVIEW: Smart Review
+      SHOT: opt-in-smart-review
+- runFlow:
+    file: ../../common/open-opt-in-preview.yaml
+    env:
+      PREVIEW: Challenges
+      SHOT: opt-in-challenges
+- runFlow:
+    file: ../../common/open-opt-in-preview.yaml
+    env:
+      PREVIEW: Habit Formation
+      SHOT: opt-in-habit-formation

@@ -1,0 +1,50 @@
+# A3 (speak-ios#9662): Daily Reminders, back to Notifications, open Marketing Communications,
+# toggle Push and toggle it back (ends in the starting state).
+# Entry: signed in, any state (turns notification permission on first).
+# The Push switch has no identifier: the outer CheckBox is labelled "Push" and only the inner
+# switch toggles; it is the "0"/"1" value right of the "Push" text.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/system-notifications-on.yaml
+- runFlow: ../../common/launch-home.yaml
+- runFlow: ../../common/open-daily-reminders.yaml
+- tapOn:
+    id: "BackButton"
+- extendedWaitUntil:
+    visible:
+      id: "Notifications"
+    timeout: 10000
+- tapOn: "Marketing Communications"
+- extendedWaitUntil:
+    visible:
+      id: "Marketing Communications"
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      text: "[01]"
+      rightOf: "Push"
+    timeout: 10000
+- takeScreenshot: marketing-push-toggle
+- copyTextFrom:
+    text: "[01]"
+    rightOf: "Push"
+- evalScript: ${output.pushBefore = maestro.copiedText}
+- evalScript: "${output.pushAfter = output.pushBefore == '1' ? '0' : '1'}"
+- tapOn:
+    text: "[01]"
+    rightOf: "Push"
+- extendedWaitUntil:
+    visible:
+      text: ${output.pushAfter}
+      rightOf: "Push"
+    timeout: 5000
+- tapOn:
+    text: "[01]"
+    rightOf: "Push"
+- extendedWaitUntil:
+    visible:
+      text: ${output.pushBefore}
+      rightOf: "Push"
+    timeout: 5000

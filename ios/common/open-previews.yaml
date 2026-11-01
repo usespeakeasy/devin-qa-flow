@@ -1,0 +1,14 @@
+# Home -> Settings -> Previews (debug preview catalog). Dev builds only.
+# Entry: Home. The row and the search field have no identifier.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: open-settings.yaml
+- scrollUntilVisible:
+    element: "Previews"
+    direction: DOWN
+- tapOn: "Previews"
+- extendedWaitUntil:
+    visible: "Search"
+    timeout: 10000

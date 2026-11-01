@@ -1,0 +1,24 @@
+# Turns "Allow Daily Reminders" on if it is off. The switch has no identifier or label; it is
+# the CheckBox right of the row title, value 0 or 1.
+# Entry and exit: Daily Reminders.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow:
+    when:
+      visible:
+        text: "0"
+        rightOf: "Allow Daily Reminders"
+        above: "Smart Scheduling"
+    commands:
+      - tapOn:
+          text: "0"
+          rightOf: "Allow Daily Reminders"
+          above: "Smart Scheduling"
+- extendedWaitUntil:
+    visible:
+      text: "1"
+      rightOf: "Allow Daily Reminders"
+      above: "Smart Scheduling"
+    timeout: 5000
