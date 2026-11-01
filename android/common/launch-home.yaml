@@ -1,0 +1,12 @@
+# Cold-start the app and wait for Home's learning path.
+# Precondition: signed in (harness `qa_android.py login`).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
