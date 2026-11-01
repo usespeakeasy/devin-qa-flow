@@ -213,7 +213,12 @@ When a flow needs a text or point fallback because the element has no ID:
    (feature-prefixed `snake_case` on Android, dotted namespace on iOS). A committed flow never
    relies on an ID from an open PR until it is on develop.
 3. Open it ready for review, not as a draft, under the QA'd PR's author's GitHub account
-   (`git_create_pr` with `author_user_id` set to that author's Devin user). Then comment
+   (`git_create_pr` with `author_user_id` set to that author's Devin user). When the request has
+   no PR (a commit, branch or release sweep, or a ticket with no PR), the author is the person who
+   asked; when a bot asked (seanbot2, Sean Kim Bot), it is Sean Kim. With no PR there is no
+   ticket either: create one in Linear for the ID PR (team EPD - Client Platform, label `android`
+   or `ios`, assigned to that author) and use it in the branch and title. "No PR" is never a
+   reason to skip the ID PR. Then comment
    `@codex review` on it as the ID PR's author, not as Devin's bot: Codex declines the bot's
    request. Check the PR's and the comment's author; if either is the bot, say so in the report.
    Request a review from the `qa-devin` team

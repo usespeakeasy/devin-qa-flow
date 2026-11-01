@@ -21,6 +21,10 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-01
 
+- **qa-request-mobile 2026.11.01.11**: a request with no PR (a commit or release sweep) still opens
+  its ID PR. The author is the person who asked, or Sean Kim when a bot asked, and the run creates a
+  Linear ticket for it. Every report has the `ID PR:` line, sweeps included. Why: a 4.73 sweep found
+  missing and removed IDs but wrote "ID PR: none opened", and two other sweeps left the line out.
 - **qa-request-mobile 2026.11.01.10**: ID PRs are posted as a top-level message in #devin-qa-flow
   instead of a broadcast reply in the QA thread. `scripts/slack-id-pr-broadcast.sh` is now
   `scripts/slack-id-pr-post.sh "<text>"`, which posts there and prints the `ts` for the details
