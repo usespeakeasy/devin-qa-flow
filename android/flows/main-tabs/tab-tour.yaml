@@ -1,0 +1,17 @@
+# Bottom nav tour: Home -> Profile -> Challenge -> Home.
+# Entry: cold start. Precondition: signed-in dev account with Leagues locked.
+# Selectors: Profile/Challenge/Home tab items have no resource-id yet (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn: "Profile"
+- assertVisible:
+    id: stat_streak_title
+- tapOn: "Challenge"
+- assertVisible:
+    id: placeholder_title
+- tapOn: "Home"
+- assertVisible:
+    id: learning_path_ready
