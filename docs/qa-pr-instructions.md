@@ -212,10 +212,10 @@ When a flow needs a text or point fallback because the element has no ID:
    that repo's standard produces
    (feature-prefixed `snake_case` on Android, dotted namespace on iOS). A committed flow never
    relies on an ID from an open PR until it is on develop.
-3. Open it ready for review, not as a draft, under Sean Kim's GitHub account (`git_create_pr`
-   with `author_user_id` set to Sean's Devin user). Then comment `@codex review` on it as Sean,
-   not as Devin's bot: Codex declines the bot's request. Check the comment's author; if it
-   posted as the bot, say so in the report.
+3. Open it ready for review, not as a draft, under the QA'd PR's author's GitHub account
+   (`git_create_pr` with `author_user_id` set to that author's Devin user). Then comment
+   `@codex review` on it as the ID PR's author, not as Devin's bot: Codex declines the bot's
+   request. Check the PR's and the comment's author; if either is the bot, say so in the report.
 4. Post the PR link in #devin-qa-request-mobile for review (see Writing PRs and Slack
    posts). Don't block the QA run on
    it. Switch the flow and the INDEX.md row to the ID once the PR is on develop.
