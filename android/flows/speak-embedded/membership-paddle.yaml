@@ -1,0 +1,23 @@
+# Settings > Manage Membership opens the embedded Paddle membership page (QA-only patch: deliver
+# OpenEmbeddedPaddleMembership in SettingsViewModel.onManageMembershipDataFetched).
+# Entry: Home tab. Exit: back on Settings (a pool account has no Paddle subscription, so the page
+# closes itself after a few seconds; the lifecycle log shows the open and close).
+# Selectors: Settings row text fallback.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Profile"
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible: "Clear Cache"
+    timeout: 15000
+- tapOn: "Manage Membership"
+# The page covers Settings for about a second, then closes itself for an account with no Paddle
+# subscription, too fast for a reliable assertion; the case script checks the lifecycle log.
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "Clear Cache"
+    timeout: 30000

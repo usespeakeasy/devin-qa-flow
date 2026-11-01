@@ -1,0 +1,18 @@
+# Metrics page with the calendar open, the Debug Menu deep link covers it, Back returns to the same
+# page state (calendar still open, so no reload).
+# Entry: exit of metrics-open-calendar.yaml.
+# Selectors: Debug Menu and web page text fallbacks.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Previous month"
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible: "Feature flag override"
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible: "Previous month"
+    timeout: 10000
+- assertVisible: "Time studied"

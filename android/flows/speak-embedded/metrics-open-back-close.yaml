@@ -1,0 +1,31 @@
+# Profile > Time studied stats card opens the Speak Embedded learning metrics page. System Back twice,
+# then the page's close button returns to Profile.
+# Entry: Home tab. Preconditions: signed-in dev account; stats cards are clickable only for business
+# accounts, so non-business pool accounts need the QA-only patch `statsClickable = true` in ProfileDataMapping.kt.
+# Selectors: the web page has no resource ids (text fallbacks); the close button is an unlabeled web
+# button, tapped by point.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Profile"
+- tapOn:
+    id: stats_time_group
+- extendedWaitUntil:
+    visible: "FROM"
+    timeout: 30000
+- assertVisible: "Time studied"
+- takeScreenshot: arrival
+- back
+- back
+# Back is handed to the page; on develop the page stays open.
+- extendedWaitUntil:
+    visible: "Time studied"
+    timeout: 5000
+# Close button: unlabeled web Button left of the title, no id or text.
+- tapOn:
+    point: "6%,8%"
+- extendedWaitUntil:
+    visible:
+      id: stat_time_title
+    timeout: 15000

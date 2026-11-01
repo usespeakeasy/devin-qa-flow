@@ -1,0 +1,19 @@
+# speak-dev://wrapped opens Speak Wrapped on the Speak Embedded page; Return home closes it.
+# Entry: Home tab. Precondition: signed-in dev account (a pool account without enough activity sees
+# the "not enough learning activity" page with Return home).
+# Selectors: `wrapped-2025-wrapper` is a web element id, `Return home` a text fallback.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://wrapped
+- extendedWaitUntil:
+    visible:
+      id: wrapped-2025-wrapper
+    timeout: 30000
+- takeScreenshot: arrival
+- tapOn: "Return home"
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 15000

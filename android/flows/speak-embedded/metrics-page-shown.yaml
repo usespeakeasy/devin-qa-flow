@@ -1,0 +1,22 @@
+# The learning metrics page shows. With CALENDAR=open the in-page calendar is still open, with
+# CALENDAR=closed it is gone (the page reloaded).
+# Entry: the metrics page, e.g. after rotation or a process death relaunch.
+# CALENDAR has no env default: a default wins over `maestro test -e`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible: "FROM"
+    timeout: 30000
+- assertVisible: "Time studied"
+- runFlow:
+    when:
+      true: ${CALENDAR == 'open'}
+    commands:
+      - assertVisible: "Previous month"
+- runFlow:
+    when:
+      true: ${CALENDAR == 'closed'}
+    commands:
+      - assertNotVisible: "Previous month"

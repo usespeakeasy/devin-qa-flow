@@ -1,0 +1,20 @@
+# Profile > Time studied stats card > tap the FROM date: the page's in-page calendar opens.
+# Entry: Home tab. Exit: metrics page with the calendar open (page state to check after a covering
+# screen, rotation or process death). Preconditions: as metrics-open-back-close.yaml.
+# Selectors: web page text fallbacks.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Profile"
+- tapOn:
+    id: stats_time_group
+- extendedWaitUntil:
+    visible: "FROM"
+    timeout: 30000
+- tapOn:
+    text: "[A-Z][a-z]{2} \\d{1,2}, \\d{4}"
+    index: 0
+- extendedWaitUntil:
+    visible: "Previous month"
+    timeout: 10000
