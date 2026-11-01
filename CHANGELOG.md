@@ -21,7 +21,7 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-01
 
-- **qa-request-mobile 2026.11.01.7**: iOS runs drive cases with Maestro flows from this repo
+- **qa-request-mobile 2026.11.01.8**: iOS runs drive cases with Maestro flows from this repo
   instead of an AXe or XCUITest script, and record with `recordVideo --codec h264 --force`.
   Found by the iOS dry run of speak-ios#9662.
 - **Instructions**: iOS run steps corrected after the dry run of speak-ios#9662 (first real
@@ -29,6 +29,14 @@ Runs before 2026-11-01 have no `skill_version`.
   account per simulator for settings cases, switch selectors, notification permission through
   iOS Settings, `takeScreenshot` location, date picker and popover points, two-simulator load.
   Recording 44 → about 6 min for both builds in parallel.
+- **qa-request-mobile 2026.11.01.7**: the ID PR post goes in the QA request's thread with "Also
+  send to channel" on (`chat.postMessage` with `reply_broadcast`), not as a separate top-level
+  post in #devin-qa-request-mobile. Why: Sean asked for it after the speak-android#8664 post
+  ("thread is good. But share it to the channel when you send it").
+  ID PRs also request a review from the `qa-devin` GitHub team. Why: Sean asked for it ("for
+  those PRs, add https://github.com/orgs/usespeakeasy/teams/qa-devin as reviewer").
+  Missing IDs step 4 now says to tag Sean in the ID PR post itself. Why: the speak-android#8664
+  post had no tag, even though Writing PRs step 5 already asked for one.
 - **Instructions**: the ID PR and its `@codex review` come from the QA'd PR's author, not always
   Sean. Why: Sean asked for it ("It should be the author of the pr").
 - **qa-request-mobile 2026.11.01.6**: ID PRs open ready for review, not as drafts, with an
