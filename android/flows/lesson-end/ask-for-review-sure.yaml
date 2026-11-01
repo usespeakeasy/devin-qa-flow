@@ -1,11 +1,13 @@
 # Play Store ask: "Sure!" opens the Play listing (web page in Chrome on images without Play Store); back returns to the lesson end flow, which moves on.
 # Entry: Play Store ask open (run after ../../common/open-ask-for-review.yaml, then ask-for-review-yes.yaml).
-# Selectors: the review dialogs have no resource-id on the Navigation 3 entries (text fallback).
+# Selectors: ask_for_review_positive_dialog_yes (speak-android#8660); the browser and Play pages are
+# third-party text.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
-- tapOn: "Sure!"
+- tapOn:
+    id: ask_for_review_positive_dialog_yes
 - tapOn:
     text: "Use without an account"
     optional: true
@@ -21,6 +23,7 @@ env:
 - back
 - extendedWaitUntil:
     visible:
-      id: lesson_end_reskin_root
+      id: "lesson_end_.*_root"
     timeout: 30000
-- assertNotVisible: "Are you enjoying learning languages with Speak\\?"
+- assertNotVisible:
+    id: ask_for_review_positive_dialog

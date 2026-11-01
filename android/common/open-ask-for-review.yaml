@@ -4,7 +4,8 @@
 # account hits "Preview Finished"), and a build whose lesson end flow has the ASK_FOR_REVIEW step.
 # The dev server rarely sends it, so QA runs add `Screen.AskForReview` after the first step in
 # `LessonEndFlowViewModel` as a QA-only patch on both builds.
-# Selectors: the referral prompt and the dialog message have no resource-id (text fallback).
+# Selectors: the dialog root id ask_for_review_dialog (speak-android#8660); the referral prompt's
+# "Later" has no resource-id (text fallback).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
@@ -20,12 +21,18 @@ env:
     timeout: 60000
 - repeat:
     while:
-      notVisible: "Are you enjoying learning languages with Speak\\?"
+      notVisible:
+        id: ask_for_review_dialog
     times: 60
     commands:
       - tapOn:
           id: drill_lesson_skip
           optional: true
+      # The QA patch puts the dialog after the first lesson end step.
+      - tapOn:
+          id: lesson_end_reskin_continue_button
+          optional: true
 - extendedWaitUntil:
-    visible: "Are you enjoying learning languages with Speak\\?"
+    visible:
+      id: ask_for_review_dialog
     timeout: 30000
