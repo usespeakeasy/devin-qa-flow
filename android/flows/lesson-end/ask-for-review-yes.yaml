@@ -1,0 +1,12 @@
+# First review dialog: "Yes" swaps it for the Play Store ask.
+# Entry: first review dialog open (run after ../../common/open-ask-for-review.yaml).
+# Selectors: the review dialogs have no resource-id on the Navigation 3 entries (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Yes"
+- extendedWaitUntil:
+    visible: "Glad to hear it\\..*"
+    timeout: 15000
+- assertNotVisible: "Are you enjoying learning languages with Speak\\?"

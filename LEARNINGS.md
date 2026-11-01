@@ -18,6 +18,8 @@ describes.
 - The pool password appeared in plain text in Maestro's debug logs. Cause: Maestro logs typed
   text to `~/.maestro/tests/` by default. Rule: `--debug-output /tmp/maestro-<serial>/<case>`,
   filter the password from console output, delete the folder after the run. ([dry run of speak-android#8617](https://github.com/usespeakeasy/speak-android/pull/8617), 2026-11-01)
+- A Maestro flow that cycled a Debug Menu feature flag chip asserted `SERVER` and passed while the flag stayed `LOCAL · on`, so a later case ran with the kill switch on. Cause: right after typing in the flag search, the unfiltered list is still on screen, so `rightOf: <flag>` and label regexes match other flags' rows. Rule: after setting a flag, read the row with harness `dump` and check the `<SOURCE> · <value>` label under the flag key before running a case; confirm the path in logcat (`navigation=nav3` vs `conductor`). ([QA of speak-android#8630](https://github.com/usespeakeasy/speak-android/pull/8630), 2026-11-01)
+- On tablet emulation, a case that dies on a `wait` (set -e) leaves `wm size 1600x2560` and rotation lock on, and the next harness steps miss their nodes. Rule: `trap` the `wm ... reset` lines on EXIT in the case script. ([QA of speak-android#8630](https://github.com/usespeakeasy/speak-android/pull/8630), 2026-11-01)
 
 ## iOS
 

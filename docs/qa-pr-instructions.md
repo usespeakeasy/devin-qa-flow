@@ -25,7 +25,9 @@ INDEX.md row are in [AGENTS.md](../AGENTS.md).
    Maestro flow is running; both drive UiAutomator.
 7. Add or update the INDEX.md row (format in [AGENTS.md](../AGENTS.md#indexmd)), then commit
    and push (see Committing).
-8. If the run hit a major failure, add a learning (see Learnings).
+8. If a flow this run wrote or ran uses a text or point fallback, open the draft ID PR or
+   comment on the open one (see Missing IDs). This is for Android and iOS runs.
+9. If the run hit a major failure, add a learning (see Learnings).
 
 Step 6 and the next two sections are for Android. iOS runs use the same steps, with the
 changes listed in iOS runs.
@@ -156,7 +158,7 @@ the child clones this repo and follows this file. The child prompt says so.
 - Two simulators share server state when they share an account. When cases change settings
   (notifications, profile, progress), lease one pool account per simulator (separate
   `QA_LEASE_FILE`s) and release both. The same rules for timing cases apply as on Android.
-- Missing IDs: the draft ID PR goes to speak-ios. Follow its `AGENTS.md` and
+- Missing IDs: the draft ID PR goes to speak-ios instead of speak-android. Follow its `AGENTS.md` and
   `agent_docs/workflows/git-pr-workflow.md` (branch prefix, draft, template).
 
 ## Committing

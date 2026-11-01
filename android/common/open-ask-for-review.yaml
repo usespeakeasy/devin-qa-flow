@@ -1,0 +1,31 @@
+# Open a drill lesson and skip every card until the lesson end shows
+# "Are you enjoying learning languages with Speak?" (AskForReview).
+# Entry: Home, signed in. Preconditions: Debug Menu > Subscription override > Premium (a free
+# account hits "Preview Finished"), and a build whose lesson end flow has the ASK_FOR_REVIEW step.
+# The dev server rarely sends it, so QA runs add `Screen.AskForReview` after the first step in
+# `LessonEndFlowViewModel` as a QA-only patch on both builds.
+# Selectors: the referral prompt and the dialog message have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- tapOn:
+    text: "Later"
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible: "Are you enjoying learning languages with Speak\\?"
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible: "Are you enjoying learning languages with Speak\\?"
+    timeout: 30000

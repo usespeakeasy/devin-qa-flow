@@ -1,0 +1,26 @@
+# Feedback ask: "Email us" opens the survey in the browser; back returns to the lesson end flow, which moves on.
+# Entry: feedback ask open (run after ../../common/open-ask-for-review.yaml, then ask-for-review-no.yaml).
+# Selectors: the review dialogs have no resource-id on the Navigation 3 entries (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Email us"
+- tapOn:
+    text: "Use without an account"
+    optional: true
+- tapOn:
+    text: "Accept & continue"
+    optional: true
+- tapOn:
+    text: "No thanks"
+    optional: true
+- extendedWaitUntil:
+    visible: ".*[Ss]urvey.*"
+    timeout: 30000
+- back
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 30000
+- assertNotVisible: "Are you enjoying learning languages with Speak\\?"
