@@ -1,0 +1,15 @@
+# Onboarding chat freeform question -> type TEXT -> send. Use when the chat keeps asking
+# follow-ups to a generic answer. Entry: `onboarding_magic_freeform_text_input` on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: onboarding_magic_freeform_text_input
+- inputText: ${TEXT}
+- tapOn:
+    id: onboarding_magic_action_send_text
+- extendedWaitUntil:
+    notVisible:
+      text: ${TEXT}
+    timeout: 60000

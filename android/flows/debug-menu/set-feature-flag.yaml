@@ -1,0 +1,34 @@
+# Debug Menu > Feature flag override: set one flag to SERVER, ON or OFF.
+# Entry: any state (the flow cold-starts the app first, signed in or signed out). Exit: on the
+# override list; force-stop and relaunch so the next cold start reads it. `qa_android.py fresh` (pm clear) drops overrides.
+# maestro test -e FLAG=android_nav3_segment_kill_switch -e VALUE=ON set-feature-flag.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- launchApp:
+    stopApp: true
+- openLink: speak-dev://debug-menu
+- tapOn: Feature flag override
+- tapOn:
+    text: Search
+- inputText: ${FLAG}
+- hideKeyboard
+# The value chip cycles on tap.
+- repeat:
+    times: 3
+    while:
+      notVisible:
+        text: ${VALUE}
+        rightOf:
+          text: ${FLAG}
+    commands:
+      - tapOn:
+          text: "SERVER|ON|OFF"
+          rightOf:
+            text: ${FLAG}
+          index: 0
+- assertVisible:
+    text: ${VALUE}
+    rightOf:
+      text: ${FLAG}
