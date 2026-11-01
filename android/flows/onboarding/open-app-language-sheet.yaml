@@ -1,0 +1,34 @@
+# Learning language step -> English -> native language step -> Korean -> "Would you like to use Speak
+# in Korean?" sheet (`AppLanguageSelectionBottomSheet` entry, or its controller with the kill switch on).
+# Entry: `onboarding_language_screen` (learning language step) on screen, signed out, app in English.
+# Works in the full-screen onboarding step and in the sign-in sheet's language flow.
+# Tapping a native language that isn't the app language opens the sheet right away; Continue only
+# shows after it.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  NATIVE: korean_english
+---
+- tapOn:
+    id: onboarding_language_option_en_us
+- runFlow:
+    when:
+      visible:
+        id: onboarding_language_continue_button
+    commands:
+      - tapOn:
+          id: onboarding_language_continue_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_${NATIVE}
+    timeout: 30000
+- tapOn:
+    id: onboarding_language_option_${NATIVE}
+- extendedWaitUntil:
+    visible:
+      id: onboarding_app_language_sheet
+    timeout: 15000
+- assertVisible:
+    id: onboarding_app_language_switch_button
+- assertVisible:
+    id: onboarding_app_language_keep_button

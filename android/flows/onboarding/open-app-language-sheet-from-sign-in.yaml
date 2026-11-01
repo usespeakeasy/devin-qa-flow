@@ -1,0 +1,24 @@
+# Storybook -> Log in sheet -> "Sign up" link -> the sheet's learning language step -> English ->
+# Korean -> app language sheet. The language steps sit on the auth sheet's child router here.
+# Entry: app data cleared (`qa_android.py fresh`), `onboarding_storybook_screen` on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_sign_in_button
+    timeout: 60000
+- tapOn:
+    id: onboarding_storybook_sign_in_button
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 30000
+# The link is a text span with no ID.
+- tapOn: "Don.t have an account\\? Sign up"
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_screen
+    timeout: 30000
+- runFlow: open-app-language-sheet.yaml
