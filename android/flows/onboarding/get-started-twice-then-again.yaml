@@ -1,5 +1,5 @@
 # Signed-out storybook -> two fast taps on Get started -> Back while the language check's progress
-# dialog shows -> Get started again if the storybook is back -> learning language step.
+# dialog shows -> Get started again right away (optional) -> learning language step.
 # Entry: `onboarding_storybook_screen` on screen, signed out. Pass OUT=<dir> for the dialog screenshot.
 # The "Run flow when id: indicator is visible" line says whether the progress dialog showed.
 appId: ${APP_ID}
@@ -16,6 +16,11 @@ env:
     repeat: 2
     delay: 150
     waitToSettleTimeoutMs: 200
+- extendedWaitUntil:
+    visible:
+      id: indicator
+    timeout: 4000
+    optional: true
 - runFlow:
     when:
       visible:
@@ -23,6 +28,10 @@ env:
     commands:
       - takeScreenshot: ${OUT}/c10_dialog
       - back
+      - tapOn:
+          id: onboarding_storybook_get_started_button
+          optional: true
+          waitToSettleTimeoutMs: 200
 - runFlow:
     when:
       visible:
