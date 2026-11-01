@@ -1,0 +1,13 @@
+# Over quota sheet > back > the community details sheet is still up.
+# Entry: over quota sheet over the details sheet (details-over-quota.yaml). Exit: details sheet.
+# Text fallback: `Start chatting` (details sheet IDs pending in speak-android #8664).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    visible: "Start chatting"
+    timeout: 10000
+- assertNotVisible:
+    id: ai_tutor_over_quota_screen
