@@ -1,0 +1,15 @@
+# Fill the empty email sign-in sheet and submit. Entry: `onboarding_sign_in_screen` just opened.
+# No eraseText: on this emulator it costs ~15 s per field. Retries use retry-password.yaml.
+# Pass credentials at run time: maestro test -e EMAIL=... -e PASSWORD=... (never commit them).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: onboarding_sign_in_email_field
+- inputText: ${EMAIL}
+- tapOn:
+    id: onboarding_sign_in_password_field
+- inputText: ${PASSWORD}
+- tapOn:
+    id: onboarding_sign_in_submit_button

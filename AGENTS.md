@@ -43,7 +43,9 @@ share the CPU and recordings drop frames.
 - Assert an arrival after every screen change (`assertVisible` or `extendedWaitUntil`).
   No fixed sleeps over 2 s.
 - No sign-in, sign-up or onboarding inside flows, and no credentials, emails or user IDs.
-  The harness leases and signs in a pool account before flows run.
+  The harness leases and signs in a pool account before flows run. Exception: when sign-in
+  is the case under test (`android/flows/auth/`), flows take `EMAIL` and `PASSWORD` as
+  `-e` parameters at run time; the values still never go in a file.
 - A flow must work on any pool account. If it needs seeded state (progress, saved items,
   premium), the header says how to seed it, ideally with a common subflow.
 - Run `maestro check-syntax <file>` before committing.
@@ -146,5 +148,12 @@ than the recorded one.
 
 - Maestro installs its driver on a device the first time it runs there (about 10 to 20 s).
 - `screenrecord` stops at 180 s; split long cases into two flows or two recordings.
+- Maestro is slow on the software-rendered emulator: `inputText` takes ~10 s and
+  `eraseText` ~15 s. Don't erase fields that are already empty.
+- Maestro debug output (`~/.maestro/tests/` by default) logs typed text, passwords included.
+  Pass `--debug-output /tmp/maestro-<serial>/<case>` and delete it after the run.
+- `tapOn` hits the element's centre, so in a text field the cursor can land mid-text and
+  `eraseText` leaves a tail. Retype only short values, or reopen the screen.
+- Two emulators at once: one `maestro --device <serial>` per emulator works in parallel.
 - Install Maestro with `curl -fsSL "https://get.maestro.mobile.dev" | bash` (needs Java 17+);
   the binary lands in `~/.maestro/bin/maestro`.

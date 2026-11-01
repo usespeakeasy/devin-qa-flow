@@ -1,0 +1,16 @@
+# Signed-out welcome screen -> "Sign in with email" sheet. Does not launch the app.
+# Entry: `onboarding_storybook_sign_in_button` on screen (cold start after `pm clear`, or after log out).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_sign_in_button
+    timeout: 60000
+- tapOn:
+    id: onboarding_storybook_sign_in_button
+- tapOn:
+    id: button_email
+- assertVisible:
+    id: onboarding_sign_in_screen

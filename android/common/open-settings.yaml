@@ -1,0 +1,11 @@
+# Home -> Profile tab -> Settings. Entry: `home_root_ready`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Profile"
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible: "Manage Account"
+    timeout: 15000

@@ -1,0 +1,32 @@
+# Email sign-in with the network off shows "An unexpected error occurred." and stays on
+# sign-in; with the network back the same credentials reach Home.
+# Entry: app data cleared. Params: EMAIL, PASSWORD (run time only).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- launchApp:
+    stopApp: true
+- runFlow: ../../common/open-email-sign-in.yaml
+- setAirplaneMode: enabled
+- runFlow: ../../common/submit-email-sign-in.yaml
+- extendedWaitUntil:
+    visible: "An unexpected error occurred\\."
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: button1
+    commands:
+      - tapOn:
+          id: button1
+- assertVisible:
+    id: onboarding_sign_in_screen
+- setAirplaneMode: disabled
+- extendedWaitUntil:
+    visible:
+      id: onboarding_sign_in_submit_button
+    timeout: 10000
+- tapOn:
+    id: onboarding_sign_in_submit_button
+- runFlow: ../../common/dismiss-premium-intro.yaml

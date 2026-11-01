@@ -1,0 +1,14 @@
+# Force-stop and cold start while signed in: Home shows, no welcome screen.
+# Entry: signed in.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- assertNotVisible:
+    id: onboarding_storybook_sign_in_button

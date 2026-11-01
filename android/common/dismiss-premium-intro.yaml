@@ -1,0 +1,24 @@
+# After sign-in the premium intro opens. With no Play Billing on the emulator it shows
+# "An unexpected error occurred."; dismiss the dialog and exit to Home.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      # The error dialog hides the `_ready` root from the hierarchy, so match either.
+      id: onboarding_premium_intro_(ready|error)
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: button1
+    commands:
+      - tapOn:
+          id: button1
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000

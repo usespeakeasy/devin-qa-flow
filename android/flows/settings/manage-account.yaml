@@ -1,0 +1,22 @@
+# Profile -> Settings -> Manage Account shows the account rows, then Back to Profile.
+# Entry: `home_root_ready`. Param: EMAIL (the signed-in account).
+# Selectors: Settings rows have no resource-id yet (text fallback "Manage Account").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn: "Manage Account"
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 15000
+- assertVisible:
+    id: edit_name
+- assertVisible:
+    id: edit_email
+- assertVisible: ${EMAIL}
+- back
+- back
+- assertVisible:
+    id: action_settings
