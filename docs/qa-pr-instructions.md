@@ -6,7 +6,7 @@ INDEX.md row are in [AGENTS.md](../AGENTS.md).
 
 ## Per-run workflow
 
-1. `git pull --rebase` on `main`.
+1. `git pull --rebase` on `main`, then read [LEARNINGS.md](../LEARNINGS.md).
 2. For each case in the PR's "How to test?", grep [INDEX.md](../INDEX.md) for the screen, the
    classes the diff touches, the deep link and the resource IDs. Reuse a matching flow as is.
    Skip flows listed under Known broken unless this run repairs them.
@@ -25,6 +25,10 @@ INDEX.md row are in [AGENTS.md](../AGENTS.md).
    Maestro flow is running; both drive UiAutomator.
 7. Add or update the INDEX.md row (format in [AGENTS.md](../AGENTS.md#indexmd)), then commit
    and push (see Committing).
+8. If the run hit a major failure, add a learning (see Learnings).
+
+Step 6 and the next two sections are for Android. iOS runs use the same steps, with the
+changes listed in iOS runs.
 
 Base and branch can run at the same time on two emulators: `maestro --device emulator-5554`
 and `--device emulator-5556`. Keep animation and timing cases sequential; two emulators
@@ -62,11 +66,38 @@ account and flags.
   other build would see (lesson progress, counters, sign out of all sessions, account deletion,
   purchases).
 
+## iOS runs
+
+iOS builds and runs only on macOS. A Linux QA session hands the run to one macOS child, and
+the child clones this repo and follows this file. The child prompt says so.
+
+- Flows: `ios/common/` and `ios/flows/<area>/<case>.yaml`, with the same `<area>/<case>` name
+  as the Android flow for the same product case. Run with
+  `maestro --device <simulator UDID> test -e APP_ID=com.selabs.speak-v2.dev <flow>`.
+- Selectors: accessibility identifiers first (`id:` in Maestro matches them), then text.
+  Read the tree with `axe describe-ui --udid <UDID>` on the base build, only while no flow is
+  running.
+- Automation markers are off unless the app launches with `SPEAK_AUTOMATION_MARKERS=1` in its
+  launch environment. Launch with
+  `SIMCTL_CHILD_SPEAK_AUTOMATION_MARKERS=1 xcrun simctl launch <UDID> com.selabs.speak-v2.dev`
+  before a flow that reads markers, and start that flow without `launchApp`.
+- Install each build with `xcrun simctl install`. Installing over the same bundle ID keeps the
+  signed-in account, so one pool account serves both builds.
+- Record with `xcrun simctl io <UDID> recordVideo --codec h264 <file>` and stop it with
+  `kill -INT`. It has no 180 s limit; keep one file per case anyway so the packet timestamps
+  stay simple.
+- Two simulators: base and branch can run at once on two booted simulators of the same device
+  type and runtime (`xcrun simctl clone <UDID> <name>`), one `maestro --device` per simulator.
+  The same rules for timing cases and shared server state apply as on Android.
+- Missing IDs: the draft ID PR goes to speak-ios. Follow its `AGENTS.md` and
+  `agent_docs/workflows/git-pr-workflow.md` (branch prefix, draft, template).
+
 ## Committing
 
 - Push straight to `main`; no PRs. Many QA runs write at once, so `git pull --rebase` and
   retry the push when it's rejected.
-- One commit per run, e.g. `android/main-tabs: add tab-tour (QA speak-android#1234)`.
+- One commit per run, e.g. `android/main-tabs: add tab-tour (QA speak-android#1234)` or
+  `ios/settings: add manage-account (QA speak-ios#1234)`.
 - Commit only flows that passed on the base build. Never commit recordings, screenshots or
   Maestro debug output.
 
@@ -146,6 +177,23 @@ ID, fix those in the same commit, and re-run each on base. If one can't be run t
 its file unchanged and add it to Known broken with reason `stale id <old> -> <new>, not re-run`.
 Any run that passes a flow on base updates its "Last verified" SHA when this run's base is newer
 than the recorded one.
+
+## Learnings
+
+[LEARNINGS.md](../LEARNINGS.md) holds what went wrong in past runs, so the next run doesn't
+repeat it. Runs push to it directly, like flows.
+
+Add an entry when a run hit a major failure: a wrong or `QA incomplete.` verdict, a stuck or
+crashed emulator or simulator, a leaked secret, or about 15 minutes or more lost to one cause.
+Skip one-off flakes that a single retry fixed.
+
+- One bullet per failure, under its platform heading: what happened, the cause, and the rule
+  that prevents it. Add the QA PR link and the date.
+- If an entry for the same cause exists, update it instead of adding a second one.
+- When a fix moves into a flow, a common subflow or the harness, say so in the entry, so a
+  reader knows the rule is already applied.
+- Never put credentials, emails or user IDs in an entry.
+- Commit it with the run's flow commit, or alone as `learnings: <one line> (QA <repo>#<PR>)`.
 
 ## Writing PRs and Slack posts
 

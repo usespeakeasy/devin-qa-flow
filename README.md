@@ -30,8 +30,9 @@ Flows assume the app is installed and signed in. Account lease, login, screen re
 the Before | After packet come from the `qa-request-mobile` skill and its Android harness,
 not from this repo.
 
-QA runs follow [docs/qa-pr-instructions.md](docs/qa-pr-instructions.md) (workflow, two emulators,
-committing, conflicts, missing and stale IDs, PR and Slack writing). Flow-file and INDEX.md rules
+QA runs follow [docs/qa-pr-instructions.md](docs/qa-pr-instructions.md) (workflow for Android and
+iOS, two emulators, committing, conflicts, missing and stale IDs, learnings, PR and Slack writing)
+and read [LEARNINGS.md](LEARNINGS.md), where runs record what went wrong. Flow-file and INDEX.md rules
 are in [AGENTS.md](AGENTS.md). `.agents/skills/` vendors the
 [i-have-adhd](https://github.com/ayghri/i-have-adhd) and [humanizer](https://github.com/blader/humanizer)
 writing skills (MIT).
