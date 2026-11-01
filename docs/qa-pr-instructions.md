@@ -174,7 +174,8 @@ When a flow needs a text or point fallback because the element has no ID:
    (`gh api -X POST repos/usespeakeasy/speak-<platform>/pulls/<n>/requested_reviewers -f 'team_reviewers[]=qa-devin'`).
    If it fails, say so in the report.
 4. Post the PR link as a reply in the QA request's thread, with "Also send to channel" on, so it
-   shows in #devin-qa-request-mobile too. Don't make a separate top-level post. Neither
+   shows in #devin-qa-request-mobile too, and tag Sean Kim in it (`<@U06CM4TRNBX>`, a real
+   mention, not plain text). Don't make a separate top-level post. Neither
    `message_user` nor the Slack MCP's `slack_reply_to_thread` can set that flag, so call
    `chat.postMessage` with `reply_broadcast` and the Slack MCP server's token (it posts as
    `devin_mcp`):
