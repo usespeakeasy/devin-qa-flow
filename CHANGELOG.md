@@ -25,7 +25,7 @@ Runs before 2026-11-01 have no `skill_version`.
   `auth/` and `onboarding/` start signed out and are the only ones that may sign in, sign up or
   walk onboarding. Harness `fresh` clears app data and waits for the welcome screen; `newuser`
   prints a throwaway sign-up email that never joins the pool. Why: sign-up and onboarding cases
-  had no reusable flows, so every run walked them by hand (PR_LINK).
+  had no reusable flows, so every run walked them by hand ([#6](https://github.com/usespeakeasy/devin-qa-flow/pull/6)).
 - **qa-request-mobile 2026.11.01.3**: the skill's source now lives in this repo under
   `skills/`. Runs write `skill_version` and `flow_repo_sha` to the run record. Change the skill
   with a PR here; after merge, Devin saves it with `manage_plugin` and posts the PSA.
