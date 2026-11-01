@@ -17,7 +17,7 @@ before writing anything new. Keep rows sorted by platform, then area.
 ## Known broken
 
 Flows that failed on the base build and could not be repaired in the run (see Stale IDs in
-AGENTS.md). Don't use these as evidence. Remove the entry when the flow passes on base again.
+[docs/qa-pr-instructions.md](docs/qa-pr-instructions.md)). Don't use these as evidence. Remove the entry when the flow passes on base again.
 
 | Flow | Base SHA | Reason |
 |---|---|---|
