@@ -21,7 +21,7 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-01
 
-- **qa-request-mobile 2026.11.01.6**: iOS runs drive cases with Maestro flows from this repo
+- **qa-request-mobile 2026.11.01.7**: iOS runs drive cases with Maestro flows from this repo
   instead of an AXe or XCUITest script, and record with `recordVideo --codec h264 --force`.
   Found by the iOS dry run of speak-ios#9662.
 - **Instructions**: iOS run steps corrected after the dry run of speak-ios#9662 (first real
@@ -29,6 +29,10 @@ Runs before 2026-11-01 have no `skill_version`.
   account per simulator for settings cases, switch selectors, notification permission through
   iOS Settings, `takeScreenshot` location, date picker and popover points, two-simulator load.
   Recording 44 → about 6 min for both builds in parallel.
+- **qa-request-mobile 2026.11.01.6**: ID PRs open ready for review, not as drafts, under Sean's
+  GitHub account, then get an `@codex review` comment from Sean's account. Why: Sean asked for it
+  after speak-android#8660 opened as a draft ("For ID PRs, you should always open it for review
+  and comment `@codex review` using my gh").
 - **qa-request-mobile 2026.11.01.5**: the Slack report needs an `ID PR:` line, with the draft ID
   PR link for each screen, or `ID PR: none needed`. The per-run workflow now has an ID PR step,
   for Android and iOS. Why: the speak-android#8630 rerun used text selectors on the review dialogs
