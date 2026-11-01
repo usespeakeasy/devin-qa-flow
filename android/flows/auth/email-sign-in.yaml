@@ -1,0 +1,9 @@
+# Email sign-in from the signed-out storybook, through the premium intro, to Home.
+# Entry: `onboarding_storybook_sign_in_button` (after `qa_android.py fresh` or a log out). Params (run time only): EMAIL, PASSWORD.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/open-email-sign-in.yaml
+- runFlow: ../../common/submit-email-sign-in.yaml
+- runFlow: ../../common/dismiss-premium-intro.yaml
