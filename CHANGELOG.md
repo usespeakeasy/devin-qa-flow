@@ -21,6 +21,10 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-01
 
+- **qa-request-mobile 2026.11.01.7**: the ID PR post goes in the QA request's thread with "Also
+  send to channel" on (`chat.postMessage` with `reply_broadcast`), not as a separate top-level
+  post in #devin-qa-request-mobile. Why: Sean asked for it after the speak-android#8664 post
+  ("thread is good. But share it to the channel when you send it").
 - **Instructions**: the ID PR and its `@codex review` come from the QA'd PR's author, not always
   Sean. Why: Sean asked for it ("It should be the author of the pr").
 - **qa-request-mobile 2026.11.01.6**: ID PRs open ready for review, not as drafts, with an

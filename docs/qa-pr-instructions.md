@@ -170,9 +170,23 @@ When a flow needs a text or point fallback because the element has no ID:
    (`git_create_pr` with `author_user_id` set to that author's Devin user). Then comment
    `@codex review` on it as the ID PR's author, not as Devin's bot: Codex declines the bot's
    request. Check the PR's and the comment's author; if either is the bot, say so in the report.
-4. Post the PR link in #devin-qa-request-mobile for review (see Writing PRs and Slack
-   posts). Don't block the QA run on
-   it. Switch the flow and the INDEX.md row to the ID once the PR is on develop.
+4. Post the PR link as a reply in the QA request's thread, with "Also send to channel" on, so it
+   shows in #devin-qa-request-mobile too. Don't make a separate top-level post. Neither
+   `message_user` nor the Slack MCP's `slack_reply_to_thread` can set that flag, so call
+   `chat.postMessage` with `reply_broadcast` and the Slack MCP server's token (it posts as
+   `devin_mcp`):
+
+   ```bash
+   SLACK_TOKEN=$(tr '\0' '\n' < /proc/$(pgrep -f 'node .*mcp-server-slack' | head -1)/environ \
+     | sed -n 's/^SLACK_BOT_TOKEN=//p')
+   jq -n --arg ts "$THREAD_TS" --arg text "$TEXT" \
+     '{channel: "C0C8G9VS2KX", thread_ts: $ts, reply_broadcast: true, text: $text}' \
+     | curl -s -H "Authorization: Bearer $SLACK_TOKEN" -H 'Content-Type: application/json; charset=utf-8' \
+       --data @- https://slack.com/api/chat.postMessage | jq '{ok, ts, error}'
+   ```
+
+   Never print the token. Write the text as in Writing PRs and Slack posts. Don't block the QA
+   run on it. Switch the flow and the INDEX.md row to the ID once the PR is on develop.
 
 ## Stale IDs
 
@@ -236,6 +250,9 @@ This applies to ID PRs, PRs in this repo, and every Slack post about them.
 4. PR description: follow the target repo's PR template and PR rules.
 5. Slack: keep the top-level message to one or two lines with the PR link, and tag Sean Kim
    (`<@U06CM4TRNBX>`). Put the details in the first reply in the thread, written with steps 1 to 3.
+   An ID PR has no top-level message: its post is the broadcast thread reply from Missing IDs
+   step 4, one or two lines with the PR link and the Sean Kim tag, and the details go in the
+   next reply in the same thread.
 
 ## Gotchas
 
