@@ -1,0 +1,14 @@
+# Community details sheet > Edit: the sheet closes and the edit (character) screen opens; back returns.
+# Entry: open-favorites-topic.yaml or open-community-topic.yaml.
+# Selectors: Edit, the edit screen title and Continue have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "^Edit$"
+- extendedWaitUntil:
+    visible: "Continue"
+    timeout: 15000
+- assertNotVisible: "Start chatting"
+- back
+- assertNotVisible: "Continue"

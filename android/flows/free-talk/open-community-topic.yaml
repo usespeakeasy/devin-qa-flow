@@ -1,0 +1,26 @@
+# Free Talk tab > Community > tap a topic: the community details sheet opens.
+# Entry: cold start (launch-home). Precondition: signed-in dev account. TOPIC is a title on the
+# Community Hot list (dev data, e.g. "Espresso vs\\. Latte Art").
+# Selectors: the bottom tab, the Community tab, the topic card and the sheet's Start chatting
+# button have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn: "Free Talk"
+- assertVisible:
+    id: ai_tutor_title
+- tapOn: "Community"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_recycler_view
+    timeout: 20000
+- extendedWaitUntil:
+    visible: ${TOPIC}
+    timeout: 20000
+- tapOn: ${TOPIC}
+- extendedWaitUntil:
+    visible: "Start chatting"
+    timeout: 10000
+- assertVisible: "See something wrong\\? Report this topic\\."

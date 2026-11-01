@@ -1,0 +1,13 @@
+# Community details sheet opened from the Community tab > back: the sheet closes on the Community tab.
+# Entry: open-community-topic.yaml or report-confirmation-okay.yaml.
+# Selectors: the sheet's report line has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    notVisible: "See something wrong\\? Report this topic\\."
+    timeout: 10000
+- assertVisible:
+    id: ai_tutor_community_recycler_view

@@ -1,0 +1,42 @@
+# Details sheet opened from the Community tab > Start chatting: the sheet closes and the AI lesson
+# opens; back returns to the Community tab. A free pool account gets the lesson's own premium
+# intro (server answers notPremium; on an emulator without billing it shows an error dialog first).
+# Back from the intro returns to the lesson's quit sheet; Quit returns to the Community tab.
+# Entry: open-community-topic.yaml. Precondition: free dev account.
+# Selectors: Start chatting, the error dialog's OK and Quit have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Start chatting"
+- assertNotVisible: "See something wrong\\? Report this topic\\."
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_premium_intro_(ready|error)|ai_lesson_.*"
+    timeout: 30000
+- repeat:
+    times: 4
+    while:
+      notVisible:
+        id: ai_tutor_community_recycler_view
+    commands:
+      - runFlow:
+          when:
+            visible: "^OK$"
+          commands:
+            - tapOn: "^OK$"
+      - runFlow:
+          when:
+            visible: "^Quit$"
+          commands:
+            - tapOn: "^Quit$"
+      - runFlow:
+          when:
+            notVisible:
+              id: ai_tutor_community_recycler_view
+          commands:
+            - back
+            - waitForAnimationToEnd
+- assertVisible:
+    id: ai_tutor_community_recycler_view
+- assertNotVisible: "See something wrong\\? Report this topic\\."
