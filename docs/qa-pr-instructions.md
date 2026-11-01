@@ -175,7 +175,8 @@ When a flow needs a text or point fallback because the element has no ID:
    If it fails, say so in the report.
 4. Post the PR link as a reply in the QA request's thread, with "Also send to channel" on, so it
    shows in #devin-qa-request-mobile too, and tag Sean Kim in it (`<@U06CM4TRNBX>`, a real
-   mention, not plain text). Don't make a separate top-level post. Neither
+   mention, not plain text). Don't make a separate top-level post. Example text:
+   `<@U06CM4TRNBX> ID PR for the Free Talk community details, report and report confirmation sheets, ready for review: <PR URL>` Neither
    `message_user` nor the Slack MCP's `slack_reply_to_thread` can set that flag, so call
    `chat.postMessage` with `reply_broadcast` and the Slack MCP server's token (it posts as
    `devin_mcp`):
