@@ -1,0 +1,21 @@
+# Lesson end streak freeze step: Got it moves the flow on to its next step (not Home).
+# Entry: the streak freeze step is showing (run `android/common/open-streak-freeze.yaml` first;
+# it needs the QA-only STREAK_FREEZE patch and a premium account, Debug Menu > Subscription override > Premium).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: lesson_end_streak_freeze_root
+- tapOn:
+    id: lesson_end_streak_freeze_got_it_button
+- extendedWaitUntil:
+    notVisible:
+      id: lesson_end_streak_freeze_root
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*"
+    timeout: 30000
+- assertNotVisible:
+    id: home_root_ready
