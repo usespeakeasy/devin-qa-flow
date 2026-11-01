@@ -25,7 +25,7 @@ Runs before 2026-11-01 have no `skill_version`.
   PR link for each screen, or `ID PR: none needed`. The per-run workflow now has an ID PR step,
   for Android and iOS. Why: the speak-android#8630 rerun used text selectors on the review dialogs
   but skipped the ID PR. The ID rule was only under Missing IDs, and a search for it found only
-  the iOS line.
+  the iOS line ([#9](https://github.com/usespeakeasy/devin-qa-flow/pull/9)).
 - **qa-request-mobile 2026.11.01.4, qa-android-harness 2026.11.01.2**: pre-auth flows. Flows in
   `auth/` and `onboarding/` start signed out and are the only ones that may sign in, sign up or
   walk onboarding. Harness `fresh` clears app data and waits for the welcome screen; `newuser`
