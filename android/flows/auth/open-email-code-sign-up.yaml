@@ -1,0 +1,14 @@
+# Signed-out welcome > Start speaking today > Spanish > "Create an account" sheet > "Continue with Email Code":
+# the sign-up email code entry screen (`email_otp_enabled` ON or served ON).
+# Entry: `onboarding_storybook_screen`. Selectors: the row has no resource-id yet (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../onboarding/storybook-get-started.yaml
+- runFlow: ../onboarding/pick-spanish-open-auth.yaml
+- tapOn: "Continue with Email Code"
+- extendedWaitUntil:
+    visible:
+      id: otp_sign_in_entry_screen
+    timeout: 15000

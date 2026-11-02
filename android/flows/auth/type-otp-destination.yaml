@@ -1,0 +1,16 @@
+# Phone or email code entry screen: type into the destination field. Leaves the keyboard open.
+# PRESS_DONE=true then presses Enter (the field's Done action, which submits when "Send code" is enabled).
+# Entry: `otp_sign_in_entry_screen`. Params: VALUE (a phone number, national or E.164, or an email).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  PRESS_DONE: ${PRESS_DONE || "false"}
+---
+- tapOn:
+    id: otp_sign_in_destination_field
+- inputText: ${VALUE}
+- runFlow:
+    when:
+      true: ${PRESS_DONE == "true"}
+    commands:
+      - pressKey: Enter

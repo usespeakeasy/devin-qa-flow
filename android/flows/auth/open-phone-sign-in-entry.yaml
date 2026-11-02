@@ -1,0 +1,13 @@
+# Signed-out welcome > Log in > "Continue with Phone": the sign-in phone entry screen, stops before typing.
+# Entry: `onboarding_storybook_sign_in_button` (app data cleared or a cold start while signed out).
+# Selectors: the "Continue with Phone" row has no resource-id at develop `1ebcfb44c6` (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-phone-sign-in.yaml
+- tapOn: "Continue with Phone"
+- extendedWaitUntil:
+    visible:
+      id: otp_sign_in_entry_screen
+    timeout: 15000

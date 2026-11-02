@@ -1,0 +1,15 @@
+# Signed-out welcome > Start speaking today > Spanish > "Create an account" sheet > "Continue with Phone":
+# the sign-up phone entry screen (Speak session, `sms_otp_enabled` ON or served ON), e.g. chinaDevelopDebug.
+# Entry: `onboarding_storybook_screen` (app data cleared or a cold start while signed out).
+# Selectors: the "Continue with Phone" row has no resource-id yet (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../onboarding/storybook-get-started.yaml
+- runFlow: ../onboarding/pick-spanish-open-auth.yaml
+- tapOn: "Continue with Phone"
+- extendedWaitUntil:
+    visible:
+      id: otp_sign_in_entry_screen
+    timeout: 15000
