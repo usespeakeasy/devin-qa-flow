@@ -1,0 +1,19 @@
+# Lesson end post to community step (eolFlow): system back skips the step and the lesson end flow
+# moves on to the next step; it does not close the flow (develop on SERVER does the same).
+# Entry: the post to community step is showing, with the phone speak call summary as the next step
+# (`android/common/open-post-assessment.yaml`, then `compose-steps-continue.yaml` with STOP_AT=4 and its
+# QA-only patch).
+# Selectors: post to community has no resource IDs (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Upload to community"
+- back
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_summary_continue
+    timeout: 30000
+- assertNotVisible: "Upload to community"
+- assertNotVisible:
+    id: "home_root_ready"

@@ -1,0 +1,14 @@
+# Lesson end post-assessment step: after a config change or process death, the step still shows its
+# skills and Next.
+# Entry: the post-assessment step (3 of 3, demo repository) was showing before the rotation or relaunch.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_post_assessment_next_button
+    timeout: 30000
+- assertVisible:
+    id: lesson_end_post_assessment_root
+- assertVisible: "You checked off 3/3 skills!"

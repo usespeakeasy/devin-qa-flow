@@ -1,0 +1,83 @@
+# Lesson end steps built on ConductorComposeController, in this order: post-assessment, Speak level
+# celebration (same PostAssessmentController screen), unit end celebration, post to community, phone speak
+# call summary. Each step's main button moves the flow on to the next one. STOP_AT=N (required, passed
+# with -e) stops on step N (1 to 5) with that step showing; 6 goes through all five and ends on the readout.
+# Entry: the post-assessment step is showing (run `android/common/open-post-assessment.yaml` first).
+# Preconditions: QA-only patch that puts POST_ASSESSMENT, SPEAK_LEVEL_CELEBRATION, END_OF_UNIT_CELEBRATION,
+# COMMUNITY_SCENARIO and PHONE_SPEAK_SUMMARY_V2 first in `LessonEndFlowViewModel.updateScreens` with fixed
+# data (unit 0, scenario title "QA coffee chat", fixed phone speak summary, no corrections), the demo
+# `PostAssessmentRepositoryFactory` (3 of 3) and a no-op community submit; premium account.
+# Selectors: post to community has no resource IDs (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+# 1. Post-assessment
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_post_assessment_next_button
+    timeout: 30000
+- runFlow:
+    when:
+      true: ${parseInt(STOP_AT) > 1}
+    commands:
+      - tapOn:
+          id: lesson_end_post_assessment_next_button
+      - tapOn:
+          id: lesson_end_post_assessment_continue_button
+      - extendedWaitUntil:
+          notVisible:
+            id: lesson_end_post_assessment_continue_button
+          timeout: 15000
+      # 2. Speak level celebration: the same screen again
+      - extendedWaitUntil:
+          visible:
+            id: lesson_end_post_assessment_next_button
+          timeout: 30000
+- runFlow:
+    when:
+      true: ${parseInt(STOP_AT) > 2}
+    commands:
+      - tapOn:
+          id: lesson_end_post_assessment_next_button
+      - tapOn:
+          id: lesson_end_post_assessment_continue_button
+      # 3. Unit end celebration
+      - extendedWaitUntil:
+          visible:
+            id: unit_end_cta
+          timeout: 30000
+- runFlow:
+    when:
+      true: ${parseInt(STOP_AT) > 3}
+    commands:
+      - tapOn:
+          id: unit_end_cta
+      # 4. Post to community
+      - extendedWaitUntil:
+          visible: "Share with the community"
+          timeout: 30000
+      - assertVisible: "Upload to community"
+- runFlow:
+    when:
+      true: ${parseInt(STOP_AT) > 4}
+    commands:
+      - tapOn: "Share with the community"
+      # 5. Phone speak call summary
+      - extendedWaitUntil:
+          visible:
+            id: phone_speak_summary_continue
+          timeout: 30000
+      - assertVisible: "Great call!"
+- runFlow:
+    when:
+      true: ${parseInt(STOP_AT) > 5}
+    commands:
+      - tapOn:
+          id: phone_speak_summary_continue
+      - extendedWaitUntil:
+          visible:
+            id: lesson_end_reskin_root
+          timeout: 30000
+      - assertNotVisible:
+          id: phone_speak_summary

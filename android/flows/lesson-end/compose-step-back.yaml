@@ -1,0 +1,19 @@
+# Lesson end step built on ConductorComposeController (post-assessment, Speak level celebration, unit end,
+# post to community or phone speak summary): system back closes the whole lesson end flow and returns Home.
+# Entry: the step is showing (`android/common/open-post-assessment.yaml`, then `compose-steps-continue.yaml`
+# with STOP_AT=N). Same QA-only patch as compose-steps-continue.yaml.
+# Selectors: post to community has no resource IDs (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: "home_root_ready|learning_path_ready"
+    timeout: 30000
+- assertNotVisible:
+    id: "lesson_end_.*_root"
+- assertNotVisible:
+    id: "unit_end_screen|phone_speak_summary"
+- assertNotVisible: "Upload to community"
