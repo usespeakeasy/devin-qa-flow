@@ -1,0 +1,29 @@
+# Lesson end summary step after a jump-in lesson: a fast double tap on Keep Learning opens the jump-in lesson
+# group (Speak Embedded web view) once; one back returns Home without the summary or a second web view.
+# Entry: the summary step is showing with Keep Learning and Maybe Later (`android/common/open-summary.yaml`,
+# `debug.qa.summary jumpin`, `debug.qa.jil_group <group id>`).
+# Count the web view opens in logcat (`ControllerTransactionProvider` lines to `SpeakEmbeddedWebViewController`).
+# Selectors: the web view has no resource-id (content description `Speak Embedded`).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: lesson_end_reskin_keep_going_button
+- assertNotVisible:
+    id: lesson_end_reskin_continue_button
+- doubleTapOn:
+    id: lesson_end_reskin_keep_going_button
+- extendedWaitUntil:
+    visible: "Speak Embedded"
+    timeout: 30000
+- assertNotVisible:
+    id: lesson_end_reskin_root
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: lesson_end_reskin_root
+- assertNotVisible: "Speak Embedded"
