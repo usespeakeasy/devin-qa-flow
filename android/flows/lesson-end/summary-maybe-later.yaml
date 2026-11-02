@@ -1,0 +1,29 @@
+# Lesson end summary step that allows skipping to the next lesson: Maybe Later moves the flow on like Continue.
+# Entry: the summary step is showing with Keep Learning and Maybe Later (`android/common/open-summary.yaml`,
+# `debug.qa.summary skip`).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: lesson_end_reskin_keep_going_button
+- assertVisible: "Keep Learning"
+- assertVisible:
+    id: lesson_end_reskin_go_home_button
+- assertVisible: "Maybe Later"
+- assertNotVisible:
+    id: lesson_end_reskin_continue_button
+- tapOn:
+    id: lesson_end_reskin_go_home_button
+- extendedWaitUntil:
+    notVisible:
+      id: lesson_end_reskin_root
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*_root|home_root_ready|primary_button"
+    timeout: 30000
+- assertNotVisible:
+    id: lesson_end_reskin_root
+- assertNotVisible:
+    id: "drill_lesson_skip|tap_to_continue"

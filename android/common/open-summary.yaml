@@ -1,0 +1,39 @@
+# Open a drill lesson and skip every card until the lesson end shows the summary step
+# (`LessonEndReskin` entry / `LessonEndReskinController`): XP, stats, streak and Continue
+# (or Keep Learning and Maybe Later when the summary allows skipping to the next lesson or is a jump-in lesson).
+# Entry: Home, signed in, Debug Menu > Subscription override > Premium.
+# Preconditions: QA-only summary patch: `adb shell setprop debug.qa.summary first|skip|jumpin` puts
+# `LessonFinishedFlow.Component.SUMMARY` first in `LessonEndFlowViewModel.updateScreens`; `skip` also sets
+# `canSkipToNextLesson` (empty `skipToNextActivityEolOrder`), `jumpin` treats the lesson as jump-in with
+# `debug.qa.jil_group` as the group ID.
+# Selectors: `Later` (optional referral welcome prompt).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- tapOn:
+    text: "Later"
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible:
+        id: lesson_end_reskin_root
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_metric_time_studied
+    timeout: 15000

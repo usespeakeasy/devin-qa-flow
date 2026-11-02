@@ -1,0 +1,20 @@
+# Lesson end summary step: Continue moves the flow on to its next step (or Home when the summary is last).
+# Entry: the summary step is showing with Continue (`android/common/open-summary.yaml`, `debug.qa.summary first`).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertNotVisible:
+    id: lesson_end_reskin_keep_going_button
+- tapOn:
+    id: lesson_end_reskin_continue_button
+- extendedWaitUntil:
+    notVisible:
+      id: lesson_end_reskin_root
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*_root|home_root_ready|primary_button"
+    timeout: 30000
+- assertNotVisible:
+    id: lesson_end_reskin_root

@@ -1,0 +1,32 @@
+# Lesson end summary step after a jump-in lesson: Keep Learning opens the jump-in lesson group (Speak Embedded
+# web view) in place of the lesson end flow; back from it returns Home without the summary.
+# Entry: the summary step is showing with Keep Learning and Maybe Later (`android/common/open-summary.yaml`,
+# `debug.qa.summary jumpin`, `debug.qa.jil_group <group id>`).
+# Selectors: the web view has no resource-id (content description `Speak Embedded`).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: lesson_end_reskin_keep_going_button
+- assertVisible: "Keep Learning"
+- assertVisible:
+    id: lesson_end_reskin_go_home_button
+- assertVisible: "Maybe Later"
+- assertNotVisible:
+    id: lesson_end_reskin_continue_button
+- tapOn:
+    id: lesson_end_reskin_keep_going_button
+- extendedWaitUntil:
+    visible: "Speak Embedded"
+    timeout: 30000
+- assertNotVisible:
+    id: lesson_end_reskin_root
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: lesson_end_reskin_root
+- assertNotVisible: "Speak Embedded"

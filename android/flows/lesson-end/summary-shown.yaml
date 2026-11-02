@@ -1,0 +1,25 @@
+# Lesson end summary step: XP, streak and the minutes studied stat are in (animations done) with the
+# step's primary button (Continue, or Keep Learning when the summary has the button stack).
+# Also the check after a rotation or a process death on the summary.
+# Entry: the summary step is showing (`android/common/open-summary.yaml`, QA-only summary patch, 25 XP).
+# Selectors: the XP counter and the streak pill have no resource-id (text fallback `XP`, `.*Day Streak`).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 30000
+- extendedWaitUntil:
+    visible: "XP"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: ".*Day Streak"
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_metric_time_studied
+    timeout: 15000
+- assertVisible:
+    id: "lesson_end_reskin_continue_button|lesson_end_reskin_keep_going_button"
