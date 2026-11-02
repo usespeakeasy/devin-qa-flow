@@ -1,0 +1,15 @@
+# Explore > History (toolbar clock): Singles History opens with its rows (or its empty text).
+# Entry: Explore (open-explore.yaml). Exit: Singles History.
+# Selectors: action_history, single_timestamp (history rows only), empty_text.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: action_history
+- extendedWaitUntil:
+    visible:
+      id: "single_timestamp|empty_text"
+    timeout: 30000
+- assertNotVisible:
+    id: category_list

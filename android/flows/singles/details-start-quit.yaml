@@ -1,0 +1,72 @@
+# Lesson details sheet > Start (TAP=double taps it twice fast): the sheet closes and one lesson opens;
+# back > Quit leaves it. A free account then gets the premium intro (on an emulator without billing
+# an error dialog first): OK, then its exit. Lands on RETURN (the screen under the sheet), sheet gone.
+# No loop: a second lesson left open by a double tap would show instead of RETURN and fail the flow.
+# Entry: details sheet open (details-open.yaml).
+# maestro test -e RETURN=action_history details-start-quit.yaml
+# RETURN: action_history (Explore category), single_title (pack, scrolled past its header), single_timestamp (Singles History).
+# Selectors: button, cant_speak_now_toggle|video_progress_seekbar|debug_skip_lesson (lesson screen),
+# onboarding_premium_intro_ready, exit; "Start over", "Quit", "OK" have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  TAP: single
+---
+- runFlow:
+    when:
+      true: ${TAP == 'double'}
+    commands:
+      - doubleTapOn:
+          id: button
+- runFlow:
+    when:
+      true: ${TAP != 'double'}
+    commands:
+      - tapOn:
+          id: button
+- repeat:
+    times: 10
+    while:
+      notVisible:
+        id: "cant_speak_now_toggle|video_progress_seekbar|debug_skip_lesson"
+    commands:
+      - tapOn:
+          text: "Start over"
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "cant_speak_now_toggle|video_progress_seekbar|debug_skip_lesson"
+    timeout: 60000
+- assertNotVisible:
+    id: singles_details_dialog
+- back
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_premium_intro_(ready|error)|${RETURN}"
+    timeout: 20000
+- runFlow:
+    when:
+      visible:
+        id: onboarding_premium_intro_error
+    commands:
+      - tapOn: "^OK$"
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_premium_intro_ready|${RETURN}"
+    timeout: 20000
+- runFlow:
+    when:
+      visible:
+        id: onboarding_premium_intro_ready
+    commands:
+      - tapOn:
+          id: exit
+- extendedWaitUntil:
+    visible:
+      id: ${RETURN}
+    timeout: 20000
+- assertNotVisible:
+    id: singles_details_dialog
+- assertNotVisible:
+    id: "cant_speak_now_toggle|video_progress_seekbar|debug_skip_lesson"

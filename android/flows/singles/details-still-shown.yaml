@@ -1,0 +1,21 @@
+# Lesson details sheet still shows LESSON with the save button at EXPECT (Save or Unsave), e.g. after
+# a config change or process death.
+# Entry: details sheet expected open. Exit: same.
+# maestro test -e LESSON="집에서 넷플릭스 보기" -e EXPECT=Unsave details-still-shown.yaml
+# Selectors: singles_details_dialog, title, saved, button.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: singles_details_dialog
+    timeout: 20000
+- assertVisible:
+    id: title
+    text: ${LESSON}
+- assertVisible:
+    id: saved
+    text: ${EXPECT}
+- assertVisible:
+    id: button

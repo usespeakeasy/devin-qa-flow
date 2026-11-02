@@ -1,0 +1,15 @@
+# Lesson details sheet: tap the scrim above the sheet; the sheet closes and the list under it shows.
+# Entry: details sheet open (details-open.yaml). Exit: the screen under the sheet.
+# Selectors: point 50%,10% (scrim, no resource-id), singles_details_dialog, single_title.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    point: "50%,10%"
+- extendedWaitUntil:
+    notVisible:
+      id: singles_details_dialog
+    timeout: 10000
+- assertVisible:
+    id: single_title

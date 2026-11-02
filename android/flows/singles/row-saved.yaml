@@ -1,0 +1,33 @@
+# Category or history list: LESSON's row shows the Saved label (SAVED=true) or no label (SAVED=false).
+# Entry: list with LESSON visible and no sheet open. Exit: same.
+# maestro test -e LESSON="집에서 넷플릭스 보기" -e SAVED=true row-saved.yaml
+# Selectors: single_title, saved (the row's Saved label; the sheet's save button shares the id, so
+# the sheet must be closed). Only one saved row is expected on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertNotVisible:
+    id: singles_details_dialog
+- assertVisible:
+    id: single_title
+    text: ${LESSON}
+- runFlow:
+    when:
+      true: ${SAVED == 'true'}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: saved
+            below:
+              id: single_title
+              text: ${LESSON}
+          timeout: 10000
+- runFlow:
+    when:
+      true: ${SAVED != 'true'}
+    commands:
+      - extendedWaitUntil:
+          notVisible:
+            id: saved
+          timeout: 10000

@@ -1,0 +1,20 @@
+# Explore > CATEGORY tab: the category's lesson list shows, scrolled until LESSON is centered.
+# Entry: Explore (open-explore.yaml). Exit: Explore on the CATEGORY tab with the LESSON row visible.
+# maestro test -e CATEGORY="일상" -e LESSON="집에서 넷플릭스 보기" open-category.yaml
+# Selectors: the category tabs have no resource-id (text fallback inside category_list); single_title.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    text: "^${CATEGORY}$"
+    childOf:
+      id: category_list
+- scrollUntilVisible:
+    element:
+      id: single_title
+      text: ${LESSON}
+    centerElement: true
+    timeout: 30000
+- assertVisible:
+    id: action_history
