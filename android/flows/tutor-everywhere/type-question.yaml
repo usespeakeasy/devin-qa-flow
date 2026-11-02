@@ -1,0 +1,12 @@
+# With the Speak Tutor sheet in keyboard mode, type question Q into the input and hide the keyboard.
+# The send button has no id/text/description (tags are not exported as resource-ids in the sheet), so the
+# caller taps it by point at the right of "Switch to voice", then waits for the answer.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  Q: "Give me five example sentences with this phrase, each with a translation"
+---
+- tapOn: "Ask me anything\\.\\.\\."
+- inputText: ${Q}
+- hideKeyboard
+- assertVisible: "Switch to voice"

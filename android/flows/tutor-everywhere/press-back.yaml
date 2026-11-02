@@ -1,0 +1,6 @@
+# System back (closes ExpressionDetails over the Speak Tutor sheet).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back

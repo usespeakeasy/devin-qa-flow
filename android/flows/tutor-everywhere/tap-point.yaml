@@ -1,0 +1,8 @@
+# Tap at X,Y inside the Speak Tutor sheet (a dictionary card word or its speaker button; neither has a
+# resource-id, so the case script reads the card's text bounds and passes the point).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    point: "${X},${Y}"

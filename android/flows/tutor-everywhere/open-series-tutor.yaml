@@ -1,0 +1,24 @@
+# Series lesson by deep link > intro card > first line card > tutor button: the Speak Tutor sheet opens.
+# Entry: Home, signed in, Debug Menu > tutor_everywhere_series_lessons_enabled = tutor_button, Premium override.
+# Exit: the tutor sheet showing "Ask me anything".
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP
+---
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: tap_to_continue
+    timeout: 60000
+- tapOn:
+    id: tap_to_continue
+- extendedWaitUntil:
+    visible:
+      id: tutor_button_line
+    timeout: 30000
+- tapOn:
+    id: tutor_button_line
+- extendedWaitUntil:
+    visible: "Ask me anything"
+    timeout: 20000

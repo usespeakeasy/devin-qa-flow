@@ -1,0 +1,6 @@
+# Assert the Speak Tutor sheet is showing (keyboard mode input or voice mode prompt). No navigation.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Ask me anything.*|Switch to voice"

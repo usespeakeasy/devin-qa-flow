@@ -1,0 +1,12 @@
+# Close the open Speak Tutor sheet by a tap at X,Y (the close button or the scrim above the sheet).
+# The close button has no resource-id (the Compose testTag is not exported), so the case script reads
+# the "Ask me anything" bounds and passes the point. Exit: the sheet is gone.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    point: "${X},${Y}"
+- extendedWaitUntil:
+    notVisible: "Ask me anything"
+    timeout: 10000

@@ -1,0 +1,6 @@
+# Home key: background the app (the Speak Tutor sheet stays on the back stack).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- pressKey: Home

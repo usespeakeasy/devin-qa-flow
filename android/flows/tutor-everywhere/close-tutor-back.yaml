@@ -1,0 +1,9 @@
+# Close the open Speak Tutor sheet with system back. Exit: the sheet is gone.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    notVisible: "Ask me anything"
+    timeout: 10000

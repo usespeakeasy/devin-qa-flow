@@ -1,0 +1,13 @@
+# Close the open Speak Tutor sheet by dragging its header ("Ask me anything") down. Exit: the sheet is gone.
+# Maestro parses swipe points before env substitution, so the start is the header text, not ${X},${Y}.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- swipe:
+    from: "Ask me anything"
+    direction: DOWN
+    duration: 400
+- extendedWaitUntil:
+    notVisible: "Ask me anything"
+    timeout: 10000

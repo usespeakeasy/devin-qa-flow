@@ -1,0 +1,29 @@
+# Free Talk community topic > Start chatting > AI lesson > tutor button: the Speak Tutor sheet opens.
+# Entry: cold start. Precondition: Debug Menu > tutor_everywhere_ai_lessons_enabled ON, Premium override,
+# Free Talk FTUX dismissed. TOPIC as in open-community-topic.yaml.
+# Selectors: the tutor button is a Rive overlay without resource-id (point at the bottom-right control).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  TOPIC: "Espresso vs\\. Latte Art"
+  MODE: "Chat mode"
+---
+- runFlow: ../free-talk/open-community-topic.yaml
+# With ai_lesson_immersive_toggle ON the details sheet shows the Chat/Immersive toggle; pick chat mode.
+- runFlow:
+    when:
+      visible: ${MODE}
+    commands:
+      - tapOn: ${MODE}
+- tapOn: "Start chatting"
+# The lesson opens in chat mode (ai_lesson_primary_send) or, when the topic defaults to it, voice mode ("Tap to respond").
+- extendedWaitUntil:
+    notVisible: "Start chatting"
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 5000
+- tapOn:
+    point: "75%,89%"
+- extendedWaitUntil:
+    visible: "Ask me anything"
+    timeout: 20000

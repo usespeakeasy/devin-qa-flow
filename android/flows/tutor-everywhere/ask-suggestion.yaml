@@ -1,0 +1,15 @@
+# With the Speak Tutor sheet open, tap the first suggested question chip and wait for the answer to
+# finish streaming (the next suggestion chips show). Exit: the sheet with one more Q&A turn.
+# Selectors: the chips have no resource-id (text fallback: questions end with "?").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    text: "(What|When|How|Is|Can|Why|Do|Does|Are)[^\\n]*\\?"
+    index: 0
+- extendedWaitUntil:
+    notVisible: "Ask me anything"
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 20000

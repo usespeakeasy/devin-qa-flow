@@ -1,0 +1,24 @@
+# Drill lesson by deep link > tap the tutor mascot on the card: the Speak Tutor sheet opens.
+# Entry: Home, signed in, Debug Menu > drill_lesson_tutor_everywhere ON, Premium override.
+# Exit: the tutor sheet showing "Ask me anything".
+# Selectors: the mascot node (drill_lesson_mascot) spans the whole screen, so the tap is a point on the
+# card's bottom-right avatar; the sheet has no resource-id on either path (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_mascot
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: lesson_speak_now_status_pill
+    timeout: 30000
+- tapOn:
+    point: "84%,62%"
+- extendedWaitUntil:
+    visible: "Ask me anything"
+    timeout: 20000
