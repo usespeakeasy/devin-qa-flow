@@ -1,0 +1,34 @@
+# Open a drill lesson and skip every card until the lesson end shows the "unit finished"
+# celebration ("Unit N Completed!", then "Next Stop: Unit N+1" or the last unit's Continue).
+# Entry: Home, signed in, Debug Menu > Subscription override > Premium.
+# Preconditions: a build whose lesson end flow has the END_OF_UNIT_CELEBRATION step. The dev server
+# sends it only on a unit's last lesson, so QA runs put `LessonFinishedFlow.Component.END_OF_UNIT_CELEBRATION`
+# first in `LessonEndFlowViewModel.updateScreens` with a fixed unit (QA-only patch; the unit number comes
+# from `adb shell setprop debug.qa.unit_no <n>`, -1 for the course's last unit).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+# Optional referral welcome prompt; it has no resource-id on develop yet (text fallback).
+- tapOn:
+    text: "Later"
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible:
+        id: unit_end_screen
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: unit_end_cta
+    timeout: 30000

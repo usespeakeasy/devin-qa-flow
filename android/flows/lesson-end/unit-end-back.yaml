@@ -1,0 +1,18 @@
+# Lesson end "unit finished" celebration: system back closes the whole lesson end flow and returns Home (home_root_ready or learning_path_ready).
+# Entry: the celebration is showing (run `android/common/open-unit-end.yaml` first; it needs the QA-only
+# END_OF_UNIT_CELEBRATION patch and a premium account, Debug Menu > Subscription override > Premium).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: unit_end_screen
+- back
+- extendedWaitUntil:
+    visible:
+      id: "home_root_ready|learning_path_ready"
+    timeout: 30000
+- assertNotVisible:
+    id: unit_end_screen
+- assertNotVisible:
+    id: lesson_end_reskin_root

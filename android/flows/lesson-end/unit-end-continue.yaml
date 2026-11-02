@@ -1,0 +1,20 @@
+# Lesson end "unit finished" celebration: the button ("Start next unit", or "Continue" on the last
+# unit) moves the flow on to its next step.
+# Entry: the celebration is showing (run `android/common/open-unit-end.yaml` first; it needs the QA-only
+# END_OF_UNIT_CELEBRATION patch and a premium account, Debug Menu > Subscription override > Premium).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: unit_end_screen
+- tapOn:
+    id: unit_end_cta
+- extendedWaitUntil:
+    notVisible:
+      id: unit_end_screen
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*|home_root_ready|learning_path_ready"
+    timeout: 30000
