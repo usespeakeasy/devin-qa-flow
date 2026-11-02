@@ -1,0 +1,19 @@
+# Lesson end level progress step (card or level up reveal): system back closes the whole lesson end flow
+# and returns Home.
+# Entry: the level progress step is showing (`android/common/open-level-progress.yaml`; QA-only LEVEL_PROGRESS
+# patch, premium account).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: lesson_end_level_progress_root
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: lesson_end_level_progress_root
+- assertNotVisible:
+    id: lesson_end_reskin_root

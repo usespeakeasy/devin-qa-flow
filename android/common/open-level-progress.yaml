@@ -1,0 +1,43 @@
+# Open a drill lesson and skip every card until the lesson end shows the level progress step
+# (`LevelProgress` entry / `LevelProgressController`): the level card and Continue.
+# Entry: Home, signed in, Debug Menu > Subscription override > Premium.
+# Preconditions: a build whose lesson end flow has the LEVEL_PROGRESS step with a `level`. The dev server sends
+# it only with the XPs/quests/levels experiment, so QA runs put `LessonFinishedFlow.Component.LEVEL_PROGRESS`
+# first in `LessonEndFlowViewModel.updateScreens` with a fixed level (QA-only patch; `adb shell setprop
+# debug.qa.level up` sets `previous` for a level up, `none` leaves it null).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+# Optional referral welcome prompt.
+- tapOn:
+    id: referral_welcome_dialog_later_button
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible:
+        id: lesson_end_level_progress_root
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_level_progress_root
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: card
+    timeout: 10000
+- assertVisible:
+    id: primary_button
+    enabled: true
+- assertNotVisible:
+    id: next_level_title

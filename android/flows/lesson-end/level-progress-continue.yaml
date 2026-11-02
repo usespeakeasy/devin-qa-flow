@@ -1,0 +1,22 @@
+# Lesson end level progress step: Continue moves the flow on to its next step (with a level up, run
+# level-progress-level-up-reveal.yaml first; without one, this is the only tap).
+# Entry: the level progress step is showing (`android/common/open-level-progress.yaml`; QA-only LEVEL_PROGRESS
+# patch, premium account).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: lesson_end_level_progress_root
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    notVisible:
+      id: lesson_end_level_progress_root
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*|home_root_ready|learning_path_ready"
+    timeout: 30000
+- assertNotVisible:
+    id: lesson_end_level_progress_root

@@ -1,0 +1,16 @@
+# Lesson end level progress step still shows after a config change or process death, back on the progress card.
+# Entry: the level progress step was showing before the rotation or the kill and relaunch.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_level_progress_root
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: card
+    timeout: 10000
+- assertVisible:
+    id: primary_button

@@ -1,0 +1,38 @@
+# Lesson end level progress step with a level up: the first tap on Continue plays the level up reveal
+# (next level caption, title and motivation) and stays on the step.
+# Entry: the level progress step is showing (run `android/common/open-level-progress.yaml` first with
+# `debug.qa.level up`; QA-only LEVEL_PROGRESS patch, premium account). TITLE is the new level's title.
+# DOUBLE_TAP=true taps twice fast instead, which must not skip the reveal.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  TITLE: ".+"
+  DOUBLE_TAP: "false"
+---
+- assertVisible:
+    id: lesson_end_level_progress_root
+- assertNotVisible:
+    id: next_level_title
+- runFlow:
+    when:
+      true: ${DOUBLE_TAP != "true"}
+    commands:
+      - tapOn:
+          id: primary_button
+- runFlow:
+    when:
+      true: ${DOUBLE_TAP == "true"}
+    commands:
+      - doubleTapOn:
+          id: primary_button
+- extendedWaitUntil:
+    visible:
+      id: next_level_title
+      text: ${TITLE}
+    timeout: 10000
+- assertVisible:
+    id: next_level_caption
+- assertVisible:
+    id: lesson_end_level_progress_root
+- assertVisible:
+    id: primary_button
