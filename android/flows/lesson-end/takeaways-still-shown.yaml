@@ -1,0 +1,11 @@
+# Lesson end takeaways step is still shown (after rotation or process death on card 2), and Next / Continue still
+# finish it. Prints nothing about the page: the arrival screenshot records which card is showing.
+# Entry: the takeaways step after `adb shell settings put system user_rotation 1` (or process death + relaunch).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible: "Feedback for you|Where you can improve"
+    timeout: 30000
+- assertVisible: "Next|Continue"

@@ -1,0 +1,16 @@
+# Lesson end takeaways step: swipe from card 1 to card 2 and park there (before rotation or process death).
+# Entry: the takeaways step is showing (`android/common/open-takeaways.yaml`) with the QA patch's
+# "Multiple Cards" demo (card 1 "Vivo en ____", card 2 "He vivido en ____ desde ____").
+# Selectors: no resource-ids on the takeaways screen (text fallbacks); the pager swipe uses screen percentages.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Feedback for you|Where you can improve"
+- assertVisible: "Vivo en ____"
+- swipe:
+    start: 85%, 45%
+    end: 15%, 45%
+- extendedWaitUntil:
+    visible: "He vivido en ____ desde ____"
+    timeout: 5000
