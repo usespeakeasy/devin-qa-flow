@@ -1,11 +1,12 @@
 # Free Talk community topic > Start chatting > AI lesson > tutor button: the Speak Tutor sheet opens.
 # Entry: cold start. Precondition: Debug Menu > tutor_everywhere_ai_lessons_enabled ON, Premium override,
-# Free Talk FTUX dismissed. TOPIC as in open-community-topic.yaml.
+# Free Talk FTUX dismissed ("Get started"). TOPIC is a title on the dev Community Hot list; edit the default here
+# when it changes, because a flow's env default wins over maestro test -e.
 # Selectors: the tutor button is a Rive overlay without resource-id (point at the bottom-right control).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
-  TOPIC: "Espresso vs\\. Latte Art"
+  TOPIC: "Unlocking the Subjunctive"
   MODE: "Chat mode"
 ---
 - runFlow: ../free-talk/open-community-topic.yaml
@@ -22,6 +23,16 @@ env:
     timeout: 60000
 - waitForAnimationToEnd:
     timeout: 5000
+# The chat can start with the mic already recording (cancel and send buttons); the tutor button ignores taps then.
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_record_cancel
+    commands:
+      - tapOn:
+          id: ai_lesson_record_cancel
+      - waitForAnimationToEnd:
+          timeout: 5000
 - tapOn:
     point: "75%,89%"
 - extendedWaitUntil:

@@ -37,3 +37,9 @@ describes.
   this. Use a toggle on a UIKit screen that refreshes on foreground
   (`CompactNotificationSettingsVC`), not Marketing Communications, which does not.
   ([dry run of speak-ios#9662](https://github.com/usespeakeasy/speak-ios/pull/9662), 2026-11-01)
+
+- Android emulator 1080x2400: a held `adb shell input swipe` that starts at y 144 (16 px below the
+  128 px status bar) opens the notification shade on about 2 of 3 tries on every screen, on develop
+  too and with no sheet showing. A handle drag check that starts there measures the emulator, not the
+  app. Start drags from a top handle at y 169 or lower and read `mCurrentFocus` mid-drag.
+  ([QA of speak-android#8706 at dd95dfb](https://github.com/usespeakeasy/speak-android/pull/8706), 2026-11-02)

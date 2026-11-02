@@ -13,3 +13,5 @@ Speak Tutor sheet in lessons (QA of speak-android#8706). Debug Menu flags: `tuto
 | close-tutor-swipe.yaml | swipe down from the header | text `Ask me anything` |
 | type-question.yaml, ask-suggestion.yaml | ask a question | text `Ask me anything...`, `Switch to voice` |
 | tap-point.yaml | tap a point (dictionary button) | point (ID PR: `tutor_everywhere_dictionary_button`) |
+| scroll-list-up.yaml, fling-list.yaml | scroll or fling the sheet's Q&A list | point swipes inside the list (no ID on the list; ID PR speak-android#8721 comment: `tutor_everywhere_message_list`) |
+| rotate.yaml | set the device orientation (ORIENT) | none. The app is portrait-locked (`screenOrientation="portrait"`), so on phones it does not relayout |

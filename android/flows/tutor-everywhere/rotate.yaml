@@ -1,0 +1,9 @@
+# Rotate the device to ORIENT (LANDSCAPE_LEFT or PORTRAIT) and wait for the relayout. Exit: same screen, new orientation.
+# Selectors: none.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- setOrientation: ${ORIENT}
+- waitForAnimationToEnd:
+    timeout: 5000

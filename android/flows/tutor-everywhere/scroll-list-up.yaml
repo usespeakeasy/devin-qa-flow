@@ -1,0 +1,13 @@
+# With the expanded Speak Tutor sheet showing several Q&A turns (list at the newest answer), scroll the list
+# back toward the first question: a slow drag down in the middle of the list. Exit: the sheet, list scrolled up.
+# Selectors: point swipe, because the list has no resource-id and the drag must start inside the list, below the header.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 70%"
+    duration: 800
+- waitForAnimationToEnd:
+    timeout: 5000

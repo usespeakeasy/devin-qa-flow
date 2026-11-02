@@ -1,0 +1,19 @@
+# With the expanded Speak Tutor sheet open, fling the list: a fast drag up then a fast drag down, both inside
+# the list. Exit: the sheet still open (the case script checks the handle did not move).
+# Selectors: point swipes inside the list (no resource-id on the list).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- swipe:
+    start: "50%, 65%"
+    end: "50%, 30%"
+    duration: 120
+- waitForAnimationToEnd:
+    timeout: 5000
+- swipe:
+    start: "50%, 30%"
+    end: "50%, 65%"
+    duration: 120
+- waitForAnimationToEnd:
+    timeout: 5000
