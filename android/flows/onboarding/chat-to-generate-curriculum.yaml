@@ -1,0 +1,62 @@
+# Onboarding chat: answer every turn (first option, Continue, a beginner travel answer for free text, text
+# instead of voice) until the closing "Generate my curriculum" button shows.
+# Entry: onboarding chat on screen (`onboarding_magic_ready`), e.g. after email-sign-up.yaml.
+# Exit: `onboarding_magic_action_generate_curriculum` visible, not tapped.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  TEXT: I am a complete beginner. I want Spanish for travel, 10 minutes a day.
+---
+- runFlow:
+    when:
+      visible:
+        id: onboarding_magic_action_start
+    commands:
+      - tapOn:
+          id: onboarding_magic_action_start
+- repeat:
+    times: 80
+    while:
+      notVisible:
+        id: onboarding_magic_action_generate_curriculum
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "onboarding_magic_(user_turn_ready|action_continue|action_generate_curriculum)"
+          timeout: 60000
+      - runFlow:
+          when:
+            visible:
+              id: onboarding_magic_action_switch_to_text
+          commands:
+            - tapOn:
+                id: onboarding_magic_action_switch_to_text
+      - runFlow:
+          when:
+            visible:
+              id: "onboarding_magic_option_.*"
+          commands:
+            - tapOn:
+                id: "onboarding_magic_option_.*"
+                index: 0
+      - runFlow:
+          when:
+            visible:
+              id: onboarding_magic_freeform_text_input
+          commands:
+            - tapOn:
+                id: onboarding_magic_freeform_text_input
+            - inputText: ${TEXT}
+            - tapOn:
+                id: onboarding_magic_action_send_text
+      - runFlow:
+          when:
+            visible:
+              id: onboarding_magic_action_continue
+              enabled: true
+          commands:
+            - tapOn:
+                id: onboarding_magic_action_continue
+                retryTapIfNoChange: false
+- assertVisible:
+    id: onboarding_magic_action_generate_curriculum

@@ -1,0 +1,12 @@
+# After the summary's "Get started": Back on the post-onboarding screen never shows the summary
+# or the onboarding chat again.
+# Entry: summary-finish.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- assertNotVisible: "^Get started$"
+- assertNotVisible: "Building your custom course"
+- assertNotVisible:
+    id: onboarding_magic_ready

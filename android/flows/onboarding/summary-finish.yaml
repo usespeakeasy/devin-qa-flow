@@ -1,0 +1,15 @@
+# Onboarding summary: "Get started" leaves onboarding for the post-onboarding screen
+# (premium intro, or Home), then Back there does not return to the summary or the chat.
+# Entry: loaded summary ("Get started" visible).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "^Get started$"
+- extendedWaitUntil:
+    visible:
+      id: (onboarding_premium_intro_(ready|error)|home_root_ready|main-editor-container)
+    timeout: 60000
+- assertNotVisible: "^Get started$"
+- assertNotVisible:
+    id: onboarding_magic_ready

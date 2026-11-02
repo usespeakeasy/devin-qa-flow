@@ -1,0 +1,13 @@
+# Onboarding summary still on screen and loaded (after rotation, Home and return, or a process
+# kill and relaunch). Entry: the summary was open before the change.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible: "^Get started$"
+    timeout: 30000
+- assertNotVisible:
+    id: onboarding_magic_ready
+- assertNotVisible:
+    id: onboarding_curriculum_ready

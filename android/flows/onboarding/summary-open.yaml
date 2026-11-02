@@ -1,0 +1,19 @@
+# Onboarding summary: open it from "Generate my curriculum" and press Back while it loads (nothing happens).
+# One flow because the loading only runs about 5.5 s.
+# Entry: `onboarding_magic_action_generate_curriculum` visible (chat-to-generate-curriculum.yaml).
+# Exit: summary still loading or loaded; a SHOT screenshot of the loading state is saved in the working directory.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: summary-loading
+---
+- tapOn:
+    id: onboarding_magic_action_generate_curriculum
+- assertVisible: "Building your custom course"
+- takeScreenshot: ${SHOT}
+- back
+- assertVisible: "Building your custom course|^Get started$"
+- assertNotVisible:
+    id: onboarding_magic_ready
+- assertNotVisible:
+    id: onboarding_curriculum_ready

@@ -1,0 +1,18 @@
+# Onboarding summary: once loaded, Back does nothing.
+# Entry: summary open (summary-open.yaml).
+# Exit: loaded summary with its "Get started" button.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible: "^Get started$"
+    timeout: 30000
+- back
+- assertVisible: "^Get started$"
+- back
+- assertVisible: "^Get started$"
+- assertNotVisible:
+    id: onboarding_magic_ready
+- assertNotVisible:
+    id: onboarding_curriculum_ready
