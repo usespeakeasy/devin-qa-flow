@@ -232,8 +232,12 @@ When a flow needs a text or point fallback because the element has no ID:
    token (it posts as `devin_mcp`), calls `chat.postMessage` in #devin-qa-flow, refuses text that
    doesn't start with Sean's tag, and prints the message `ts`. Then reply in that message's
    thread (`slack_reply_to_thread`, channel `C0CDW7WKWGN`, that `ts`) with the details and a link
-   to the QA request. The QA report's `ID PR:` line carries the PR link back to the QA thread. If
-   the script fails, say so in the report.
+   to the QA request. Then add a `Slack:` row to the ID PR description's Related Links table with
+   both threads:
+   `| Slack: [QA request thread](<QA thread URL>), [#devin-qa-flow thread](https://usespeak.slack.com/archives/C0CDW7WKWGN/p<ts without the dot>) |`.
+   When you comment on an existing ID PR instead of opening one, add this run's links to that row.
+   The QA report's `ID PR:` line carries the PR link back to the QA thread. If the script fails,
+   say so in the report.
 
    Never print the token. Write the text as in Writing PRs and Slack posts. Don't block the QA
    run on it. Switch the flow and the INDEX.md row to the ID once the PR is on develop.
