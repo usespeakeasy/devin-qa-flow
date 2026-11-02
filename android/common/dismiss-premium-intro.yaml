@@ -1,5 +1,5 @@
 # After sign-in the premium intro opens. With no Play Billing on the emulator it shows
-# "An unexpected error occurred."; dismiss the dialog and exit to Home.
+# "An unexpected error occurred."; dismiss the dialog and exit to Home, closing a streak-saved sheet if one shows.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
@@ -18,6 +18,17 @@ env:
           id: button1
 - tapOn:
     id: exit
+# Accounts whose streak was frozen get a "We saved your N-day streak!" sheet over Home on sign-in.
+# It hides `home_root_ready`, so wait for either and close the sheet with Back.
+- extendedWaitUntil:
+    visible:
+      id: (home_root_ready|design_bottom_sheet)
+    timeout: 60000
+- runFlow:
+    when:
+      visible: "We saved your .*streak!"
+    commands:
+      - back
 - extendedWaitUntil:
     visible:
       id: home_root_ready
