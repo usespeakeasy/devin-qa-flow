@@ -5,7 +5,6 @@
 # only to free users whose next lesson unlocks tomorrow, so QA runs put
 # `LessonFinishedFlow.Component.FREEMIUM_NEXT_UNLOCKED` first in the order in `LessonEndFlowViewModel.updateScreens`
 # (with one stand-in course lesson when the server sends no unlock data) as a QA-only patch.
-# Text fallbacks: the step has no resource IDs yet.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
@@ -22,7 +21,7 @@ env:
 - repeat:
     while:
       notVisible:
-        text: "Coming up tomorrow"
+        id: "freemium_education_coming_up"
     times: 60
     commands:
       - tapOn:
@@ -30,11 +29,11 @@ env:
           optional: true
 - extendedWaitUntil:
     visible:
-      text: "Coming up tomorrow"
+      id: "freemium_education_coming_up"
     timeout: 30000
 - extendedWaitUntil:
     visible:
-      text: "I.ll be back tomorrow!"
+      id: "freemium_education_coming_up_back_tomorrow"
     timeout: 10000
 - assertVisible:
-    text: "Try unlimited lessons"
+    id: "freemium_education_coming_up_try_unlimited_lessons"

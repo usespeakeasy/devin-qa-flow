@@ -1,19 +1,18 @@
 # Lesson end freemium "Coming up tomorrow" step: system back closes the whole lesson end flow and returns Home.
 # Entry: the step is showing (run `android/common/open-freemium-coming-up.yaml` first; it needs the QA-only
 # FREEMIUM_NEXT_UNLOCKED patch and Debug Menu > Subscription override > Free).
-# Text fallbacks: the step has no resource IDs yet.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
 - assertVisible:
-    text: "Coming up tomorrow"
+    id: "freemium_education_coming_up"
 - back
 - extendedWaitUntil:
     visible:
       id: home_root_ready
     timeout: 30000
 - assertNotVisible:
-    text: "Coming up tomorrow"
+    id: "freemium_education_coming_up"
 - assertNotVisible:
     id: lesson_end_reskin_root

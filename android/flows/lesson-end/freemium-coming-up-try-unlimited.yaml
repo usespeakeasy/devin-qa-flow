@@ -2,16 +2,15 @@
 # Entry: the step is showing (run `android/common/open-freemium-coming-up.yaml` first; it needs the QA-only
 # FREEMIUM_NEXT_UNLOCKED patch and Debug Menu > Subscription override > Free).
 # Exit: on the paywall. Close it with the paywall close flows.
-# Text fallbacks: the step has no resource IDs yet.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
 - assertVisible:
-    text: "Coming up tomorrow"
+    id: "freemium_education_coming_up"
 - tapOn:
-    text: "Try unlimited lessons"
+    id: "freemium_education_coming_up_try_unlimited_lessons"
 - extendedWaitUntil:
     notVisible:
-      text: "Coming up tomorrow"
+      id: "freemium_education_coming_up"
     timeout: 30000

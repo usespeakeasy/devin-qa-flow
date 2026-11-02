@@ -1,18 +1,17 @@
 # Lesson end freemium "Coming up tomorrow" step: I'll be back tomorrow! moves the flow on to its next step or closes it.
 # Entry: the step is showing (run `android/common/open-freemium-coming-up.yaml` first; it needs the QA-only
 # FREEMIUM_NEXT_UNLOCKED patch and Debug Menu > Subscription override > Free).
-# Text fallbacks: the step has no resource IDs yet.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
 - assertVisible:
-    text: "Coming up tomorrow"
+    id: "freemium_education_coming_up"
 - tapOn:
-    text: "I.ll be back tomorrow!"
+    id: "freemium_education_coming_up_back_tomorrow"
 - extendedWaitUntil:
     notVisible:
-      text: "Coming up tomorrow"
+      id: "freemium_education_coming_up"
     timeout: 30000
 - extendedWaitUntil:
     visible:
