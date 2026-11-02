@@ -1,0 +1,21 @@
+# Lesson end takeaways step: system back on "Time to practice" closes the whole lesson end flow and
+# returns Home.
+# Entry: the takeaways step is showing (run `android/common/open-takeaways.yaml` first) on a build
+# with the QA-only takeaways patch, `debug.qa.takeaways` unset.
+# Selectors: text fallback "Time to practice".
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/takeaways-to-practice.yaml
+- extendedWaitUntil:
+    visible: "Time to practice"
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible: "Time to practice"
+- assertNotVisible:
+    id: "lesson_end_.*_root"

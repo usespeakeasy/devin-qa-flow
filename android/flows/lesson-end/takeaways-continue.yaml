@@ -1,0 +1,15 @@
+# Lesson end takeaways step: swipe the cards, Next, then Continue moves the flow on to its next step
+# when the takeaways have no practice lesson.
+# Entry: the takeaways step is showing (run `android/common/open-takeaways.yaml` first) on a build
+# with the QA-only takeaways patch and `adb shell setprop debug.qa.takeaways nolesson`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/takeaways-to-practice.yaml
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*_root|ask_for_review_dialog|home_root_ready"
+    timeout: 30000
+- assertNotVisible: "Feedback for you|Where you can improve"
+- assertNotVisible: "Time to practice"

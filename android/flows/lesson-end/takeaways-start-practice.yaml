@@ -1,0 +1,19 @@
+# Lesson end takeaways step: Next, Continue, then on "Time to practice" Start practice opens the
+# generated lesson (the patch's fixed lesson, a drill) and leaves the lesson end flow.
+# Entry: the takeaways step is showing (run `android/common/open-takeaways.yaml` first) on a build
+# with the QA-only takeaways patch, `debug.qa.takeaways` unset.
+# Selectors: text fallbacks "Time to practice", "Start practice".
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/takeaways-to-practice.yaml
+- extendedWaitUntil:
+    visible: "Time to practice"
+    timeout: 15000
+- tapOn: "Start practice"
+- extendedWaitUntil:
+    visible:
+      id: "drill_lesson_skip|tap_to_continue"
+    timeout: 60000
+- assertNotVisible: "Time to practice"

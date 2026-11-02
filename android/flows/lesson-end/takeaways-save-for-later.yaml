@@ -1,0 +1,20 @@
+# Lesson end takeaways step: Next, Continue, then on "Time to practice" Save for later moves the
+# flow on to its next step.
+# Entry: the takeaways step is showing (run `android/common/open-takeaways.yaml` first) on a build
+# with the QA-only takeaways patch, `debug.qa.takeaways` unset.
+# Selectors: text fallbacks "Time to practice", "Save for later".
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/takeaways-to-practice.yaml
+- extendedWaitUntil:
+    visible: "Time to practice"
+    timeout: 15000
+- tapOn: "Save for later"
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*_root|ask_for_review_dialog|home_root_ready"
+    timeout: 30000
+- assertNotVisible: "Time to practice"
+- assertNotVisible: "Feedback for you|Where you can improve"
