@@ -1,0 +1,16 @@
+# Lesson end progress wait: once the progress write ends, the difficulty check-in replaces the spinner.
+# Entry: the spinner shows (run `android/common/open-progress-loading.yaml` first, with its QA-only patch).
+# Selectors: the check-in screen has no resource-ids yet (text fallbacks; IDs in speak-android#8692).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible: "Want to adjust the difficulty of this course\\?"
+    timeout: 30000
+- assertVisible: "Make it harder"
+- assertVisible: "It.s just right"
+- assertVisible: "Make it easier"
+- assertVisible: "Don.t show again"
+- assertNotVisible:
+    id: home_root_ready

@@ -1,0 +1,37 @@
+# Open a drill lesson and skip every card until the lesson end shows its progress wait spinner
+# (`LessonEndProgressLoading` entry / `LessonEndProgressLoadingController`), before the difficulty check-in.
+# Entry: Home, signed in, Debug Menu > Subscription override > Premium.
+# Preconditions: the spinner shows only when a difficulty check-in is due (custom unit lesson that is not the
+# unit's last, `dynamic_on_demand_unit_gen` on, `doug_feedback_forms` = `difficultySheet`, first time per unit)
+# and usually for under a second. QA runs make `DifficultyCheckInEolGateImpl.resolveEolSnapshot` always return
+# a snapshot and delay the progress write in `LessonEndFlowViewModel.launchUncancellableProgressWrite` by 12 s
+# (QA-only patch), so the spinner stays up long enough to act on.
+# Exit: the spinner shows (no lesson card, no check-in yet).
+# Selectors: the spinner has no resource-id; the check-in title is a text fallback (IDs in speak-android#8692).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- tapOn:
+    text: "Later"
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      visible:
+        id: drill_lesson_skip
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    notVisible:
+      id: drill_lesson_skip
+    timeout: 10000
+- assertNotVisible: "Want to adjust the difficulty of this course\\?"

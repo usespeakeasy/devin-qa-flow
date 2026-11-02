@@ -1,0 +1,25 @@
+# Lesson end progress wait: system back on the spinner closes the whole lesson end flow and returns Home,
+# and the difficulty check-in does not open later when the progress write ends.
+# Entry: the spinner shows. Run `android/common/open-progress-loading.yaml` (with its QA-only patch) in the same
+# Maestro run, e.g. a wrapper with two `runFlow`s: a separate `maestro test` starts too late for the 12 s hold.
+# Selectors: the check-in title is a text fallback (IDs in speak-android#8692).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertNotVisible: "Want to adjust the difficulty of this course\\?"
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: "lesson_end_.*"
+# Watch past the end of the held progress write: the check-in must not come back.
+- extendedWaitUntil:
+    visible: "Want to adjust the difficulty of this course\\?"
+    timeout: 16000
+    optional: true
+- assertNotVisible: "Want to adjust the difficulty of this course\\?"
+- assertVisible:
+    id: home_root_ready

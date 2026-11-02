@@ -1,0 +1,20 @@
+# Lesson end difficulty check-in after the progress wait: Don't show again moves the flow on to its next step,
+# and neither the check-in nor the spinner comes back.
+# Entry: the check-in shows (`android/common/open-progress-loading.yaml`, then
+# `android/flows/lesson-end/progress-loading-to-check-in.yaml`).
+# Selectors: the check-in screen has no resource-ids yet (text fallbacks; IDs in speak-android#8692).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Don.t show again"
+- extendedWaitUntil:
+    notVisible: "Want to adjust the difficulty of this course\\?"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*"
+    timeout: 30000
+- assertNotVisible: "Want to adjust the difficulty of this course\\?"
+- assertNotVisible:
+    id: home_root_ready

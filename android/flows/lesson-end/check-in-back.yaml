@@ -1,0 +1,15 @@
+# Lesson end difficulty check-in after the progress wait: system back. The check-in consumes back
+# (`DifficultyCheckInController.handleBack`), so it stays and the flow does not close.
+# Entry: the check-in shows (`android/common/open-progress-loading.yaml`, then
+# `android/flows/lesson-end/progress-loading-to-check-in.yaml`).
+# Selectors: the check-in screen has no resource-ids yet (text fallbacks; IDs in speak-android#8692).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible: "Want to adjust the difficulty of this course\\?"
+- assertNotVisible:
+    id: home_root_ready
