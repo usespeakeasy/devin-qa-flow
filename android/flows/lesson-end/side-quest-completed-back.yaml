@@ -1,0 +1,19 @@
+# Lesson end side quest completed step: system back closes the whole lesson end flow and returns Home.
+# Entry: the side quest completed step is showing (run `android/common/open-side-quest-completed.yaml` first;
+# it needs the QA-only SIDE_QUEST_COMPLETED patch and a premium account, Debug Menu > Subscription override > Premium).
+# Text fallback: the step has no resource IDs yet.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    text: ".*completed all vocab lessons for this unit.*"
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    text: ".*completed all vocab lessons for this unit.*"
+- assertNotVisible:
+    id: lesson_end_reskin_root

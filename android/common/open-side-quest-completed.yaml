@@ -1,0 +1,36 @@
+# Open a drill lesson and skip every card until the lesson end shows the side quest completed step
+# ("You've completed all vocab lessons for this unit!", Tap to continue).
+# Entry: Home, signed in, Debug Menu > Subscription override > Premium.
+# Preconditions: a build whose lesson end flow has the SIDE_QUEST_COMPLETED step. The dev server sends it
+# only after the last vocab lesson of a unit, so QA runs put `LessonFinishedFlow.Component.SIDE_QUEST_COMPLETED`
+# first in the order in `LessonEndFlowViewModel.updateScreens` (with empty SideQuestCompletedData when the
+# server sends none) as a QA-only patch.
+# Text fallback: the step has no resource IDs yet (see INDEX.md).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- tapOn:
+    text: "Later"
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible:
+        text: ".*completed all vocab lessons for this unit.*"
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      text: ".*completed all vocab lessons for this unit.*"
+    timeout: 30000
+- assertVisible:
+    text: "Tap to continue"

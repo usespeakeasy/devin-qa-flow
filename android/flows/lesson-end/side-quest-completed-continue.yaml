@@ -1,0 +1,36 @@
+# Lesson end side quest completed step: tap anywhere shows the second message and Continue,
+# Continue moves the flow on to its next step (not Home).
+# Entry: the side quest completed step is showing (run `android/common/open-side-quest-completed.yaml` first;
+# it needs the QA-only SIDE_QUEST_COMPLETED patch and a premium account, Debug Menu > Subscription override > Premium).
+# Text fallback: the step has no resource IDs yet; the tap is a point on the empty upper part of the screen
+# because the whole screen is the click target and only text nodes are exported.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    text: ".*completed all vocab lessons for this unit.*"
+- assertNotVisible:
+    text: "^Continue$"
+- tapOn:
+    point: "50%,20%"
+- extendedWaitUntil:
+    visible:
+      text: ".*restart you from the beginning.*"
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      text: "^Continue$"
+    timeout: 10000
+- tapOn:
+    text: "^Continue$"
+- extendedWaitUntil:
+    notVisible:
+      text: ".*restart you from the beginning.*"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*"
+    timeout: 30000
+- assertNotVisible:
+    id: home_root_ready
