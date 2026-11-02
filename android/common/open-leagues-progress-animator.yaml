@@ -1,0 +1,55 @@
+# Debug Menu > "Leagues Progress Animator": open the form (defaults), optionally check
+# "Display change username prompt", and stop on the form before Start.
+# Entry: any signed-in state (restarts the app, opens speak-dev://debug-menu). Exit: the form shows Start.
+# maestro test -e USERNAME_PROMPT=true open-leagues-progress-animator.yaml
+# Selectors: the debug rows and the form have no ids (text fallback; the CheckBox is found leftOf its label).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  USERNAME_PROMPT: ${USERNAME_PROMPT || "false"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: "home_root_ready|referral_welcome_dialog_root"
+    timeout: 30000
+- tapOn:
+    id: referral_welcome_dialog_later_button
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 15000
+- openLink: speak-dev://debug-menu
+- runFlow:
+    when:
+      notVisible: "Debug Menu"
+    commands:
+      - openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible: "Debug Menu"
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      text: "Leagues Progress Animator"
+    direction: DOWN
+    timeout: 30000
+- tapOn: "Leagues Progress Animator"
+- extendedWaitUntil:
+    visible: "Display change username prompt"
+    timeout: 15000
+- runFlow:
+    when:
+      true: ${USERNAME_PROMPT == "true"}
+    commands:
+      # The label is not clickable; tap the CheckBox left of it.
+      - tapOn:
+          checked: false
+          leftOf: "Display change username prompt"
+          below: "XP end amount"
+      - assertVisible:
+          checked: true
+          leftOf: "Display change username prompt"
+          below: "XP end amount"
+- assertVisible: "Start"

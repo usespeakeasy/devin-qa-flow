@@ -1,0 +1,41 @@
+# Leagues Progress Animator with "Display change username prompt": the Choose your username sheet opens before
+# the animation. Saving NEW_NAME closes the sheet and the animation runs with the new name. Saves the username
+# on the server (pool account: set a note).
+# Entry: any signed-in state. maestro test -e NEW_NAME=qalp<digits> animator-username-save.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  NEW_NAME: ${NEW_NAME || "qalpname"}
+---
+- runFlow:
+    file: ../../common/open-leagues-progress-animator.yaml
+    env:
+      USERNAME_PROMPT: "true"
+- runFlow: animator-start.yaml
+- extendedWaitUntil:
+    visible:
+      id: leagues_username_input_screen
+    timeout: 20000
+- assertVisible:
+    text: "Choose your username"
+    childOf:
+      id: leagues_username_input_screen
+- tapOn:
+    id: username_input
+- eraseText: 30
+- inputText: ${NEW_NAME}
+- assertVisible:
+    id: username_input
+    text: ${NEW_NAME}
+- hideKeyboard
+# The sheet is its own window, so its button is the only primary_button in the tree.
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    notVisible:
+      id: leagues_username_input_screen
+    timeout: 15000
+- runFlow:
+    file: animator-settled.yaml
+    env:
+      NAME: ${NEW_NAME}

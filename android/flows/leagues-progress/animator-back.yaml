@@ -1,0 +1,14 @@
+# Leagues rank change screen opened from the Leagues Progress Animator: system Back closes it to the form.
+# Entry: the settled screen (animator-defaults, animator-username-save, animator-username-back).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    visible: "Display change username prompt"
+    timeout: 10000
+- assertVisible: "^Start$"
+- assertNotVisible:
+    id: title
+    text: "Debug Progress Animation"

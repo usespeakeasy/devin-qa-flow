@@ -1,0 +1,14 @@
+# Leagues Progress Animator: tap Start, the rank change screen opens with the debug title.
+# Entry: the animator form (android/common/open-leagues-progress-animator.yaml). Exit: the leagues screen,
+# animation running (or the username sheet when USERNAME_PROMPT was checked).
+# Selectors: the form's Start button has no id (text fallback); the screen's title id is the generic `title`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "^Start$"
+# With USERNAME_PROMPT the sheet is a dialog window that hides the screen below it from the tree.
+- extendedWaitUntil:
+    visible:
+      id: "title|leagues_username_input_screen"
+    timeout: 15000

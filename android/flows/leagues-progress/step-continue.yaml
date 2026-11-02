@@ -1,0 +1,14 @@
+# Lesson end Leagues step: Continue moves the lesson end flow to its next step (the step leaves, Home is not shown).
+# Entry: the step has settled (android/common/open-leagues-progress-step.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: primary_button
+    text: "Continue"
+- extendedWaitUntil:
+    notVisible: "QA Leagues Progress"
+    timeout: 15000
+- assertNotVisible:
+    id: home_root_ready

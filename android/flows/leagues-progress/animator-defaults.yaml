@@ -1,0 +1,19 @@
+# Leagues Progress Animator with the defaults: the list settles, the learner's row moves to its new rank, XP
+# counts up and Continue shows. Continue does nothing here (no flow); Ends on the settled screen; animator-back.yaml closes it.
+# Entry: any signed-in state. maestro test -e NAME="<learner's name>" animator-defaults.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  NAME: ${NAME || "User 1"}
+---
+- runFlow: ../../common/open-leagues-progress-animator.yaml
+- runFlow: animator-start.yaml
+- runFlow:
+    file: animator-settled.yaml
+    env:
+      NAME: ${NAME}
+- tapOn:
+    id: primary_button
+- assertVisible:
+    id: title
+    text: "Debug Progress Animation"

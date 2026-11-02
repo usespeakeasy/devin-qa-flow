@@ -1,0 +1,50 @@
+# Open a drill lesson and skip every card until the lesson end Leagues step (title "QA Leagues Progress")
+# shows, then wait for the rank animation to finish (Continue shows, learner speaklearner).
+# Entry: any signed-in state (restarts the app to Home first), Debug Menu > Subscription override > Premium.
+# Preconditions: the QA-only patch puts a fixed LessonFinishedFlow.Leagues right after LessonCompleted in
+# LessonEndFlowViewModel.updateScreens (title "QA Leagues Progress", displayChangeUsernamePrompt false,
+# 20 entrants, active speaklearner moves from rank 4 down to 9, XP 1000 to 1500). See QA speak-android#8742.
+# Selectors: the step has no root id; its title and button ids are the generic `title` and `primary_button`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: "home_root_ready|referral_welcome_dialog_root"
+    timeout: 30000
+- tapOn:
+    id: referral_welcome_dialog_later_button
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 15000
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible: "QA Leagues Progress"
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: title
+      text: "QA Leagues Progress"
+    timeout: 30000
+- runFlow:
+    file: ../flows/leagues-progress/animator-settled.yaml
+    env:
+      NAME: speaklearner
+      RANK: "9"
+      XP: 1500 XP
+      TITLE: "QA Leagues Progress"

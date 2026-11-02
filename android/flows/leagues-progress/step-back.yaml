@@ -1,0 +1,12 @@
+# Lesson end Leagues step: system Back closes the whole lesson end flow and lands on Home.
+# Entry: the step has settled (android/common/open-leagues-progress-step.yaml or step-still-shown).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- assertNotVisible: "QA Leagues Progress"

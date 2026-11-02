@@ -1,0 +1,26 @@
+# Leagues Progress Animator with "Display change username prompt": system Back on the Choose your username sheet
+# closes it without saving, and the animation runs with the old NAME.
+# Entry: any signed-in state. maestro test -e NAME="<current name>" animator-username-back.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  NAME: ${NAME || "User 1"}
+---
+- runFlow:
+    file: ../../common/open-leagues-progress-animator.yaml
+    env:
+      USERNAME_PROMPT: "true"
+- runFlow: animator-start.yaml
+- extendedWaitUntil:
+    visible:
+      id: leagues_username_input_screen
+    timeout: 20000
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: leagues_username_input_screen
+    timeout: 15000
+- runFlow:
+    file: animator-settled.yaml
+    env:
+      NAME: ${NAME}

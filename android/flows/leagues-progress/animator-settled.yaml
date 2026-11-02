@@ -1,0 +1,35 @@
+# Leagues rank change screen: the animation finishes, Continue shows and the learner's row (NAME) settles at RANK
+# with XP counted up to its end value. Defaults match the Leagues Progress Animator form defaults (rank 15 to 1, 400 to 1000 XP).
+# Entry: the leagues screen is open (animator-start, or after the username sheet closed).
+# maestro test -e NAME="<username>" animator-settled.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  NAME: ${NAME || "User 1"}
+  RANK: ${RANK || "1"}
+  XP: ${XP || "1000 XP"}
+  TITLE: ${TITLE || "Debug Progress Animation"}
+---
+- extendedWaitUntil:
+    visible:
+      id: primary_button
+      text: "Continue"
+    timeout: 30000
+- assertVisible:
+    id: title
+    text: ${TITLE}
+- assertVisible:
+    id: name
+    text: ${NAME}
+- assertVisible:
+    id: rank
+    text: ${RANK}
+    leftOf:
+      id: name
+      text: ${NAME}
+- assertVisible:
+    id: xp
+    text: ${XP}
+    rightOf:
+      id: name
+      text: ${NAME}

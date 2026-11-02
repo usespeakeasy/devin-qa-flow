@@ -1,0 +1,19 @@
+# Lesson end Leagues step after a rotation or a process death: the step shows again, its animation settles and
+# Continue shows with speaklearner on screen.
+# Entry: the step was showing before the config change or the relaunch.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: title
+      text: "QA Leagues Progress"
+    timeout: 30000
+- runFlow:
+    file: animator-settled.yaml
+    env:
+      NAME: speaklearner
+      RANK: "9"
+      XP: 1500 XP
+      TITLE: "QA Leagues Progress"
