@@ -1,0 +1,33 @@
+# Open a drill lesson and skip every card until the lesson end shows the post-assessment step
+# (score change screen: "You checked off N/M skills!" with Next, or "Keep practicing these skills"
+# with Try again and Continue when no skill is mastered).
+# Entry: Home, signed in. Preconditions: a build whose lesson end flow has the POST_ASSESSMENT (or
+# SPEAK_LEVEL_CELEBRATION) step. The dev server sends it only after an assessment lesson, so QA runs put
+# the step first in `LessonEndFlowViewModel.updateScreens` and make `PostAssessmentRepositoryFactory`
+# return the demo repository (3 of 3 mastered, or 0 of 3 with `adb shell setprop debug.qa.pa zero`)
+# as a QA-only patch.
+# Selectors: the step has no resource IDs (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- tapOn:
+    text: "Later"
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible: "You checked off .* skills!|Keep practicing these skills"
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible: "You checked off .* skills!|Keep practicing these skills"
+    timeout: 30000

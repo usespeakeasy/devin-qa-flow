@@ -1,0 +1,21 @@
+# Post-assessment step with skills mastered: Next shows the score bar, Continue moves the flow on.
+# Entry: the step is showing with skills mastered (run `android/common/open-post-assessment.yaml` first,
+# QA-only post-assessment patch, default 3 of 3 scenario).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "You checked off .* skills!"
+- tapOn: "^Next$"
+- extendedWaitUntil:
+    visible: "What are Speak Levels\\?"
+    timeout: 30000
+- assertVisible: "Level completed!|Great progress!"
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    notVisible: "What are Speak Levels\\?"
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*|home_root_ready"
+    timeout: 30000

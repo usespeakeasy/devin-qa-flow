@@ -1,0 +1,33 @@
+# Post-assessment step: Next, "What are Speak Levels?" opens the score hub; system back returns to the
+# step; Continue still moves the flow on.
+# Entry: the step is showing with skills mastered (run `android/common/open-post-assessment.yaml` first,
+# QA-only post-assessment patch, default 3 of 3 scenario).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "You checked off .* skills!"
+- tapOn: "^Next$"
+- extendedWaitUntil:
+    visible: "What are Speak Levels\\?"
+    timeout: 30000
+- tapOn: "What are Speak Levels\\?"
+- extendedWaitUntil:
+    notVisible: "What are Speak Levels\\?"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "${SCORE_HUB_TEXT}"
+    timeout: 30000
+- takeScreenshot: score-hub
+- back
+- extendedWaitUntil:
+    visible: "What are Speak Levels\\?"
+    timeout: 15000
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    notVisible: "What are Speak Levels\\?"
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*|home_root_ready"
+    timeout: 30000

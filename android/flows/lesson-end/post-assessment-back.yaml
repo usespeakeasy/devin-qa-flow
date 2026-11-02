@@ -1,0 +1,16 @@
+# Post-assessment step: system back closes the whole lesson end flow and returns Home.
+# Entry: the step is showing (run `android/common/open-post-assessment.yaml` first, QA-only
+# post-assessment patch).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "You checked off .* skills!|Keep practicing these skills"
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible: "You checked off .* skills!|Keep practicing these skills"
+- assertNotVisible:
+    id: lesson_end_reskin_root

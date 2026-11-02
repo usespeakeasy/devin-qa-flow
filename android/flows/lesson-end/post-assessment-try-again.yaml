@@ -1,0 +1,30 @@
+# Post-assessment step with no skill mastered: Try again starts the same lesson again and the lesson end
+# flow is gone; back (Quit on the close confirmation) from the restarted lesson goes Home, not to the step.
+# Entry: the step is showing with 0 skills mastered (`adb shell setprop debug.qa.pa zero`, then
+# `android/common/open-post-assessment.yaml`; QA-only post-assessment patch).
+# Selectors: the step and the close confirmation sheet have no resource IDs (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Keep practicing these skills"
+- tapOn: "^Try again$"
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- assertNotVisible: "Keep practicing these skills"
+- takeScreenshot: lesson-restarted
+- back
+- runFlow:
+    when:
+      visible: "^Quit$"
+    commands:
+      - tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible: "Keep practicing these skills|You checked off .* skills!"
+- assertNotVisible:
+    id: lesson_end_reskin_root
