@@ -1,0 +1,19 @@
+# Signed-out welcome screen > Log in > sign-in options sheet (`auth_options_screen`). Stops there so the
+# run script can assert which providers show (e.g. Kakao on global, none on China builds).
+# Entry: app data cleared, storybook on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_sign_in_button
+    timeout: 60000
+- tapOn:
+    id: onboarding_storybook_sign_in_button
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 30000
+- assertVisible:
+    id: button_email

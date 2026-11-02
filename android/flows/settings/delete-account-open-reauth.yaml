@@ -1,0 +1,24 @@
+# Manage Account > Delete Account > confirm "Delete Account": stops on the reauthentication step that the
+# account's sign-in method shows (password dialog for email, provider step for third-party accounts).
+# Nothing is deleted. Entry: `home_root_ready`, signed-in dev account.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn:
+    id: settings_manage_account_option
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 15000
+- tapOn:
+    id: edit_delete_account
+- extendedWaitUntil:
+    visible: "Confirm account deletion"
+    timeout: 10000
+- tapOn:
+    text: "Delete Account"
+    rightOf:
+      text: "Cancel"
+- assertNotVisible: "Confirm account deletion"
