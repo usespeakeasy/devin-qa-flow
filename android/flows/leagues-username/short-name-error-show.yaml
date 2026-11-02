@@ -1,0 +1,18 @@
+# Leagues username sheet: "ab" is rejected by the server and the error dialog
+# "Username must be 3 characters or more." shows over the sheet. Stops with the dialog open.
+# Entry: the sheet shows (android/common/open-leagues-username-bridge.yaml), signed in.
+# Exit: the error dialog is open. Follow with short-name-error-ok.yaml or short-name-error-back.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: username_input
+- eraseText: 40
+- inputText: "ab"
+- hideKeyboard
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    visible: "Username must be 3 characters or more."
+    timeout: 20000

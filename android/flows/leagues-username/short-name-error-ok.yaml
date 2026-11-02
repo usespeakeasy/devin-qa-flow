@@ -1,0 +1,25 @@
+# Leagues username sheet: OK on the "ab" error dialog closes it, the sheet stays with "ab",
+# then Back closes the sheet (no name saved).
+# Entry: the error dialog shows (short-name-error-show.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "OK"
+- extendedWaitUntil:
+    notVisible: "Username must be 3 characters or more."
+    timeout: 5000
+- assertVisible:
+    id: leagues_username_input_screen
+- assertVisible:
+    id: username_input
+    text: "ab"
+- repeat:
+    while:
+      visible:
+        id: leagues_username_input_screen
+    times: 2
+    commands:
+      - back
+- assertNotVisible:
+    id: leagues_username_input_screen
