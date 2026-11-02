@@ -1,5 +1,6 @@
 # After sign-in the premium intro opens. With no Play Billing on the emulator it shows
 # "An unexpected error occurred."; dismiss the dialog and exit to Home, closing a streak-saved sheet if one shows.
+# With Play Billing (Google Play image and a Google account) prod shows a Superwall paywall instead; Back closes it.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
@@ -7,8 +8,14 @@ env:
 - extendedWaitUntil:
     visible:
       # The error dialog hides the `_ready` root from the hierarchy, so match either.
-      id: onboarding_premium_intro_(ready|error)
+      id: (onboarding_premium_intro_(ready|error)|main-editor-container)
     timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: main-editor-container
+    commands:
+      - back
 - runFlow:
     when:
       visible:
@@ -16,8 +23,13 @@ env:
     commands:
       - tapOn:
           id: button1
-- tapOn:
-    id: exit
+- runFlow:
+    when:
+      visible:
+        id: onboarding_premium_intro_ready
+    commands:
+      - tapOn:
+          id: exit
 # Accounts whose streak was frozen get a "We saved your N-day streak!" sheet over Home on sign-in.
 # It hides `home_root_ready`, so wait for either and close the sheet with Back.
 - extendedWaitUntil:

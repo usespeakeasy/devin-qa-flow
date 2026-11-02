@@ -1,0 +1,22 @@
+# Signed-out welcome screen -> Continue with Google -> the device's Google account, through the premium intro, to Home.
+# Entry: `onboarding_storybook_sign_in_button` on screen (cold start after `pm clear`, or after log out).
+# Precondition: exactly one Google account on the device (qa@usespeak.com, see the skill's "Android Google sign-in").
+# Selectors: the Google button and the account chooser have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_sign_in_button
+    timeout: 60000
+- tapOn:
+    id: onboarding_storybook_sign_in_button
+- tapOn: "Continue with Google"
+# With one account Google signs in directly; with more it shows "Choose an account".
+- runFlow:
+    when:
+      visible: "qa@usespeak.com"
+    commands:
+      - tapOn: "qa@usespeak.com"
+- runFlow: dismiss-premium-intro.yaml

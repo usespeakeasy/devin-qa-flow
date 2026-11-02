@@ -1,0 +1,8 @@
+# Google sign-in from the signed-out welcome screen to Home.
+# Entry: `onboarding_storybook_sign_in_button` (after `qa_android.py fresh` or a log out).
+# Precondition: qa@usespeak.com added in Android Settings, screen lock set (see the skill's "Android Google sign-in").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/open-google-sign-in.yaml
