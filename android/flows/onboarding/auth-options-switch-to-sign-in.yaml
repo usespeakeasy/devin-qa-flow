@@ -1,0 +1,15 @@
+# Sign-up options sheet > "Already have an account? Log in" > sign-in options (`auth_options_screen`).
+# Asserts no provider, so it runs on every market (China builds show only the phone code). The run
+# script asserts the providers after it.
+# Entry: sign-up options sheet on screen (e.g. after korean-native-sign-up-options.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: auth_options_secondary_text_button
+- extendedWaitUntil:
+    visible: "Sign in to continue"
+    timeout: 15000
+- assertVisible:
+    id: auth_options_screen
