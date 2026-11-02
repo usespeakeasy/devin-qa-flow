@@ -5,7 +5,6 @@
 # only after the last vocab lesson of a unit, so QA runs put `LessonFinishedFlow.Component.SIDE_QUEST_COMPLETED`
 # first in the order in `LessonEndFlowViewModel.updateScreens` (with empty SideQuestCompletedData when the
 # server sends none) as a QA-only patch.
-# Text fallback: the step has no resource IDs yet (see INDEX.md).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
@@ -22,7 +21,7 @@ env:
 - repeat:
     while:
       notVisible:
-        text: ".*completed all vocab lessons for this unit.*"
+        id: lesson_end_side_quest_completed_root
     times: 60
     commands:
       - tapOn:
@@ -30,7 +29,9 @@ env:
           optional: true
 - extendedWaitUntil:
     visible:
-      text: ".*completed all vocab lessons for this unit.*"
+      id: lesson_end_side_quest_completed_root
     timeout: 30000
+- assertVisible:
+    text: ".*completed all vocab lessons for this unit.*"
 - assertVisible:
     text: "Tap to continue"
