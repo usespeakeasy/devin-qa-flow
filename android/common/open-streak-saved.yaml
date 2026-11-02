@@ -1,0 +1,36 @@
+# Open a drill lesson and skip every card until the lesson end shows the streak saved step
+# ("You saved your streak!" with the day count and Continue).
+# Entry: Home, signed in, Debug Menu > Subscription override > Premium.
+# Preconditions: a build whose lesson end flow has the STREAK step with streak data. The dev server sends
+# it only when the lesson saves a streak that could be restored, so QA runs put
+# `LessonFinishedFlow.Component.STREAK` first in the order in `LessonEndFlowViewModel.updateScreens`
+# (with fixed UserStreak data, 12 days) as a QA-only patch.
+# Selectors: the step's root and title have no feature-prefixed ID (text fallback for the title).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- tapOn:
+    text: "Later"
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible: "You saved your streak!"
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible: "You saved your streak!"
+    timeout: 30000
+- assertVisible:
+    id: streak_count
+- assertVisible:
+    id: primary_button

@@ -1,0 +1,21 @@
+# Lesson end streak saved step: Continue moves the flow on to its next step (not Home).
+# Entry: the streak saved step is showing (run `android/common/open-streak-saved.yaml` first;
+# it needs the QA-only STREAK patch and a premium account, Debug Menu > Subscription override > Premium).
+# Selectors: title text fallback (no feature-prefixed ID on the step).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "You saved your streak!"
+- tapOn:
+    id: primary_button
+    text: "Continue"
+- extendedWaitUntil:
+    notVisible: "You saved your streak!"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*"
+    timeout: 30000
+- assertNotVisible:
+    id: home_root_ready

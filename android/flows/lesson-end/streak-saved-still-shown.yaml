@@ -1,0 +1,20 @@
+# Lesson end streak saved step: after a config change or process death, the step still shows with
+# its day count, texts and Continue.
+# Entry: the streak saved step was showing before the rotation or the relaunch (QA-only STREAK patch,
+# fixed 12 day streak).
+# Selectors: title and subtitle text fallback (no feature-prefixed ID on the step).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  DAYS: "12"
+---
+- extendedWaitUntil:
+    visible: "You saved your streak!"
+    timeout: 30000
+- assertVisible:
+    id: streak_count
+    text: "${DAYS}"
+- assertVisible: "You did a ${DAYS} day streak.*"
+- assertVisible:
+    id: primary_button
+    text: "Continue"

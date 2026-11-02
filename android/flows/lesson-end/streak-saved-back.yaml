@@ -1,0 +1,17 @@
+# Lesson end streak saved step: system back closes the whole lesson end flow and returns Home.
+# Entry: the streak saved step is showing (run `android/common/open-streak-saved.yaml` first;
+# it needs the QA-only STREAK patch and a premium account, Debug Menu > Subscription override > Premium).
+# Selectors: title text fallback (no feature-prefixed ID on the step).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "You saved your streak!"
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible: "You saved your streak!"
+- assertNotVisible:
+    id: lesson_end_reskin_root
