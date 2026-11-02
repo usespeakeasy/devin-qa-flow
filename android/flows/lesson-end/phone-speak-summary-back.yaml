@@ -1,0 +1,16 @@
+# Lesson end phone speak call summary: system back closes the whole lesson end flow and returns Home.
+# Entry: the summary is showing (run `android/common/open-phone-speak-summary.yaml` first).
+# Selectors: the summary has no resource-id (text fallback "Great call!").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Great call!"
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible: "Great call!"
+- assertNotVisible:
+    id: "lesson_end_.*_root"

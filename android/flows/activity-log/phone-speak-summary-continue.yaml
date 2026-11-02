@@ -1,0 +1,15 @@
+# Activity log phone speak call summary: Continue closes the summary and returns to the activity log.
+# Entry: the summary is showing (run `android/common/open-activity-log-phone-speak.yaml` first).
+# Selectors: the summary has no resource-id (text fallback "Great call!").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Great call!"
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    visible:
+      id: activity_log_screen
+    timeout: 15000
+- assertNotVisible: "Great call!"
+- assertNotVisible: "Practice your frequent mistakes"

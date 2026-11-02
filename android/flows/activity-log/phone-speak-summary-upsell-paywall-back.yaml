@@ -1,0 +1,36 @@
+# Phone speak call summary with the upsell banner: the upgrade button opens the paywall
+# over the summary; system back returns to the summary.
+# Entry: the summary is showing with the upsell buttons (Maybe later under the tier button). With
+# Subscription override > Free a drill lesson stops at Preview Finished, so open it from the activity log
+# (`android/common/open-activity-log-phone-speak.yaml`).
+# Preconditions: QA-only patch: the fixed summary has upsell=true when `adb shell setprop debug.qa.upsell 1`
+# is set; Debug Menu > Subscription override > Free.
+# Back target: the summary ("Great call!").
+# With no Play Billing on the emulator the paywall shows "An unexpected error occurred." first; OK dismisses it.
+# Selectors: the tier button has no resource-id (text fallback UPGRADE_TEXT).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  UPGRADE_TEXT: "(?i).*(unlock|upgrade|premium).*"
+---
+- assertVisible: "Great call!"
+- assertVisible: "Maybe later"
+- tapOn: ${UPGRADE_TEXT}
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_(ready|error)
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: button1
+    commands:
+      - tapOn:
+          id: button1
+- assertNotVisible: "Great call!"
+- back
+- extendedWaitUntil:
+    visible: "Great call!"
+    timeout: 15000
+- assertNotVisible:
+    id: onboarding_premium_intro_(ready|error)

@@ -1,0 +1,22 @@
+# Lesson end phone speak call summary: Continue shows "Practice your frequent mistakes"; Not now
+# leaves the summary for the next lesson end step (the readout, lesson_end_reskin_root, on pool accounts).
+# Entry: the summary is showing (run `android/common/open-phone-speak-summary.yaml` first).
+# Selectors: the summary and the practice intro have no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Great call!"
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    visible: "Practice your frequent mistakes"
+    timeout: 10000
+- tapOn: "Not now"
+- extendedWaitUntil:
+    notVisible: "Practice your frequent mistakes"
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 15000
+- assertNotVisible: "Great call!"

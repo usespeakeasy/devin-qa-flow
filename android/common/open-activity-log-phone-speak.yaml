@@ -1,0 +1,40 @@
+# Profile > See all activities > tap the first activity row: the phone speak call summary opens.
+# Entry: Home tab, signed in, at least four activities (See all activities shows from four).
+# Preconditions: QA-only patch: `ActivityLogNavigator.lessonDestination` treats every activity as a
+# phone speak call and `UserRepositoryImpl.fetchPhoneSpeakActivitySummary` returns a fixed summary.
+# Selectors: the Profile tab, See all activities and the rows have no resource-id (text fallbacks;
+# the row is tapped by the activity title ROW_TEXT, by default the drill lesson
+# that open-phone-speak-summary.yaml finishes).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  ROW_TEXT: "EN_ES_A1-1_quetal_SP.*"
+---
+- tapOn: "Profile"
+- extendedWaitUntil:
+    visible:
+      id: stat_streak_title
+    timeout: 20000
+- scrollUntilVisible:
+    element: "See all activities"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "See all activities"
+- extendedWaitUntil:
+    visible:
+      id: activity_log_screen
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      text: ${ROW_TEXT}
+      childOf:
+        id: list
+    timeout: 20000
+- tapOn:
+    text: ${ROW_TEXT}
+    childOf:
+      id: list
+    index: 0
+- extendedWaitUntil:
+    visible: "Great call!"
+    timeout: 30000

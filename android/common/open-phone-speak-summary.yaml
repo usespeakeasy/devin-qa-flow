@@ -1,0 +1,31 @@
+# Open a drill lesson and skip every card until the lesson end shows the phone speak call summary
+# ("Great call!" with Continue under it).
+# Entry: Home, signed in.
+# Preconditions: the dev server sends PHONE_SPEAK_SUMMARY_V2 only after a phone speak call, so QA runs
+# put it first in the order in `LessonEndFlowViewModel.updateScreens` with a fixed summary (one
+# correction with an outline id, so Continue shows "Practice your frequent mistakes") as a QA-only patch.
+# Selectors: the summary has no resource-id (text fallback "Great call!").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- tapOn:
+    text: "Later"
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible: "Great call!"
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible: "Great call!"
+    timeout: 30000

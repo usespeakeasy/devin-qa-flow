@@ -1,0 +1,35 @@
+# Lesson end phone speak call summary: Continue, Start practice opens the practice lesson in place of
+# the whole lesson end flow; system back from the lesson does not return to the summary.
+# Entry: the summary is showing (run `android/common/open-phone-speak-summary.yaml` first).
+# Preconditions: QA-only patch: a `qa-` outline id opens EN_ES_A1-1_quetal_SP_DL_IC instead of
+# generating a lesson, and debug.qa.mfy_upsell unset.
+# Selectors: the summary and the practice intro have no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Great call!"
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    visible: "Practice your frequent mistakes"
+    timeout: 10000
+- tapOn: "Start practice"
+- extendedWaitUntil:
+    visible:
+      id: "drill_lesson_skip|tap_to_continue"
+    timeout: 60000
+- assertNotVisible: "Practice your frequent mistakes"
+- back
+- runFlow:
+    when:
+      visible:
+        id: button1
+    commands:
+      - tapOn:
+          id: button1
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible: "Great call!"
+- assertNotVisible: "Practice your frequent mistakes"

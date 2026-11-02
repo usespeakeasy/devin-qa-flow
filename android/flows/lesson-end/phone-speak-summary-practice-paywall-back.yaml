@@ -1,0 +1,36 @@
+# Phone speak call summary with the Made For You allowance used up: Continue, Start practice opens the
+# paywall over the summary; system back returns to "Practice your frequent mistakes".
+# Entry: the lesson end summary is showing (run `android/common/open-phone-speak-summary.yaml` first;
+# Subscription override > Premium, since Free stops the drill lesson at Preview Finished).
+# Preconditions: QA-only patch: `adb shell setprop debug.qa.mfy_upsell 1` makes the
+# Made For You decision Upsell.
+# With no Play Billing on the emulator the paywall shows "An unexpected error occurred." first; OK dismisses it.
+# Selectors: the summary and the practice intro have no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Great call!"
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    visible: "Practice your frequent mistakes"
+    timeout: 10000
+- tapOn: "Start practice"
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_(ready|error)
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: button1
+    commands:
+      - tapOn:
+          id: button1
+- assertNotVisible: "Practice your frequent mistakes"
+- back
+- extendedWaitUntil:
+    visible: "Practice your frequent mistakes"
+    timeout: 15000
+- assertNotVisible:
+    id: onboarding_premium_intro_(ready|error)
