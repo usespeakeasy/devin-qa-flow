@@ -8,8 +8,10 @@ appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
-- tapOn: "Start chatting"
-- assertNotVisible: "See something wrong\\? Report this topic\\."
+- tapOn:
+    id: ai_tutor_community_details_start_chatting_button
+- assertNotVisible:
+    id: ai_tutor_community_details_sheet
 - extendedWaitUntil:
     visible:
       id: "onboarding_premium_intro_(ready|error)|ai_lesson_.*"
@@ -39,4 +41,5 @@ env:
             - waitForAnimationToEnd
 - assertVisible:
     id: ai_tutor_community_recycler_view
-- assertNotVisible: "See something wrong\\? Report this topic\\."
+- assertNotVisible:
+    id: ai_tutor_community_details_sheet

@@ -7,7 +7,8 @@ env:
 ---
 - back
 - extendedWaitUntil:
-    notVisible: "See something wrong\\? Report this topic\\."
+    notVisible:
+      id: ai_tutor_community_details_sheet
     timeout: 10000
 - assertVisible:
     id: ai_tutor_community_recycler_view

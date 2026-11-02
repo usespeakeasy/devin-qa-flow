@@ -1,22 +1,27 @@
 # Community details sheet > "Report this topic." > Spam: the report sheet closes and the
 # Report Confirmation dialog shows over the details sheet.
 # Entry: open-favorites-topic.yaml or open-community-topic.yaml. Exit: the confirmation dialog.
-# Selectors: the report link is a span inside one text node with no resource-id, so a point is
-# the only way to hit it (portrait 1080x2400). Spam, Inappropriate content (the report sheet; the
-# Navigation 3 sheet has no design_bottom_sheet) and Report Confirmation are text fallbacks.
+# Selectors: the report link's clickable child has no resource-id and does not show in the UiAutomator
+# tree, so a point inside ai_tutor_community_details_report_text hits it (portrait 1080x2400).
+# The rest use ids (speak-android#8664).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
-- assertVisible: "See something wrong\\? Report this topic\\."
+- assertVisible:
+    id: ai_tutor_community_details_report_text
 - tapOn:
     point: "69%,71%"
 - extendedWaitUntil:
-    visible: "^Inappropriate content$"
+    visible:
+      id: ai_tutor_community_report_sheet
     timeout: 10000
-- tapOn: "^Spam$"
+- tapOn:
+    id: ai_tutor_community_report_option_spam
 - extendedWaitUntil:
-    visible: "Report Confirmation"
+    visible:
+      id: ai_tutor_community_report_confirmation
     timeout: 15000
-- assertNotVisible: "^Inappropriate content$"
+- assertNotVisible:
+    id: ai_tutor_community_report_sheet
 - assertVisible: "You've successfully reported this submission\\."

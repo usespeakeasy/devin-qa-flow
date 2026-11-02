@@ -15,5 +15,6 @@ env:
     timeout: 20000
 - tapOn: ${TOPIC}
 - extendedWaitUntil:
-    visible: "Start chatting"
+    visible:
+      id: ai_tutor_community_details_start_chatting_button
     timeout: 10000

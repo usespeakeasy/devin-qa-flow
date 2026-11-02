@@ -5,7 +5,11 @@ appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
-- tapOn: "^Okay$"
-- assertNotVisible: "Report Confirmation"
-- assertVisible: "Start chatting"
-- assertVisible: "See something wrong\\? Report this topic\\."
+- tapOn:
+    id: ai_tutor_community_report_confirmation_okay_button
+- assertNotVisible:
+    id: ai_tutor_community_report_confirmation
+- assertVisible:
+    id: ai_tutor_community_details_start_chatting_button
+- assertVisible:
+    id: ai_tutor_community_details_report_text

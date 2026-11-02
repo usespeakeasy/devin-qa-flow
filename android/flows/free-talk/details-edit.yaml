@@ -5,10 +5,12 @@ appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
-- tapOn: "^Edit$"
+- tapOn:
+    id: ai_tutor_community_details_edit_button
 - extendedWaitUntil:
     visible: "Continue"
     timeout: 15000
-- assertNotVisible: "Start chatting"
+- assertNotVisible:
+    id: ai_tutor_community_details_sheet
 - back
 - assertNotVisible: "Continue"
