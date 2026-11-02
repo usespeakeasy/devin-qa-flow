@@ -1,0 +1,36 @@
+# Profile > Explore: the singles Explore screen opens with its category tabs.
+# Entry: Home tab. Precondition: ko-en or ja-en dev account, experiment learning_path_explore ON
+# (Debug Menu > Feature flag override, flows/debug-menu/set-feature-flag.yaml).
+# Home popups (app_assessment_popup, the referral prompt) are closed first.
+# Selectors: the bottom tab, the Profile "Explore" option row and the referral popup's "Later"
+# have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow:
+    when:
+      visible:
+        id: app_assessment_popup
+    commands:
+      - back
+- tapOn:
+    text: "Later"
+    optional: true
+- tapOn: "Profile"
+- tapOn:
+    text: "Later"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      text: "Explore"
+- tapOn:
+    text: "Explore"
+- extendedWaitUntil:
+    visible:
+      id: action_history
+    timeout: 30000

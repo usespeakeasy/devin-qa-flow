@@ -1,0 +1,13 @@
+# Pack: one slow fixed swipe up, so the first rows sit above where the details sheet opens.
+# Entry: pack screen at the top (open-pack.yaml). Exit: pack screen, header scrolled away.
+# Selectors: header_title.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- swipe:
+    start: 50%, 85%
+    end: 50%, 30%
+    duration: 1500
+- assertNotVisible:
+    id: header_title

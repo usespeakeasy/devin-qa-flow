@@ -1,0 +1,16 @@
+# Lesson details sheet: system back closes it and the pack stays.
+# Entry: details sheet open. Exit: pack screen.
+# Selectors: singles_details_dialog, list.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: singles_details_dialog
+    timeout: 10000
+- assertVisible:
+    id: list
+- assertVisible:
+    id: single_title

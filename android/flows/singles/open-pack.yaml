@@ -1,0 +1,24 @@
+# Explore > a pack card: the pack screen opens with its header and its lessons.
+# Entry: Explore (open-explore.yaml). Exit: pack screen.
+# maestro test -e PACK="원어민과의 대화: 일상, 회사, 학교" open-pack.yaml
+# Selectors: pack_title, header_title, single_title (the pack is picked by its title text).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- scrollUntilVisible:
+    element:
+      id: pack_title
+      text: ${PACK}
+- tapOn:
+    id: pack_title
+    text: ${PACK}
+- extendedWaitUntil:
+    visible:
+      id: header_title
+      text: ${PACK}
+    timeout: 30000
+- assertVisible:
+    id: single_title
+- assertVisible:
+    id: exit

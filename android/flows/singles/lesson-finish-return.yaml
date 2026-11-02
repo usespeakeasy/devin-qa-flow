@@ -1,0 +1,41 @@
+# Pack: start a lesson from its details sheet, finish it with the debug Skip lesson button,
+# walk the lesson end, and land back on the pack with that row showing.
+# Entry: pack screen with the LESSON row visible (pack-scroll-to.yaml).
+# Preconditions: Debug Menu > Debug features enabled (flows/debug-menu/set-debug-toggle-on.yaml),
+# Subscription override Premium, LESSON not finished yet.
+# A lesson started before asks "Continue where you left off?"; the flow picks Start over
+# (text fallback, the dialog buttons have no resource-id).
+# Exit: pack screen. Check single_finished on the LESSON row and the row bounds with harness dump.
+# maestro test -e LESSON="마트에서 장보기" lesson-finish-return.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: single_title
+    text: ${LESSON}
+- extendedWaitUntil:
+    visible:
+      id: singles_details_dialog
+    timeout: 15000
+- tapOn:
+    id: button
+- repeat:
+    while:
+      notVisible:
+        id: debug_skip_lesson
+    times: 10
+    commands:
+      - tapOn:
+          text: "Start over"
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: debug_skip_lesson
+    timeout: 60000
+- tapOn:
+    id: debug_skip_lesson
+- runFlow:
+    file: lesson-end-to-pack.yaml
+    env:
+      LESSON: ${LESSON}

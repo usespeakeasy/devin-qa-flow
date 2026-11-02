@@ -1,0 +1,19 @@
+# Pack: tap a lesson row: the lesson details sheet opens.
+# Entry: pack screen with the LESSON row visible (pack-swipe-up.yaml puts it above the sheet).
+# Exit: details sheet over the pack.
+# maestro test -e LESSON="마트에서 장보기" details-open.yaml
+# Selectors: single_title (the row is picked by its title text), singles_details_dialog, title.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: single_title
+    text: ${LESSON}
+- extendedWaitUntil:
+    visible:
+      id: singles_details_dialog
+    timeout: 15000
+- assertVisible:
+    id: title
+    text: ${LESSON}

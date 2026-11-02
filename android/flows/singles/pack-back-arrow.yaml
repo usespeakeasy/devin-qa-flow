@@ -1,0 +1,15 @@
+# Pack: the back arrow closes the pack and Explore shows again.
+# Entry: pack screen. Exit: Explore.
+# Selectors: exit, action_history, header_title.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible:
+      id: action_history
+    timeout: 15000
+- assertNotVisible:
+    id: header_title

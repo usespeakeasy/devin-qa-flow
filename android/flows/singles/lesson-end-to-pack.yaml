@@ -1,0 +1,39 @@
+# Lesson end > pack: tap through the lesson end screens and prompts until the pack shows again
+# with the LESSON row on screen.
+# Entry: lesson end (after debug_skip_lesson). Exit: pack screen.
+# maestro test -e LESSON="마트에서 장보기" lesson-end-to-pack.yaml
+# The loop waits on single_image (pack rows only; the lesson end has its own exit id).
+# Selectors: the widget prompt ("Maybe later") and the streak screen's "Continue" have no
+# resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- repeat:
+    while:
+      notVisible:
+        id: single_image
+    times: 15
+    commands:
+      - tapOn:
+          id: "ask_for_review.*_no"
+          optional: true
+      - tapOn:
+          id: "lesson_end_.*continue_button"
+          optional: true
+      - tapOn:
+          id: primary_button
+          optional: true
+      - tapOn:
+          text: "^Continue$"
+          optional: true
+      - tapOn:
+          text: "Maybe later"
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: single_title
+      text: ${LESSON}
+    timeout: 30000
+- assertNotVisible:
+    id: header_title

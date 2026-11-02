@@ -1,0 +1,15 @@
+# Pack: scroll the list until a lesson row shows, away from the header.
+# Entry: pack screen. Exit: pack screen scrolled.
+# maestro test -e LESSON="마트에서 장보기" pack-scroll-to.yaml
+# Selectors: single_title (picked by its title text), header_title.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- scrollUntilVisible:
+    element:
+      id: single_title
+      text: ${LESSON}
+    centerElement: true
+- assertNotVisible:
+    id: header_title

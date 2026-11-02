@@ -1,0 +1,16 @@
+# Lesson details sheet: tap the save button; its label flips to EXPECT (Unsave after saving,
+# Save after unsaving).
+# Entry: details sheet open (details-open.yaml). Exit: same sheet.
+# maestro test -e EXPECT=Unsave details-toggle-save.yaml
+# Selectors: saved (the sheet's save button, content description Save/Unsave).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: saved
+- extendedWaitUntil:
+    visible:
+      id: saved
+      text: ${EXPECT}
+    timeout: 10000
