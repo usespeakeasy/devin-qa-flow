@@ -1,0 +1,67 @@
+# Lesson end with the five CLNT-942 steps (see five-steps-continue.yaml): continue to step BACK_AT
+# (1 post-assessment, 2 Speak Level celebration, 3 unit end, 5 call summary), then system
+# back closes the whole lesson end flow and returns Home.
+# BACK_AT=4 (community) does not close the flow: back moves on, see community-scenario-back.yaml.
+# Entry and preconditions: same as five-steps-continue.yaml (run `android/common/open-post-assessment.yaml`).
+# maestro test -e BACK_AT=3 five-steps-back.yaml (BACK_AT is required; an env default here would win over -e).
+# Selectors: post-assessment, community and call summary have no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "You checked off .* skills!"
+- runFlow:
+    when:
+      true: ${Number(BACK_AT) >= 2}
+    commands:
+      - tapOn: "^Next$"
+      - extendedWaitUntil:
+          visible: "What are Speak Levels\\?"
+          timeout: 30000
+      - tapOn: "^Continue$"
+      - extendedWaitUntil:
+          notVisible: "What are Speak Levels\\?"
+          timeout: 15000
+      - extendedWaitUntil:
+          visible: "You checked off .* skills!"
+          timeout: 30000
+- runFlow:
+    when:
+      true: ${Number(BACK_AT) >= 3}
+    commands:
+      - tapOn: "^Next$"
+      - extendedWaitUntil:
+          visible: "What are Speak Levels\\?"
+          timeout: 30000
+      - tapOn: "^Continue$"
+      - extendedWaitUntil:
+          visible:
+            id: unit_end_screen
+          timeout: 30000
+- runFlow:
+    when:
+      true: ${Number(BACK_AT) >= 4}
+    commands:
+      - tapOn:
+          id: unit_end_cta
+      - extendedWaitUntil:
+          visible: "Share with the community"
+          timeout: 30000
+- runFlow:
+    when:
+      true: ${Number(BACK_AT) >= 5}
+    commands:
+      - tapOn: "Share with the community"
+      - extendedWaitUntil:
+          visible: "Great call!"
+          timeout: 30000
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: lesson_end_reskin_root
+- assertNotVisible: "You checked off .* skills!|Share with the community|Great call!"
+- assertNotVisible:
+    id: unit_end_screen

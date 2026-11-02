@@ -1,0 +1,51 @@
+# Lesson end with the five steps CLNT-942 made Navigable, in this order: POST_ASSESSMENT,
+# SPEAK_LEVEL_CELEBRATION (both PostAssessmentController), END_OF_UNIT_CELEBRATION (UnitEndController),
+# COMMUNITY_SCENARIO (PostToCommunityController), PHONE_SPEAK_SUMMARY_V2 (PhoneSpeakSummaryV2Controller).
+# Each step's main button moves the flow on; the run ends on the readout (lesson_end_reskin_root).
+# Entry: the first step is showing (run `android/common/open-post-assessment.yaml` first).
+# Preconditions: QA-only patch from the speak-android#8698 packet (the five components first in
+# `LessonEndFlowViewModel.updateScreens` with fixed unit end, community and call summary data, demo
+# `PostAssessmentRepositoryFactory`, no server call on community submit); premium account
+# (Debug Menu > Subscription override > Premium). Works with the kill switch ON or SERVER.
+# Selectors: post-assessment, community and call summary have no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "You checked off .* skills!"
+- tapOn: "^Next$"
+- extendedWaitUntil:
+    visible: "What are Speak Levels\\?"
+    timeout: 30000
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    notVisible: "What are Speak Levels\\?"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "You checked off .* skills!"
+    timeout: 30000
+- tapOn: "^Next$"
+- extendedWaitUntil:
+    visible: "What are Speak Levels\\?"
+    timeout: 30000
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    visible:
+      id: unit_end_screen
+    timeout: 30000
+- tapOn:
+    id: unit_end_cta
+- extendedWaitUntil:
+    visible: "Share with the community"
+    timeout: 30000
+- assertVisible: "Upload to community"
+- tapOn: "Share with the community"
+- extendedWaitUntil:
+    visible: "Great call!"
+    timeout: 30000
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 30000
+- assertNotVisible: "Great call!"

@@ -1,0 +1,42 @@
+# Lesson end community scenario step ("Upload to community", PostToCommunityController): system back
+# leaves the step and the flow moves on to the next step (the call summary here); it does not close the
+# lesson end flow. Reaches the step through the five CLNT-942 steps (see five-steps-continue.yaml).
+# Entry and preconditions: same as five-steps-continue.yaml (run `android/common/open-post-assessment.yaml`).
+# Selectors: post-assessment, community and call summary have no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "You checked off .* skills!"
+- tapOn: "^Next$"
+- extendedWaitUntil:
+    visible: "What are Speak Levels\\?"
+    timeout: 30000
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    notVisible: "What are Speak Levels\\?"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "You checked off .* skills!"
+    timeout: 30000
+- tapOn: "^Next$"
+- extendedWaitUntil:
+    visible: "What are Speak Levels\\?"
+    timeout: 30000
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    visible:
+      id: unit_end_screen
+    timeout: 30000
+- tapOn:
+    id: unit_end_cta
+- extendedWaitUntil:
+    visible: "Share with the community"
+    timeout: 30000
+- back
+- extendedWaitUntil:
+    visible: "Great call!"
+    timeout: 30000
+- assertNotVisible: "Share with the community"
+- assertNotVisible:
+    id: home_root_ready
