@@ -1,0 +1,22 @@
+# Lesson end post to community step: "Share with the community" shows the loading dialog while the
+# submission runs, then the lesson end flow moves on to the next step.
+# Entry: the post to community step is showing (`android/common/open-post-to-community.yaml`).
+# Preconditions: its QA-only patch; the submit is a 2 s no-op success (`debug.qa.community` unset) so the
+# loading dialog stays up long enough for the LOADING_SHOT screenshot.
+# NEXT_ID: the next step's resource id (default lesson_end_reskin_root). LOADING_SHOT (required): screenshot name
+# path, no extension, taken right after the tap. No env defaults: an env default wins over `-e`.
+# Selectors: post to community and the loading dialog have no resource IDs (text fallback, ID PR speak-android#8720).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Upload to community"
+- tapOn: "Share with the community"
+- takeScreenshot: ${LOADING_SHOT}
+- extendedWaitUntil:
+    visible:
+      id: "${typeof NEXT_ID === 'undefined' ? 'lesson_end_reskin_root' : NEXT_ID}"
+    timeout: 30000
+- assertNotVisible: "Upload to community"
+- assertNotVisible:
+    id: "home_root_ready"

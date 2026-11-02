@@ -1,0 +1,21 @@
+# Lesson end post to community step: a submit that fails with any other error shows the generic error
+# dialog ("An unexpected error occurred."); OK closes it and the step stays.
+# Entry: the post to community step is showing (`android/common/open-post-to-community.yaml`).
+# Preconditions: its QA-only patch with `adb shell setprop debug.qa.community error` (the submit throws an IOException).
+# Selectors: post to community has no resource IDs (text fallback, ID PR speak-android#8720).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Upload to community"
+- tapOn: "Share with the community"
+- extendedWaitUntil:
+    visible: "An unexpected error occurred\\."
+    timeout: 30000
+- tapOn:
+    id: button1
+- extendedWaitUntil:
+    notVisible: "An unexpected error occurred\\."
+    timeout: 10000
+- assertVisible: "Upload to community"
+- assertVisible: "Share with the community"

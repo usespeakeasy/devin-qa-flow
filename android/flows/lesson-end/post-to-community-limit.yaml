@@ -1,0 +1,33 @@
+# Lesson end post to community step: a submit that fails with the daily limit shows the
+# "Daily submission limit reached" alert; OK closes it and the step stays. The ViewModel keeps the submission
+# IN_PROGRESS after this error, so the loading dialog shows again over the step after OK (same with the kill
+# switch ON); Back closes it (it is cancelable) and the step stays.
+# AFTER_OK_SHOT (required): screenshot name, no extension, taken right after OK. No env defaults (an env
+# default wins over `-e`).
+# Entry: the post to community step is showing (`android/common/open-post-to-community.yaml`).
+# Preconditions: its QA-only patch with `adb shell setprop debug.qa.community limit`
+# (the submit throws TooManySubmissionsException).
+# Selectors: post to community has no resource IDs (text fallback, ID PR speak-android#8720).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Upload to community"
+- tapOn: "Share with the community"
+- extendedWaitUntil:
+    visible: "Daily submission limit reached"
+    timeout: 30000
+- tapOn: "^OK$"
+- extendedWaitUntil:
+    notVisible: "Daily submission limit reached"
+    timeout: 10000
+- takeScreenshot: ${AFTER_OK_SHOT}
+- runFlow:
+    when:
+      notVisible: "Upload to community"
+    commands:
+      - back
+- extendedWaitUntil:
+    visible: "Upload to community"
+    timeout: 10000
+- assertVisible: "Share with the community"

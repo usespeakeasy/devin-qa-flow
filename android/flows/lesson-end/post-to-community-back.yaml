@@ -3,6 +3,8 @@
 # Entry: the post to community step is showing, with the phone speak call summary as the next step
 # (`android/common/open-post-assessment.yaml`, then `compose-steps-continue.yaml` with STOP_AT=4 and its
 # QA-only patch).
+# NEXT_ID: the next step's resource id (default the phone speak summary; `lesson_end_reskin_root` after
+# `android/common/open-post-to-community.yaml`). No env default: an env default wins over `-e`.
 # Selectors: post to community has no resource IDs (text fallback).
 appId: ${APP_ID}
 env:
@@ -12,7 +14,7 @@ env:
 - back
 - extendedWaitUntil:
     visible:
-      id: phone_speak_summary_continue
+      id: "${typeof NEXT_ID === 'undefined' ? 'phone_speak_summary_continue' : NEXT_ID}"
     timeout: 30000
 - assertNotVisible: "Upload to community"
 - assertNotVisible:

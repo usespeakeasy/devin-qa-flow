@@ -1,0 +1,17 @@
+# Lesson end post to community step still shows with its scenario card (after rotation or process death).
+# Entry: the post to community step was showing before the rotation or the kill and relaunch.
+# Selectors: post to community has no resource IDs (text fallback, ID PR speak-android#8720).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+# Tablet emulation can show the system taskbar tip ("See and do more") over the app.
+- tapOn:
+    text: "Got it"
+    optional: true
+- extendedWaitUntil:
+    visible: "Share with the community"
+    timeout: 30000
+- assertVisible: "Upload to community"
+- assertVisible: "QA coffee chat"
+- assertVisible: "QA traveler"
