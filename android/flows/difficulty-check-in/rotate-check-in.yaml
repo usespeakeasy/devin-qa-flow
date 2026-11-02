@@ -1,0 +1,16 @@
+# Rotate to landscape and back with the check-in open: it is still there.
+# Entry: the check-in shows. Exit: portrait, the check-in shows.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: custom_units_difficulty_check_in_just_right
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: custom_units_difficulty_check_in_just_right

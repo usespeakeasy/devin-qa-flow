@@ -1,0 +1,40 @@
+# Series lesson > exit > "Are you sure you want to quit this lesson?" > Quit: the difficulty check-in opens over
+# the lesson (shared `LessonExitPath`, same as Video).
+# Entry: as quit-ai-lesson.yaml. The close confirmation only shows once a series item has started, so the build has
+# the QA-only patch (`SeriesLessonLogic.shouldShowLessonCloseModal` returns true).
+# Exit: the check-in shows.
+# Selectors: the close confirmation and the resume dialog ("Continue where you left off?") have no app
+# resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP
+---
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: "tap_to_continue|button2"
+    timeout: 60000
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "Start over"
+      - extendedWaitUntil:
+          visible:
+            id: tap_to_continue
+          timeout: 30000
+- tapOn:
+    id: tap_to_continue
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: custom_units_difficulty_check_in_just_right
+    timeout: 30000
+- assertNotVisible:
+    id: series_list

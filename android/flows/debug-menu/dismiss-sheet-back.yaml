@@ -1,0 +1,6 @@
+# Dismiss a sheet that covers Home (e.g. the custom courses announcement) with Back.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back

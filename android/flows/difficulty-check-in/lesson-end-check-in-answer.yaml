@@ -1,0 +1,20 @@
+# Lesson end check-in: tap ANSWER and the flow moves on to its next lesson end step; the check-in does not come back.
+# Entry: lesson-end-to-check-in.yaml. Exit: the next lesson end step (lesson_end_*), no check-in.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: ${ANSWER}
+- extendedWaitUntil:
+    notVisible:
+      id: custom_units_difficulty_check_in
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*"
+    timeout: 30000
+- assertNotVisible:
+    id: custom_units_difficulty_check_in
+- assertNotVisible:
+    id: drill_lesson_root

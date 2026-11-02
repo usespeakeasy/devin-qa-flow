@@ -1,0 +1,16 @@
+# Back on the difficulty check-in does nothing: the check-in stays, nothing under it shows.
+# Entry: the check-in shows (quit-*.yaml or lesson-end.yaml). Exit: the check-in still shows.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- waitForAnimationToEnd:
+    timeout: 2000
+- back
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: custom_units_difficulty_check_in_just_right
+- assertNotVisible:
+    id: home_root_ready

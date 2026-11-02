@@ -1,0 +1,17 @@
+# Quit check-in: tap ANSWER (an answer or Don't show again) and land on Home, where the lesson was started.
+# Entry: the check-in from quit-*.yaml. Exit: Home, no check-in, no lesson screen.
+# maestro test -e ANSWER=custom_units_difficulty_check_in_dont_show_again check-in-answer-to-home.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: ${ANSWER}
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: custom_units_difficulty_check_in
+- assertNotVisible:
+    id: "ai_lesson_screen|drill_lesson_root|series_list"

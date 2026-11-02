@@ -1,0 +1,48 @@
+# Tutor (drill) lesson > close > "Are you sure you want to quit this lesson?" > Quit: the difficulty check-in opens
+# over the lesson.
+# Entry: as quit-ai-lesson.yaml. The close confirmation only shows after a spoken sentence, which the emulator cannot
+# do, so the build needs the QA-only patch (`TutorLessonViewModel.shouldShowLessonCloseModal` returns true).
+# Exit: the check-in shows.
+# Selectors: the close confirmation dialog has no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 30000
+    optional: true
+# The drill route sometimes stays blank after a deep link right after another lesson; restart the app and open it again.
+- runFlow:
+    when:
+      notVisible:
+        id: drill_lesson_skip
+    commands:
+      - launchApp:
+          stopApp: true
+      - extendedWaitUntil:
+          visible:
+            id: home_root_ready
+          timeout: 60000
+      - openLink: speak-dev://lesson?id=${LESSON_ID}
+      - extendedWaitUntil:
+          visible:
+            id: drill_lesson_skip
+          timeout: 60000
+- tapOn:
+    id: drill_lesson_skip
+- tapOn:
+    id: lesson_top_bar_close
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: custom_units_difficulty_check_in_just_right
+    timeout: 30000
+- assertNotVisible:
+    id: drill_lesson_root

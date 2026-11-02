@@ -1,0 +1,27 @@
+# Native AI lesson (roleplay, `AiLesson` > `AiLessonController`) > back > quit sheet > Quit: the difficulty
+# check-in opens over the lesson.
+# Entry: Home, signed in, Premium override, `doug_feedback_forms` = `difficultySheet`, `dynamic_on_demand_unit_gen` ON,
+# a custom unit lesson that is not the unit's last and a unit that has not had the check-in yet (QA-only gate patch:
+# every lesson counts, unit id from `adb shell setprop debug.qa.unit_no N`).
+# Exit: the check-in shows. QNA lessons route to Speak Embedded, so use a roleplay (`_AST`) lesson.
+# Selectors: the quit sheet's Quit has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-2_mexico_city_survival__diningoutinmexicocity__AST
+---
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- tapOn:
+    id: ai_lesson_pre_lesson_start
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_primary_send
+    timeout: 60000
+- back
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: custom_units_difficulty_check_in_just_right
+    timeout: 30000
+- assertNotVisible:
+    id: ai_lesson_screen
