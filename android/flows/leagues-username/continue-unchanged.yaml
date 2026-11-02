@@ -1,0 +1,13 @@
+# Leagues username sheet: Continue with the name unchanged closes the sheet (nothing saved).
+# Entry: the sheet shows with speaklearner unchanged (android/common/open-leagues-username-bridge.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    notVisible:
+      id: leagues_username_input_screen
+    timeout: 10000
+- assertVisible: "Leagues Username"

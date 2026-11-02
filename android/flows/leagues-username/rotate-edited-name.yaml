@@ -1,0 +1,30 @@
+# Leagues username sheet: rotate to landscape and back; the edited name is kept, then Back closes the sheet
+# without saving.
+# Entry: the sheet shows speaklearnerqa (android/flows/leagues-username/edit-name.yaml). Exit: portrait, sheet closed.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: leagues_username_input_screen
+- assertVisible:
+    id: username_input
+    text: "speaklearnerqa"
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: username_input
+    text: "speaklearnerqa"
+- repeat:
+    while:
+      visible:
+        id: leagues_username_input_screen
+    times: 2
+    commands:
+      - back
+- assertNotVisible:
+    id: leagues_username_input_screen

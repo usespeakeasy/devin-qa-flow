@@ -1,0 +1,23 @@
+# Leagues username sheet after a kill and relaunch: the sheet is back with the edited name, Back closes it
+# without saving.
+# Entry: edit-name.yaml ran, then Home, am kill and a launcher relaunch.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: leagues_username_input_screen
+    timeout: 20000
+- assertVisible:
+    id: username_input
+    text: "speaklearnerqa"
+- repeat:
+    while:
+      visible:
+        id: leagues_username_input_screen
+    times: 2
+    commands:
+      - back
+- assertNotVisible:
+    id: leagues_username_input_screen

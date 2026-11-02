@@ -1,0 +1,44 @@
+# Debug Menu > Dialog Bridges > "Leagues Username": the Choose your username sheet opens with speaklearner.
+# Entry: any signed-in state (restarts the app, opens speak-dev://debug-menu). Exit: the sheet shows, name unchanged.
+# Preconditions: a build with the "Leagues Username" bridge button (added by PR 8697; QA-only patch on its base).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 30000
+- openLink: speak-dev://debug-menu
+- runFlow:
+    when:
+      notVisible: "Debug Menu"
+    commands:
+      - openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible: "Debug Menu"
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      text: "Dialog Bridges"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Dialog Bridges"
+- scrollUntilVisible:
+    element:
+      text: "Leagues Username"
+    direction: DOWN
+    timeout: 30000
+- tapOn: "Leagues Username"
+- extendedWaitUntil:
+    visible:
+      id: leagues_username_input_screen
+    timeout: 15000
+- assertVisible: "Choose your username"
+- assertVisible:
+    id: username_input
+    text: ".*speaklearner.*"
+- assertVisible:
+    id: primary_button
+    enabled: true

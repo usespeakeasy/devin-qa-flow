@@ -1,0 +1,36 @@
+# Open a drill lesson and skip every card until the lesson end Leagues step opens the Choose your username
+# sheet over the leaderboard.
+# Entry: Home, signed in, Debug Menu > Subscription override > Premium.
+# Preconditions: the dev server sends a Leagues step with displayChangeUsernamePrompt only for some accounts,
+# so QA runs put a fixed LessonFinishedFlow.Leagues (title "QA Leagues Progress", displayChangeUsernamePrompt
+# true, active entrant speaklearner) right after LessonCompleted in LessonEndFlowViewModel.updateScreens
+# (QA-only patch).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- tapOn:
+    id: referral_welcome_dialog_later_button
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible:
+        id: leagues_username_input_screen
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: leagues_username_input_screen
+    timeout: 30000
+- assertVisible:
+    id: username_input
+    text: ".*speaklearner.*"

@@ -1,0 +1,13 @@
+# Leagues username sheet: a tap on the scrim above the sheet closes it.
+# Entry: the sheet shows (android/common/open-leagues-username-bridge.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    point: "50%,8%"
+- extendedWaitUntil:
+    notVisible:
+      id: leagues_username_input_screen
+    timeout: 10000
+- assertVisible: "Leagues Username"

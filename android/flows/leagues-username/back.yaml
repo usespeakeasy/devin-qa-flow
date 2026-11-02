@@ -1,0 +1,14 @@
+# Leagues username sheet: system Back closes the sheet.
+# Entry: the sheet shows (android/common/open-leagues-username-bridge.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: leagues_username_input_screen
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: leagues_username_input_screen
+    timeout: 10000
+- assertVisible: "Leagues Username"

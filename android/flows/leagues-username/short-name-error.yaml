@@ -1,0 +1,35 @@
+# Leagues username sheet: "ab" is rejected by the server with the 3-character error; after OK the sheet
+# stays open with "ab", then Back closes it (no name saved).
+# Entry: the sheet shows (android/common/open-leagues-username-bridge.yaml), signed in.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: username_input
+- eraseText: 40
+- inputText: "ab"
+- hideKeyboard
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    visible: "Username must be 3 characters or more."
+    timeout: 20000
+- tapOn: "OK"
+- extendedWaitUntil:
+    notVisible: "Username must be 3 characters or more."
+    timeout: 5000
+- assertVisible:
+    id: leagues_username_input_screen
+- assertVisible:
+    id: username_input
+    text: "ab"
+- repeat:
+    while:
+      visible:
+        id: leagues_username_input_screen
+    times: 2
+    commands:
+      - back
+- assertNotVisible:
+    id: leagues_username_input_screen

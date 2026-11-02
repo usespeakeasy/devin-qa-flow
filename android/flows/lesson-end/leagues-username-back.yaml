@@ -1,0 +1,21 @@
+# Lesson end Leagues step: Back closes the Choose your username sheet, the leaderboard stays and the rank
+# animation plays (Continue only appears after the animation finishes; logcat has the rank change viewed event).
+# Entry: the sheet shows over the Leagues step (android/common/open-leagues-progress-username.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: leagues_username_input_screen
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: leagues_username_input_screen
+    timeout: 10000
+- assertVisible: "QA Leagues Progress"
+- extendedWaitUntil:
+    visible:
+      id: primary_button
+      text: "Continue"
+    timeout: 20000
+- assertVisible: "speaklearner"

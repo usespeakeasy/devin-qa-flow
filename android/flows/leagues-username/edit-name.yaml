@@ -1,0 +1,13 @@
+# Leagues username sheet: type an edited name (not confirmed). Used before a rotation or a kill and relaunch.
+# Entry: the sheet shows (android/common/open-leagues-username-bridge.yaml). Exit: the sheet shows speaklearnerqa.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: username_input
+- eraseText: 40
+- inputText: "speaklearnerqa"
+- assertVisible:
+    id: username_input
+    text: "speaklearnerqa"
