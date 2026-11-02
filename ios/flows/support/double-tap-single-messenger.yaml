@@ -1,0 +1,14 @@
+# Double-tapping Settings > Support Center presents one Messenger (count `intercom window`
+# nodes in `maestro hierarchy` afterwards; expect 1).
+# Entry: Settings. Preconditions: as support/open-messenger.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- scrollUntilVisible:
+    element: "Support Center"
+- doubleTapOn: "Support Center"
+- extendedWaitUntil:
+    visible:
+      id: "intercom window"
+    timeout: 25000

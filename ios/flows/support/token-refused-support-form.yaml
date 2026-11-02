@@ -1,0 +1,17 @@
+# With GET /v1/intercom/messenger-token refused (proxy returns 404/500), Settings > Support Center
+# falls back to the Speak support form (SupportCenterVC) and never shows the Messenger.
+# Entry: Settings. Preconditions: as support/open-messenger.yaml, plus a local proxy
+# (SPEAK_HTTP_PROXY) failing that one path. Support form screen has no identifier.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- scrollUntilVisible:
+    element: "Support Center"
+- tapOn: "Support Center"
+- extendedWaitUntil:
+    visible: "What is the issue\\?"
+    timeout: 20000
+- assertVisible: "Report an Issue"
+- assertNotVisible:
+    id: "intercom window"

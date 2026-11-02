@@ -1,0 +1,20 @@
+# Settings > Support Center opens the Intercom Messenger greeting the signed-in user.
+# Entry: Settings (common/open-settings.yaml). Preconditions: signed in, Intercom market,
+# Split `intercom_help_center` on (local override `speak-dev://set-split-overrides?intercom_help_center=on`), dev.
+# NAME = the account's first name shown in "Hi <NAME>" (pool accounts: QAPool<N>).
+# "Support Center" row has no identifier.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  NAME: ""
+---
+- scrollUntilVisible:
+    element: "Support Center"
+- tapOn: "Support Center"
+- extendedWaitUntil:
+    visible:
+      id: "intercom window"
+    timeout: 25000
+- extendedWaitUntil:
+    visible: ".*${NAME}.*"
+    timeout: 10000
