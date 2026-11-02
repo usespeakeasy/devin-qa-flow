@@ -1,0 +1,34 @@
+# Lesson end phone speak schedule step: Schedule a weekly call opens the picker sheet, Save keeps the
+# suggested slot and closes the sheet, the step then lists the slot with Continue, and Continue
+# moves the flow on to its next step (not Home).
+# Entry: the schedule step is showing (run `android/common/open-phone-speak-schedule-cta.yaml` first).
+# With the QA-only in-memory schedule patch the slot lives until the process dies; against the real
+# server it stays on the account.
+# Selectors: the step and the sheet have no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "^Skip$"
+- tapOn: "Schedule a weekly call"
+- extendedWaitUntil:
+    visible: "Choose a day"
+    timeout: 15000
+- tapOn: "^Save$"
+- extendedWaitUntil:
+    notVisible: "Choose a day"
+    timeout: 30000
+- extendedWaitUntil:
+    visible: "^Continue$"
+    timeout: 15000
+- assertNotVisible: "^Skip$"
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    notVisible: "Ready to make it a habit.*"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*"
+    timeout: 30000
+- assertNotVisible:
+    id: home_root_ready

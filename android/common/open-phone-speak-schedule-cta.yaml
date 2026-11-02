@@ -1,0 +1,34 @@
+# Open a drill lesson and skip every card until the lesson end shows the phone speak schedule step
+# ("Schedule a weekly call" with Skip under it).
+# Entry: Home, signed in, Debug Menu > Subscription override > Premium, no weekly call scheduled
+# (with a slot the step shows Continue instead of Skip).
+# Preconditions: the dev server sends PHONE_SPEAK_SCHEDULE_CTA only after a phone speak session, so
+# QA runs put `LessonFinishedFlow.Component.PHONE_SPEAK_SCHEDULE_CTA` first in the order in
+# `LessonEndFlowViewModel.updateScreens` as a QA-only patch. Pool accounts get canEditSchedule=false
+# from v1/phone-speak/schedule (only Continue shows), so the same patch makes
+# `PhoneSpeakRepositoryImpl` answer fetch/update from an in-memory list with canEditSchedule=true.
+# Selectors: the step's buttons have no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- tapOn:
+    text: "Later"
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible: "Schedule a weekly call"
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible: "^Skip$"
+    timeout: 30000

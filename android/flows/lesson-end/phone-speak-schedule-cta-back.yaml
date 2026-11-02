@@ -1,0 +1,16 @@
+# Lesson end phone speak schedule step: system back closes the whole lesson end flow and returns Home.
+# Entry: the schedule step is showing (run `android/common/open-phone-speak-schedule-cta.yaml` first).
+# Selectors: the step has no resource-id (text fallback "Schedule a weekly call").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Schedule a weekly call"
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible: "Schedule a weekly call"
+- assertNotVisible:
+    id: lesson_end_reskin_root

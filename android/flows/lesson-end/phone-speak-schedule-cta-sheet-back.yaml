@@ -1,0 +1,20 @@
+# Lesson end phone speak schedule step: back with the picker sheet open closes only the sheet; the
+# step stays with Skip and nothing is saved.
+# Entry: the schedule step is showing (run `android/common/open-phone-speak-schedule-cta.yaml` first).
+# Selectors: the step and the sheet have no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Schedule a weekly call"
+- extendedWaitUntil:
+    visible: "Choose a day"
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    notVisible: "Choose a day"
+    timeout: 15000
+- assertVisible: "^Skip$"
+- assertVisible: "Schedule a weekly call"
+- assertNotVisible:
+    id: home_root_ready

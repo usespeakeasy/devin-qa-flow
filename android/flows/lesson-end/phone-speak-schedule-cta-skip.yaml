@@ -1,0 +1,19 @@
+# Lesson end phone speak schedule step: Skip moves the flow on to its next step (not Home).
+# Entry: the schedule step is showing (run `android/common/open-phone-speak-schedule-cta.yaml` first;
+# it needs the QA-only PHONE_SPEAK_SCHEDULE_CTA patch).
+# Selectors: the step has no resource-id (text fallbacks "Schedule a weekly call", "Skip").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Schedule a weekly call"
+- tapOn: "^Skip$"
+- extendedWaitUntil:
+    notVisible: "Ready to make it a habit.*"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*"
+    timeout: 30000
+- assertNotVisible:
+    id: home_root_ready
