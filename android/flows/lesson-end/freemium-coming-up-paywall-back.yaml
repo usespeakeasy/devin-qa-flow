@@ -1,0 +1,33 @@
+# Lesson end freemium "Coming up tomorrow" step: Try unlimited lessons opens the upgrade paywall; system back
+# leaves the paywall. Kill switch ON (controller flow) lands on Home, because the paywall replaced the flow.
+# Entry: the step is showing (run `android/common/open-freemium-coming-up.yaml` first; it needs the QA-only
+# FREEMIUM_NEXT_UNLOCKED patch and Debug Menu > Subscription override > Free).
+# With no Play Billing on the emulator the paywall shows "An unexpected error occurred." first; OK dismisses it.
+# Text fallbacks: the step has no resource IDs yet.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: freemium-coming-up-try-unlimited.yaml
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_(ready|error)
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: button1
+    commands:
+      - tapOn:
+          id: button1
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_ready
+    timeout: 10000
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    text: "Coming up tomorrow"

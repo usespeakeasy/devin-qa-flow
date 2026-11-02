@@ -1,0 +1,40 @@
+# Open a drill lesson and skip every card until the lesson end shows the freemium "Coming up tomorrow" step
+# (I'll be back tomorrow! and Try unlimited lessons).
+# Entry: Home, signed in, Debug Menu > Subscription override > Free.
+# Preconditions: a build whose lesson end flow has the FREEMIUM_NEXT_UNLOCKED step. The dev server sends it
+# only to free users whose next lesson unlocks tomorrow, so QA runs put
+# `LessonFinishedFlow.Component.FREEMIUM_NEXT_UNLOCKED` first in the order in `LessonEndFlowViewModel.updateScreens`
+# (with one stand-in course lesson when the server sends no unlock data) as a QA-only patch.
+# Text fallbacks: the step has no resource IDs yet.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- tapOn:
+    text: "Later"
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible:
+        text: "Coming up tomorrow"
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      text: "Coming up tomorrow"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      text: "I.ll be back tomorrow!"
+    timeout: 10000
+- assertVisible:
+    text: "Try unlimited lessons"

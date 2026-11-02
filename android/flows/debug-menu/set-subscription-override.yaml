@@ -12,5 +12,5 @@ env:
     timeout: 30000
 - tapOn: "^${TIER}$"
 - extendedWaitUntil:
-    visible: "This device behaves as a ${TIER} subscriber.*|No override.*"
+    visible: "This device behaves as a ${TIER} (subscriber|user).*|No override.*"
     timeout: 10000
