@@ -1,0 +1,29 @@
+# Lesson end challenge tier reached step: Continue moves the flow on to its next step (not Home).
+# Entry: the challenge tier reached step is showing (run `android/common/open-challenge-tier-reached.yaml`
+# first; it needs the QA-only CHALLENGES patch and a premium account, Debug Menu > Subscription override > Premium).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: challenge_tier_reached
+- assertVisible:
+    id: title
+- assertVisible:
+    id: card_title
+- assertVisible:
+    id: card_subtitle
+- tapOn:
+    id: primary_button
+    childOf:
+      id: challenge_tier_reached
+- extendedWaitUntil:
+    notVisible:
+      id: challenge_tier_reached
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*"
+    timeout: 30000
+- assertNotVisible:
+    id: home_root_ready

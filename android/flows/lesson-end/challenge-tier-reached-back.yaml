@@ -1,0 +1,18 @@
+# Lesson end challenge tier reached step: system back closes the whole lesson end flow and returns Home.
+# Entry: the challenge tier reached step is showing (run `android/common/open-challenge-tier-reached.yaml`
+# first; it needs the QA-only CHALLENGES patch and a premium account, Debug Menu > Subscription override > Premium).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: challenge_tier_reached
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: challenge_tier_reached
+- assertNotVisible:
+    id: lesson_end_reskin_root
