@@ -19,6 +19,12 @@ GROUP BY 1, 2 ORDER BY 1 DESC, 2
 
 Runs before 2026-11-01 have no `skill_version`.
 
+## 2026-11-02
+
+- **qa-request-mobile 2026.11.02.1**: after posting an ID PR in #devin-qa-flow, the run adds a
+  `Slack:` row to the ID PR description with links to the QA request thread and the #devin-qa-flow
+  thread. Why: Sean asked for the thread link in every ID PR description.
+
 ## 2026-11-01
 
 - **qa-request-mobile 2026.11.01.11**: a request with no PR (a commit or release sweep) still opens
