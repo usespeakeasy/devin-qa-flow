@@ -1,0 +1,27 @@
+# Closes the Intercom Messenger (home or a conversation) back to Settings.
+# Entry: Intercom Messenger opened from Settings > Support Center.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- repeat:
+    times: 3
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: "intercom close button"
+          commands:
+            - tapOn:
+                id: "intercom close button"
+            - waitForAnimationToEnd
+      - runFlow:
+          when:
+            visible: "Close"
+          commands:
+            - tapOn: "Close"
+            - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "Settings"
+    timeout: 10000

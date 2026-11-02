@@ -1,0 +1,15 @@
+# Taps "Open" on the iOS "Open in "Speak Dev"?" sheet after `xcrun simctl openurl speak-dev://...`.
+# Entry: any, right after openurl. No-op when the sheet is absent. System sheet has no id.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- repeat:
+    times: 3
+    commands:
+      - runFlow:
+          when:
+            visible: "Open in “Speak Dev”\\?"
+          commands:
+            - tapOn: "Open"
+            - waitForAnimationToEnd
