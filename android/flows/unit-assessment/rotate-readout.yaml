@@ -1,0 +1,18 @@
+# The readout keeps its step across landscape and back to portrait (practice-ready stays practice-ready).
+# Entry: readout-to-practice. Exit: practice-ready, portrait.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: skill_check_practice_ready
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: skill_check_practice_ready
+- assertVisible:
+    id: skill_check_save_for_later

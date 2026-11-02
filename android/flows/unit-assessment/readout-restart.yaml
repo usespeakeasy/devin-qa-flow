@@ -1,0 +1,8 @@
+# Readout > primary CTA on a standalone (AI tutor) readout is Create practice; Start on practice-ready
+# restarts the assessment. Same steps as practice-start; kept for the standalone case name.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: readout-to-practice.yaml
+- runFlow: practice-start.yaml

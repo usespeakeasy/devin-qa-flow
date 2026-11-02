@@ -1,0 +1,17 @@
+# Practice-ready > Start restarts the lesson (QA patch: no takeaway generation) in place of the readout.
+# Back from the restarted lesson must not show the readout again.
+# Entry: readout-to-practice. Exit: the drill lesson.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: skill_check_practice_start
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- assertNotVisible:
+    id: skill_check_practice_ready
+- assertNotVisible:
+    id: skill_check_readout

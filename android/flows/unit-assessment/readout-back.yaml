@@ -1,0 +1,20 @@
+# System Back on the readout closes it: MODE=step closes the lesson end flow (no further steps),
+# MODE=standalone goes back to the screen before the lesson. Both land on Home.
+# Entry: open-unit-assessment-readout. Exit: Home.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: skill_check_readout
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: skill_check_readout
+- assertNotVisible:
+    id: lesson_end_reskin_root
+- assertNotVisible:
+    id: drill_lesson_root

@@ -1,0 +1,16 @@
+# The readout comes back after process death (Home, killApp, relaunch), not Home.
+# Entry: open-unit-assessment-readout. Exit: readout.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: skill_check_readout
+    timeout: 60000
+- assertNotVisible:
+    id: home_root_ready

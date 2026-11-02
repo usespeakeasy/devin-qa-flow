@@ -1,0 +1,38 @@
+# Open a drill lesson, skip every card, and wait for the unit assessment readout (skill_check_readout)
+# after the celebration. The dev server opens the readout only after a real SC-AST or AI tutor
+# assessment, so QA runs use a QA-only patch keyed by `adb shell setprop debug.qa.ua MODE`:
+#   step       : LessonEndFlowViewModel.updateScreens puts POST_STRUCTURED_CONVERSATION_ASSESSMENT first
+#                (Destination.UnitAssessmentPostAssessment, lesson end step) and the readout loads as SC-AST
+#   standalone : SeriesLessonViewModel.endLesson replaces the lesson with Destination.LoadedUnitAssessment
+#                (lessonType AI_TUTOR, restartConfiguration = the drill lesson), as an AI tutor assessment does
+# Both modes: PostAssessmentRepositoryImpl returns a fixed 2 of 3 readout; SC-AST practice generation is
+# skipped so Start restarts the lesson.
+# Entry: Home, signed in. Exit: readout shown.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- tapOn:
+    text: "Later"
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible:
+        id: skill_check_readout
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: skill_check_readout
+    timeout: 30000
+- assertVisible:
+    id: skill_check_create_practice

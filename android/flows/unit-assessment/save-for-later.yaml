@@ -1,0 +1,18 @@
+# Practice-ready > Save for later leaves the readout: the lesson end flow moves on (MODE=step) or the
+# standalone readout goes back (MODE=standalone). Both end on Home here; no readout or lesson left.
+# Entry: readout-to-practice. Exit: Home.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: skill_check_save_for_later
+- extendedWaitUntil:
+    notVisible:
+      id: skill_check_practice_ready
+    timeout: 15000
+- runFlow: ../../common/finish-lesson-end.yaml
+- assertNotVisible:
+    id: drill_lesson_root
+- assertNotVisible:
+    id: skill_check_readout

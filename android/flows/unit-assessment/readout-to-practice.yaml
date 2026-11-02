@@ -1,0 +1,20 @@
+# Readout > Create practice lesson: practice-ready screen with Save for later and Start.
+# Entry: open-unit-assessment-readout. Exit: practice-ready screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: skill_check_create_practice
+- extendedWaitUntil:
+    visible:
+      id: skill_check_practice_ready
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: skill_check_save_for_later
+    timeout: 30000
+- assertVisible:
+    id: skill_check_practice_start
+- assertNotVisible:
+    id: skill_check_readout
