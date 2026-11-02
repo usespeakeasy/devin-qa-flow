@@ -4,11 +4,12 @@
 # maestro test -e FLAG=android_nav3_segment_kill_switch -e VALUE=ON set-feature-flag.yaml
 appId: ${APP_ID}
 env:
-  APP_ID: com.selabs.speak.dev
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
 ---
 - launchApp:
     stopApp: true
-- openLink: speak-dev://debug-menu
+- openLink: ${DEBUG_MENU_LINK}
 - tapOn: Feature flag override
 - tapOn:
     text: Search

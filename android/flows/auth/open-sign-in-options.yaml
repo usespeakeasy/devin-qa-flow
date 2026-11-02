@@ -3,7 +3,7 @@
 # Entry: app data cleared, storybook on screen.
 appId: ${APP_ID}
 env:
-  APP_ID: com.selabs.speak.dev
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
 ---
 - extendedWaitUntil:
     visible:
