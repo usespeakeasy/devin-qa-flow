@@ -1,0 +1,26 @@
+# Lesson end streak goal step with a streak widget already on the home screen: pick 7 days, I'm committed
+# goes straight to the flow's next step, no widget prompt.
+# Entry: the streak goal step is showing (`android/common/open-streak-goal.yaml`) with
+# `adb shell setprop debug.qa.widget installed` (QA-only patch). Exit: the step after the streak goal.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: goal_7days
+- extendedWaitUntil:
+    visible: "You.ll be \\d+x more likely to complete the course!"
+    timeout: 10000
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    notVisible:
+      id: goal_7days
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 30000
+- assertNotVisible: "See your progress from your home screen"
+- assertNotVisible:
+    id: home_root_ready

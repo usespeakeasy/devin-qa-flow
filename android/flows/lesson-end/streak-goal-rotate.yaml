@@ -1,0 +1,45 @@
+# Lesson end streak goal step and its widget prompt survive landscape and back to portrait: pick 7 days,
+# rotate (goal and its label stay), I'm committed, rotate (prompt stays), back shows the goal with 7 days.
+# Entry: the streak goal step is showing (`android/common/open-streak-goal.yaml`, `debug.qa.widget` empty).
+# Exit: portrait, the goal with 7 days picked.
+# Selectors: the widget prompt has no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: goal_7days
+- extendedWaitUntil:
+    visible: "You.ll be \\d+x more likely to complete the course!"
+    timeout: 10000
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: goal_3days
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: goal_7days
+- assertVisible: "You.ll be \\d+x more likely to complete the course!"
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    visible: "See your progress from your home screen"
+    timeout: 15000
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "See your progress from your home screen"
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "See your progress from your home screen"
+- assertVisible: "Maybe later"
+- back
+- extendedWaitUntil:
+    visible:
+      id: goal_7days
+    timeout: 15000
+- assertVisible: "You.ll be \\d+x more likely to complete the course!"

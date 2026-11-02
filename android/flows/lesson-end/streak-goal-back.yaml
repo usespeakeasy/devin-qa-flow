@@ -1,0 +1,17 @@
+# Lesson end streak goal step: system back closes the whole lesson end flow and returns Home.
+# Entry: the streak goal step is showing (`android/common/open-streak-goal.yaml`).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: goal_7days
+- back
+- extendedWaitUntil:
+    visible:
+      id: "home_root_ready|learning_path_ready"
+    timeout: 30000
+- assertNotVisible:
+    id: goal_7days
+- assertNotVisible:
+    id: "lesson_end_.*"

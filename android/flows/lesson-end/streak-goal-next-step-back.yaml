@@ -1,0 +1,17 @@
+# Lesson end, the step after the streak goal (reached through Maybe later on the widget prompt): system back
+# returns Home and never shows the streak goal or the widget prompt again.
+# Entry: exit of `android/flows/lesson-end/streak-goal-widget-maybe-later.yaml`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertNotVisible:
+    id: goal_7days
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: goal_7days
+- assertNotVisible: "See your progress from your home screen"

@@ -1,0 +1,40 @@
+# Lesson end streak goal step: a fast double tap on I'm committed opens one screen only. With the prompt
+# (`debug.qa.widget` empty), back from the prompt lands on the goal, not on a second prompt. With
+# `debug.qa.widget installed`, the goal and the prompt are gone and the lifecycle log shows one
+# `EOL Set Streak Goal Screen CTA Tapped` and one transaction out of the goal.
+# Entry: the streak goal step is showing (`android/common/open-streak-goal.yaml`). Pass -e WIDGET=prompt|installed (no default: a flow env default overrides -e).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: goal_7days
+- extendedWaitUntil:
+    visible: "You.ll be \\d+x more likely to complete the course!"
+    timeout: 10000
+- doubleTapOn:
+    id: primary_button
+- runFlow:
+    when:
+      true: ${WIDGET == 'prompt'}
+    commands:
+      - extendedWaitUntil:
+          visible: "See your progress from your home screen"
+          timeout: 15000
+      - back
+      - extendedWaitUntil:
+          visible:
+            id: goal_7days
+          timeout: 15000
+      - assertNotVisible: "See your progress from your home screen"
+- runFlow:
+    when:
+      true: ${WIDGET == 'installed'}
+    commands:
+      # The second tap can land on the next step's Continue button (same spot) and move one step further,
+      # so only assert the goal and the prompt are gone. The one-transaction check is in the lifecycle log.
+      - extendedWaitUntil:
+          notVisible:
+            id: goal_7days
+          timeout: 30000
+      - assertNotVisible: "See your progress from your home screen"

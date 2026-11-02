@@ -1,0 +1,34 @@
+# Lesson end streak goal step: pick 7 days, I'm committed opens the widget prompt, back shows the goal again
+# with 7 days still picked, and I'm committed opens the prompt again.
+# Entry: the streak goal step is showing (`android/common/open-streak-goal.yaml`, `debug.qa.widget` empty).
+# Exit: the widget prompt over the goal.
+# Selectors: the widget prompt has no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: goal_7days
+- extendedWaitUntil:
+    visible: "You.ll be \\d+x more likely to complete the course!"
+    timeout: 10000
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    visible: "See your progress from your home screen"
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible:
+      id: goal_7days
+    timeout: 15000
+- assertNotVisible: "See your progress from your home screen"
+- assertVisible: "You.ll be \\d+x more likely to complete the course!"
+- assertVisible:
+    id: primary_button
+    enabled: true
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    visible: "See your progress from your home screen"
+    timeout: 15000

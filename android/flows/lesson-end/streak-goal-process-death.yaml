@@ -1,0 +1,47 @@
+# Process death on the lesson end streak goal step (7 days picked) or on its widget prompt (pass -e SCREEN=goal|prompt, no default):
+# Home, `killApp`, relaunch restores the same screen, not Home.
+# Entry: the streak goal step is showing (`android/common/open-streak-goal.yaml`, `debug.qa.widget` empty).
+# Exit: the restored goal or prompt.
+# Selectors: the widget prompt has no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: goal_7days
+- extendedWaitUntil:
+    visible: "You.ll be \\d+x more likely to complete the course!"
+    timeout: 10000
+- runFlow:
+    when:
+      true: ${SCREEN == 'prompt'}
+    commands:
+      - tapOn:
+          id: primary_button
+      - extendedWaitUntil:
+          visible: "See your progress from your home screen"
+          timeout: 15000
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- runFlow:
+    when:
+      true: ${SCREEN == 'goal'}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: goal_7days
+          timeout: 60000
+      - assertVisible:
+          id: primary_button
+- runFlow:
+    when:
+      true: ${SCREEN == 'prompt'}
+    commands:
+      - extendedWaitUntil:
+          visible: "See your progress from your home screen"
+          timeout: 60000
+      - assertVisible: "Maybe later"
+- assertNotVisible:
+    id: home_root_ready
