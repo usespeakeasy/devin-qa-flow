@@ -2,13 +2,14 @@
 # With a takeaways lesson (QA patch default) Continue shows "Time to practice"; with
 # `debug.qa.takeaways nolesson` it ends the step. Exit: right after the Continue tap.
 # Entry: the takeaways step is showing (`android/common/open-takeaways.yaml`).
-# Selectors: no resource-ids on the takeaways screen (text fallbacks "Feedback for you|Where you can improve", "Next",
-# "Continue"); the card pager swipe uses screen percentages because the pager has no id.
+# Selectors: TakeawaysTestTags ids; the primary button is Next until the last card, where its text is
+# "Continue" (its text node is a child of the id). The card pager swipe uses screen percentages because the pager has no id.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
-- assertVisible: "Feedback for you|Where you can improve"
+- assertVisible:
+    id: lesson_end_takeaways_root
 # Card pager has no id: swipe across its middle band.
 - swipe:
     start: 85%, 45%
@@ -18,11 +19,19 @@ env:
     end: 85%, 45%
 - repeat:
     while:
-      notVisible: "Continue"
+      notVisible:
+        text: "Continue"
+        childOf:
+          id: lesson_end_takeaways_primary_button
     times: 6
     commands:
-      - tapOn: "Next"
+      - tapOn:
+          id: lesson_end_takeaways_primary_button
 - extendedWaitUntil:
-    visible: "Continue"
+    visible:
+      text: "Continue"
+      childOf:
+        id: lesson_end_takeaways_primary_button
     timeout: 10000
-- tapOn: "Continue"
+- tapOn:
+    id: lesson_end_takeaways_primary_button

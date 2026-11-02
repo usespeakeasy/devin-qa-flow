@@ -11,5 +11,7 @@ env:
     visible:
       id: "lesson_end_.*_root|ask_for_review_dialog|home_root_ready"
     timeout: 30000
-- assertNotVisible: "Feedback for you|Where you can improve"
-- assertNotVisible: "Time to practice"
+- assertNotVisible:
+    id: lesson_end_takeaways_root
+- assertNotVisible:
+    id: lesson_end_takeaways_generated_lesson_root

@@ -5,7 +5,7 @@
 # `LessonFinishedFlow.Component.TAKEAWAYS` first in `LessonEndFlowViewModel.updateScreens` and make
 # `TakeawaysRepositoryFactory` / `TakeawayVotingRepositoryFactory` return their demo repositories
 # (Multiple Cards, generated lesson = a real dev lesson id) as a QA-only patch.
-# Selectors: the takeaways screen has no resource-id yet (text fallback "Feedback for you|Where you can improve").
+# Selectors: `lesson_end_takeaways_root` (TakeawaysTestTags).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
@@ -21,13 +21,16 @@ env:
     timeout: 60000
 - repeat:
     while:
-      notVisible: "Feedback for you|Where you can improve"
+      notVisible:
+        id: lesson_end_takeaways_root
     times: 60
     commands:
       - tapOn:
           id: drill_lesson_skip
           optional: true
 - extendedWaitUntil:
-    visible: "Feedback for you|Where you can improve"
+    visible:
+      id: lesson_end_takeaways_root
     timeout: 30000
-- assertVisible: "Next"
+- assertVisible:
+    id: lesson_end_takeaways_primary_button

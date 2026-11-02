@@ -2,20 +2,22 @@
 # returns Home.
 # Entry: the takeaways step is showing (run `android/common/open-takeaways.yaml` first) on a build
 # with the QA-only takeaways patch, `debug.qa.takeaways` unset.
-# Selectors: text fallback "Time to practice".
+# Selectors: `lesson_end_takeaways_generated_lesson_root`.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
 - runFlow: ../../common/takeaways-to-practice.yaml
 - extendedWaitUntil:
-    visible: "Time to practice"
+    visible:
+      id: lesson_end_takeaways_generated_lesson_root
     timeout: 15000
 - back
 - extendedWaitUntil:
     visible:
       id: home_root_ready
     timeout: 30000
-- assertNotVisible: "Time to practice"
+- assertNotVisible:
+    id: lesson_end_takeaways_generated_lesson_root
 - assertNotVisible:
     id: "lesson_end_.*_root"

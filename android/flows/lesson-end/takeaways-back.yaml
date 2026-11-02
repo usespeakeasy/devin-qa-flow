@@ -1,16 +1,18 @@
 # Lesson end takeaways step: system back closes the whole lesson end flow and returns Home.
 # Entry: the takeaways step is showing (run `android/common/open-takeaways.yaml` first).
-# Selectors: text fallback "Feedback for you|Where you can improve".
+# Selectors: `lesson_end_takeaways_root`.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
-- assertVisible: "Feedback for you|Where you can improve"
+- assertVisible:
+    id: lesson_end_takeaways_root
 - back
 - extendedWaitUntil:
     visible:
       id: home_root_ready
     timeout: 30000
-- assertNotVisible: "Feedback for you|Where you can improve"
+- assertNotVisible:
+    id: lesson_end_takeaways_root
 - assertNotVisible:
     id: "lesson_end_.*_root"
