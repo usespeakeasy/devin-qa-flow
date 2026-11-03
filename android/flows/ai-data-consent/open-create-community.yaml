@@ -1,0 +1,23 @@
+# Free Talk > Community > Create your own > pick the default character > topic form (AiLessonCreate).
+# Entry: cold start, signed in (Premium override). Exit: ai_lesson_create_topic_screen with empty fields.
+# Selectors: the Free Talk bottom tab and the Community tab have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow: dismiss-home-popups.yaml
+- tapOn: "Free Talk"
+- tapOn: "Community"
+- tapOn:
+    id: ai_tutor_create_community_button
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_create_character_continue
+    timeout: 20000
+- tapOn:
+    id: ai_lesson_create_character_continue
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_create_topic_user_role_field
+    timeout: 20000

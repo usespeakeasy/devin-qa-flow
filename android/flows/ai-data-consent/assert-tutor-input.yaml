@@ -1,0 +1,8 @@
+# Tutor chat: assert the message field is visible and enabled. Entry/exit: tutor chat.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: input_message
+    enabled: true

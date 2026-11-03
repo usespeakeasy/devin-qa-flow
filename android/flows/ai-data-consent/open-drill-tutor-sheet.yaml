@@ -1,0 +1,23 @@
+# Drill lesson by deep link > tutor mascot: the Speak Tutor sheet starts opening (the consent alert may come first).
+# Entry: any, signed in, drill_lesson_tutor_everywhere ON, Premium override. Exit: lesson with the sheet or the alert.
+# Selectors: the mascot node spans the screen and drill_lesson_mascot_tutor_overlay is not in the tree, so the tap is a point on the avatar (as in tutor-everywhere/open-drill-tutor.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow: dismiss-home-popups.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_mascot
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: lesson_speak_now_status_pill
+    timeout: 30000
+- tapOn:
+    point: "84%,62%"
+- waitForAnimationToEnd:
+    timeout: 3000

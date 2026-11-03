@@ -1,0 +1,11 @@
+# Level assessment by deep link: the intro with Start shows.
+# Entry: any, signed in, an assessment entry point for the account. Exit: intro.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://assessment
+- extendedWaitUntil:
+    visible:
+      id: app_assessment_intro_start_button
+    timeout: 30000

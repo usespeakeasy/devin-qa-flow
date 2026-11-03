@@ -1,0 +1,12 @@
+# Home > tutor button: the full-screen Speak Tutor chat opens (with the AI data consent alert over it when asked).
+# Entry: cold start, signed in (Premium override). Exit: tutor chat, or the alert over it (the case script asserts which).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow: dismiss-home-popups.yaml
+- tapOn:
+    id: learning_path_tutor_entry
+- waitForAnimationToEnd:
+    timeout: 3000

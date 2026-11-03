@@ -1,0 +1,33 @@
+# Debug Menu > Feature flag override without restarting the app: FLAG gets custom TREATMENT, then back to the screen below.
+# Entry: any screen, signed in, FLAG on any value. Exit: the screen the Debug Menu was opened over.
+# Selectors: the value chip is debug_feature_flag_value_<flag>; the picker and custom-treatment dialogs have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://debug-menu
+- tapOn: Feature flag override
+- tapOn:
+    text: Search
+- inputText: ${FLAG}
+- hideKeyboard
+- tapOn:
+    id: debug_feature_flag_value_${FLAG}
+    index: 0
+- tapOn: "Custom…"
+- assertVisible: Enter custom treatment
+- tapOn: Treatment
+- inputText: ${TREATMENT}
+- tapOn: Submit
+- assertVisible:
+    text: ${TREATMENT}
+    rightOf:
+      text: ${FLAG}
+- repeat:
+    while:
+      notVisible:
+        id: debug_menu_screen
+    times: 3
+    commands:
+      - back
+- back

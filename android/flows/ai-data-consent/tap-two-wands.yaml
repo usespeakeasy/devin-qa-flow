@@ -1,0 +1,11 @@
+# Tap the Your role and AI's role magic wands back to back. Entry/exit: ai_lesson_create_topic_screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: ai_lesson_create_topic_user_role_idea
+    waitToSettleTimeoutMs: 100
+- tapOn:
+    id: ai_lesson_create_topic_agent_role_idea
+    waitToSettleTimeoutMs: 100

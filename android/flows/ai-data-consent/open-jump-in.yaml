@@ -1,0 +1,18 @@
+# Practice > ITEM (a jump-in lesson group tile): the group opens in the Speak Embedded web view.
+# Entry: cold start, signed in. Exit: the web view or the consent alert over it (the case script asserts which).
+# Selectors: Practice tiles and the bottom tab have no resource-id (text fallback); the web view has only the
+# content description `Speak Embedded`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  ITEM: ${ITEM || "QA Jump In"}
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow: dismiss-home-popups.yaml
+- tapOn: "Practice"
+- extendedWaitUntil:
+    visible: "^${ITEM}$"
+    timeout: 20000
+- tapOn: "^${ITEM}$"
+- waitForAnimationToEnd:
+    timeout: 3000

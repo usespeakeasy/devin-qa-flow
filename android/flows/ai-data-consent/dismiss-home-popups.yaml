@@ -1,0 +1,11 @@
+# Home: dismiss the referral promo ("Later") if it is up. Entry/exit: Home.
+# Selectors: the promo has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow:
+    when:
+      visible: "^Later$"
+    commands:
+      - tapOn: "^Later$"

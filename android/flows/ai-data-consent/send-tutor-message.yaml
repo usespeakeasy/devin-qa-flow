@@ -1,0 +1,19 @@
+# Tutor chat: type TEXT and send; the learner's message shows in the chat. Entry/exit: tutor chat, input enabled.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  TEXT: ${TEXT || "Hola, como estas"}
+---
+- extendedWaitUntil:
+    visible:
+      id: input_message
+      enabled: true
+    timeout: 20000
+- tapOn:
+    id: input_message
+- inputText: ${TEXT}
+- tapOn:
+    id: send_button
+- extendedWaitUntil:
+    visible: ${TEXT}
+    timeout: 10000

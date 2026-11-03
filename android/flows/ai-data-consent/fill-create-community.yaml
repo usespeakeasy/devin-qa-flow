@@ -1,0 +1,20 @@
+# Fill the three topic fields. Entry/exit: ai_lesson_create_topic_screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  USER_ROLE: ${USER_ROLE || "Tourist"}
+  AI_ROLE: ${AI_ROLE || "Waiter"}
+  SCENARIO: ${SCENARIO || "Ordering dinner"}
+---
+- tapOn:
+    id: ai_lesson_create_topic_user_role_field
+- inputText: ${USER_ROLE}
+- hideKeyboard
+- tapOn:
+    id: ai_lesson_create_topic_agent_role_field
+- inputText: ${AI_ROLE}
+- hideKeyboard
+- tapOn:
+    id: ai_lesson_create_topic_scenario_field
+- inputText: ${SCENARIO}
+- hideKeyboard
