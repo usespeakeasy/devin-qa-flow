@@ -1,0 +1,12 @@
+# Custom unit planning intro > "Let's go!", which calls /custom-unit/init and streams the first agent message
+# (with `ai_data_consent_mode` = alert_only on speak-android#8799, the AI data consent alert first).
+# Entry: the planning intro on screen (open-create-course.yaml). Exit: Let's go tapped.
+# Selectors: the intro has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible: "Hey there! Ready to build your custom course.*"
+    timeout: 30000
+- tapOn: "Let's go!"

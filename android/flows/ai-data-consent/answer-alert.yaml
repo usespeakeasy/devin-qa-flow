@@ -1,0 +1,17 @@
+# AI data consent alert ("Allow Speak to send your voice and text to AI?", speak-android#8799): tap one action.
+# ACTION is allow, dont_allow or privacy_policy. Entry: the alert on screen (`ai_data_consent_mode` = alert_only,
+# account without the agreement). Exit: alert gone; assert where it lands in the caller.
+# maestro test -e ACTION=dont_allow answer-alert.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: ai_data_consent_alert
+    timeout: 60000
+- assertVisible: "Allow Speak to send your voice and text to AI\\?"
+- tapOn:
+    id: ai_data_consent_alert_${ACTION}
+- assertNotVisible:
+    id: ai_data_consent_alert

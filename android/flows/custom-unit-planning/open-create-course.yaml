@@ -1,0 +1,20 @@
+# Home learning path > "Create your own course" on the next-course card, opens custom unit planning
+# (`CustomUnitPlanningLaunchRequest.CreateCourseWithFirstUnit`). Needs `dynamic_on_demand_unit_gen` ON and Premium (Subscription override).
+# Entry: signed in (the flow cold-starts the app first). Exit: planning sheet requested; assert its content in the caller.
+# Selectors: AddCustomUnitListItem has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      text: Create your own course
+    direction: DOWN
+    timeout: 60000
+- tapOn: Create your own course

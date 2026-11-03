@@ -1,0 +1,29 @@
+# Debug Menu > Deeplink Lesson: open one lesson type of the signed-in user's course (e.g. "PLL \(uncreated\)" opens
+# the unit personalization "Create your lessons" screen, `Destination.UnitPersonalization`).
+# Entry: signed in (the flow cold-starts the app first). Exit: on the opened lesson screen.
+# maestro test -e TYPE='PLL \(uncreated\)' open-deeplink-lesson.yaml
+# Selectors: the deeplink lesson list has no resource-id (text fallback). A type the course can't resolve is greyed out.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- openLink: ${DEBUG_MENU_LINK}
+- tapOn:
+    text: Search
+- inputText: Deeplink
+- hideKeyboard
+- tapOn: Deeplink Lesson
+- assertVisible: Deeplink lesson
+- scrollUntilVisible:
+    element:
+      text: ${TYPE}
+    direction: DOWN
+- tapOn:
+    text: ${TYPE}

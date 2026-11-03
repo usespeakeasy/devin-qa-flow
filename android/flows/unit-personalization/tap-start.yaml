@@ -1,0 +1,12 @@
+# Unit personalization intro ("Create your lessons") > Start, which opens the survey chat
+# (with `ai_data_consent_mode` = alert_only on speak-android#8799, the AI data consent alert first).
+# Entry: the intro on screen (debug-menu/open-deeplink-lesson.yaml with TYPE 'PLL \(uncreated\)'). Exit: Start tapped.
+# Selectors: the intro has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible: Create your lessons
+    timeout: 30000
+- tapOn: "^Start$"
