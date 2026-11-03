@@ -1,0 +1,42 @@
+# Weekly Schedule > turn "Ring my phone" on with full-screen alerts denied: the dialog shows; "Not now"
+# closes it and the ring card shows the full-screen alerts notice. Turns the ring back off at the end.
+# Entry: signed-in dev account with a saved weekly schedule and the ring off, microphone granted, and
+# `adb shell appops set com.selabs.speak.dev USE_FULL_SCREEN_INTENT deny` (Android 14+, debug build:
+# release builds don't declare the permission, so neither the dialog nor the notice can show there).
+# Pass SHOT and the copy for the app language with -e (no env defaults: they would win over -e):
+# English: RING_TITLE='Ring my phone' DIALOG_TITLE='Show calls on your lock screen'
+# NOTICE_BUTTON='Turn on full-screen alerts'.
+# Selectors: the ring switch row and the notice's button have no resource-id in the tree (the button's
+# testTag sits outside testTagsAsResourceId), so both use text fallback.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://phone-speak?action=schedule
+- extendedWaitUntil:
+    visible: ${RING_TITLE}
+    timeout: 20000
+- assertNotVisible: ${NOTICE_BUTTON}
+- tapOn: ${RING_TITLE}
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_ring_full_screen_alerts_dialog
+    timeout: 10000
+- assertVisible: ${DIALOG_TITLE}
+- assertVisible:
+    id: phone_speak_schedule_ring_full_screen_alerts_open_settings
+- takeScreenshot: ${SHOT}_dialog
+- tapOn:
+    id: phone_speak_schedule_ring_full_screen_alerts_not_now
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_schedule_ring_full_screen_alerts_dialog
+    timeout: 10000
+- extendedWaitUntil:
+    visible: ${NOTICE_BUTTON}
+    timeout: 10000
+- takeScreenshot: ${SHOT}_notice
+- tapOn: ${RING_TITLE}
+- extendedWaitUntil:
+    notVisible: ${NOTICE_BUTTON}
+    timeout: 10000
