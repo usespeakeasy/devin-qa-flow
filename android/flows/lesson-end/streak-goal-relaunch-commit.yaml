@@ -1,0 +1,24 @@
+# Lesson end streak goal step after the process was killed in the background: relaunch restores the goal,
+# pick 7 days, I'm committed opens the widget prompt, Maybe later moves the flow on to its next step.
+# Used for the kill switch change between app starts (the QA-only `debug.qa.kill` prop set while the
+# process is dead), the restoration path of PR 8719's Codex P2.
+# Entry: the goal was showing, then Home and `adb shell am kill <package>` (not `killApp`, so the
+# case script can change props first). Exit: the step after the streak goal.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: goal_7days
+    timeout: 60000
+- tapOn:
+    id: goal_7days
+- extendedWaitUntil:
+    visible: "You.ll be \\d+x more likely to complete the course!"
+    timeout: 10000
+- tapOn:
+    id: primary_button
+- runFlow: streak-goal-prompt-maybe-later.yaml

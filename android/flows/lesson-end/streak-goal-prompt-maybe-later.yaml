@@ -1,0 +1,26 @@
+# Lesson end streak goal widget prompt: Maybe later moves the flow on to its next step; neither the goal
+# nor the prompt stays. Use after a flow that ends on the prompt (`streak-goal-widget-back.yaml`,
+# `streak-goal-process-death.yaml -e SCREEN=prompt`).
+# Entry: the widget prompt is showing. Exit: the step after the streak goal.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: widget_install
+    timeout: 15000
+- tapOn:
+    id: widget_install_maybe_later
+- extendedWaitUntil:
+    notVisible:
+      id: widget_install
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 30000
+- assertNotVisible:
+    id: goal_7days
+- assertNotVisible:
+    id: home_root_ready
