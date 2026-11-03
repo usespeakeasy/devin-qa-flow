@@ -1,0 +1,49 @@
+# Phone Speak schedule: turn "Ring my phone" on; if the full-screen alerts dialog opens, tap
+# "Open settings", allow full-screen notifications on Android's page for Speak and come back.
+# Exit: the switch is on, no dialog, and no "Turn on full-screen alerts" notice.
+# Entry: open-phone-speak-schedule with the switch off, microphone granted.
+# Writes the screenshot SHOT (default full-screen-alerts-settings-from-dialog.png) of Android's page.
+# Selectors: `phone_speak_schedule_ring_switch` (speak-android#8752) with `checked`; the dialog IDs
+# ship with speak-android#8712. On Android's page the switch row is the only checkable node.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: ${SHOT || "full-screen-alerts-settings-from-dialog"}
+---
+- assertNotVisible:
+    id: phone_speak_schedule_ring_switch
+    checked: true
+- tapOn:
+    id: phone_speak_schedule_ring_switch
+- runFlow:
+    when:
+      visible:
+        id: phone_speak_schedule_ring_full_screen_alerts_dialog
+    commands:
+      - tapOn:
+          id: phone_speak_schedule_ring_full_screen_alerts_open_settings
+      - extendedWaitUntil:
+          visible: "Allow full-screen notifications from this app"
+          timeout: 15000
+      - takeScreenshot: ${SHOT}
+      - tapOn: "Allow full-screen notifications from this app"
+      - extendedWaitUntil:
+          visible:
+            checked: true
+          timeout: 10000
+      - back
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_standalone_screen
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_ring_switch
+      checked: true
+    timeout: 15000
+- assertNotVisible:
+    id: phone_speak_schedule_ring_full_screen_alerts_dialog
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_schedule_ring_turn_on_full_screen_alerts
+    timeout: 10000

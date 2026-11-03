@@ -1,0 +1,32 @@
+# Phone Speak schedule: turn "Ring my phone" on; if the full-screen alerts dialog opens (Android 14+
+# with full-screen alerts denied, microphone granted, a build that declares USE_FULL_SCREEN_INTENT),
+# tap Not now. Exit: the switch is on and no dialog shows. Whether the dialog showed is the
+# conditional block's COMPLETED or SKIPPED; the card notice is the caller's check.
+# Entry: open-phone-speak-schedule with the switch off and microphone granted.
+# Selectors: `phone_speak_schedule_ring_switch` (speak-android#8752) with `checked`; the dialog IDs
+# ship with speak-android#8712. On Android's page the switch row is the only checkable node.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertNotVisible:
+    id: phone_speak_schedule_ring_switch
+    checked: true
+- tapOn:
+    id: phone_speak_schedule_ring_switch
+- runFlow:
+    when:
+      visible:
+        id: phone_speak_schedule_ring_full_screen_alerts_dialog
+    commands:
+      - tapOn:
+          id: phone_speak_schedule_ring_full_screen_alerts_not_now
+      - extendedWaitUntil:
+          notVisible:
+            id: phone_speak_schedule_ring_full_screen_alerts_dialog
+          timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_ring_switch
+      checked: true
+    timeout: 15000
