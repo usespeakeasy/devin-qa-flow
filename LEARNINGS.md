@@ -43,3 +43,9 @@ describes.
   too and with no sheet showing. A handle drag check that starts there measures the emulator, not the
   app. Start drags from a top handle at y 169 or lower and read `mCurrentFocus` mid-drag.
   ([QA of speak-android#8706 at dd95dfb](https://github.com/usespeakeasy/speak-android/pull/8706), 2026-11-02)
+- Android process death: `adb shell input keyevent 3` straight into `am kill <pkg>` can leave the app
+  alive (it is still the foreground process), and the relaunch then logs nothing. Wait 1 s after Home,
+  run `am kill`, and check `adb shell pidof <pkg>` is empty before relaunching.
+  The leagues animator flows take the learner's current username as `NAME`: after
+  `animator-username-save` the defaults screen shows the saved name, not "User 1".
+  ([QA of speak-android#8742 at 135244cfd5](https://github.com/usespeakeasy/speak-android/pull/8742), 2026-11-03)
