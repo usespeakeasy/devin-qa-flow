@@ -1,0 +1,21 @@
+# Sign-in phone entry screen > system back closes the whole sign-in dialog (entry screen and options
+# sheet) to the signed-out welcome screen, as on develop. Runs on China builds (phone code only) and
+# global with `sms_otp_enabled` served ON.
+# Entry: `otp_sign_in_entry_screen` (run after open-phone-sign-in-entry.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: otp_sign_in_entry_screen
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_sign_in_button
+    timeout: 15000
+- assertNotVisible:
+    id: auth_options_screen
+- assertNotVisible:
+    id: otp_sign_in_entry_screen
