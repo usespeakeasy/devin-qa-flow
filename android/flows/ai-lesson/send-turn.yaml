@@ -1,0 +1,25 @@
+# AI lesson chat mode: type TEXT and send it, without waiting for the partner's answer.
+# Entry: AI lesson in chat mode, mic not recording (open-free-talk-scenario.yaml).
+# Exit: the turn is sent. Use it when the next screen is not the partner's answer (an error dialog, a paywall).
+# maestro test -e TEXT="Hola" send-turn.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  TEXT: "¿Es tu primera vez en un concierto de Bad Bunny?"
+---
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_keyboard_field
+    commands:
+      - tapOn:
+          id: ai_lesson_keyboard_toggle
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_keyboard_field
+    timeout: 10000
+- tapOn:
+    id: ai_lesson_keyboard_field
+- inputText: ${TEXT}
+- tapOn:
+    id: ai_lesson_keyboard_send

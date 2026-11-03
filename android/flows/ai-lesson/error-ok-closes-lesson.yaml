@@ -1,0 +1,37 @@
+# AI lesson error dialog with nothing over the lesson (a lost connection, a failed turn, the flagged
+# scenario dialog): its OK closes the lesson, back to the Free Talk tab where it started.
+# Entry: AI lesson started from the Free Talk tab (open-free-talk-scenario.yaml), the error coming
+# (network off, or the QA-only `debug.qa.error_code` patch). Exit: the Free Talk tab, no lesson.
+# The dialog's OK / Got it button is `android:id/button1`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: button1
+    timeout: 120000
+- tapOn:
+    id: button1
+- extendedWaitUntil:
+    visible:
+      id: (ai_tutor_title|button1)
+    timeout: 20000
+# A lesson error that the screen above held back shows once the lesson is on top again; each OK is `button1`.
+- repeat:
+    times: 3
+    while:
+      visible:
+        id: button1
+    commands:
+      - tapOn:
+          id: button1
+      - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000
+- assertNotVisible:
+    id: button1
+- assertNotVisible:
+    id: ai_lesson_screen

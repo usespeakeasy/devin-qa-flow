@@ -1,0 +1,38 @@
+# Preview paywall over the AI lesson: after every error dialog's OK the premium intro stays, and its
+# close lands on the Free Talk tab where the lesson started, not on the stopped lesson.
+# Entry: preview-paywall.yaml (the premium intro, its billing error OK already tapped). The case script
+# taps any later error dialog (`android:id/button1`) with the harness first, so this flow starts on
+# `onboarding_premium_intro_ready`. Exit: the Free Talk tab, no lesson. On develop the lesson's own error
+# dialog shows after the close, over the stopped lesson; the flow taps it and records it in the steps.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: onboarding_premium_intro_ready
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible:
+      id: (ai_tutor_title|button1)
+    timeout: 20000
+# A lesson error that the screen above held back shows once the lesson is on top again; each OK is `button1`.
+- repeat:
+    times: 3
+    while:
+      visible:
+        id: button1
+    commands:
+      - tapOn:
+          id: button1
+      - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000
+- assertNotVisible:
+    id: button1
+- assertNotVisible:
+    id: ai_lesson_screen
+- assertNotVisible:
+    id: onboarding_premium_intro_ready
