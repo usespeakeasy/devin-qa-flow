@@ -1,0 +1,36 @@
+# Case flow: answered series line card > tutor > Back, then tutor > close button: each time the sheet
+# closes and the card is still answered; then tap to continue reaches the next card (NEXT_ID).
+# Entry: the card shows `completed_header`. Exit: the next card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LINE: ${LINE || ".*Qué tal.*"}
+  NEXT_ID: ${NEXT_ID || "subtitle"}
+---
+- runFlow:
+    file: assert-series-card.yaml
+    env:
+      LINE: ${LINE}
+      STATE_ID: completed_header
+- runFlow: tap-series-tutor.yaml
+- runFlow: close-tutor-back.yaml
+- runFlow:
+    file: assert-series-card.yaml
+    env:
+      LINE: ${LINE}
+      STATE_ID: completed_header
+- runFlow: tap-series-tutor.yaml
+- runFlow: close-tutor-button.yaml
+- runFlow:
+    file: assert-series-card.yaml
+    env:
+      LINE: ${LINE}
+      STATE_ID: completed_header
+- tapOn:
+    id: tap_to_continue
+- extendedWaitUntil:
+    visible:
+      id: ${NEXT_ID}
+    timeout: 15000
+- assertNotVisible:
+    id: tutor_everywhere_sheet

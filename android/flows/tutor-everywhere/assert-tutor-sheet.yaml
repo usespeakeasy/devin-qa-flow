@@ -1,0 +1,7 @@
+# Assert the Speak Tutor sheet is showing (`tutor_everywhere_sheet`). No navigation.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: tutor_everywhere_sheet

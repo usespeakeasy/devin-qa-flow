@@ -1,0 +1,13 @@
+# Series lesson line card: tap the tutor button (`tutor_button_line` before the answer, `tutor_button_restart`
+# after it), the Speak Tutor sheet opens. Entry: series line card, tutor_everywhere_series_lessons_enabled = tutor_button.
+# Exit: `tutor_everywhere_sheet`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: "tutor_button_(line|restart)"
+- extendedWaitUntil:
+    visible:
+      id: tutor_everywhere_sheet
+    timeout: 20000

@@ -1,0 +1,34 @@
+# Sheet opened from an answered series card: ask in keyboard mode to repeat the card, wait for the
+# "Try again in lesson" action (`retry_card`, only offered for an answered card), tap it.
+# Exit: the sheet is gone and the card is back to "Speak now" (no `completed_header`).
+# The action comes from the tutor's answer, so Q must ask for a retry.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  Q: ${Q || "I want to try this card again in the lesson"}
+---
+# The sheet reopens in the last input mode, so the keyboard toggle is only there in voice mode.
+- tapOn:
+    id: tutor_everywhere_keyboard_toggle_button
+    optional: true
+- tapOn:
+    id: tutor_everywhere_input_field
+- inputText: ${Q}
+- tapOn:
+    id: tutor_everywhere_send_button
+- extendedWaitUntil:
+    visible:
+      id: tutor_everywhere_action_button_retry_card
+    timeout: 60000
+- tapOn:
+    id: tutor_everywhere_action_button_retry_card
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_everywhere_sheet
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: speak_now_header
+    timeout: 10000
+- assertNotVisible:
+    id: completed_header

@@ -1,0 +1,15 @@
+# Assert the Speak Tutor sheet is up for the current series card: the sheet plus an initial suggestion
+# (`tutor_everywhere_initial_suggestion`) whose text matches TUTOR_LINE. The chips are generated from the
+# card and not every chip quotes the line ("What's the best reply to this?"), so the default also takes
+# "this". No navigation.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TUTOR_LINE: ${TUTOR_LINE || ".*(Qué tal|this).*"}
+---
+- assertVisible:
+    id: tutor_everywhere_sheet
+- assertVisible:
+    text: ${TUTOR_LINE}
+    childOf:
+      id: tutor_everywhere_initial_suggestion

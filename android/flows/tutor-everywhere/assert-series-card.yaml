@@ -1,0 +1,17 @@
+# Assert the series lesson is on the card with line LINE (regex) in state STATE_ID (`speak_now_header`
+# before the answer, `completed_header` after it) and no Speak Tutor sheet. No navigation.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LINE: ${LINE || ".*Qué tal.*"}
+  STATE_ID: ${STATE_ID || "speak_now_header"}
+---
+- assertNotVisible:
+    id: tutor_everywhere_sheet
+- extendedWaitUntil:
+    visible:
+      id: ${STATE_ID}
+    timeout: 10000
+- assertVisible:
+    id: line
+    text: ${LINE}

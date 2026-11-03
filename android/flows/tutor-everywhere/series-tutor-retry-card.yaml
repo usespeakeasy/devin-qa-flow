@@ -1,0 +1,19 @@
+# Case flow: answered series line card > tutor > "Try again in lesson": the sheet closes and the card
+# restarts ("Speak now", no `completed_header`). Entry: the card shows `completed_header` (answer it with
+# DebugBridge `mockRecognition` first).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LINE: ${LINE || ".*Qué tal.*"}
+---
+- runFlow:
+    file: assert-series-card.yaml
+    env:
+      LINE: ${LINE}
+      STATE_ID: completed_header
+- runFlow: tap-series-tutor.yaml
+- runFlow: assert-tutor-sheet.yaml
+- runFlow: retry-card-from-tutor.yaml
+- assertVisible:
+    id: line
+    text: ${LINE}

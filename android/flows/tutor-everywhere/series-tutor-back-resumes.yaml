@@ -1,0 +1,15 @@
+# Case flow: series line card before the answer > tutor > system Back: the sheet closes and the card
+# listens again ("Speak now"). Entry: the card shows `speak_now_header` (it times out after ~25 s).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LINE: ${LINE || ".*Qué tal.*"}
+---
+- runFlow: tap-series-tutor.yaml
+- runFlow: assert-series-tutor-card.yaml
+- runFlow: close-tutor-back.yaml
+- runFlow:
+    file: assert-series-card.yaml
+    env:
+      LINE: ${LINE}
+      STATE_ID: speak_now_header

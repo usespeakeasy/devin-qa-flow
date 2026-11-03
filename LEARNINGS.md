@@ -49,3 +49,4 @@ describes.
   The leagues animator flows take the learner's current username as `NAME`: after
   `animator-username-save` the defaults screen shows the saved name, not "User 1".
   ([QA of speak-android#8742 at 135244cfd5](https://github.com/usespeakeasy/speak-android/pull/8742), 2026-11-03)
+- android tutor-everywhere (2026-11-03, speak-android#8808): after "I want to try this card again in the lesson" the sheet sometimes shows the user bubble and follow-up chips but no tutor reply and no `tutor_everywhere_action_button_retry_card`, while analytics still log `Speak Tutor Action Shown` and `Agent Response Loaded`. Seen on develop 885d2adb52 (1 of 17 tries) and the PR (4 of 22), so it is not a PR regression. `retry-card-from-tutor.yaml` then fails on the action wait; rerun the case alone before calling a fail.

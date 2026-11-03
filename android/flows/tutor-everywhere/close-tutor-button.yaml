@@ -1,0 +1,11 @@
+# Close the open Speak Tutor sheet with its close button. Exit: the sheet is gone.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: tutor_everywhere_close_button
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_everywhere_sheet
+    timeout: 10000

@@ -1,0 +1,21 @@
+# Case flow: Speak Tutor sheet open over a series card > landscape > portrait: the sheet stays up for the
+# same card; then the close button closes it and the card is back. Entry: sheet open (tap-series-tutor.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LINE: ${LINE || ".*Qué tal.*"}
+---
+- runFlow:
+    file: rotate.yaml
+    env:
+      ORIENT: LANDSCAPE_LEFT
+- runFlow: assert-tutor-sheet.yaml
+- runFlow:
+    file: rotate.yaml
+    env:
+      ORIENT: PORTRAIT
+- runFlow: assert-tutor-sheet.yaml
+- runFlow: close-tutor-button.yaml
+- assertVisible:
+    id: line
+    text: ${LINE}
