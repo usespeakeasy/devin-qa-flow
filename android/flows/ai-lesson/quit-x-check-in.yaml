@@ -1,0 +1,23 @@
+# AI lesson > X > quit sheet > Quit: the difficulty check-in replaces the lesson (no lesson under it).
+# Entry: AI lesson (open-free-talk-scenario.yaml). Preconditions: Premium override, doug_feedback_forms =
+# difficultySheet, dynamic_on_demand_unit_gen ON, QA-only gate patch (every lesson is a non-final custom unit
+# lesson, unit id from `adb shell setprop debug.qa.unit_no N`, a new N per case). Exit: the check-in.
+# Selectors: the X has no resource-id (point at the top-left close button, ID PR adds one).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    point: "7%,8%"
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_quit_sheet
+    timeout: 10000
+- tapOn:
+    id: ai_lesson_quit_confirm
+- extendedWaitUntil:
+    visible:
+      id: custom_units_difficulty_check_in_just_right
+    timeout: 30000
+- assertNotVisible:
+    id: ai_lesson_screen

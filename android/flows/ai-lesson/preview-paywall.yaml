@@ -1,0 +1,42 @@
+# AI lesson preview ends mid-lesson: the next agent turn gets the server's notPremium error and the
+# lesson preview paywall opens over the lesson. Under it the AI voice and the learner turn stop
+# (no recording, no new agent turn).
+# Entry: AI lesson in chat mode (open-free-talk-scenario.yaml) with `adb shell setprop debug.qa.not_premium 1`
+# set by the case script (QA-only patch in AiLessonService that replays the server's notPremium error).
+# Exit: the paywall over the lesson. On the google_apis AVD Superwall can't present (no Play Billing),
+# so the native premium screen (`onboarding_premium_intro_ready`) opens behind an "An unexpected error
+# occurred." dialog (`android:id/button1` OK).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  TEXT: "¿Es tu primera vez en un concierto de Bad Bunny?"
+---
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_keyboard_field
+    commands:
+      - tapOn:
+          id: ai_lesson_keyboard_toggle
+- tapOn:
+    id: ai_lesson_keyboard_field
+- inputText: ${TEXT}
+- tapOn:
+    id: ai_lesson_keyboard_send
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_premium_intro_(ready|error)"
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: button1
+    commands:
+      - tapOn:
+          id: button1
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_ready
+    timeout: 20000
+- assertNotVisible:
+    id: ai_lesson_record_cancel

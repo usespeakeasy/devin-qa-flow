@@ -1,0 +1,77 @@
+# Mic permission denied before an AI lesson: Start lesson asks for the mic, granting it ("While using
+# the app") loads the lesson and the mic works.
+# Entry: signed in, Subscription override Premium (the flow cold-starts with the mic permission denied).
+# Exit: AI lesson in chat mode with the permission granted. TOPIC as in open-free-talk-scenario.yaml.
+# Selectors: the system permission dialog's id is the permission controller's; Free Talk tab, Topics,
+# the scenario card and "Chat mode" have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  TOPIC: "At a Bad Bunny Concert"
+---
+- launchApp:
+    stopApp: true
+    permissions:
+      microphone: deny
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+- tapOn: "Free Talk"
+- runFlow:
+    when:
+      visible: "^Get started$"
+    commands:
+      - tapOn: "^Get started$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000
+- tapOn: "^Topics$"
+- extendedWaitUntil:
+    visible: ${TOPIC}
+    timeout: 20000
+- tapOn: ${TOPIC}
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_start
+    timeout: 20000
+- runFlow:
+    when:
+      visible: "^Chat mode$"
+    commands:
+      - tapOn: "^Chat mode$"
+- tapOn:
+    id: ai_lesson_pre_lesson_start
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_resume_start_over
+    commands:
+      - tapOn:
+          id: ai_lesson_resume_start_over
+# After an earlier denial the app shows its own rationale dialog before the system prompt.
+- extendedWaitUntil:
+    visible: "(.*Speak needs access to your microphone.*|While using the app|Only this time)"
+    timeout: 30000
+- runFlow:
+    when:
+      visible: ".*Speak needs access to your microphone.*"
+    commands:
+      - assertNotVisible:
+          id: ai_lesson_partner_message
+      - tapOn: "^Allow$"
+- extendedWaitUntil:
+    visible:
+      id: "permission_allow_foreground_only_button"
+    timeout: 30000
+- assertNotVisible:
+    id: ai_lesson_partner_message
+- tapOn:
+    id: "permission_allow_foreground_only_button"
+- extendedWaitUntil:
+    visible:
+      id: "ai_lesson_primary_(send|record)"
+    timeout: 60000
+- assertVisible:
+    id: ai_lesson_screen

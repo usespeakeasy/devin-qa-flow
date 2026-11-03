@@ -1,0 +1,32 @@
+# AI lesson: two fast taps on the transcript report icon open one report options sheet; the case script checks
+# that one back closes it and the lesson shows.
+# Entry: AI lesson in chat mode with a partner message (open-free-talk-scenario.yaml). Exit: the lesson, no sheet.
+# Selectors: QA-only patch tags `ai_lesson_transcript_expand` and `ai_lesson_transcript_report` (ID PR adds them);
+# the options sheet has no resource-id (text fallback "Content error").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_transcript_expand
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_transcript_report
+    commands:
+      - tapOn:
+          id: ai_lesson_transcript_expand
+- tapOn:
+    id: ai_lesson_transcript_report
+    repeat: 2
+    delay: 50
+    waitToSettleTimeoutMs: 100
+- extendedWaitUntil:
+    visible: "^Content error$"
+    timeout: 10000
+- back
+# The case script checks what is left after one back (harness `has`): one sheet means the lesson shows.
+- waitForAnimationToEnd:
+    timeout: 3000

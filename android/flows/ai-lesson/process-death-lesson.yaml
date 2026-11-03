@@ -1,0 +1,17 @@
+# Process death during an AI lesson: the system kills the app in the background, relaunch restores
+# the lesson screen (or its resume sheet) instead of Home.
+# Entry: AI lesson in chat mode. Exit: the restored lesson, Home not showing.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_screen
+    timeout: 60000
+- assertNotVisible:
+    id: home_root_ready

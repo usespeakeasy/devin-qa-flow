@@ -1,0 +1,20 @@
+# AI lesson: two fast taps on the tutor button open one Speak Tutor sheet; one back closes it and the lesson shows.
+# Entry: AI lesson in chat mode, mic idle (open-free-talk-scenario.yaml). Precondition:
+# tutor_everywhere_ai_lessons_enabled ON. Exit: the lesson, mic idle, no sheet.
+# Selectors: the tutor sheet has no resource-id yet (text fallback "Ask me anything").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: ai_lesson_tutor_button
+    repeat: 2
+    delay: 50
+    waitToSettleTimeoutMs: 100
+- extendedWaitUntil:
+    visible: "Ask me anything"
+    timeout: 20000
+- back
+# The case script checks what is left after one back (harness `has`): one sheet means the lesson shows.
+- waitForAnimationToEnd:
+    timeout: 3000

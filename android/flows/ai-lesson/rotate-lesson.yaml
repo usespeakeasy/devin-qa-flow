@@ -1,0 +1,18 @@
+# Rotate to landscape and back during an AI lesson: the lesson and its transcript are still there.
+# Entry: AI lesson in chat mode with a partner message. Exit: portrait, the lesson shows.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: ai_lesson_screen
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: ai_lesson_screen
+- assertVisible:
+    id: ai_lesson_partner_message

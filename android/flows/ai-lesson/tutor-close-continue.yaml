@@ -1,0 +1,23 @@
+# AI lesson > tutor button > Speak Tutor sheet > back: the sheet closes and the lesson continues.
+# Entry: AI lesson in chat mode, mic idle (open-free-talk-scenario.yaml). Precondition: Debug Menu >
+# tutor_everywhere_ai_lessons_enabled ON. Exit: the lesson, mic idle, no sheet.
+# Selectors: the tutor sheet has no resource-id yet (text fallback "Ask me anything").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: ai_lesson_tutor_button
+- extendedWaitUntil:
+    visible: "Ask me anything"
+    timeout: 20000
+- back
+- extendedWaitUntil:
+    notVisible: "Ask me anything"
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: "ai_lesson_primary_(send|record)"
+    timeout: 10000
+- assertVisible:
+    id: ai_lesson_tutor_button

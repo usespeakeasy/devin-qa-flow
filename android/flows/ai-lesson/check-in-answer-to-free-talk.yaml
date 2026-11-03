@@ -1,0 +1,18 @@
+# Quit check-in from an AI lesson started on Free Talk: tap ANSWER and land on the Free Talk tab, with no
+# lesson screen showing on the way or after.
+# Entry: the check-in from quit-x-check-in.yaml. Exit: Free Talk tab (ai_tutor_title).
+# maestro test -e ANSWER=custom_units_difficulty_check_in_just_right check-in-answer-to-free-talk.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: ${ANSWER}
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 30000
+- assertNotVisible:
+    id: custom_units_difficulty_check_in
+- assertNotVisible:
+    id: ai_lesson_screen

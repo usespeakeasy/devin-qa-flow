@@ -1,0 +1,58 @@
+# AI lesson from Free Talk: talk three typed turns that complete the scenario's tasks and a goodbye, then End lesson:
+# the lesson end flow opens (readout) and the lesson screen is gone.
+# Entry: AI lesson in chat mode (open-free-talk-scenario.yaml, TOPIC "At a Bad Bunny Concert"; the turns
+# answer its three tasks). Exit: lesson end readout (lesson_end_reskin_root).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow:
+    file: type-turn.yaml
+    env:
+      TEXT: "¿Es tu primera vez en un concierto de Bad Bunny?"
+- runFlow:
+    file: type-turn.yaml
+    env:
+      TEXT: "¿Cuál es tu canción favorita?"
+- runFlow:
+    file: type-turn.yaml
+    env:
+      TEXT: "Mi canción favorita es Tití Me Preguntó."
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_tasks_completed
+    timeout: 30000
+# The partner sometimes ends the conversation right after the last task, sometimes only after a goodbye.
+- assertVisible:
+    id: ai_lesson_end_lesson
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_end_lesson
+    commands:
+      - runFlow:
+          file: type-turn.yaml
+          env:
+            TEXT: "¡Gracias! Me tengo que ir, ¡adiós!"
+      # End lesson shows under the keyboard. With the keyboard already down, hideKeyboard is a back
+      # press that opens the quit sheet: keep learning.
+      - hideKeyboard
+      - runFlow:
+          when:
+            visible:
+              id: ai_lesson_quit_sheet
+          commands:
+            - tapOn: "^Keep Learning$"
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_end_lesson
+    timeout: 90000
+- tapOn:
+    id: ai_lesson_end_lesson
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 60000
+- assertNotVisible:
+    id: ai_lesson_screen
