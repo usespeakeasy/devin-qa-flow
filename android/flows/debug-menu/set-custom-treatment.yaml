@@ -23,9 +23,12 @@ env:
 - tapOn: "Custom…"
 - assertVisible: Enter custom treatment
 - tapOn: Treatment
+# Typing before the keyboard settles drops the first character ("lert_only").
+- waitForAnimationToEnd
 - inputText: ${TREATMENT}
+- assertVisible: "^${TREATMENT}$"
 - tapOn: Submit
 - assertVisible:
-    text: ${TREATMENT}
+    text: "LOCAL · ${TREATMENT}"
     rightOf:
       text: ${FLAG}

@@ -1,0 +1,22 @@
+# Home: open the AI data alert's lesson site from the learning path without relaunching (a connectivity
+# or account state set before the flow is kept): expand the second lesson loop and tap Preview.
+# Entry: Home (`learning_path_ready`). Exit: right after the tap, before the lesson or the AI data alert shows.
+# Why Preview and not Start: on dev, a new account's first loop Start ("[PROD-CLONE] ...") opens nothing.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+- runFlow:
+    when:
+      notVisible:
+        id: learning_path_popover_preview_button
+    commands:
+      - tapOn:
+          id: "learning_path_loop_.*"
+          index: 1
+- tapOn:
+    id: learning_path_popover_preview_button

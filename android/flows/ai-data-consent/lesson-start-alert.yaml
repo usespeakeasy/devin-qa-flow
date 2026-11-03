@@ -1,0 +1,11 @@
+# Learning path lesson Preview shows the AI data alert ("Allow Speak to send your voice and text to AI?"); tap ACTION
+# (allow, dont_allow or privacy_policy).
+# Entry: Home, `ai_data_consent_mode` = alert_only, account without a stored or pending agreement.
+# Exit: alert gone (the lesson opens after allow). Keeps connectivity: no relaunch.
+# maestro test -e ACTION=allow lesson-start-alert.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/start-path-lesson.yaml
+- runFlow: answer-alert.yaml
