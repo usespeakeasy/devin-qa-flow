@@ -1,0 +1,30 @@
+# Code step: type the code, Verify, then to the signed-in landing: Home through the premium intro for an
+# onboarded account, or the onboarding chat (`onboarding_magic_ready`) for an account the code just created.
+# Entry: `otp_sign_in_code_screen`. Param (run time only): CODE (read from the inbox or a backend static code).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: otp_sign_in_code_field
+- inputText: ${CODE}
+- runFlow:
+    when:
+      visible:
+        id: otp_sign_in_verify_button
+        enabled: true
+    commands:
+      - tapOn:
+          id: otp_sign_in_verify_button
+- extendedWaitUntil:
+    visible:
+      id: (home_root_ready|onboarding_premium_intro_(ready|error)|main-editor-container|design_bottom_sheet|onboarding_magic_ready)
+    timeout: 60000
+- runFlow:
+    when:
+      notVisible:
+        id: (home_root_ready|onboarding_magic_ready)
+    commands:
+      - runFlow: ../../common/dismiss-premium-intro.yaml
+- assertVisible:
+    id: (home_root_ready|onboarding_magic_ready)

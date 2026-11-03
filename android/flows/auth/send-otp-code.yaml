@@ -1,0 +1,25 @@
+# Phone or email code entry: type the destination, submit with the keyboard's Done (the keyboard covers
+# "Send code" on a 1080x2400 screen), wait for the code step. Works for sign-in and sign-up.
+# Entry: `otp_sign_in_entry_screen`. Param (run time only): VALUE (a phone in E.164 or an email).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: type-otp-destination.yaml
+    env:
+      VALUE: ${VALUE}
+      PRESS_DONE: "true"
+- runFlow:
+    when:
+      visible:
+        id: otp_sign_in_send_code_button
+    commands:
+      - tapOn:
+          id: otp_sign_in_send_code_button
+- extendedWaitUntil:
+    visible:
+      id: otp_sign_in_code_screen
+    timeout: 30000
+- assertVisible:
+    id: otp_sign_in_code_field
