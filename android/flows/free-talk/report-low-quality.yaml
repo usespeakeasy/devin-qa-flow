@@ -1,0 +1,27 @@
+# Community details sheet > "Report this topic." > Low quality: the report sheet closes and the
+# Report Confirmation dialog shows over the details sheet.
+# Entry: open-favorites-topic.yaml or open-community-topic.yaml. Exit: the confirmation dialog.
+# Selectors: the report link's clickable child has no resource-id and does not show in the UiAutomator
+# tree, so a point inside ai_tutor_community_details_report_text hits it (portrait 1080x2400).
+# The rest use ids (speak-android#8664).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: ai_tutor_community_details_report_text
+- tapOn:
+    point: "69%,71%"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_report_sheet
+    timeout: 10000
+- tapOn:
+    id: ai_tutor_community_report_option_low_quality
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_report_confirmation
+    timeout: 15000
+- assertNotVisible:
+    id: ai_tutor_community_report_sheet
+- assertVisible: "You've successfully reported this submission\\."
