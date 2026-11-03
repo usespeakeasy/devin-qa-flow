@@ -1,0 +1,13 @@
+# Close the launcher's taskbar education dialog ("See and do more") that Android shows over the app
+# the first time a tablet-size window is used. System UI, not the app, so it has no app resource ID.
+# Entry: any screen in a tablet-size window. Preconditions: none.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    text: "Got it"
+    optional: true
+- extendedWaitUntil:
+    notVisible: "See and do more"
+    timeout: 5000

@@ -12,7 +12,7 @@ env:
   LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
 ---
 - tapOn:
-    text: "Later"
+    id: referral_welcome_dialog_later_button
     optional: true
 - openLink: speak-dev://lesson?id=${LESSON_ID}
 - extendedWaitUntil:
