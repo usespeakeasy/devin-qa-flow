@@ -1,0 +1,14 @@
+# Scrolls the open Course Selector until the course card titled TITLE is centered on screen.
+# Entry: Course Selector open (open-course-selector). Pass -e TITLE (no env default: a default wins over -e). Precondition: TITLE exists in the user's course list.
+# Selectors: course card titles have no resource-id (text fallback TITLE, a regex).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Select a course"
+- scrollUntilVisible:
+    element: ${TITLE}
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- assertVisible: ${TITLE}

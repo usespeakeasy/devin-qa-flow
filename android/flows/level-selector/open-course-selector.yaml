@@ -1,0 +1,15 @@
+# Course Selector (LevelSelector, CourseSelection entry) opens by deep link from Home.
+# Entry: Home tab. Precondition: signed-in dev account (any course).
+# Selectors: the nav bar title has no resource-id (text fallback "Select a course").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- openLink: speak-dev://course-selector
+- extendedWaitUntil:
+    visible: "Select a course"
+    timeout: 30000

@@ -1,0 +1,14 @@
+# Close (X) on the Course Selector returns to Home.
+# Entry: Course Selector open. Precondition: signed-in dev account.
+# Selectors: the Close button has no resource-id (content description fallback "Close").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Select a course"
+- tapOn: "Close"
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible: "Select a course"
