@@ -1,0 +1,48 @@
+# Phone Speak schedule with the microphone revoked and full-screen alerts denied: turn "Ring my
+# phone" off and on (refusing the system microphone prompt if it shows), take MIC_SHOT, then allow
+# the microphone from the card. Exit: the switch is on and no full-screen alerts dialog showed.
+# Which notice shows before and after (microphone, then full-screen alerts) is the caller's check.
+# Entry: open-phone-speak-schedule. Writes MIC_SHOT (default microphone-notice.png).
+# Selectors: the switch row and the card's notice buttons have no exported resource-id on the
+# Weekly Schedule screen (text fallback, ID PR pending); system prompt buttons use permissioncontroller IDs.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  MIC_SHOT: ${MIC_SHOT || "microphone-notice"}
+---
+- runFlow:
+    when:
+      visible:
+        checked: true
+    commands:
+      - tapOn: "Ring my phone"
+      - extendedWaitUntil:
+          notVisible:
+            checked: true
+          timeout: 15000
+- tapOn: "Ring my phone"
+- runFlow:
+    when:
+      visible:
+        id: com.android.permissioncontroller:id/permission_deny_button
+    commands:
+      - tapOn:
+          id: com.android.permissioncontroller:id/permission_deny_button
+- extendedWaitUntil:
+    visible: "Turn on microphone"
+    timeout: 15000
+- assertNotVisible:
+    id: phone_speak_schedule_ring_full_screen_alerts_dialog
+- takeScreenshot: ${MIC_SHOT}
+- tapOn: "Turn on microphone"
+- extendedWaitUntil:
+    visible:
+      id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+    timeout: 15000
+- tapOn:
+    id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+- extendedWaitUntil:
+    notVisible: "Turn on microphone"
+    timeout: 15000
+- assertNotVisible:
+    id: phone_speak_schedule_ring_full_screen_alerts_dialog

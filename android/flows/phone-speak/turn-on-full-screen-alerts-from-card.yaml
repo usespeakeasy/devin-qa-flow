@@ -1,0 +1,35 @@
+# Phone Speak schedule: from the ring card's full-screen alerts notice, tap "Turn on full-screen
+# alerts", allow full-screen notifications on Android's page for Speak, come back, and check the
+# notice is gone. Skipped (no-op) when the notice isn't showing, e.g. on a build without it.
+# Entry: open-phone-speak-schedule with the notice showing. Exit: the schedule screen.
+# Writes the screenshot SHOT (default full-screen-alerts-settings.png) of Android's page.
+# Selectors: the notice button's testTag is not exported as a resource-id on the Weekly Schedule
+# screen (text fallback, ID PR pending). The Settings switch row is the only checkable node there.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: ${SHOT || "full-screen-alerts-settings"}
+---
+- runFlow:
+    when:
+      visible: "Turn on full-screen alerts"
+    commands:
+      - tapOn: "Turn on full-screen alerts"
+      - extendedWaitUntil:
+          visible: "Allow full-screen notifications from this app"
+          timeout: 15000
+      - takeScreenshot: ${SHOT}
+      - assertNotVisible:
+          checked: true
+      - tapOn: "Allow full-screen notifications from this app"
+      - extendedWaitUntil:
+          visible:
+            checked: true
+          timeout: 10000
+      - back
+      - extendedWaitUntil:
+          visible: "Ring my phone"
+          timeout: 15000
+      - extendedWaitUntil:
+          notVisible: "Turn on full-screen alerts"
+          timeout: 10000
