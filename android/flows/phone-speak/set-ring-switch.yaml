@@ -1,9 +1,7 @@
 # Phone Speak schedule: set "Ring my phone" to CHECKED (true or false) and wait for the save to land.
 # A full-screen alerts dialog or a system microphone prompt the switch opens is left for the caller.
 # Entry: open-phone-speak-schedule. maestro test -e CHECKED=false set-ring-switch.yaml
-# Selectors: the switch row has no resource-id. It is the only checkable node on the screen, so
-# `checked: true` finds it when on (Maestro drops `checked` when combined with containsDescendants);
-# it is tapped by its title text.
+# Selectors: `phone_speak_schedule_ring_switch` (speak-android#8752) with `checked`.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
@@ -13,21 +11,27 @@ env:
     when:
       true: ${CHECKED == "true"}
       notVisible:
+        id: phone_speak_schedule_ring_switch
         checked: true
     commands:
-      - tapOn: "Ring my phone"
+      - tapOn:
+          id: phone_speak_schedule_ring_switch
       - extendedWaitUntil:
           visible:
+            id: phone_speak_schedule_ring_switch
             checked: true
           timeout: 15000
 - runFlow:
     when:
       true: ${CHECKED != "true"}
       visible:
+        id: phone_speak_schedule_ring_switch
         checked: true
     commands:
-      - tapOn: "Ring my phone"
+      - tapOn:
+          id: phone_speak_schedule_ring_switch
       - extendedWaitUntil:
           notVisible:
+            id: phone_speak_schedule_ring_switch
             checked: true
           timeout: 15000

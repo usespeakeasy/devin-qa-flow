@@ -2,9 +2,8 @@
 # "Ring my phone" card showing (needs a Premium Plus entitled account with one saved slot, and the
 # server's ring arm plus FCM call sender on for Android).
 # Entry: signed in, any screen. Exit: the Weekly Schedule screen with the ring card.
-# With a saved slot the screen is "Weekly Schedule" with no resource-id on its root
-# (`phone_speak_schedule_cta_screen` only shows with no slot), so arrival is the ring card text.
-# Selectors: the screen and the ring card have no resource-id (text fallback, ID PR pending).
+# Arrival is the Weekly Schedule root `phone_speak_schedule_standalone_screen` plus the ring switch
+# `phone_speak_schedule_ring_switch` (speak-android#8752; builds before it export neither).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
@@ -12,5 +11,10 @@ env:
 ---
 - openLink: ${LINK}
 - extendedWaitUntil:
-    visible: "Ring my phone"
+    visible:
+      id: phone_speak_schedule_standalone_screen
     timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_ring_switch
+    timeout: 15000

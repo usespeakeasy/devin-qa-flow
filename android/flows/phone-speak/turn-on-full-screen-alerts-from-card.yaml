@@ -3,8 +3,8 @@
 # notice is gone. Skipped (no-op) when the notice isn't showing, e.g. on a build without it.
 # Entry: open-phone-speak-schedule with the notice showing. Exit: the schedule screen.
 # Writes the screenshot SHOT (default full-screen-alerts-settings.png) of Android's page.
-# Selectors: the notice button's testTag is not exported as a resource-id on the Weekly Schedule
-# screen (text fallback, ID PR pending). The Settings switch row is the only checkable node there.
+# Selectors: `phone_speak_schedule_ring_turn_on_full_screen_alerts` (exported since speak-android#8752).
+# Android's page is matched by text; its switch row is the only checkable node there.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
@@ -12,9 +12,11 @@ env:
 ---
 - runFlow:
     when:
-      visible: "Turn on full-screen alerts"
+      visible:
+        id: phone_speak_schedule_ring_turn_on_full_screen_alerts
     commands:
-      - tapOn: "Turn on full-screen alerts"
+      - tapOn:
+          id: phone_speak_schedule_ring_turn_on_full_screen_alerts
       - extendedWaitUntil:
           visible: "Allow full-screen notifications from this app"
           timeout: 15000
@@ -28,8 +30,10 @@ env:
           timeout: 10000
       - back
       - extendedWaitUntil:
-          visible: "Ring my phone"
+          visible:
+            id: phone_speak_schedule_standalone_screen
           timeout: 15000
       - extendedWaitUntil:
-          notVisible: "Turn on full-screen alerts"
+          notVisible:
+            id: phone_speak_schedule_ring_turn_on_full_screen_alerts
           timeout: 10000

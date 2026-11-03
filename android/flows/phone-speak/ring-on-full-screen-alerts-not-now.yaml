@@ -3,15 +3,17 @@
 # tap Not now. Exit: the switch is on and no dialog shows. Whether the dialog showed is the
 # conditional block's COMPLETED or SKIPPED; the card notice is the caller's check.
 # Entry: open-phone-speak-schedule with the switch off and microphone granted.
-# Selectors: the switch row has no resource-id; it is tapped by its title text and is the only
-# checkable node on the screen (`checked: true` when on).
+# Selectors: `phone_speak_schedule_ring_switch` (speak-android#8752) with `checked`; the dialog IDs
+# ship with speak-android#8712. On Android's page the switch row is the only checkable node.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
 - assertNotVisible:
+    id: phone_speak_schedule_ring_switch
     checked: true
-- tapOn: "Ring my phone"
+- tapOn:
+    id: phone_speak_schedule_ring_switch
 - runFlow:
     when:
       visible:
@@ -25,5 +27,6 @@ env:
           timeout: 10000
 - extendedWaitUntil:
     visible:
+      id: phone_speak_schedule_ring_switch
       checked: true
     timeout: 15000
