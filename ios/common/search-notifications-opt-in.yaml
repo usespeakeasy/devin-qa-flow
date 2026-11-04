@@ -1,4 +1,6 @@
 # Previews catalog -> search "Notifications Opt-In". Entry: Previews. Exit: the four results.
+# The search field is the native `.searchable` field, which takes no identifier; its prompt is
+# "Search". Rows are `debug.previews.item.<section>_<preview name>`.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak-v2.dev
@@ -6,8 +8,12 @@ env:
 - tapOn: "Search"
 - inputText: "Notifications Opt-In"
 - extendedWaitUntil:
-    visible: "Notifications Opt-In - Streak"
+    visible:
+      id: "debug.previews.item.Notifications_Notifications Opt-In - Streak"
     timeout: 10000
-- assertVisible: "Notifications Opt-In - Smart Review"
-- assertVisible: "Notifications Opt-In - Challenges"
-- assertVisible: "Notifications Opt-In - Habit Formation"
+- assertVisible:
+    id: "debug.previews.item.Notifications_Notifications Opt-In - Smart Review"
+- assertVisible:
+    id: "debug.previews.item.Notifications_Notifications Opt-In - Challenges"
+- assertVisible:
+    id: "debug.previews.item.Notifications_Notifications Opt-In - Habit Formation"

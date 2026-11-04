@@ -6,15 +6,18 @@ appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak-v2.dev
 ---
-- tapOn: "Notifications Opt-In - ${PREVIEW}"
+- tapOn:
+    id: "debug.previews.item.Notifications_Notifications Opt-In - ${PREVIEW}"
 - extendedWaitUntil:
     visible: "Set up later"
     timeout: 10000
 - assertVisible: "Enable"
-- assertNotVisible: "Notifications Opt-In - ${PREVIEW}"
+- assertNotVisible:
+    id: "debug.previews.item.Notifications_Notifications Opt-In - ${PREVIEW}"
 - takeScreenshot: ${SHOT}
 - tapOn:
     id: "BackButton"
 - extendedWaitUntil:
-    visible: "Notifications Opt-In - ${PREVIEW}"
+    visible:
+      id: "debug.previews.item.Notifications_Notifications Opt-In - ${PREVIEW}"
     timeout: 10000

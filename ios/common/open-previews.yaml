@@ -1,5 +1,6 @@
 # Home -> Settings -> Previews (debug preview catalog). Dev builds only.
-# Entry: Home. The row and the search field have no identifier.
+# Entry: Home. Exit: the catalog list (debug.previews.list). The Settings "Previews" row has no
+# identifier (SettingsAccessibilityIdentifier leaves it nil).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak-v2.dev
@@ -10,5 +11,6 @@ env:
     direction: DOWN
 - tapOn: "Previews"
 - extendedWaitUntil:
-    visible: "Search"
+    visible:
+      id: "debug.previews.list"
     timeout: 10000
