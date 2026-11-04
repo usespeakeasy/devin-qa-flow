@@ -1,0 +1,20 @@
+# Opens a learning-path lesson by deep link and asserts it opens with no AI data consent alert.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_no_muchogusto_no_vamos_TL"}
+---
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_root
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: ai_data_consent_alert
+    timeout: 8000
+    optional: true
+- assertNotVisible:
+    id: ai_data_consent_alert
+- assertVisible:
+    id: drill_lesson_root

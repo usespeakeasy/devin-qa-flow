@@ -1,0 +1,9 @@
+# AI lesson pre-lesson: tap Start and the lesson opens with no AI data consent alert (consent given or not needed).
+# Entry: pre-lesson (open-free-talk-pre-lesson.yaml). Exit: AI lesson (ai_lesson_screen), no alert.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: ai_lesson_pre_lesson_start
+- runFlow: enter-from-pre-lesson.yaml

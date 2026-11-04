@@ -1,0 +1,17 @@
+# AI data consent alert over the AI lesson pre-lesson: press Back; the alert closes and the pre-lesson stays.
+# Entry: the alert on the pre-lesson (pre-lesson-start-alert.yaml). Exit: pre-lesson, no alert.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: ai_data_consent_alert
+    timeout: 10000
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: ai_data_consent_alert
+    timeout: 10000
+- assertVisible:
+    id: ai_lesson_pre_lesson_start

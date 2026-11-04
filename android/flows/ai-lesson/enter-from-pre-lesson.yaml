@@ -1,0 +1,32 @@
+# AI lesson: after Start on the pre-lesson (and Allow on the AI data alert, if it asked), wait for the lesson
+# in chat mode with the record button. Entry: right after Start / Allow. Exit: AI lesson (ai_lesson_screen).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_resume_start_over
+    commands:
+      - tapOn:
+          id: ai_lesson_resume_start_over
+- extendedWaitUntil:
+    visible:
+      id: "ai_lesson_primary_(send|record)"
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_record_cancel
+    commands:
+      - tapOn:
+          id: ai_lesson_record_cancel
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_primary_record
+    timeout: 10000
+- assertVisible:
+    id: ai_lesson_screen
+- assertNotVisible:
+    id: ai_data_consent_alert

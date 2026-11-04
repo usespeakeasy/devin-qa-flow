@@ -1,0 +1,36 @@
+# Free Talk: open a topic's pre-lesson in chat mode and stop there (Start not tapped).
+# Entry: signed in (the flow cold-starts the app). Exit: pre-lesson (ai_lesson_pre_lesson_start).
+# maestro test -e TOPIC="At a Bad Bunny Concert" open-free-talk-pre-lesson.yaml
+# Selectors: the Free Talk tab, Get started, Topics, topic and Chat mode have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TOPIC: ${TOPIC || "At a Bad Bunny Concert"}
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn: "Free Talk"
+- runFlow:
+    when:
+      visible: "^Get started$"
+    commands:
+      - tapOn: "^Get started$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000
+- tapOn: "^Topics$"
+- extendedWaitUntil:
+    visible: ${TOPIC}
+    timeout: 20000
+- tapOn: ${TOPIC}
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_start
+    timeout: 20000
+- runFlow:
+    when:
+      visible: "^Chat mode$"
+    commands:
+      - tapOn: "^Chat mode$"
+- assertVisible:
+    id: ai_lesson_pre_lesson_start

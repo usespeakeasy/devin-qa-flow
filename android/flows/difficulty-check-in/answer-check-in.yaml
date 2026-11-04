@@ -1,0 +1,18 @@
+# Lesson end difficulty check-in ("Want to adjust the difficulty of this course?"): tap one answer; the check-in closes.
+# ANSWER is make_it_harder, make_it_easier, just_right or dont_show_again. Entry: the check-in on screen.
+# Exit: check-in gone (the next lesson end step or Home).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: custom_units_difficulty_check_in_${ANSWER}
+    timeout: 60000
+- assertVisible: "Want to adjust the difficulty of this course?"
+- tapOn:
+    id: custom_units_difficulty_check_in_${ANSWER}
+- extendedWaitUntil:
+    notVisible:
+      id: custom_units_difficulty_check_in_just_right
+    timeout: 15000
