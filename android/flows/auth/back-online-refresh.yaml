@@ -1,0 +1,16 @@
+# Back online from the offline screen: airplane mode off, tap Refresh, Home loads.
+# Entry: `no_internet_root` with airplane mode on (exit of relaunch-offline-signed-in.yaml; the run script puts the
+# clock back and turns automatic date and time on first). Exit: Home (`learning_path_ready`), airplane mode off.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- setAirplaneMode: disabled
+- tapOn:
+    id: no_internet_refresh_button
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+- assertNotVisible:
+    id: no_internet_root

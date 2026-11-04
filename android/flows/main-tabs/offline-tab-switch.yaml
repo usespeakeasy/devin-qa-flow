@@ -1,0 +1,54 @@
+# Bottom tabs with the network dropping and coming back: airplane mode on, Profile -> Challenge -> Home,
+# airplane mode off, then Profile -> Challenge -> Home again, each waiting for its content.
+# Entry: Home tab, signed in, airplane mode off. Exit: Home (`learning_path_ready`), airplane mode off.
+# Offline, Profile and Challenge show cached content; Home can show "An unexpected error occurred." (android `button1`
+# OK), which the flow closes when it shows.
+# Selectors: the bottom tab items have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- setAirplaneMode: enabled
+- tapOn: "Profile"
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 20000
+- tapOn: "Challenge"
+- extendedWaitUntil:
+    visible:
+      id: challenge_tab_root
+    timeout: 20000
+- tapOn: "Home"
+- extendedWaitUntil:
+    visible:
+      id: button1
+    timeout: 30000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: button1
+    commands:
+      - tapOn:
+          id: button1
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- setAirplaneMode: disabled
+- tapOn: "Profile"
+- extendedWaitUntil:
+    visible:
+      id: stat_streak_title
+    timeout: 30000
+- tapOn: "Challenge"
+- extendedWaitUntil:
+    visible:
+      id: "placeholder_title|tier_list"
+    timeout: 30000
+- tapOn: "Home"
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
