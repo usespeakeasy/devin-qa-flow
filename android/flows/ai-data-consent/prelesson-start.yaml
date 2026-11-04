@@ -1,0 +1,25 @@
+# Taps Start on the native AI pre-lesson and waits for what follows: the AI data alert, or the
+# pre-lesson leaving (lesson, paywall) when no alert shows.
+# Entry: ai_lesson_pre_lesson_screen visible (open-lesson-link.yaml with an AI roleplay lesson).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: ai_lesson_pre_lesson_start
+- extendedWaitUntil:
+    visible:
+      id: ai_data_consent_alert
+    timeout: 8000
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: ai_data_consent_alert
+    commands:
+      - extendedWaitUntil:
+          notVisible:
+            id: ai_lesson_pre_lesson_start
+          timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 2000

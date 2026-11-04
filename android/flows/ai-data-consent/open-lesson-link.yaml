@@ -1,0 +1,27 @@
+# Opens lesson LESSON_ID by deep link from Home (outside the learning path) and waits for WAIT, a
+# resource-id regex for the lesson's first screen or the AI data alert over it, e.g.
+# "(ai_data_consent_alert|conversation_lesson_screen)".
+# Entry: signed in, any screen. Cold starts the app and closes Home popups first.
+# Preconditions: LESSON_ID is a Lesson.lessonId (not the database id) the account's language pair can open.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "(Close sheet|^Later$)"
+    timeout: 20000
+    optional: true
+- runFlow: dismiss-home-popups.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: ${WAIT}
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 2000
