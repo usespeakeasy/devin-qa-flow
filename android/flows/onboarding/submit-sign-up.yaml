@@ -1,0 +1,16 @@
+# Sign-up form: tap Sign up, to the onboarding chat (`onboarding_magic_*`).
+# Entry: `onboarding_sign_up_screen` with the sign-up button enabled.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: onboarding_sign_up_submit_button
+    direction: DOWN
+- tapOn:
+    id: onboarding_sign_up_submit_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_.*
+    timeout: 60000

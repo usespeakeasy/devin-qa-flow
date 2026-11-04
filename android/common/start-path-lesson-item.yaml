@@ -1,0 +1,22 @@
+# Home learning path: open the first lesson of the current loop by its lesson item (`learning_path_lesson_item_*`).
+# For a returning account whose popover shows Start (no id) instead of Preview; new accounts use start-path-lesson.yaml.
+# Entry: `learning_path_ready`. Exit: the lesson is opening (or an AI data alert covers it).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+- runFlow:
+    when:
+      notVisible:
+        id: learning_path_lesson_item_.*
+    commands:
+      - tapOn:
+          id: "learning_path_loop_.*"
+          index: 0
+- tapOn:
+    id: learning_path_lesson_item_.*
+    index: 0

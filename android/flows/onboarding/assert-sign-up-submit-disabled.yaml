@@ -1,0 +1,13 @@
+# Sign-up form: the sign-up button is disabled.
+# Entry: `onboarding_sign_up_screen`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: onboarding_sign_up_submit_button
+    direction: DOWN
+- assertVisible:
+    id: onboarding_sign_up_submit_button
+    enabled: false

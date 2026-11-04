@@ -1,0 +1,20 @@
+# Sign-up options sheet > Continue with Email > sign-up form with EMAIL and PASSWORD typed, before submitting, so the
+# run script can check the consent rows and the sign-up button. Pass a throwaway account at run time (never commit it).
+# Entry: `auth_options_screen` (sign-up). Exit: `onboarding_sign_up_screen`, keyboard hidden.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: button_email
+- extendedWaitUntil:
+    visible:
+      id: onboarding_sign_up_screen
+    timeout: 30000
+- tapOn:
+    id: onboarding_sign_up_email_field
+- inputText: ${EMAIL}
+- tapOn:
+    id: onboarding_sign_up_password_field
+- inputText: ${PASSWORD}
+- hideKeyboard

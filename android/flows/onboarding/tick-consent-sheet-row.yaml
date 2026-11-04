@@ -1,0 +1,12 @@
+# Social sign-up consent sheet: tick one row, OPTION = terms, ai_data, overseas_transfer, age, marketing, ...
+# (`auth_consent_option_<option>`). Entry: consent sheet (`onboarding_requirement_main_button`) with that row.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: auth_consent_option_${OPTION}
+    direction: DOWN
+- tapOn:
+    id: auth_consent_option_${OPTION}

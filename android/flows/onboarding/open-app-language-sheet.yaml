@@ -7,7 +7,7 @@
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
-  NATIVE: korean_english
+  NATIVE: ${NATIVE || "korean_english"}
 ---
 - tapOn:
     id: onboarding_language_option_en_us

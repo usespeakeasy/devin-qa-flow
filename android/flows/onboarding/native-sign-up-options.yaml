@@ -1,0 +1,28 @@
+# Storybook > Get started > learning English > native NATIVE (e.g. japanese_english, korean_english) > keep English >
+# sign-up options sheet (`auth_options_screen`). NATIVE picks the market: Japanese has no consent type, Korean is PIPA.
+# Entry: app data cleared, storybook on screen. Exit: sign-up options sheet.
+# maestro test -e NATIVE=japanese_english native-sign-up-options.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_get_started_button
+    timeout: 60000
+- tapOn:
+    id: onboarding_storybook_get_started_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_screen
+    timeout: 30000
+- runFlow:
+    file: open-app-language-sheet.yaml
+    env:
+      NATIVE: ${NATIVE}
+- tapOn:
+    id: onboarding_app_language_keep_button
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 30000

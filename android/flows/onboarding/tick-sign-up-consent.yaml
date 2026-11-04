@@ -1,0 +1,13 @@
+# Sign-up form: tick one consent row, OPTION = ai_data, terms, overseas_transfer, age, marketing, ...
+# (`onboarding_sign_up_consent_<option>`; the AI data row is `onboarding_sign_up_consent_ai_data`).
+# Entry: `onboarding_sign_up_screen` with that row.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: onboarding_sign_up_consent_${OPTION}
+    direction: DOWN
+- tapOn:
+    id: onboarding_sign_up_consent_${OPTION}

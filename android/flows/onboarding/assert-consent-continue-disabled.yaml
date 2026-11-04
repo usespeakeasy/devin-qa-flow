@@ -1,0 +1,8 @@
+# Social sign-up consent sheet: Continue (`onboarding_requirement_main_button`) is disabled.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: onboarding_requirement_main_button
+    enabled: false
