@@ -1,0 +1,47 @@
+# Video lesson word tap: tapping a word of the spoken line opens the pronunciation sheet (word,
+# translation) after the word meanings lookup, and Back closes it onto the same card.
+# Words are spans inside `line`, which is taller than its text, so the tap is a point on the
+# first text row (POINT, default the middle word of a one-row line on a 1080x2400 phone).
+# Entry: video lesson, card CARD showing its line (open-lesson.yaml).
+# Exit: video lesson, card CARD, sheet closed.
+# maestro test -e CARD="1 of 2" word-pronunciation-sheet.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "word-pronunciation-sheet"}
+  CARD: ${CARD || "1 of \\d+"}
+  POINT: ${POINT || "50%,31%"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: paused_header
+    commands:
+      - tapOn:
+          id: play_line
+- extendedWaitUntil:
+    visible:
+      id: listening_header
+    timeout: 30000
+- tapOn:
+    point: ${POINT}
+- extendedWaitUntil:
+    visible:
+      id: word
+    timeout: 15000
+- assertVisible:
+    id: translation_caption
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: word
+    timeout: 10000
+- assertVisible:
+    id: card_count
+    text: ${CARD}

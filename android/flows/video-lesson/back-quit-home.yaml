@@ -1,0 +1,25 @@
+# Video lesson: system Back opens the quit sheet, Quit leaves the lesson for Home and no lesson
+# card stays on screen. Check in logcat: `VideoLessonController destroyed` and
+# `ViewModel cleared: VideoLessonViewModel`; check `adb shell dumpsys audio` ends on `rec stop`.
+# Entry: video lesson (open-lesson.yaml). Exit: Home.
+# Selectors: the quit sheet has no resource-id (text fallback, IDs asked on speak-android#8710).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+    timeout: 20000
+- back
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: card_count
+- assertNotVisible: "Are you sure you want to quit this lesson\\?"

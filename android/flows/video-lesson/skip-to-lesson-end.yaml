@@ -1,0 +1,30 @@
+# Video lesson: finish it with the debug Skip lesson button; the lesson end opens with the
+# minutes studied metric, then the lesson end flow is walked back to Home.
+# Entry: video lesson (open-lesson.yaml), Debug features enabled, Premium.
+# Saves SHOT.png (the lesson end). Check the logged time in the dev DB: the account's newest
+# `VIDEO_LESSON_COMPLETED` Activity row, `metadata.duration`.
+# Exit: Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "lesson-end"}
+---
+- extendedWaitUntil:
+    visible:
+      id: debug_skip_lesson
+    timeout: 20000
+- tapOn:
+    id: debug_skip_lesson
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 60000
+- assertVisible:
+    id: lesson_end_reskin_metric_time_studied
+- assertVisible:
+    id: lesson_end_reskin_metric_sentences
+- takeScreenshot: ${SHOT}
+- runFlow:
+    file: ../../common/finish-lesson-end.yaml
+- assertNotVisible:
+    id: card_count

@@ -1,0 +1,37 @@
+# Video lesson: open it by deep link from Home and land on its first card with the mic listening.
+# Entry: Home, Premium (flows/debug-menu/set-subscription-override.yaml TIER=Premium), Debug features
+# enabled (flows/debug-menu/set-debug-toggle-on.yaml), microphone permission granted.
+# The Home "Find your English level" sheet (app_assessment_popup) is closed first.
+# A free account plays a 2 card preview that ends on "Preview Finished" instead of the lesson end.
+# Exit: video lesson, card_count "1 of N", listening_header ("Speak now...").
+# maestro test -e LESSON_ID=KR_EN_UC_L1_howstheweather_VL open-lesson.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "KR_EN_UC_L1_howstheweather_VL"}
+---
+- extendedWaitUntil:
+    visible:
+      id: "home_root_ready|app_assessment_popup"
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: app_assessment_popup
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: listening_header
+    timeout: 60000
+- assertVisible:
+    id: card_count
+    text: "1 of \\d+"
+- assertVisible:
+    id: cant_speak_now_toggle
+    checked: false

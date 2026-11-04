@@ -1,0 +1,47 @@
+# Video lesson: resume a paused card, open More options, close it with system Back, and the same
+# card listens again. Run it after the harness backgrounds and foregrounds the app mid card
+# (the card comes back on paused_header); also works from a listening card.
+# Entry: video lesson card CARD (open-lesson.yaml). Exit: same card, listening_header.
+# Check the mic in `adb shell dumpsys audio` (a `rec start` after the resume).
+# maestro test -e CARD="1 of 2" more-options-return.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "more-options"}
+  CARD: ${CARD || "1 of \\d+"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 20000
+- runFlow:
+    when:
+      visible:
+        id: paused_header
+    commands:
+      - tapOn:
+          id: play_line
+- extendedWaitUntil:
+    visible:
+      id: listening_header
+    timeout: 20000
+- tapOn:
+    id: more_options
+- extendedWaitUntil:
+    visible:
+      id: lesson_more_options_list
+    timeout: 10000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: lesson_more_options_list
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: listening_header
+    timeout: 20000
+- assertVisible:
+    id: card_count
+    text: ${CARD}

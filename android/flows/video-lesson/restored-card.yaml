@@ -1,0 +1,40 @@
+# Video lesson after process death or a view rebuild: the lesson comes back on card CARD with no
+# dialog over it (no More options list, quit sheet or can't speak now dialog), and the card listens
+# again (play_line resumes a paused card).
+# Entry: the harness killed the backgrounded process (`am kill`) or rebuilt the activity, then
+# relaunched with `am start ... -f 0x10200000 -n <pkg>/com.selabs.speak.SpeakActivity`.
+# Exit: video lesson, card CARD, listening_header.
+# maestro test -e CARD="2 of 2" restored-card.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "restored-card"}
+  CARD: ${CARD || "1 of \\d+"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+- assertNotVisible:
+    id: lesson_more_options_list
+- assertNotVisible:
+    id: subway_mode_dialog
+- assertNotVisible: "Are you sure you want to quit this lesson\\?"
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      visible:
+        id: paused_header
+    commands:
+      - tapOn:
+          id: play_line
+- extendedWaitUntil:
+    visible:
+      id: listening_header
+    timeout: 20000
+- assertVisible:
+    id: card_count
+    text: ${CARD}
+- assertNotVisible:
+    id: lesson_more_options_list
