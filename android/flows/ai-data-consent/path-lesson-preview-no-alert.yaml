@@ -1,0 +1,19 @@
+# Learning path lesson Preview for an account that has the AI data agreement (stored, or brought by the launch
+# notice read): the lesson opens with no AI data alert (speak-android#8836).
+# Entry: Home (`learning_path_ready`) right after launch, `ai_data_consent_mode` = alert_only. Exit: the lesson.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/start-path-lesson.yaml
+- extendedWaitUntil:
+    visible:
+      id: ai_data_consent_alert
+    timeout: 6000
+    optional: true
+- assertNotVisible:
+    id: ai_data_consent_alert
+- extendedWaitUntil:
+    notVisible:
+      id: learning_path_ready
+    timeout: 30000
