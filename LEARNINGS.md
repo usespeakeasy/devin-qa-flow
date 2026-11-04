@@ -56,3 +56,8 @@ describes.
   `animator-username-save` the defaults screen shows the saved name, not "User 1".
   ([QA of speak-android#8742 at 135244cfd5](https://github.com/usespeakeasy/speak-android/pull/8742), 2026-11-03)
 - android tutor-everywhere (2026-11-03, speak-android#8808): after "I want to try this card again in the lesson" the sheet sometimes shows the user bubble and follow-up chips but no tutor reply and no `tutor_everywhere_action_button_retry_card`, while analytics still log `Speak Tutor Action Shown` and `Agent Response Loaded`. Seen on develop 885d2adb52 (1 of 20 tries) and on the PR (4 of 16); the PR does not touch the sheet's reply rendering. `retry-card-from-tutor.yaml` then fails on the action wait; rerun the case alone before calling a fail.
+- On a Google Play AVD, signing in a Google account set screen-lock PIN 1234. After the emulator
+  restarted, user 0 stayed `RUNNING_LOCKED` and `am start` failed with "Activity class ... does not
+  exist" (logcat: "User 0 is not ready"). Rule: after the Play account sign-in, run
+  `adb shell cmd lock_settings clear --old 1234` and `cmd lock_settings set-disabled true`; check
+  `am get-started-user-state 0` is `RUNNING_UNLOCKED`. ([QA of speak-android#8834](https://github.com/usespeakeasy/speak-android/pull/8834), 2026-11-04)

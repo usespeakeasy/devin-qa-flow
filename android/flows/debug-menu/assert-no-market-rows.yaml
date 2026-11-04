@@ -1,0 +1,31 @@
+# Debug Menu > search "Market": neither "Market (relaunch required)" nor "Storefront country (relaunch required)"
+# shows (China flavor, or a build without speak-android#8834).
+# Entry: any state. Exit: on the filtered Debug Menu.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: no-market-rows
+---
+# An open Debug Menu keeps its search text and the Search tap lands mid-text; leave it first.
+- repeat:
+    times: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Debug Menu"
+          commands:
+            - back
+- openLink: speak-dev://debug-menu
+- tapOn:
+    text: Search
+- waitForAnimationToEnd
+- inputText: Market
+- hideKeyboard
+- extendedWaitUntil:
+    visible: "Debug Menu"
+    timeout: 15000
+- assertNotVisible: "Market \\(relaunch required\\)"
+- assertNotVisible: "Storefront country \\(relaunch required\\)"
+- assertNotVisible:
+    id: debug_market_override_default
+- takeScreenshot: ${SHOT}

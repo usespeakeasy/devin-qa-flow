@@ -1,0 +1,22 @@
+# Settings > Debug Menu (deep link) > nav bar Back returns to Settings.
+# Entry: Home tab, signed in. Exit: Settings.
+# Selectors: the nav bar Back button has no resource-id (content description "Back").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Profile"
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible: "Clear Cache"
+    timeout: 15000
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible: "Debug Menu"
+    timeout: 15000
+- tapOn:
+    text: Back
+- extendedWaitUntil:
+    visible: "Clear Cache"
+    timeout: 10000
