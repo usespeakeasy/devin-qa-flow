@@ -1,0 +1,28 @@
+# Profile > Settings > Support Center tap. Stops right after the tap; the caller asserts what opened
+# (the support form web view on China builds from CLNT-1155, the Intercom messenger on global builds).
+# Entry: `home_root_ready` or Settings, signed in. Param: TAPS (1 or 2; 2 is a double tap, as fast as Maestro taps).
+# Selectors: the Support Center row has no resource-id yet (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TAPS: ${TAPS || "1"}
+---
+- runFlow:
+    when:
+      notVisible:
+        id: settings_manage_account_option
+    file: ../../common/open-settings.yaml
+- scrollUntilVisible:
+    element: "Support Center"
+    direction: DOWN
+    timeout: 15000
+- runFlow:
+    when:
+      true: ${TAPS == "1"}
+    commands:
+      - tapOn: "Support Center"
+- runFlow:
+    when:
+      true: ${TAPS == "2"}
+    commands:
+      - doubleTapOn: "Support Center"

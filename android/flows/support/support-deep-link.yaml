@@ -1,0 +1,10 @@
+# Opens the support deep link (`speak-dev://support` on develop builds) on a running, signed-in app.
+# The caller asserts what opened: the support form web view on China builds (CLNT-1155), the Intercom
+# messenger on global builds, nothing new when signed out.
+# Entry: any screen of the running app. Param: LINK.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LINK: ${LINK || "speak-dev://support"}
+---
+- openLink: ${LINK}

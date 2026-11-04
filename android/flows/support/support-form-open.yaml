@@ -1,0 +1,21 @@
+# China builds (CLNT-1155): Settings > Support Center opens the backend support form in the in-app web view
+# (`Destination.WebView`, layout ids `webview_parent` (the WebView itself has no resource-id in the tree), `toolbar`) and no Intercom messenger. The case script reads
+# the page URL from WebView DevTools (develop builds turn WebView debugging on).
+# Entry: `home_root_ready` or Settings, signed in. Param: TAPS (1, or 2 for the double tap case).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TAPS: ${TAPS || "1"}
+---
+- runFlow:
+    file: open-support-center.yaml
+    env:
+      TAPS: ${TAPS}
+- extendedWaitUntil:
+    visible:
+      id: webview_parent
+    timeout: 30000
+- extendedWaitUntil:
+    notVisible:
+      id: loading_bar
+    timeout: 30000

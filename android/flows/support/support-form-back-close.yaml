@@ -1,0 +1,29 @@
+# China builds (CLNT-1155): leaves the support form web view with system back (CLOSE=back) or the toolbar
+# back arrow (CLOSE=up), then asserts Settings. One exit per page, so after a double tap this also shows
+# whether a second page opened (a web view would still be on top).
+# Entry: the support form web view on top of Settings (support-form-open.yaml).
+# Selectors: the toolbar back arrow (an ImageButton in `toolbar`) has no resource-id and no content
+# description, and Maestro's childOf matches the toolbar itself, so CLOSE=up taps its center (point fallback,
+# 1080x2400 at 420 dpi) and the case script checks the tree for the button first.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CLOSE: ${CLOSE || "back"}
+---
+- runFlow:
+    when:
+      true: ${CLOSE == "back"}
+    commands:
+      - back
+- runFlow:
+    when:
+      true: ${CLOSE == "up"}
+    commands:
+      - tapOn:
+          point: "10%,9%"
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 10000
+- assertNotVisible:
+    id: webview_parent
