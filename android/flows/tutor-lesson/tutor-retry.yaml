@@ -1,0 +1,48 @@
+# Tutor lesson > mascot > Speak Tutor sheet > ask to retry > "Try again in lesson" (retry_card).
+# Entry: drill lesson card with Speak Now, Debug Menu drill_lesson_tutor_everywhere ON.
+# First open for an account shows the AI data alert on top: Allow it.
+# Exit: sheet gone, the card back to Speak now.
+# Selectors: the mascot node spans the screen, so the tap is a point on the card's avatar (as open-drill-tutor.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: lesson_speak_now_status_pill
+    timeout: 30000
+- tapOn:
+    point: "84%,62%"
+- waitForAnimationToEnd:
+    timeout: 4000
+- runFlow:
+    when:
+      visible: "^Allow$"
+    commands:
+      - tapOn: "^Allow$"
+- extendedWaitUntil:
+    visible: "Ask me anything"
+    timeout: 20000
+# Inline retry: the drill card shows lesson_speak_now_status_pill, not the series speak_now_header.
+- tapOn:
+    id: tutor_everywhere_keyboard_toggle_button
+    optional: true
+- tapOn:
+    id: tutor_everywhere_input_field
+- inputText: "I want to try this card again in the lesson"
+- tapOn:
+    id: tutor_everywhere_send_button
+- extendedWaitUntil:
+    visible:
+      id: tutor_everywhere_action_button_retry_card
+    timeout: 60000
+- tapOn:
+    id: tutor_everywhere_action_button_retry_card
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_everywhere_sheet
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: lesson_speak_now_status_pill
+    timeout: 15000

@@ -1,0 +1,17 @@
+# Tap Next N times (N=1..6) on the tutor lesson. Entry/exit: drill lesson.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  N: ${N || 2}
+---
+- repeat:
+    times: ${N}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: drill_lesson_skip
+          timeout: 20000
+      - tapOn:
+          id: drill_lesson_skip
+      - waitForAnimationToEnd:
+          timeout: 3000

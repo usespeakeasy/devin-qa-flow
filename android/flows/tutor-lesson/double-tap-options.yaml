@@ -1,0 +1,17 @@
+# Fast repeated taps on the top bar sliders button: one Settings sheet opens, one Back closes it.
+# Entry: drill lesson. Exit: the lesson, no sheet.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- doubleTapOn:
+    id: drill_lesson_topbar_options
+- extendedWaitUntil:
+    visible: "^Report a problem$"
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    notVisible: "^Report a problem$"
+    timeout: 10000
+- assertVisible:
+    id: drill_lesson_topbar_options

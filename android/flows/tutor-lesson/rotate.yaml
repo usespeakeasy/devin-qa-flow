@@ -1,0 +1,17 @@
+# Rotate to landscape and back on the tutor lesson (optionally with a sheet open, SEL still showing).
+# Entry: drill lesson. Exit: portrait, SEL (default the lesson root) shows. A sheet's window hides drill_lesson_root from the tree, so only SEL is asserted.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SEL: ${SEL || "drill_lesson_root"}
+---
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: ${SEL}
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: ${SEL}

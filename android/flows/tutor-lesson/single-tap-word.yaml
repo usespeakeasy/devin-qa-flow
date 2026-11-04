@@ -1,0 +1,19 @@
+# Control for double-tap-word: a single tap opens the coach and a single Back closes it.
+# Entry: drill lesson with pronunciation_coach_multilingual ON. Exit: the lesson, no coach.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: lesson_line_word
+- extendedWaitUntil:
+    visible:
+      id: pronunciation_phoneme_coach_root
+    timeout: 20000
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: pronunciation_phoneme_coach_root
+    timeout: 10000
+- assertVisible:
+    id: drill_lesson_root

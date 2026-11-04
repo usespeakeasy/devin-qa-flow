@@ -1,0 +1,20 @@
+# Reopen a tutor lesson with saved progress: "Continue where you left off?" > CHOICE (Continue or Start over).
+# Entry: Home, the lesson quit after skipping cards. Exit: dialog gone, the lesson shows Next.
+# Selectors: the restore dialog (SimpleDialog) has no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  CHOICE: ${CHOICE || "Continue"}
+---
+- runFlow: open.yaml
+- extendedWaitUntil:
+    visible: "Continue where you left off\\?"
+    timeout: 30000
+- tapOn: "^${CHOICE}$"
+- extendedWaitUntil:
+    notVisible: "Continue where you left off\\?"
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 30000

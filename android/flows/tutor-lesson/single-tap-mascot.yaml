@@ -1,0 +1,29 @@
+# Control for double-tap-mascot: a single tap opens the Speak Tutor sheet and a single Back closes it.
+# Entry: drill lesson card (Speak Now or paused; the avatar shows in both), drill_lesson_tutor_everywhere ON. Exit: the lesson, no sheet.
+# Selectors: the mascot node spans the screen, so the tap is a point on the card's avatar (as open-drill-tutor.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_topbar_options
+    timeout: 30000
+- tapOn:
+    point: "84%,62%"
+- waitForAnimationToEnd:
+    timeout: 4000
+- runFlow:
+    when:
+      visible: "^Allow$"
+    commands:
+      - tapOn: "^Allow$"
+- extendedWaitUntil:
+    visible: "Ask me anything"
+    timeout: 20000
+- back
+- extendedWaitUntil:
+    notVisible: "Ask me anything"
+    timeout: 10000
+- assertVisible:
+    id: drill_lesson_root

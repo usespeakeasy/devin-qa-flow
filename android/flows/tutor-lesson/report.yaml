@@ -1,0 +1,27 @@
+# Tutor lesson > sliders (drill_lesson_topbar_options) > Report a problem > REASON > report screen.
+# Entry: drill lesson. Exit: the report screen (`report_screen`); the attached screenshot is the app's
+# cache/reportedContentData/screenshot.jpg (pull with run-as to check what it captured).
+# Selectors: the lesson options sheet rows have no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  REASON: ${REASON || "content_error"}
+---
+- tapOn:
+    id: drill_lesson_topbar_options
+- extendedWaitUntil:
+    visible: "^Report a problem$"
+    timeout: 10000
+- tapOn: "^Report a problem$"
+- extendedWaitUntil:
+    visible:
+      id: lesson_more_options_list
+    timeout: 10000
+- tapOn:
+    id: lesson_more_options_report_problem_${REASON}
+- extendedWaitUntil:
+    visible:
+      id: report_screen
+    timeout: 15000
+- assertNotVisible:
+    id: lesson_more_options_list

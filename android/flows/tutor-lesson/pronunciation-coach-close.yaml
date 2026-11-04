@@ -1,0 +1,20 @@
+# Tutor lesson > tap a word of the line > pronunciation coach > Back. Entry: drill lesson card with a line.
+# Exit: coach gone, same lesson.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: lesson_line_word
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: pronunciation_phoneme_coach_root
+    timeout: 20000
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: pronunciation_phoneme_coach_root
+    timeout: 10000
+- assertVisible:
+    id: drill_lesson_root
