@@ -1,0 +1,24 @@
+# "Can't speak now" explanation dialog survives process death (Home, `killApp`, relaunch), then "Got it"
+# closes it to the screen below.
+# Entry: the dialog shows (android/common/open-subway-mode-bridge.yaml). Exit: Dialog Bridges list.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: subway_mode_dialog
+    timeout: 60000
+- assertVisible:
+    id: subway_mode_dialog_button
+- tapOn:
+    id: subway_mode_dialog_button
+- extendedWaitUntil:
+    notVisible:
+      id: subway_mode_dialog
+    timeout: 10000
+- assertVisible: "Subway Mode"

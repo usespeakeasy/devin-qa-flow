@@ -1,0 +1,27 @@
+# Video lesson: once the explanation was shown on this install, turning "Can't speak now" on does not
+# open the explanation dialog again; the toggle turns on straight away.
+# Entry: a newly opened video lesson, toggle off, explanation already shown
+# (flows/video-lesson/cant-speak-now-first-toggle.yaml earlier, then flows/debug-menu/open-deeplink-lesson.yaml).
+# Exit: video lesson, toggle on. Toggle it once only: in can't speak now mode a short lesson can reach its end quickly.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: cant_speak_now_toggle
+    timeout: 30000
+- assertVisible:
+    id: cant_speak_now_toggle
+    checked: false
+- tapOn:
+    id: cant_speak_now_toggle
+- extendedWaitUntil:
+    visible:
+      id: cant_speak_now_toggle
+      checked: true
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertNotVisible:
+    id: subway_mode_dialog

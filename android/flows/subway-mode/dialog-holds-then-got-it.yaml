@@ -1,0 +1,28 @@
+# "Can't speak now" explanation dialog opened from Debug Menu > Dialog Bridges: system Back and a tap
+# outside the card keep it, "Got it" closes it back to the Dialog Bridges list.
+# Entry: android/common/open-subway-mode-bridge.yaml. Exit: Dialog Bridges list.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: subway_mode_dialog
+- back
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: subway_mode_dialog
+# Point fallback: the scrim outside the card has no node of its own.
+- tapOn:
+    point: "50%,20%"
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: subway_mode_dialog
+- tapOn:
+    id: subway_mode_dialog_button
+- extendedWaitUntil:
+    notVisible:
+      id: subway_mode_dialog
+    timeout: 10000
+- assertVisible: "Subway Mode"

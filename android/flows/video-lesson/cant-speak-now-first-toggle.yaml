@@ -1,0 +1,49 @@
+# Video lesson: the first "Can't speak now" toggle opens the explanation dialog (`Destination.SubwayModeDialog`).
+# System Back and a tap outside the card keep it; three fast taps on "Got it" close it once and the lesson
+# stays in can't speak now mode (toggle checked).
+# Entry: video lesson, toggle off, explanation never shown on this install (`qa_android.py fresh` + login,
+# then flows/debug-menu/open-deeplink-lesson.yaml with TYPE='^Video$'). Exit: video lesson, toggle on.
+# Saves SHOT.png (the open dialog) under ~/.maestro/tests/<run>/<flow>/takeScreenshot/.
+# Check the single result in logcat: one `Track 'Cant Speak Now Modal CTA Tapped'`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: cant_speak_now_toggle
+    timeout: 30000
+- assertVisible:
+    id: cant_speak_now_toggle
+    checked: false
+- tapOn:
+    id: cant_speak_now_toggle
+- extendedWaitUntil:
+    visible:
+      id: subway_mode_dialog
+    timeout: 15000
+- takeScreenshot: ${SHOT || "cant-speak-now-dialog"}
+- back
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: subway_mode_dialog
+# Point fallback: the scrim outside the card has no node of its own.
+- tapOn:
+    point: "50%,20%"
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: subway_mode_dialog
+- tapOn:
+    id: subway_mode_dialog_button
+    repeat: 3
+    delay: 30
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    notVisible:
+      id: subway_mode_dialog
+    timeout: 10000
+- assertVisible:
+    id: cant_speak_now_toggle
+    checked: true
