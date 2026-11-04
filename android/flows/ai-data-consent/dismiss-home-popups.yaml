@@ -1,4 +1,4 @@
-# Home: dismiss the referral promo ("Later") if it is up. Entry/exit: Home.
+# Home: dismiss the referral promo ("Later") and any Home bottom sheet if they are up. Entry/exit: Home.
 # Selectors: the promo has no resource-id (text fallback).
 appId: ${APP_ID}
 env:
@@ -9,3 +9,20 @@ env:
       visible: "^Later$"
     commands:
       - tapOn: "^Later$"
+# Bottom sheets that open over Home a few seconds after launch (custom courses announcement,
+# streak reminder) share the "Close sheet" scrim description; Back closes each one.
+- repeat:
+    times: 3
+    commands:
+      - extendedWaitUntil:
+          visible: "Close sheet"
+          timeout: 4000
+          optional: true
+      - runFlow:
+          when:
+            visible: "Close sheet"
+          commands:
+            - back
+            - extendedWaitUntil:
+                notVisible: "Close sheet"
+                timeout: 10000
