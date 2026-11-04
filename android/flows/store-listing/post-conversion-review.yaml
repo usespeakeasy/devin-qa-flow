@@ -1,0 +1,28 @@
+# Post-purchase screen: tap the "Review Speak" tip's action, which opens the store listing. The
+# case script checks where it landed.
+# Entry: app cold-started with the QA-only `debug.qa.mode=postconversion` patch (SpeakActivity
+# pushes Destination.PostConversion once the availability check returns AVAILABLE).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: post_conversion_screen
+    timeout: 60000
+- scrollUntilVisible:
+    element:
+      id: tip_Review
+    direction: DOWN
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: action
+      childOf:
+        id: tip_Review
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: action
+    childOf:
+      id: tip_Review

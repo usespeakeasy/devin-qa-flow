@@ -1,0 +1,16 @@
+# "Time to update Speak": tap "Update now", which opens the store listing (Play Store app, or the
+# market's web page when no app handles market:// links). The case script checks where it landed.
+# Entry: app cold-started with the QA-only `debug.qa.mode=unsupported` patch (RefreshAppAvailability
+# reports UNSUPPORTED_VERSION), so AppUnavailable is the root. No account needed.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: app_unavailable_screen
+    timeout: 60000
+- assertVisible:
+    id: primary_button
+- tapOn:
+    id: primary_button
