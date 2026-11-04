@@ -1,0 +1,34 @@
+# Upgrade paywall from Debug Menu > Monetization entitlements > component gallery "Get unlimited Free Talk"
+# (the real `PaywallNavigator.showUpgradePaywall` for FREE_TALK). Works on a premium pool account, which has
+# no locked lessons. Entry: signed in, any screen. Exit: the CTA was tapped; the caller asserts the paywall.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: debug_menu_monetization_entitlements
+    direction: DOWN
+- tapOn:
+    id: debug_menu_monetization_entitlements
+# The gallery header and its CTA have no resource-id (text fallback).
+- extendedWaitUntil:
+    visible:
+      id: debug_entitlements_screen
+    timeout: 20000
+# Collapse the long endpoint section first so the gallery header is on screen (short API 27 screens).
+- tapOn: "Entitlement state"
+- extendedWaitUntil:
+    visible: "Component gallery"
+    timeout: 10000
+- tapOn: "Component gallery"
+- scrollUntilVisible:
+    element: "Get unlimited Free Talk"
+    direction: DOWN
+    timeout: 30000
+- tapOn: "Get unlimited Free Talk"

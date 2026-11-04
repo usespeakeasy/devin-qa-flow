@@ -1,0 +1,22 @@
+# Close the streak auto repair dialog ("We saved your N-day streak!", `StreakRepairDialogContent`) that a pool account
+# can show on Home right after sign-in, then wait for Home. Entry: Home loading or showing (signed in).
+# Exit: `home_root_ready`. The dialog hides the Home tree, so wait for the dialog itself (optional: most launches skip it).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: course_streak_repair_dialog_root
+    timeout: 45000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: course_streak_repair_dialog_root
+    commands:
+      - pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000

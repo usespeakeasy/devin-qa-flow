@@ -16,6 +16,8 @@ env:
     element: "Support Center"
     direction: DOWN
     timeout: 15000
+    # On short screens (API 27) the row stops behind the navigation bar and the tap lands on Back.
+    centerElement: true
 - runFlow:
     when:
       true: ${TAPS == "1"}

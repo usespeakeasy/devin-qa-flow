@@ -1,0 +1,21 @@
+# Process death on Home: the system kills the app in the background, relaunch runs Application startup again
+# and restores Home (no crash, no welcome screen).
+# Entry: Home (`home_root_ready`), signed in. Exit: Home restored.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- assertNotVisible:
+    id: onboarding_storybook_sign_in_button
