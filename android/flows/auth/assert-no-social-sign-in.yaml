@@ -1,0 +1,19 @@
+# Sign-in options sheet (`auth_options_screen`) offers no social sign-in: no "Continue with Facebook",
+# "Continue with KakaoTalk" or "Continue with Naver" for a whole WINDOW (default 12 s), so a button that
+# shows up once the market resolves mid-launch fails the flow.
+# Entry: sign-in options sheet on screen (open-sign-in-options or korean-native-sign-in-options).
+# Selectors: the social buttons have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WINDOW: ${WINDOW || "12000"}
+---
+- assertVisible:
+    id: auth_options_screen
+- extendedWaitUntil:
+    visible: "Continue with (Facebook|KakaoTalk|Naver)"
+    timeout: ${WINDOW}
+    optional: true
+- assertNotVisible: "Continue with Facebook"
+- assertNotVisible: "Continue with KakaoTalk"
+- assertNotVisible: "Continue with Naver"

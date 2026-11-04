@@ -1,10 +1,11 @@
 # Korean native language onboarding > sign-up options > "Already have an account? Log in" > sign-in options
 # (`auth_options_screen`) in the Korean flow. Stops there so the run script can assert the providers
 # (Kakao and Naver show in the Korean flow on global builds only).
-# Entry: app data cleared, storybook on screen.
+# Entry: app data cleared, storybook on screen. EXPECT_EMAIL=false skips the Email check (China market launch).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
+  EXPECT_EMAIL: ${EXPECT_EMAIL || "true"}
 ---
 - runFlow: korean-native-sign-up-options.yaml
 - tapOn:
@@ -12,5 +13,9 @@ env:
 - extendedWaitUntil:
     visible: "Sign in to continue"
     timeout: 15000
-- assertVisible:
-    id: button_email
+- runFlow:
+    when:
+      true: ${EXPECT_EMAIL == "true"}
+    commands:
+      - assertVisible:
+          id: button_email

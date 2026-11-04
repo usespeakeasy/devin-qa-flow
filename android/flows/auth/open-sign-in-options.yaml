@@ -1,9 +1,11 @@
 # Signed-out welcome screen > Log in > sign-in options sheet (`auth_options_screen`). Stops there so the
 # run script can assert which providers show (e.g. Kakao on global, none on China builds).
-# Entry: app data cleared, storybook on screen.
+# Entry: app data cleared, storybook on screen. EXPECT_EMAIL=false skips the Email check for a China market
+# launch, which offers only the phone code.
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  EXPECT_EMAIL: ${EXPECT_EMAIL || "true"}
 ---
 - extendedWaitUntil:
     visible:
@@ -15,5 +17,9 @@ env:
     visible:
       id: auth_options_screen
     timeout: 30000
-- assertVisible:
-    id: button_email
+- runFlow:
+    when:
+      true: ${EXPECT_EMAIL == "true"}
+    commands:
+      - assertVisible:
+          id: button_email

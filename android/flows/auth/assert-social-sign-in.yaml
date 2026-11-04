@@ -1,0 +1,19 @@
+# Sign-in options sheet (`auth_options_screen`) offers Facebook, KakaoTalk and Naver, and still does after
+# a WINDOW (default 12 s), so a button that goes away once the market resolves mid-launch fails the flow.
+# Entry: sign-in options sheet on screen (open-sign-in-options). Global market launch.
+# Selectors: the social buttons have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WINDOW: ${WINDOW || "12000"}
+---
+- extendedWaitUntil:
+    visible: "Continue with Facebook"
+    timeout: 15000
+- extendedWaitUntil:
+    notVisible: "Continue with Facebook"
+    timeout: ${WINDOW}
+    optional: true
+- assertVisible: "Continue with Facebook"
+- assertVisible: "Continue with KakaoTalk"
+- assertVisible: "Continue with Naver"
