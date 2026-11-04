@@ -1,0 +1,44 @@
+# Debug Menu > search "Market" > Market (relaunch required, ...) row: pick MARKET (default, global, china).
+# The pick applies on the next launch; the caller relaunches the app (force-stop, then launch).
+# Entry: any state, signed in or signed out (the deep link opens the Debug Menu in both on dev).
+# OPEN=false skips the deep link and uses the Debug Menu already on screen (opened by a shake).
+# Exit: on the filtered Debug Menu with the option selected.
+# maestro test -e MARKET=china set-market.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  MARKET: ${MARKET || "default"}
+  OPEN: ${OPEN || "true"}
+---
+# An open Debug Menu keeps its search text and the Search tap lands mid-text; leave it first.
+- runFlow:
+    when:
+      true: ${OPEN == "true"}
+    commands:
+      - repeat:
+          times: 2
+          commands:
+            - runFlow:
+                when:
+                  visible: "Debug Menu"
+                commands:
+                  - back
+      - openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 30000
+- tapOn:
+    text: Search
+- waitForAnimationToEnd
+- inputText: Market
+- hideKeyboard
+- extendedWaitUntil:
+    visible:
+      id: debug_market_override_${MARKET}
+    timeout: 15000
+- tapOn:
+    id: debug_market_override_${MARKET}
+- assertVisible:
+    id: debug_market_override_${MARKET}
+    checked: true

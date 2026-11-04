@@ -1,0 +1,30 @@
+# Debug Menu > search "Market": the market row names this launch's market,
+# "Market (relaunch required, this launch: LAUNCH)" (LAUNCH = Global or China).
+# Entry: any state, signed in or signed out. Exit: on the filtered Debug Menu.
+# maestro test -e LAUNCH=China assert-launch-market.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LAUNCH: ${LAUNCH || "Global"}
+---
+- repeat:
+    times: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Debug Menu"
+          commands:
+            - back
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 30000
+- tapOn:
+    text: Search
+- waitForAnimationToEnd
+- inputText: Market
+- hideKeyboard
+- extendedWaitUntil:
+    visible: "Market \\(relaunch required, this launch: ${LAUNCH}\\)"
+    timeout: 15000
