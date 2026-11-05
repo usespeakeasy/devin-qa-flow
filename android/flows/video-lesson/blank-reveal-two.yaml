@@ -1,0 +1,33 @@
+# Video lesson two hidden words (blanks) tapped about 1 s apart: each tap reveals its blank in place and no word
+# sheet opens. Entry: video lesson card CARD listening, blanks at POINT and POINT2. Fade and hold timing per blank
+# is read from logcat by the case script.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD: ${CARD || "1 of \\d+"}
+  POINT: ${POINT || "44%,30%"}
+  POINT2: ${POINT2 || "62%,30%"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+- assertVisible:
+    id: listening_header
+# Points: blanks are spans inside `line`, no node.
+- tapOn:
+    point: ${POINT}
+- extendedWaitUntil:
+    notVisible:
+      id: word
+    timeout: 1000
+- tapOn:
+    point: ${POINT2}
+- extendedWaitUntil:
+    notVisible:
+      id: word
+    timeout: 1000
+- assertVisible:
+    id: card_count
+    text: ${CARD}

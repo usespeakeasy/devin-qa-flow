@@ -1,0 +1,26 @@
+# Video lesson hidden word (blank) tap: the tap reveals the blank in place and does not open the word sheet.
+# Entry: video lesson card CARD listening, line with a blank at POINT. Fade and hold timing is read from logcat
+# by the case script (no node exposes the blank's alpha).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD: ${CARD || "1 of \\d+"}
+  POINT: ${POINT || "44%,30%"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+- assertVisible:
+    id: listening_header
+# Point: the blank is a span inside `line`, no node.
+- tapOn:
+    point: ${POINT}
+- extendedWaitUntil:
+    notVisible:
+      id: word
+    timeout: 1500
+- assertVisible:
+    id: card_count
+    text: ${CARD}

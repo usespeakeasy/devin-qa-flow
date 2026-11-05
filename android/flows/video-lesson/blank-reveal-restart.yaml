@@ -1,0 +1,32 @@
+# Video lesson retry while a blank is shown: tap a blank (it reveals, no word sheet), then Restart within the
+# 5 s hold; the line replays and the same card listens again. Whether the new attempt starts with the blank
+# hidden is read from logcat by the case script. Entry: video lesson card CARD listening, blank at POINT.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD: ${CARD || "1 of \\d+"}
+  POINT: ${POINT || "44%,30%"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+- assertVisible:
+    id: listening_header
+# Point: the blank is a span inside `line`, no node.
+- tapOn:
+    point: ${POINT}
+- extendedWaitUntil:
+    notVisible:
+      id: word
+    timeout: 1000
+- tapOn:
+    id: restart
+- extendedWaitUntil:
+    visible:
+      id: listening_header
+    timeout: 30000
+- assertVisible:
+    id: card_count
+    text: ${CARD}

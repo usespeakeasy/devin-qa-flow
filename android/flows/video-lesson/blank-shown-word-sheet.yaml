@@ -1,0 +1,41 @@
+# Video lesson blank tapped twice: the first tap reveals it, a second tap on the shown word opens the word
+# pronunciation sheet (word, translation); Back closes it onto the same card.
+# Entry: video lesson card CARD listening, line with a blank at POINT.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD: ${CARD || "1 of \\d+"}
+  POINT: ${POINT || "44%,30%"}
+  SHOT: ${SHOT || "blank-shown-word-sheet"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+- assertVisible:
+    id: listening_header
+# Point: the blank is a span inside `line`, no node.
+- tapOn:
+    point: ${POINT}
+- extendedWaitUntil:
+    notVisible:
+      id: word
+    timeout: 1000
+- tapOn:
+    point: ${POINT}
+- extendedWaitUntil:
+    visible:
+      id: word
+    timeout: 15000
+- assertVisible:
+    id: translation_caption
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: word
+    timeout: 10000
+- assertVisible:
+    id: card_count
+    text: ${CARD}
