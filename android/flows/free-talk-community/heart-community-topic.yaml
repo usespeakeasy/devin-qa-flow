@@ -1,0 +1,38 @@
+# Free Talk > Community > heart the INDEX-th scenario card (0-based) with its like button.
+# The case script reads the like count next to the button before and after (dump) as the check.
+# Entry: Free Talk tab with Community offered (assert-free-talk-header.yaml). Exit: Community page.
+# Selectors: the tab bar (native_title_bar_tabs) Community tab has no resource-id (text fallback "^Community$").
+# TAP=false only opens the Community page (to read the counts first).
+# maestro test -e INDEX=1 heart-community-topic.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  INDEX: ${INDEX || "0"}
+  TAP: ${TAP || "true"}
+---
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_community_tab
+    commands:
+      - tapOn:
+          id: ai_tutor_community_tab
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_tab_bar
+    commands:
+      - tapOn: "^Community$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_like_button_.*
+    timeout: 20000
+- runFlow:
+    when:
+      true: ${TAP == "true"}
+    commands:
+      - tapOn:
+          id: ai_tutor_community_like_button_.*
+          index: ${INDEX}
+- assertVisible:
+    id: ai_tutor_community_recycler_view

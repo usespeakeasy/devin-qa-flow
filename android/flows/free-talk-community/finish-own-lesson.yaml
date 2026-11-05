@@ -1,0 +1,59 @@
+# Finish the self-created lesson from open-create-own.yaml (Tourist ordering dinner from a Waiter): three typed
+# turns, End lesson, then walk the lesson end steps until the post to community step (community_post_root) or
+# the app is back on Free Talk or Home. COMMUNITY_STEP=true asserts the step and stops on it (leave-community-step.yaml
+# backs out without sharing). COMMUNITY_STEP=false asserts the flow ended on Free Talk or Home without the step.
+# Entry: AI lesson in chat mode (open-create-own.yaml). Exit: community_post_root, or Free Talk tab or Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  COMMUNITY_STEP: ${COMMUNITY_STEP || "true"}
+---
+- runFlow:
+    file: ../ai-lesson/type-turn.yaml
+    env:
+      TEXT: "Sí, tengo una reserva para dos personas."
+- runFlow:
+    file: ../ai-lesson/type-turn.yaml
+    env:
+      TEXT: "Quiero la paella y una limonada, por favor."
+- runFlow:
+    file: ../ai-lesson/type-turn.yaml
+    env:
+      TEXT: "La cuenta, por favor. ¡Gracias, adiós!"
+# End lesson shows under the keyboard; with the keyboard already down, back opens the quit sheet: keep learning.
+- hideKeyboard
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_quit_sheet
+    commands:
+      - tapOn: "^Keep Learning$"
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_end_lesson
+    timeout: 90000
+- tapOn:
+    id: ai_lesson_end_lesson
+- extendedWaitUntil:
+    notVisible:
+      id: ai_lesson_screen
+    timeout: 60000
+- runFlow: walk-lesson-end-steps.yaml
+- runFlow:
+    when:
+      true: ${COMMUNITY_STEP == "true"}
+    commands:
+      - assertVisible:
+          id: community_post_root
+      - assertVisible:
+          id: community_post_share_button
+- runFlow:
+    when:
+      true: ${COMMUNITY_STEP == "false"}
+    commands:
+      - assertNotVisible:
+          id: community_post_root
+      - extendedWaitUntil:
+          visible:
+            id: "(home_root_ready|ai_tutor_history_button)"
+          timeout: 30000

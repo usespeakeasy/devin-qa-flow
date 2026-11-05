@@ -1,0 +1,21 @@
+# Free Talk tab: rotate to landscape and back; the header and page stay as asserted after (case script runs
+# assert-free-talk-header.yaml OPEN=none INTRO=absent with the same COMMUNITY and BAR).
+# Entry: Free Talk tab. Exit: Free Talk tab, portrait.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_history_button
+    timeout: 20000
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_history_button
+    timeout: 20000

@@ -1,0 +1,73 @@
+# Create your own Free Talk lesson and start it in chat mode: Create your own (Free Talk tab button, or VIA=link
+# for speak-dev://tutor/freechat-create) > default character Continue > topic form > Chat mode > Start.
+# Answers the AI data consent alert with Allow and stops the auto-started recording.
+# Entry: VIA=tab: Free Talk tab (assert-free-talk-header.yaml). VIA=link: any signed-in state.
+# STOP=form stops on the empty topic form. Exit: AI lesson in chat mode, mic not recording (ai_lesson_keyboard_toggle).
+# Precondition: Debug Menu > Subscription override > Premium.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  VIA: ${VIA || "tab"}
+  STOP: ${STOP || "lesson"}
+  SCENARIO: ${SCENARIO || "Ordering dinner at a restaurant"}
+---
+- runFlow:
+    when:
+      true: ${VIA == "tab"}
+    commands:
+      - tapOn:
+          id: ai_tutor_create_community_button
+- runFlow:
+    when:
+      true: ${VIA == "link"}
+    commands:
+      - openLink: speak-dev://tutor/freechat-create
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_create_character_continue
+    timeout: 30000
+- tapOn:
+    id: ai_lesson_create_character_continue
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_create_topic_user_role_field
+    timeout: 20000
+- runFlow:
+    when:
+      true: ${STOP == "lesson"}
+    commands:
+      - runFlow:
+          file: ../ai-data-consent/fill-create-community.yaml
+          env:
+            SCENARIO: ${SCENARIO}
+      - tapOn:
+          id: mode_toggle_chat
+      - tapOn:
+          id: ai_lesson_create_topic_start
+      - extendedWaitUntil:
+          visible:
+            id: ai_data_consent_alert
+          timeout: 8000
+          optional: true
+      - runFlow:
+          when:
+            visible:
+              id: ai_data_consent_alert
+          commands:
+            - tapOn:
+                id: ai_data_consent_alert_allow
+      - extendedWaitUntil:
+          visible:
+            id: ai_lesson_partner_message
+          timeout: 60000
+      - runFlow:
+          when:
+            visible:
+              id: ai_lesson_record_cancel
+          commands:
+            - tapOn:
+                id: ai_lesson_record_cancel
+      - extendedWaitUntil:
+          visible:
+            id: ai_lesson_keyboard_toggle
+          timeout: 20000

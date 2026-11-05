@@ -1,0 +1,19 @@
+# Free Talk tab survives process death: Home key, kill the process, relaunch from recents state; the app comes back
+# on the Free Talk tab (case script then runs assert-free-talk-header.yaml OPEN=none INTRO=absent).
+# Entry: Free Talk tab. Exit: Free Talk tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_history_button
+    timeout: 20000
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_history_button
+    timeout: 60000

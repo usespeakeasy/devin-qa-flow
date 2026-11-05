@@ -1,0 +1,19 @@
+# Post to community step (community_post_root): Back without sharing moves on; walk the remaining lesson end steps.
+# Entry: community_post_root (finish-own-lesson.yaml COMMUNITY_STEP=true). Exit: Free Talk tab or Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: community_post_back_button
+- extendedWaitUntil:
+    notVisible:
+      id: community_post_root
+    timeout: 15000
+- runFlow: walk-lesson-end-steps.yaml
+- assertNotVisible:
+    id: community_post_root
+- extendedWaitUntil:
+    visible:
+      id: "(home_root_ready|ai_tutor_history_button)"
+    timeout: 30000

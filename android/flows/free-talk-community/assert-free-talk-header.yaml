@@ -1,0 +1,163 @@
+# Free Talk tab header and page for the freetalk_community_tab_enabled gate (speak-android#8906).
+# COMMUNITY=true: Community is offered (Community tab, Favorites button). COMMUNITY=false: Topics only, no Favorites.
+# BAR=true: native_title_bar_tabs header (title plus tab bar; no tab bar when Topics is the only page).
+# BAR=false: text tabs header (ai_tutor_topics_tab, plus ai_tutor_community_tab when offered).
+# PAGE=topics|community|any: the selected page (any skips the check). DETAILS=false asserts no community details sheet (deep link with id).
+# OPEN=tab cold-starts and taps the Free Talk tab; OPEN=none asserts the current screen (after a deep link or rotation).
+# INTRO=dismiss taps the FTUX dialog away if it shows; absent asserts it does not show; present asserts it shows, then dismisses it.
+# Entry: signed in. Exit: Free Talk tab. The text tabs header has no ai_tutor_title, so arrival is ai_tutor_history_button. Flags are set before with debug-menu/set-feature-flag.yaml.
+# maestro test -e COMMUNITY=false -e BAR=true assert-free-talk-header.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  COMMUNITY: ${COMMUNITY || "true"}
+  BAR: ${BAR || "true"}
+  PAGE: ${PAGE || "topics"}
+  DETAILS: ${DETAILS || "false"}
+  OPEN: ${OPEN || "tab"}
+  INTRO: ${INTRO || "dismiss"}
+---
+- runFlow:
+    when:
+      true: ${OPEN == "tab"}
+    commands:
+      - launchApp:
+          stopApp: true
+      - extendedWaitUntil:
+          visible:
+            id: home_root_ready
+          timeout: 60000
+          optional: true
+      # After a fresh sign-in the referral promo opens over Home a few seconds after it is ready.
+      - extendedWaitUntil:
+          visible:
+            id: referral_welcome_dialog_later_button
+          timeout: 8000
+          optional: true
+      - runFlow: ../ai-data-consent/dismiss-home-popups.yaml
+      - extendedWaitUntil:
+          visible:
+            id: home_root_ready
+          timeout: 30000
+      - tapOn:
+          id: main_tab_free_talk
+- runFlow:
+    when:
+      true: ${INTRO == "present"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: ai_tutor_intro_dialog
+          timeout: 20000
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
+- runFlow:
+    when:
+      true: ${INTRO == "dismiss"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: ai_tutor_intro_dialog
+          timeout: 4000
+          optional: true
+      - runFlow:
+          when:
+            visible:
+              id: ai_tutor_intro_dialog
+          commands:
+            - tapOn:
+                id: ai_tutor_intro_dialog_get_started_button
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_history_button
+    timeout: 30000
+- runFlow:
+    when:
+      true: ${INTRO == "absent"}
+    commands:
+      # The dialog opens right after the tab loads when it is due; give it that time before asserting it is absent.
+      - extendedWaitUntil:
+          visible:
+            id: ai_tutor_intro_dialog
+          timeout: 6000
+          optional: true
+      - assertNotVisible:
+          id: ai_tutor_intro_dialog
+- assertNotVisible:
+    id: ai_tutor_intro_dialog
+- assertVisible:
+    id: ai_tutor_history_button
+- runFlow:
+    when:
+      true: ${COMMUNITY == "true"}
+    commands:
+      - assertVisible:
+          id: ai_tutor_favorites_button
+- runFlow:
+    when:
+      true: ${COMMUNITY == "false"}
+    commands:
+      - assertNotVisible:
+          id: ai_tutor_favorites_button
+      - assertNotVisible:
+          id: ai_tutor_community_tab
+      - assertNotVisible:
+          id: ai_tutor_community_recycler_view
+- runFlow:
+    when:
+      true: ${BAR == "true" && COMMUNITY == "true"}
+    commands:
+      - assertVisible:
+          id: ai_tutor_tab_bar
+- runFlow:
+    when:
+      true: ${BAR == "true" && COMMUNITY == "false"}
+    commands:
+      - assertNotVisible:
+          id: ai_tutor_tab_bar
+      - assertNotVisible:
+          id: ai_tutor_topics_tab
+- runFlow:
+    when:
+      true: ${BAR == "false"}
+    commands:
+      - assertVisible:
+          id: ai_tutor_topics_tab
+      - assertNotVisible:
+          id: ai_tutor_tab_bar
+- runFlow:
+    when:
+      true: ${BAR == "false" && COMMUNITY == "true"}
+    commands:
+      - assertVisible:
+          id: ai_tutor_community_tab
+- runFlow:
+    when:
+      true: ${PAGE == "topics"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: ai_tutor_overview_root
+          timeout: 20000
+- runFlow:
+    when:
+      true: ${PAGE == "community"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: ai_tutor_community_recycler_view
+          timeout: 20000
+- runFlow:
+    when:
+      true: ${DETAILS == "false"}
+    commands:
+      - assertNotVisible:
+          id: ai_tutor_community_details_sheet
+- runFlow:
+    when:
+      true: ${DETAILS == "true"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: ai_tutor_community_details_sheet
+          timeout: 20000

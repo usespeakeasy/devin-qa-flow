@@ -1,0 +1,34 @@
+# Tap through the lesson end steps after a Free Talk lesson (streak progress, Streak Freeze, readout, streak goal,
+# level and leagues progress, leagues username, widget prompt, ask for review: No, Cancel) until the post to
+# community step (community_post_root) or Free Talk / Home shows. Which steps show depends on the server.
+# Entry: any lesson end step. Exit: community_post_root, ai_tutor_history_button or home_root_ready.
+# Selectors: IDs only (the widget prompt uses widget_install_maybe_later).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- repeat:
+    while:
+      notVisible:
+        id: "(community_post_root|ai_tutor_history_button|home_root_ready)"
+    times: 15
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "(lesson_end_streak_progress_continue_button|lesson_end_streak_freeze_got_it_button|lesson_end_reskin_continue_button|goal_7days|primary_button|ask_for_review_dialog_no|ask_for_review_negative_dialog_no|community_post_root|ai_tutor_history_button|home_root_ready)"
+          timeout: 20000
+          optional: true
+      - runFlow:
+          when:
+            visible:
+              id: "(lesson_end_streak_progress_continue_button|lesson_end_streak_freeze_got_it_button|lesson_end_reskin_continue_button|goal_7days|primary_button|ask_for_review_dialog_no|ask_for_review_negative_dialog_no)"
+          commands:
+            - tapOn:
+                id: "(lesson_end_streak_progress_continue_button|lesson_end_streak_freeze_got_it_button|lesson_end_reskin_continue_button|goal_7days|primary_button|ask_for_review_dialog_no|ask_for_review_negative_dialog_no)"
+      - runFlow:
+          when:
+            visible:
+              id: widget_install_maybe_later
+          commands:
+            - tapOn:
+                id: widget_install_maybe_later
