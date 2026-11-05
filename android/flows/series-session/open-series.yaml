@@ -1,0 +1,43 @@
+# Series lesson by deep link (QA_SR=true opens it as a generated smart review via the QA-only `qa-smart-review`
+# link patch) > optional AI data consent alert (CONSENT allow|dont_allow, skipped when no alert shows) > resume
+# dialog answered "Start over" > first card. Entry: Home, signed in. Exit: the first card (`tap_to_continue` or a
+# line card listening, `speak_now_header`), or after dont_allow the screen it lands on (caller asserts).
+# Selectors: the resume dialog has no app resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+  QA_SR: ${QA_SR || "false"}
+  CONSENT: ${CONSENT || "allow"}
+---
+- openLink: speak-dev://lesson?id=${LESSON_ID}&qa-smart-review=${QA_SR}
+- extendedWaitUntil:
+    visible:
+      id: "tap_to_continue|speak_now_header|ai_data_consent_alert|button2|series_list"
+    timeout: 30000
+    optional: true
+# A link sent right after the lesson end flow lands on Home can be dropped (seen on base and head); send it once more.
+- runFlow:
+    when:
+      visible:
+        id: home_root_ready
+    commands:
+      - openLink: speak-dev://lesson?id=${LESSON_ID}&qa-smart-review=${QA_SR}
+- extendedWaitUntil:
+    visible:
+      id: "tap_to_continue|speak_now_header|ai_data_consent_alert|button2|series_list"
+    timeout: 90000
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_${CONSENT}
+      - assertNotVisible:
+          id: ai_data_consent_alert
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "Start over"

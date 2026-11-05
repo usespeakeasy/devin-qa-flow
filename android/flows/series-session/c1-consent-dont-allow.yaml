@@ -1,0 +1,16 @@
+# Case: series lesson with the AI data alert answered "Don't allow": the lesson leaves before it starts.
+# Entry: Home, `ai_data_consent_mode` = alert_only, account without the agreement. Exit: Home, no series list.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: open-series.yaml
+    env:
+      CONSENT: dont_allow
+- extendedWaitUntil:
+    notVisible:
+      id: series_list
+    timeout: 20000
+- assertNotVisible:
+    id: speak_now_header

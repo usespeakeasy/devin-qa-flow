@@ -1,0 +1,18 @@
+# Case part 2/3: Home mid-video > back to the same video card. The runner checks no app audio track is started (paused).
+# Entry: signed in, build with the QA-only `qaWithVideo` loader patch.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-2_mexico_city_survival__requestmedicine__SP"}
+  QA_SR: ${QA_SR || "false"}
+---
+# Part 2: Home mid-video and come back to the same card.
+- pressKey: Home
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: player
+    timeout: 20000
+- assertVisible:
+    id: series_list

@@ -1,0 +1,14 @@
+# Case part 3/3: tap the video > controls > play (adb taps in the runner). The runner checks an app audio track is started again.
+# Entry: signed in, build with the QA-only `qaWithVideo` loader patch.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-2_mexico_city_survival__requestmedicine__SP"}
+  QA_SR: ${QA_SR || "false"}
+---
+# Part 3: the runner has just tapped the video and then play with adb (Maestro's element lookup is slower than the
+# controls' auto-hide), so this only checks the lesson is still on the video card.
+- assertVisible:
+    id: player
+- assertVisible:
+    id: series_list

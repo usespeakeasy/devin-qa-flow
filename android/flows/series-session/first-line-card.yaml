@@ -1,0 +1,34 @@
+# From open-series.yaml's exit: tap through intro and listen-only cards (`tap_to_continue`) until a line card is
+# listening. Exit: `speak_now_header`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: "tap_to_continue|speak_now_header"
+    timeout: 90000
+- repeat:
+    while:
+      notVisible:
+        id: speak_now_header
+    times: 6
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: tap_to_continue
+          commands:
+            - tapOn:
+                id: tap_to_continue
+      - extendedWaitUntil:
+          visible:
+            id: speak_now_header
+          timeout: 15000
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: speak_now_header
+    timeout: 30000
+- assertVisible:
+    id: series_list

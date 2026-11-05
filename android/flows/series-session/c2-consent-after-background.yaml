@@ -1,0 +1,33 @@
+# Case: series lesson AI data alert showing > Home > back to the app: the alert is still up and the lesson has not
+# started; Allow then starts it. Entry: Home, `ai_data_consent_mode` = alert_only, no stored agreement.
+# Exit: the first card (`tap_to_continue` or `speak_now_header`).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- openLink: speak-dev://lesson?id=${LESSON_ID}&qa-smart-review=false
+- extendedWaitUntil:
+    visible:
+      id: ai_data_consent_alert
+    timeout: 60000
+- pressKey: Home
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: ai_data_consent_alert
+    timeout: 20000
+- assertNotVisible:
+    id: speak_now_header
+- tapOn:
+    id: ai_data_consent_alert_allow
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "Start over"
+- extendedWaitUntil:
+    visible:
+      id: "tap_to_continue|speak_now_header"
+    timeout: 90000

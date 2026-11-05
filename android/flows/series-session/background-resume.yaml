@@ -1,0 +1,17 @@
+# Home key, then bring the app back (no relaunch): the series lesson is still showing, the selected card is paused
+# or listening again, never Home. Entry: a series card on screen. Exit: the series lesson.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- pressKey: Home
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: "paused_header|speak_now_header|play_line"
+    timeout: 30000
+- assertVisible:
+    id: series_list
+- assertNotVisible:
+    id: home_root_ready

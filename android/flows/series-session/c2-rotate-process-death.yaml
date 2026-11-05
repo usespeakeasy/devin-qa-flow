@@ -1,0 +1,44 @@
+# Case: series line card > rotate both ways > Home > process death (`killApp`) > relaunch: the lesson or its resume
+# comes back on a line card, not Home; a consent alert shown after the relaunch is allowed (QA patch asks once per
+# process). Entry: Home, signed in. Exit: the restored line card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-series.yaml
+- runFlow: first-line-card.yaml
+- setOrientation: LANDSCAPE_LEFT
+- extendedWaitUntil:
+    visible:
+      id: "paused_header|speak_now_header"
+    timeout: 30000
+- setOrientation: PORTRAIT
+- extendedWaitUntil:
+    visible:
+      id: "paused_header|speak_now_header"
+    timeout: 30000
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: "series_list|ai_data_consent_alert"
+    timeout: 90000
+- assertNotVisible:
+    id: home_root_ready
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_allow
+      - assertNotVisible:
+          id: ai_data_consent_alert
+- extendedWaitUntil:
+    visible:
+      id: "paused_header|speak_now_header|failure_header|play_line"
+    timeout: 60000
+- assertVisible:
+    id: series_list

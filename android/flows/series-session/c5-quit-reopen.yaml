@@ -1,0 +1,42 @@
+# Case: series line card > exit > Quit > check-in Back > reopen the same lesson: the resume dialog shows.
+# Entry: Home, signed in; build with the QA-only `shouldShowLessonCloseModal` patch. Exit: series: "Continue where you left off?"; Smart Review: fresh lesson, no resume dialog.
+# Selectors: close confirmation and resume dialog have no app resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+  QA_SR: ${QA_SR || "false"}
+---
+- runFlow: open-series.yaml
+- runFlow: first-line-card.yaml
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    notVisible:
+      id: series_list
+    timeout: 30000
+- openLink: speak-dev://lesson?id=${LESSON_ID}&qa-smart-review=${QA_SR}
+- runFlow:
+    when:
+      true: ${QA_SR != 'true'}
+    commands:
+      - extendedWaitUntil:
+          visible: "Continue where you left off\\?"
+          timeout: 60000
+      - assertVisible: "Start over"
+# Smart Review content is regenerated on each open, so it is never offered for resume.
+- runFlow:
+    when:
+      true: ${QA_SR == 'true'}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "tap_to_continue|speak_now_header|series_list"
+          timeout: 60000
+      - assertNotVisible: "Continue where you left off\\?"
+      - assertVisible:
+          id: series_list

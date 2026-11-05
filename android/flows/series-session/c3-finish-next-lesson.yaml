@@ -1,0 +1,48 @@
+# Case: finish a series lesson (debug skip) > lesson end shows time studied > Continue through to Home (same process) > open NEXT_LESSON_ID: its first line card listens
+# again (speech recognition and mic back after teardown). Entry: Home, signed in. Exit: NEXT lesson `speak_now_header`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  NEXT_LESSON_ID: ${NEXT_LESSON_ID || "EN_ES_A1-2_mexico_city_survival__requestmedicine__SP"}
+---
+- runFlow: open-series.yaml
+- runFlow: first-line-card.yaml
+- tapOn:
+    id: debug_skip_lesson
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 60000
+- assertVisible:
+    id: lesson_end_reskin_metric_time_studied
+- repeat:
+    while:
+      notVisible:
+        id: home_root_ready
+    times: 8
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: lesson_end_reskin_continue_button
+          commands:
+            - tapOn:
+                id: lesson_end_reskin_continue_button
+      - runFlow:
+          when:
+            notVisible:
+              id: "lesson_end_reskin_continue_button|home_root_ready"
+          commands:
+            - back
+      - extendedWaitUntil:
+          visible:
+            id: "home_root_ready|lesson_end_reskin_continue_button"
+          timeout: 10000
+          optional: true
+- assertVisible:
+    id: home_root_ready
+- runFlow:
+    file: open-series.yaml
+    env:
+      LESSON_ID: ${NEXT_LESSON_ID}
+- runFlow: first-line-card.yaml

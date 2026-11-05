@@ -1,0 +1,118 @@
+# Case: mic permission denied on the first series line card > lesson stays up (no crash, no listening) > exit > Quit >
+# reopen the same lesson > the mic is asked again (app rationale or system prompt) > allow > the line card listens.
+# Entry: signed in; the flow cold-starts with the mic permission denied. Exit: line card listening with the mic granted.
+# Selectors: the system permission dialog ids are the permission controller's; the rationale, close confirmation and
+# resume dialog have no app resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+  QA_SR: ${QA_SR || "false"}
+---
+- launchApp:
+    stopApp: true
+    permissions:
+      microphone: deny
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- runFlow: open-series.yaml
+- repeat:
+    while:
+      notVisible:
+        id: "permission_deny_button|permission_deny_and_dont_ask_again_button|speak_now_header"
+    times: 6
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: tap_to_continue
+          commands:
+            - tapOn:
+                id: tap_to_continue
+      - extendedWaitUntil:
+          visible:
+            id: "permission_deny_button|permission_deny_and_dont_ask_again_button|speak_now_header"
+          timeout: 15000
+          optional: true
+- assertVisible:
+    id: "permission_deny_button|permission_deny_and_dont_ask_again_button"
+- tapOn:
+    id: "permission_deny_button|permission_deny_and_dont_ask_again_button"
+- extendedWaitUntil:
+    notVisible:
+      id: "permission_deny_button|permission_deny_and_dont_ask_again_button"
+    timeout: 10000
+# A denial shows the app's own rationale dialog over the card; the card does not listen.
+- extendedWaitUntil:
+    visible: ".*(Speak needs access to your microphone|Microphone permissions needed).*"
+    timeout: 10000
+- assertNotVisible:
+    id: speak_now_header
+- back
+- extendedWaitUntil:
+    notVisible: ".*(Speak needs access to your microphone|Microphone permissions needed).*"
+    timeout: 5000
+- assertVisible:
+    id: series_list
+- tapOn:
+    id: exit
+# With no line answered yet the lesson closes without the quit confirmation.
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 5000
+    optional: true
+- runFlow:
+    when:
+      visible: "Are you sure you want to quit this lesson\\?"
+    commands:
+      - tapOn: "^Quit$"
+- extendedWaitUntil:
+    notVisible:
+      id: series_list
+    timeout: 30000
+# The reopened lesson asks for the microphone straight away, so the system prompt can cover the lesson ids open-series waits on.
+- openLink: speak-dev://lesson?id=${LESSON_ID}&qa-smart-review=${QA_SR}
+- extendedWaitUntil:
+    visible:
+      id: "permission_allow_foreground_only_button|tap_to_continue|speak_now_header|ai_data_consent_alert"
+    timeout: 90000
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_allow
+- repeat:
+    while:
+      notVisible:
+        id: "permission_allow_foreground_only_button|speak_now_header"
+    times: 6
+    commands:
+      - runFlow:
+          when:
+            visible: ".*(Speak needs access to your microphone|Microphone permissions needed).*"
+          commands:
+            - tapOn: "^Allow$"
+      - runFlow:
+          when:
+            visible:
+              id: tap_to_continue
+          commands:
+            - tapOn:
+                id: tap_to_continue
+      - extendedWaitUntil:
+          visible:
+            id: "permission_allow_foreground_only_button|speak_now_header"
+          timeout: 15000
+          optional: true
+- assertVisible:
+    id: permission_allow_foreground_only_button
+- tapOn:
+    id: permission_allow_foreground_only_button
+# The reopened lesson starts again from its intro card.
+- runFlow: first-line-card.yaml
+- assertVisible:
+    id: series_list
