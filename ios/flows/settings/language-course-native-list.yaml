@@ -1,0 +1,63 @@
+# Settings > Language Course > "I speak" (native language) list, then the in-app back button from
+# each screen. No swipe back: Language Course is a full screen modal and its stack hides the system
+# back button, so an edge swipe does not pop either screen.
+# Checks: the Language Course screen and the "I speak" list arrive (automation markers), and each
+# back returns to the screen it came from. Takes full resolution screenshots
+# `course-${SHOT}` and `speak-list-${SHOT}` at the two arrivals (waits for animations first). Pass
+# `-e SHOT=light` or `-e SHOT=dark`; a default in `env:` would win over `-e`.
+# Entry: Home (home.root.ready) or the AI consent screen.
+# Preconditions: signed-in pool account, dev. Launch the app with
+# `SIMCTL_CHILD_SPEAK_AUTOMATION_MARKERS=1 xcrun simctl launch <UDID> com.selabs.speak-v2.dev`
+# before this flow; it has no launchApp so the markers stay on. Changes nothing on the account.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|ai-data-consent.action.agree"
+    timeout: 30000
+- runFlow: ../../common/dismiss-ai-data-consent.yaml
+- runFlow: ../../common/open-settings.yaml
+# Language Course is in the third Settings section, below the fold.
+- scrollUntilVisible:
+    element:
+      id: "settings.row.language-course"
+    direction: DOWN
+    centerElement: true
+    timeout: 10000
+- tapOn:
+    id: "settings.row.language-course"
+- extendedWaitUntil:
+    visible:
+      id: "settings.language-course.ready"
+    timeout: 15000
+- assertVisible:
+    id: "settings.language-course.row.native-language"
+- waitForAnimationToEnd
+- takeScreenshot: course-${SHOT}
+- tapOn:
+    id: "settings.language-course.row.native-language"
+- extendedWaitUntil:
+    visible:
+      id: "settings.language-course.native-list.ready"
+    timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: speak-list-${SHOT}
+# In-app back: "I speak" list -> Language Course -> Settings.
+- tapOn:
+    id: "settings.language-course.action.back"
+- extendedWaitUntil:
+    visible:
+      id: "settings.language-course.ready"
+    timeout: 10000
+- assertNotVisible:
+    id: "settings.language-course.native-list.ready"
+- tapOn:
+    id: "settings.language-course.action.back"
+- extendedWaitUntil:
+    visible:
+      id: "settings.row.language-course"
+    timeout: 10000
+- assertNotVisible:
+    id: "settings.language-course.ready"
