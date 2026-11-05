@@ -1,0 +1,26 @@
+# Back from the browser returns to the About sheet with the ICP row, Back again returns to Settings.
+# Entry: the browser opened from the About ICP row (about-icp-opens-browser.yaml), or with FROM_BROWSER=false
+# the About sheet itself (builds without the row). Exit: Settings.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  FROM_BROWSER: ${FROM_BROWSER || "true"}
+---
+- runFlow:
+    when:
+      true: ${FROM_BROWSER == "true"}
+    commands:
+      - back
+      - extendedWaitUntil:
+          visible:
+            id: about_icp_filing_number_option
+          timeout: 15000
+- assertVisible:
+    id: about_sheet
+- back
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 15000
+- assertNotVisible:
+    id: about_sheet

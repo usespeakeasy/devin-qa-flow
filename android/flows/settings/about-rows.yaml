@@ -1,0 +1,38 @@
+# About sheet rows: Terms of Service, Privacy Policy, Open source licenses always; the ICP filing
+# number row (`about_icp_filing_number_option`, text ICP_TEXT) only when EXPECT_ICP=true
+# (China launch market, builds with speak-android#8940).
+# Entry: the About sheet is open (about-open.yaml). Exit: the About sheet.
+# maestro test -e EXPECT_ICP=true -e "ICP_TEXT=ICP备案号：ICP备XXXXXXXX号" about-rows.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  EXPECT_ICP: ${EXPECT_ICP || "false"}
+  ICP_TEXT: ${ICP_TEXT || ""}
+---
+- extendedWaitUntil:
+    visible:
+      id: about_sheet
+    timeout: 15000
+- assertVisible:
+    id: about_terms_of_service_option
+- assertVisible:
+    id: about_privacy_policy_option
+- assertVisible:
+    id: about_open_source_licenses_option
+- runFlow:
+    when:
+      true: ${EXPECT_ICP == "true"}
+    commands:
+      - assertVisible:
+          id: about_icp_filing_number_option
+          text: ${ICP_TEXT}
+          below:
+            id: about_open_source_licenses_option
+- runFlow:
+    when:
+      true: ${EXPECT_ICP != "true"}
+    commands:
+      - assertNotVisible:
+          id: about_icp_filing_number_option
+      - assertNotVisible:
+          text: "ICP备.*"

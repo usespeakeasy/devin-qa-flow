@@ -1,0 +1,51 @@
+# Profile > Settings > About opens the About sheet (`about_sheet`).
+# Entry: signed in, dev, on Home, on Settings (an open About sheet is closed), or on the Debug Menu over either.
+# Exit: the About sheet over Settings.
+# The Settings About row has no automation ID yet, so it is matched by its title text.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- repeat:
+    times: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Debug Menu"
+          commands:
+            - back
+# An About sheet left open from an earlier step would be read instead of a fresh one; close it.
+- runFlow:
+    when:
+      visible:
+        id: about_sheet
+    commands:
+      - back
+      - extendedWaitUntil:
+          notVisible:
+            id: about_sheet
+          timeout: 10000
+# Settings may be scrolled past Manage Account, so look for either row before going through Profile.
+- runFlow:
+    when:
+      notVisible:
+        id: settings_manage_account_option
+    commands:
+      - runFlow:
+          when:
+            notVisible: "^About$"
+          commands:
+            - runFlow: ../../common/open-settings.yaml
+- scrollUntilVisible:
+    element:
+      text: "^About$"
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    text: "^About$"
+- extendedWaitUntil:
+    visible:
+      id: about_sheet
+    timeout: 15000
+- assertVisible:
+    id: about_terms_of_service_option

@@ -1,0 +1,15 @@
+# About sheet > ICP filing number row opens the browser at URL_HOST (default beian.miit.gov.cn).
+# Entry: the About sheet with the ICP row (China launch market). Exit: Chrome in front.
+# The Chrome first-run screens must be off (chrome-command-line --disable-fre) before the run.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  URL_HOST: ${URL_HOST || "beian.miit.gov.cn"}
+---
+- tapOn:
+    id: about_icp_filing_number_option
+- extendedWaitUntil:
+    visible:
+      id: url_bar
+      text: ".*${URL_HOST}.*"
+    timeout: 20000
