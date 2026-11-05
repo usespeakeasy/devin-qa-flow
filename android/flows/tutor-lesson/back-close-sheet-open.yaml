@@ -1,0 +1,15 @@
+# Tutor (drill) lesson > system Back > the same close confirmation sheet as the top bar X.
+# Entry: drill lesson after skip-cards.yaml (QA-only always-confirm close patch, see close-sheet-open.yaml).
+# Exit: the close confirmation sheet. Selectors: text fallback (sheet has no resource-ids, speak-android#8710).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: drill_lesson_root
+- pressKey: back
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- assertVisible: "^Keep Learning$"
+- assertVisible: "^Quit$"

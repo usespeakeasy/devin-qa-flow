@@ -1,0 +1,12 @@
+# Close confirmation sheet > Quit: the drill lesson closes. Entry: close-sheet-open.yaml.
+# Exit: lesson gone (abandon feedback, check-in or Home, per the account). Selectors: text fallback
+# for the sheet (no resource-ids, speak-android#8710).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    notVisible:
+      id: drill_lesson_root
+    timeout: 30000

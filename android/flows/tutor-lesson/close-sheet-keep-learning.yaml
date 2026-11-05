@@ -1,0 +1,17 @@
+# Close confirmation sheet > Keep Learning: the sheet closes and the drill lesson stays, Next still works.
+# Entry: close-sheet-open.yaml or back-close-sheet-open.yaml. Exit: drill lesson.
+# Selectors: text fallback for the sheet (no resource-ids, speak-android#8710).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "^Keep Learning$"
+- extendedWaitUntil:
+    notVisible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- assertVisible:
+    id: drill_lesson_root
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 20000

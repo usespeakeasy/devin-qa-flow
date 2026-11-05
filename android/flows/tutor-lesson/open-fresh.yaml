@@ -1,0 +1,24 @@
+# Tutor (drill) lesson by deep link (LESSON_ID), starting over if "Continue where you left off?" shows.
+# Entry: Home, signed in. Exit: the drill lesson shows Next (`drill_lesson_skip`).
+# Selectors: the restore dialog (SimpleDialog) has no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+---
+- runFlow:
+    file: open.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "^Start over$"
+      - extendedWaitUntil:
+          notVisible: "Continue where you left off\\?"
+          timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 30000

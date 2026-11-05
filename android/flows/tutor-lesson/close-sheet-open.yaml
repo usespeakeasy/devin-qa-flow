@@ -1,0 +1,16 @@
+# Tutor (drill) lesson > top bar close (X) > "Are you sure you want to quit this lesson?" sheet with
+# Keep Learning and Quit. Entry: drill lesson after skip-cards.yaml (QA-only always-confirm close patch,
+# `TutorLessonViewModel.shouldShowLessonCloseModal` returns true, because the emulator can't speak a line).
+# Exit: the close confirmation sheet. Selectors: the sheet has no resource-ids (text fallback,
+# IDs asked on speak-android#8710).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: lesson_top_bar_close
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- assertVisible: "^Keep Learning$"
+- assertVisible: "^Quit$"
