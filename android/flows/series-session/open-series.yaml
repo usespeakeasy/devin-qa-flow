@@ -16,6 +16,16 @@ env:
       id: "tap_to_continue|speak_now_header|ai_data_consent_alert|button2|series_list"
     timeout: 30000
     optional: true
+# The resume dialog can show over Home before the lesson opens, with no app resource-ids (text only).
+- extendedWaitUntil:
+    visible: "Continue where you left off\\?"
+    timeout: 5000
+    optional: true
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "Start over"
 # A link sent right after the lesson end flow lands on Home can be dropped (seen on base and head); send it once more.
 - runFlow:
     when:

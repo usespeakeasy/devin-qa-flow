@@ -1,0 +1,14 @@
+# SeriesLesson top bar: tap one button (BUTTON = hands_free_mode_toggle, listen_mode_toggle or
+# transcription_mode_toggle) and check the lesson is still on the series list.
+# Entry: series line card. Exit: same card; the runner checks the result (toggle text, tint or line pixels).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  BUTTON: ${BUTTON || "hands_free_mode_toggle"}
+---
+- tapOn:
+    id: ${BUTTON}
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: series_list

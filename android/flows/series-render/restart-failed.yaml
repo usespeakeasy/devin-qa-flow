@@ -1,0 +1,14 @@
+# SeriesLesson: the active line card failed ("Try again"): tap its Restart. Earlier answered cards above keep their
+# own `restart` button, so the tap is scoped below `failure_header`. Entry: failure card. Exit: the card listens again.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: restart
+    below:
+      id: failure_header
+- extendedWaitUntil:
+    notVisible:
+      id: failure_header
+    timeout: 10000

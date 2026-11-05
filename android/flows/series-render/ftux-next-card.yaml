@@ -1,0 +1,21 @@
+# Tutor Everywhere first-use tooltip on a series line card, then tap to continue: the tooltip is gone on
+# the next card. Entry: answered line card (`completed_header`) after the third evaluation in the process,
+# tutor_everywhere_series_lessons_enabled = tutor_button. Exit: next card, no tooltip.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: tutor_everywhere_ftux_tooltip
+    timeout: 15000
+- assertVisible:
+    id: tutor_button_restart
+- tapOn:
+    id: tap_to_continue
+- extendedWaitUntil:
+    notVisible:
+      id: completed_header
+    timeout: 15000
+- assertNotVisible:
+    id: tutor_everywhere_ftux_tooltip

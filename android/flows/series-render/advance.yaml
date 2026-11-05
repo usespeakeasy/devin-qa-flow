@@ -1,0 +1,29 @@
+# SeriesLesson: tap through non-speaking cards (`tap_to_continue`) until a line card listens
+# (`speak_now_header`) or the lesson ends (`lesson_end_reskin_root`, or Home for a lesson without an end screen).
+# Entry: any series card, answered or tap-to-continue. Exit: one of those three.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- repeat:
+    while:
+      notVisible:
+        id: "speak_now_header|lesson_end_reskin_root|home_root_ready"
+    times: 8
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: tap_to_continue
+          commands:
+            - tapOn:
+                id: tap_to_continue
+      - extendedWaitUntil:
+          visible:
+            id: "speak_now_header|lesson_end_reskin_root|home_root_ready"
+          timeout: 10000
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "speak_now_header|lesson_end_reskin_root|home_root_ready"
+    timeout: 30000

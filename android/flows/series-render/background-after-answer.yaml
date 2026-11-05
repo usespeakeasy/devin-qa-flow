@@ -1,0 +1,20 @@
+# SeriesLesson: Home right after an answer lands (model still updating: feedback audio, header, tutor button),
+# then bring the app back (no relaunch): the answered card still shows its result and Continue, never Home.
+# Entry: series line card just answered. Exit: the same answered card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- pressKey: Home
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: "completed_header|failure_header"
+    timeout: 30000
+- assertVisible:
+    id: series_list
+- assertVisible:
+    id: tap_to_continue
+- assertNotVisible:
+    id: home_root_ready
