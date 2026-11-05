@@ -1,0 +1,42 @@
+# Video lesson card: the controls answer after a lifecycle change (reopen, background, rotation, process
+# death): play_line pauses the card (paused_header) and resumes it (listening_header), card CARD stays.
+# Entry: video lesson on card CARD. Exit: same card, listening.
+# Check exactly two `Event received: PlayClicked` in logcat (tag VideoLessonUpdate).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "card-play-resume"}
+  CARD: ${CARD || "\\d+ of \\d+"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: paused_header
+    commands:
+      - tapOn:
+          id: play_line
+- extendedWaitUntil:
+    visible:
+      id: listening_header
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: play_line
+- extendedWaitUntil:
+    visible:
+      id: paused_header
+    timeout: 10000
+- tapOn:
+    id: play_line
+- extendedWaitUntil:
+    visible:
+      id: listening_header
+    timeout: 30000
+- assertVisible:
+    id: card_count
+    text: ${CARD}

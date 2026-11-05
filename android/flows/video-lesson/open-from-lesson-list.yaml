@@ -1,0 +1,54 @@
+# Video lesson: open it from the Home learning path popover's lesson list (lesson item, then Start)
+# and land on a card with the mic listening.
+# Entry: Home, the current loop's popover lists LESSON_ID (`learning_path_lesson_item_<id>`); Premium
+# override and Debug features enabled for the debug buttons. A resume prompt is answered Start over.
+# Exit: video lesson, `card_count` and `listening_header`.
+# maestro test -e LESSON_ID=KR_EN_UC_L1_howstheweather_VL open-from-lesson-list.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "KR_EN_UC_L1_howstheweather_VL"}
+---
+- runFlow: ../../common/home-popups.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_lesson_item_${LESSON_ID}
+    timeout: 30000
+- tapOn:
+    id: learning_path_lesson_item_${LESSON_ID}
+- runFlow:
+    when:
+      visible:
+        id: learning_path_lesson_start_${LESSON_ID}
+    commands:
+      - tapOn:
+          id: learning_path_lesson_start_${LESSON_ID}
+- runFlow:
+    when:
+      notVisible:
+        id: "card_count|listening_header|ai_data_consent_alert"
+    commands:
+      - tapOn:
+          text: "^Start$"
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "listening_header|ai_data_consent_alert|card_count"
+    timeout: 30000
+    optional: true
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- extendedWaitUntil:
+    visible: "Continue where you left off\\?"
+    timeout: 5000
+    optional: true
+- tapOn:
+    text: "^Start over$"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: listening_header
+    timeout: 60000
+- assertVisible:
+    id: card_count

@@ -1,0 +1,20 @@
+# Free video lesson preview: the preview plays to its end and shows "Preview Finished" (no Return home tap).
+# Entry: Free (flows/debug-menu/set-subscription-override.yaml TIER=Free), video lesson open (open-lesson.yaml),
+# can't speak now on so cards advance without speech. Exit: `preview_finished_screen`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    when:
+      visible:
+        id: paused_header
+    commands:
+      - tapOn:
+          id: play_line
+- extendedWaitUntil:
+    visible:
+      id: preview_finished_screen
+    timeout: 240000
+- assertVisible:
+    id: preview_finished_learn_more_button

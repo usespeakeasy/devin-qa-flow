@@ -1,0 +1,45 @@
+# Video lesson card: Save line saves and unsaves the card's line, and the transcription toggle switches the line's
+# script (Hangul / romanization) and back.
+# Entry: video lesson whose learning language has a transcription mode (Korean, e.g. EN_KR_L1-2_pharmacy_VL), on
+# card "1 of N", can't speak now off. The toggle only shows with the QA patch that makes
+# `transcription_mode_toggle` visible (it is hidden in code on develop). Exit: same card.
+# Check `Event received: SaveLineClicked` x2 and `TranscriptionModeToggled` x2 (tag VideoLessonUpdate).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "save-line-transcription"}
+---
+- extendedWaitUntil:
+    visible:
+      id: listening_header
+    timeout: 30000
+- tapOn:
+    id: save_line
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${SHOT}-saved
+- tapOn:
+    id: save_line
+- waitForAnimationToEnd:
+    timeout: 2000
+- copyTextFrom:
+    id: lesson_line_word
+- evalScript: ${output.w0 = maestro.copiedText}
+- tapOn:
+    id: transcription_mode_toggle
+- waitForAnimationToEnd:
+    timeout: 2000
+- copyTextFrom:
+    id: lesson_line_word
+- assertTrue: ${maestro.copiedText != output.w0}
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: transcription_mode_toggle
+- waitForAnimationToEnd:
+    timeout: 2000
+- copyTextFrom:
+    id: lesson_line_word
+- assertTrue: ${maestro.copiedText == output.w0}
+- assertVisible:
+    id: card_count
+    text: "1 of \\d+"

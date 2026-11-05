@@ -1,0 +1,64 @@
+# Video lesson card controls: speed, pause and resume, Restart, rewind and forward on the card.
+# Speed text changes once per tap; play_line pauses (paused_header) and resumes (listening_header);
+# Restart replays the card's line; rewind and forward move the lesson back and on.
+# Entry: video lesson on card "1 of N" (N >= 2), listening, can't speak now off.
+# Exit: video lesson.
+# Check one `Event received: <Event>` per tap in logcat (tag VideoLessonUpdate).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "card-controls"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: "1 of \\d+"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: listening_header
+    timeout: 30000
+- copyTextFrom:
+    id: video_speed
+- evalScript: ${output.speed0 = maestro.copiedText}
+- tapOn:
+    id: video_speed
+- copyTextFrom:
+    id: video_speed
+- assertTrue: ${maestro.copiedText != output.speed0}
+- tapOn:
+    id: play_line
+- extendedWaitUntil:
+    visible:
+      id: paused_header
+    timeout: 10000
+- tapOn:
+    id: play_line
+- extendedWaitUntil:
+    visible:
+      id: listening_header
+    timeout: 30000
+# Restart replays the line audio and leaves the card on its blank header with the controls showing.
+- tapOn:
+    id: restart
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: "1 of \\d+"
+    timeout: 30000
+- takeScreenshot: ${SHOT}-restart
+# Rewind and forward move the lesson by a line or a video segment, and a card with no speech also moves on after
+# its failure delay, so the card number is not checked here; the runner counts RewindClicked/ForwardClicked.
+- tapOn:
+    id: rewind_container
+- extendedWaitUntil:
+    visible:
+      id: card_count
+    timeout: 60000
+- tapOn:
+    id: forward_container
+- extendedWaitUntil:
+    visible:
+      id: card_count
+    timeout: 60000
+- takeScreenshot: ${SHOT}

@@ -1,0 +1,35 @@
+# Video lesson card: a fast double tap on speed, play, rewind and forward sends two taps each, and the screen
+# ends where two single taps would: speed two steps on, the card back in its play state, and rewind and
+# forward each moving the lesson.
+# Entry: video lesson on a card, can't speak now off. Exit: video lesson.
+# Check exactly two `Event received: <Event>` per double tap in logcat (tag VideoLessonUpdate).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "double-tap-controls"}
+---
+- extendedWaitUntil:
+    visible:
+      id: "(listening|paused)_header"
+    timeout: 30000
+- doubleTapOn:
+    id: video_speed
+- doubleTapOn:
+    id: play_line
+- extendedWaitUntil:
+    visible:
+      id: "(listening|paused)_header"
+    timeout: 30000
+- doubleTapOn:
+    id: rewind_container
+- extendedWaitUntil:
+    visible:
+      id: card_count
+    timeout: 60000
+- takeScreenshot: ${SHOT}
+- doubleTapOn:
+    id: forward_container
+- extendedWaitUntil:
+    visible:
+      id: card_count
+    timeout: 30000

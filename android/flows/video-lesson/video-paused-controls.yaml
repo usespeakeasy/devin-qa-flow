@@ -1,0 +1,52 @@
+# Video lesson, video paused between cards: the timestamp holds, rewind and forward move it by the skip
+# (rewind_text/forward_text seconds) and keep the video paused, the subtitles toggle is tapped four times (one
+# cycle; the mode shows only as span colors and subtitle text, so the runner counts `SubtitlesToggled`), and play resumes the video.
+# Entry: the video paused with its controls showing (the case script pauses it with one adb shell call: tap the
+# player below the hidden card, `sleep 0.5`, tap `play_line`, because Maestro waits for an idle tree while the
+# video plays). Exit: the video playing (the next Maestro command returns at the next card).
+# Check one `Event received: <Event>` per tap in logcat (tag VideoLessonUpdate).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "video-paused-controls"}
+  SUBTITLES: ${SUBTITLES || "true"}
+---
+- extendedWaitUntil:
+    visible:
+      id: video_progress_elapsed
+    timeout: 10000
+- copyTextFrom:
+    id: debug_timestamp
+- evalScript: ${output.t0 = parseFloat(maestro.copiedText)}
+- waitForAnimationToEnd:
+    timeout: 2000
+- copyTextFrom:
+    id: debug_timestamp
+- assertTrue: ${parseFloat(maestro.copiedText) == output.t0}
+- tapOn:
+    id: forward_container
+- copyTextFrom:
+    id: debug_timestamp
+- evalScript: ${output.t1 = parseFloat(maestro.copiedText)}
+- assertTrue: ${output.t1 > output.t0}
+- tapOn:
+    id: rewind_container
+- copyTextFrom:
+    id: debug_timestamp
+- assertTrue: ${parseFloat(maestro.copiedText) < output.t1}
+- runFlow:
+    when:
+      true: ${SUBTITLES == "true"}
+    commands:
+      - tapOn:
+          id: subtitle_toggle
+      - takeScreenshot: ${SHOT}-subtitles-1
+      - tapOn:
+          id: subtitle_toggle
+      - tapOn:
+          id: subtitle_toggle
+      - tapOn:
+          id: subtitle_toggle
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: play_line

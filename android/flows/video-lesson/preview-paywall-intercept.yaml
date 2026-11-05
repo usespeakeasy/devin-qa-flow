@@ -1,0 +1,45 @@
+# Free video lesson after the preview: Learn more opens the upgrade paywall once; closing it returns to the
+# Preview Finished dialog (not cancelable, so lesson taps can't reach the screen) and the paywall does not reopen by
+# itself while the lesson's player events are filtered; system Back does not dismiss the dialog; Return home lands on Home.
+# Entry: play-to-preview-finished.yaml. Exit: Home.
+# Check: no lesson `Event received:` lines (tag VideoLessonUpdate) between Learn more and Return home; a billing error
+# OK is `android:id/button1`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "preview-paywall-intercept"}
+---
+- tapOn:
+    id: preview_finished_learn_more_button
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_premium_intro_(ready|error)"
+    timeout: 30000
+- tapOn:
+    id: button1
+    optional: true
+- takeScreenshot: ${SHOT}-paywall
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible:
+      id: preview_finished_learn_more_button
+    timeout: 20000
+- extendedWaitUntil:
+    notVisible:
+      id: "onboarding_premium_intro_(ready|error)"
+    timeout: 5000
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: preview_finished_learn_more_button
+- assertNotVisible:
+    id: "onboarding_premium_intro_(ready|error)"
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: preview_finished_return_home_button
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000

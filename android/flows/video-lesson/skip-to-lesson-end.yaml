@@ -21,8 +21,10 @@ env:
     timeout: 60000
 - assertVisible:
     id: lesson_end_reskin_metric_time_studied
+# The sentences metric only shows once a line was spoken.
 - assertVisible:
     id: lesson_end_reskin_metric_sentences
+    optional: true
 - takeScreenshot: ${SHOT}
 - runFlow:
     file: ../../common/finish-lesson-end.yaml
