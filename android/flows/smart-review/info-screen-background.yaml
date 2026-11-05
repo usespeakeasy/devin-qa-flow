@@ -1,0 +1,76 @@
+# Smart Review info screen ("How Does Smart Review Work?"): open it from the Practice tab, scroll
+# to the end, close with X, back on Smart Review. Screenshots: practice, info-top, info-bottom,
+# closed (run with --test-output-dir); the runner compares their page background pixels.
+# Entry: Home tab. Precondition: dev account with at least one Smart Review concept (status not
+# noConcepts). Seed: POST /v2/users/lesson-progress with isFinished=true for an EN_FR lesson that
+# has a sentence-pattern VocabSkill (e.g. EN_FR_L1-rev_cava_SP_DL_IC).
+# Selectors: builds before the Smart Review test tags (pre speak-android 4.7x) have no IDs on the
+# info and close icons, so those fall back to the top-right point where both icons sit.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "Practice"
+- extendedWaitUntil:
+    visible: "Quick lessons"
+    timeout: 20000
+- assertVisible: "Smart Review"
+- takeScreenshot: 1-practice
+- tapOn: "Smart Review"
+- extendedWaitUntil:
+    visible: "Speaking"
+    timeout: 20000
+- takeScreenshot: 2-smart-review
+- runFlow:
+    when:
+      visible:
+        id: smart_review_info_button
+    commands:
+      - tapOn:
+          id: smart_review_info_button
+- runFlow:
+    when:
+      visible: "Speaking"
+      notVisible:
+        id: smart_review_info_button
+    commands:
+      # Old builds: info icon has no ID or content description.
+      - tapOn:
+          point: "94%,8%"
+- extendedWaitUntil:
+    visible: "How Does Smart Review Work\\?"
+    timeout: 20000
+- takeScreenshot: 3-info-top
+- scroll
+- scroll
+- scroll
+- scroll
+- scroll
+- scroll
+- takeScreenshot: 4-info-bottom
+- runFlow:
+    when:
+      visible:
+        id: smart_review_details_close_button
+    commands:
+      - tapOn:
+          id: smart_review_details_close_button
+- runFlow:
+    when:
+      visible: "(Smart Review evaluates|Please reach out).*"
+      notVisible:
+        id: smart_review_details_close_button
+    commands:
+      # Old builds: close icon has no ID or content description.
+      - tapOn:
+          point: "94%,8%"
+- extendedWaitUntil:
+    visible: "Speaking"
+    timeout: 20000
+# Not the title: Maestro text match is case-insensitive and the info button's description is
+# "How does Smart Review work?".
+- extendedWaitUntil:
+    notVisible: "Let Speak create.*"
+    timeout: 10000
+- assertVisible: "Mastery Score.*"
+- takeScreenshot: 5-closed
