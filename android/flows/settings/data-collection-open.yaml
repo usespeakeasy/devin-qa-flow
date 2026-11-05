@@ -1,0 +1,28 @@
+# Profile > Settings > "Improve Voice Recognition" opens the voice data screen ("Data & Analytics").
+# Entry: Home tab. Precondition: signed-in dev account. PROFILE_TAB and ROW take the copy for the app language
+# (zh-CN: PROFILE_TAB=个人资料, ROW=允许 Speak 处理您的语音信息).
+# Selectors: the Profile tab and the Settings row have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  PROFILE_TAB: ${PROFILE_TAB || "Profile"}
+  ROW: ${ROW || "Improve Voice Recognition"}
+---
+- tapOn: ${PROFILE_TAB}
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 15000
+- scrollUntilVisible:
+    element: ${ROW}
+    direction: DOWN
+    timeout: 20000
+- tapOn: ${ROW}
+- extendedWaitUntil:
+    visible:
+      id: data_collection_screen
+    timeout: 15000
+- assertVisible:
+    id: data_collection_voice_switch

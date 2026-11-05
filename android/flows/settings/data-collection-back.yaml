@@ -1,0 +1,26 @@
+# Data & Analytics: system back returns to Settings; reopening ROW and tapping the toolbar back arrow returns to
+# Settings too. Entry: `data_collection_screen` opened from Settings. Ends on Settings with ROW visible.
+# Selectors: the Settings row has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ROW: ${ROW || "Improve Voice Recognition"}
+---
+- back
+- extendedWaitUntil:
+    visible: ${ROW}
+    timeout: 10000
+- assertNotVisible:
+    id: data_collection_screen
+- tapOn: ${ROW}
+- extendedWaitUntil:
+    visible:
+      id: data_collection_screen
+    timeout: 15000
+- tapOn:
+    id: data_collection_back_button
+- extendedWaitUntil:
+    visible: ${ROW}
+    timeout: 10000
+- assertNotVisible:
+    id: data_collection_screen

@@ -1,0 +1,45 @@
+# Settings > App Language > LANGUAGE > confirm: Settings reloads in that language with LANGUAGE under the row;
+# back returns to the Profile tab.
+# Entry: Settings. APP_LANGUAGE_ROW is the row's copy in the current language (zh-CN: 程序语言).
+# Selectors: the Settings row and the language rows have no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  APP_LANGUAGE_ROW: ${APP_LANGUAGE_ROW || "App Language"}
+  LANGUAGE: ${LANGUAGE || "简体中文"}
+---
+- scrollUntilVisible:
+    element: ${APP_LANGUAGE_ROW}
+    direction: UP
+    timeout: 20000
+- tapOn: ${APP_LANGUAGE_ROW}
+- extendedWaitUntil:
+    visible:
+      id: language_change_screen
+    timeout: 15000
+- scrollUntilVisible:
+    element: ${LANGUAGE}
+    direction: DOWN
+    timeout: 20000
+- tapOn: ${LANGUAGE}
+- extendedWaitUntil:
+    visible:
+      id: app_language_change_confirm_sheet
+    timeout: 10000
+- tapOn:
+    id: app_language_change_confirm_button
+- extendedWaitUntil:
+    visible:
+      id: settings_clear_cache_option
+    timeout: 45000
+- assertNotVisible:
+    id: language_change_screen
+- scrollUntilVisible:
+    element: ${LANGUAGE}
+    direction: DOWN
+    timeout: 20000
+- back
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 15000

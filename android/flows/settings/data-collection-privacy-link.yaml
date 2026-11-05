@@ -1,0 +1,43 @@
+# Data & Analytics: tap the privacy policy link at the end of the copy; Chrome opens. The address bar hides "https://www.",
+# so the flow taps it and then "Edit" to put the full URL in the field, which must match URL_RE.
+# Back returns to Data & Analytics. Entry: `data_collection_screen`. Chrome's first-run screen already dismissed.
+# Selectors: the link is an inline span in the copy, so it has no node of its own (point fallback, LINK_POINT).
+# Chrome's "Edit" suggestion button has only a content description (text fallback, Chrome's own UI).
+# English copy: LINK_POINT=79%,87%.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LINK_POINT: ${LINK_POINT || "79%,87%"}
+  URL_RE: ${URL_RE || ".*"}
+  SHOT: ${SHOT || "privacy_link"}
+---
+- extendedWaitUntil:
+    visible:
+      id: data_collection_screen
+    timeout: 15000
+- tapOn:
+    point: ${LINK_POINT}
+- extendedWaitUntil:
+    visible:
+      id: url_bar
+    timeout: 30000
+- tapOn:
+    id: url_bar
+- tapOn: Edit
+- extendedWaitUntil:
+    visible:
+      id: url_bar
+      text: ${URL_RE}
+    timeout: 10000
+- takeScreenshot: ${SHOT}
+- repeat:
+    while:
+      notVisible:
+        id: data_collection_screen
+    times: 4
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: data_collection_screen
+    timeout: 15000

@@ -1,0 +1,51 @@
+# Data & Analytics: the voice data switch flips and flips back, starting from either state. Ends where it started.
+# Entry: `data_collection_screen`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "voice_toggle"}
+---
+- assertVisible:
+    id: data_collection_voice_switch
+- runFlow:
+    when:
+      visible:
+        id: data_collection_voice_switch
+        checked: true
+    commands:
+      - tapOn:
+          id: data_collection_voice_switch
+      - extendedWaitUntil:
+          visible:
+            id: data_collection_voice_switch
+            checked: false
+          timeout: 10000
+      - takeScreenshot: ${SHOT}
+      - tapOn:
+          id: data_collection_voice_switch
+      - extendedWaitUntil:
+          visible:
+            id: data_collection_voice_switch
+            checked: true
+          timeout: 10000
+- runFlow:
+    when:
+      visible:
+        id: data_collection_voice_switch
+        checked: false
+    commands:
+      - tapOn:
+          id: data_collection_voice_switch
+      - extendedWaitUntil:
+          visible:
+            id: data_collection_voice_switch
+            checked: true
+          timeout: 10000
+      - takeScreenshot: ${SHOT}
+      - tapOn:
+          id: data_collection_voice_switch
+      - extendedWaitUntil:
+          visible:
+            id: data_collection_voice_switch
+            checked: false
+          timeout: 10000
