@@ -1,0 +1,30 @@
+# Signed in -> debug menu (speak-dev://debug) -> Log Out -> welcome screen.
+# Entry: signed in, any screen. The debug menu opens over the paywalls that show after sign-in
+# (those are missing from the tree, so a Profile -> Settings path can't see them).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- openLink: speak-dev://debug
+- runFlow:
+    when:
+      visible: "Open"
+    commands:
+      - tapOn: "Open"
+- extendedWaitUntil:
+    visible:
+      id: debug.action.close
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      id: debug.action.log-out
+    timeout: 20000
+- tapOn:
+    id: debug.action.log-out
+- tapOn:
+    text: "Log Out"
+    below: "Log out of this account\\?"
+- extendedWaitUntil:
+    visible:
+      id: onboarding.storybook.sign-in
+    timeout: 15000

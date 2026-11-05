@@ -1,0 +1,12 @@
+# A2: tap Sign in on the filled sign-in sheet and reach Home.
+# Entry: email sign-in sheet with valid credentials typed (sign-in-reveal.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: auth.sign-in.submit
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|onboarding_notification_secondary_button|ai-data-consent.action.agree"
+    timeout: 30000

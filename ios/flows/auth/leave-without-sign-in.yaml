@@ -1,0 +1,20 @@
+# D (speak-ios#10028): type a password, tap back, no iOS save-password prompt.
+# Entry: signed out, welcome screen. Pass -e EMAIL. The case script checks the prompt.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/open-email-sign-in.yaml
+- tapOn:
+    id: auth.email.field
+- inputText: ${EMAIL}
+- tapOn:
+    id: auth.password.field
+- inputText: "notsaved123"
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: auth.options.screen
+    timeout: 10000
+- assertNotVisible: "(?i)save password.*"

@@ -1,0 +1,16 @@
+# F (speak-ios#10028): with text in a field, swiping the sign-in sheet down keeps it open.
+# Entry: signed out, welcome screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/open-email-sign-in.yaml
+- tapOn:
+    id: auth.email.field
+- inputText: "qa"
+- swipe:
+    start: "50%,10%"
+    end: "50%,95%"
+    duration: 600
+- assertVisible:
+    id: auth.sign-in.screen

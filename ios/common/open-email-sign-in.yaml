@@ -1,0 +1,14 @@
+# Welcome -> Log in -> Continue with Email -> email sign-in sheet.
+# Entry: signed out, welcome screen (onboarding.storybook.sign-in).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: onboarding.storybook.sign-in
+- tapOn:
+    id: auth.provider.email
+- extendedWaitUntil:
+    visible:
+      id: auth.sign-in.screen
+    timeout: 10000
