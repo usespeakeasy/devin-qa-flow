@@ -1,0 +1,28 @@
+# Video lesson: system Back opens the quit sheet, Keep Learning closes it once and the same card stays.
+# Entry: video lesson on card CARD. Exit: video lesson, card CARD, no quit sheet.
+# Selectors: the quit sheet has no resource-id (text fallback, IDs asked on speak-android#8710).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD: ${CARD || "\\d+ of \\d+"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+- back
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- takeScreenshot: ${SHOT || "close-confirmation"}
+- tapOn: "^Keep Learning$"
+- extendedWaitUntil:
+    notVisible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible: "Are you sure you want to quit this lesson\\?"
+- assertVisible:
+    id: card_count
+    text: ${CARD}

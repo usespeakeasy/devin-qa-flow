@@ -1,0 +1,28 @@
+# Video lesson resume prompt: tap ANSWER ("Continue" or "Start over") fast twice; the prompt closes once and
+# the lesson plays card CARD (Continue keeps the saved group, Start over goes to "1 of 2").
+# Entry: resume-prompt-open.yaml. Exit: video lesson, card CARD, no resume prompt.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ANSWER: ${ANSWER || "Continue"}
+  CARD: ${CARD || "\\d+ of \\d+"}
+---
+- tapOn:
+    text: "^${ANSWER}$"
+    repeat: 2
+    delay: 30
+    retryTapIfNoChange: false
+- extendedWaitUntil:
+    notVisible: "Continue where you left off\\?"
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertNotVisible: "Continue where you left off\\?"
+- assertVisible:
+    id: card_count
+    text: ${CARD}

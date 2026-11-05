@@ -1,7 +1,7 @@
 # Video lesson: open it by deep link from Home and land on its first card with the mic listening.
 # Entry: Home, Premium (flows/debug-menu/set-subscription-override.yaml TIER=Premium), Debug features
 # enabled (flows/debug-menu/set-debug-toggle-on.yaml), microphone permission granted.
-# The Home "Find your English level" sheet (app_assessment_popup) is closed first.
+# Home popups are closed first (common/home-popups.yaml); a saved-progress resume prompt is answered Start over.
 # A free account plays a 2 card preview that ends on "Preview Finished" instead of the lesson end.
 # Exit: video lesson, card_count "1 of N", listening_header ("Speak now...").
 # maestro test -e LESSON_ID=KR_EN_UC_L1_howstheweather_VL open-lesson.yaml
@@ -10,21 +10,28 @@ env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
   LESSON_ID: ${LESSON_ID || "KR_EN_UC_L1_howstheweather_VL"}
 ---
-- extendedWaitUntil:
-    visible:
-      id: "home_root_ready|app_assessment_popup"
-    timeout: 60000
-- runFlow:
-    when:
-      visible:
-        id: app_assessment_popup
-    commands:
-      - back
-- extendedWaitUntil:
-    visible:
-      id: home_root_ready
-    timeout: 20000
+- runFlow: ../../common/home-popups.yaml
 - openLink: speak-dev://lesson?id=${LESSON_ID}
+# The first lesson on an install asks for AI data consent.
+- extendedWaitUntil:
+    visible:
+      id: "listening_header|ai_data_consent_alert"
+    timeout: 30000
+    optional: true
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+# Progress is saved on the account, so a lesson quit after its first group asks to resume; start over.
+- extendedWaitUntil:
+    visible: "Continue where you left off\\?"
+    timeout: 5000
+    optional: true
+- tapOn:
+    text: "^Start over$"
+    optional: true
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
 - extendedWaitUntil:
     visible:
       id: listening_header

@@ -1,0 +1,33 @@
+# Video lesson without speech recognition: the lesson opens the "Speech recognition is not available" dialog and OK
+# leaves the lesson for Home once.
+# Entry: Home, microphone granted. The emulator has speech recognition, so the build needs the QA-only patch
+# (`getLessonPreparationState` returns SPEECH_RECOGNITION_REQUIRED when `debug.qa.no_sr` is 1) and
+# `adb shell setprop debug.qa.no_sr 1`. Exit: Home, no lesson card.
+# Selectors: the simple dialog has no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "KR_EN_UC_L1_howstheweather_VL"}
+---
+- runFlow: ../../common/home-popups.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- extendedWaitUntil:
+    visible: "Speech recognition is not available"
+    timeout: 60000
+- takeScreenshot: ${SHOT || "speech-recognition-required"}
+- back
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    text: "^OK$"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: card_count
+- assertNotVisible: "Speech recognition is not available"

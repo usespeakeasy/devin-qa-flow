@@ -1,0 +1,29 @@
+# Video lesson after process death with More options open: the More options list comes back over the
+# lesson (as Conductor restores it), one Back closes it and the lesson is on a card again.
+# Entry: More options open, the harness killed the backgrounded process (`am kill`) and relaunched.
+# Exit: video lesson, card CARD, no More options list.
+# Selectors: lesson_more_options_list, card_count.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "restored-more-options"}
+  CARD: ${CARD || "\\d+ of \\d+"}
+---
+- extendedWaitUntil:
+    visible:
+      id: lesson_more_options_list
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: lesson_more_options_list
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 20000
+- assertNotVisible:
+    id: lesson_more_options_list
+- assertNotVisible: "Are you sure you want to quit this lesson\\?"

@@ -1,0 +1,40 @@
+# Video lesson: More options > Content error opens the report screen; its close button returns to the same card once.
+# Entry: video lesson on card CARD. Exit: video lesson, card CARD, no More options list or report screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD: ${CARD || "1 of \\d+"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+- tapOn:
+    id: more_options
+- extendedWaitUntil:
+    visible:
+      id: lesson_more_options_list
+    timeout: 15000
+- takeScreenshot: ${SHOT || "more-options"}-list
+- tapOn:
+    id: lesson_more_options_report_problem_content_error
+- extendedWaitUntil:
+    visible:
+      id: report_screen
+    timeout: 15000
+- assertVisible:
+    id: report_submit_button
+- takeScreenshot: ${SHOT || "more-options"}-report
+- hideKeyboard
+- tapOn:
+    id: report_close_button
+- extendedWaitUntil:
+    notVisible:
+      id: report_screen
+    timeout: 10000
+- assertNotVisible:
+    id: lesson_more_options_list
+- assertVisible:
+    id: card_count
+    text: ${CARD}

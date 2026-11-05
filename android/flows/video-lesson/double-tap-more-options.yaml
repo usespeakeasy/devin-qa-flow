@@ -1,0 +1,32 @@
+# Video lesson: a fast double tap on More options opens one list; one Back closes it and the same card stays.
+# Entry: video lesson on card CARD. Exit: video lesson, card CARD, no More options list.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD: ${CARD || "1 of \\d+"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+- doubleTapOn:
+    id: more_options
+- extendedWaitUntil:
+    visible:
+      id: lesson_more_options_list
+    timeout: 15000
+- takeScreenshot: ${SHOT || "double-tap-more-options"}
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: lesson_more_options_list
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: lesson_more_options_list
+- assertNotVisible: "Are you sure you want to quit this lesson\\?"
+- assertVisible:
+    id: card_count
+    text: ${CARD}

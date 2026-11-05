@@ -1,0 +1,35 @@
+# Video lesson: a fast double tap on a word opens one pronunciation sheet; one Back closes it and the same card stays
+# with no second sheet and no quit sheet.
+# Entry: video lesson on card CARD, listening (can't speak now off). Exit: video lesson, card CARD, no word sheet.
+# Selectors: the word in the line has no node of its own (point fallback, as word-pronunciation-sheet.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD: ${CARD || "1 of \\d+"}
+  POINT: ${POINT || "50%,31%"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+- doubleTapOn:
+    point: ${POINT}
+- extendedWaitUntil:
+    visible:
+      id: word
+    timeout: 15000
+- takeScreenshot: ${SHOT || "double-tap-word"}
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: word
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: word
+- assertNotVisible: "Are you sure you want to quit this lesson\\?"
+- assertVisible:
+    id: card_count
+    text: ${CARD}

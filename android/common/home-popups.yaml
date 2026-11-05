@@ -1,0 +1,28 @@
+# Home after a cold start or login: close the referral welcome dialog and the "Find your English level" sheet
+# (app_assessment_popup) when they show, and wait for Home.
+# Entry: app starting on Home. Exit: Home (home_root_ready) with no popup.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: "home_root_ready|app_assessment_popup|referral_welcome_dialog_root"
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn:
+    id: referral_welcome_dialog_later_button
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: app_assessment_popup
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- assertNotVisible:
+    id: referral_welcome_dialog_root

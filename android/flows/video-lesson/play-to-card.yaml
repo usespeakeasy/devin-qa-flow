@@ -1,0 +1,53 @@
+# Video lesson in can't speak now mode: play until card CARD shows (cards advance without speech).
+# Entry: video lesson (can't speak now is turned on here if it is off). Exit: video lesson, card CARD.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD: ${CARD || "1 of 4"}
+---
+- extendedWaitUntil:
+    visible:
+      id: cant_speak_now_toggle
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: cant_speak_now_toggle
+        checked: false
+    commands:
+      - tapOn:
+          id: cant_speak_now_toggle
+      - extendedWaitUntil:
+          visible:
+            id: cant_speak_now_toggle
+            checked: true
+          timeout: 10000
+# A card can sit with the player paused and no paused_header after a dialog closes (develop too);
+# tapping play_line then restarts it. If the tap paused a playing card, the next round plays it again.
+- repeat:
+    while:
+      notVisible:
+        id: card_count
+        text: ${CARD}
+    times: 6
+    commands:
+      - runFlow:
+          optional: true
+          commands:
+            - extendedWaitUntil:
+                visible:
+                  id: card_count
+                  text: ${CARD}
+                timeout: 40000
+      - runFlow:
+          when:
+            notVisible:
+              id: card_count
+              text: ${CARD}
+          commands:
+            - tapOn:
+                id: play_line
+                optional: true
+- assertVisible:
+    id: card_count
+    text: ${CARD}

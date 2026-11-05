@@ -1,0 +1,26 @@
+# Video lesson > Back > "Are you sure you want to quit this lesson?" > Quit: the difficulty check-in opens over the
+# lesson.
+# Entry: video lesson mid-lesson. The check-in needs a course unit and experiment gates the dev pool account does not
+# have, so the build needs the QA-only patch (`DifficultyCheckInGate.resolveQuitSnapshot` returns a snapshot when
+# `debug.qa.unit_no` is set) and `adb shell setprop debug.qa.unit_no 1`. Exit: the check-in shows.
+# Selectors: the quit sheet has no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+    timeout: 30000
+- back
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: custom_units_difficulty_check_in_just_right
+    timeout: 30000
+- takeScreenshot: ${SHOT || "check-in"}
+- assertNotVisible:
+    id: card_count

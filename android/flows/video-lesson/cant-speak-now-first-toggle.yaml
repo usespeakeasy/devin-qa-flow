@@ -44,6 +44,9 @@ env:
     notVisible:
       id: subway_mode_dialog
     timeout: 10000
-- assertVisible:
-    id: cant_speak_now_toggle
-    checked: true
+# The lesson resumes on dismiss; if it moves on to a video segment the controls hide until the next card.
+- extendedWaitUntil:
+    visible:
+      id: cant_speak_now_toggle
+      checked: true
+    timeout: 90000

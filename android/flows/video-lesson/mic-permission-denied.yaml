@@ -1,0 +1,44 @@
+# Video lesson with the microphone denied: the first system Deny opens the rationale dialog, Allow asks again, the
+# second Deny opens the microphone-required dialog, OK leaves the lesson for Home once.
+# Entry: Home, RECORD_AUDIO revoked with no user-set/user-fixed flags (`pm revoke` + `pm clear-permission-flags`).
+# Exit: Home, no lesson card.
+# Selectors: the system permission dialog and the lesson AlertDialogs/simple dialogs have no app resource-ids
+# (text fallback, IDs asked on the ID PR).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "KR_EN_UC_L1_howstheweather_VL"}
+---
+- runFlow: ../../common/home-popups.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible: "Don.t allow|Allow"
+    timeout: 60000
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- extendedWaitUntil:
+    visible: "Don.t allow"
+    timeout: 30000
+- tapOn: "Don.t allow"
+- extendedWaitUntil:
+    visible: "To practice speaking and improve your pronunciation, Speak needs access to your microphone\\."
+    timeout: 15000
+- takeScreenshot: ${SHOT || "mic"}-rationale
+- tapOn: "^Allow$"
+- extendedWaitUntil:
+    visible: "Don.t allow"
+    timeout: 15000
+- tapOn: "Don.t allow"
+- extendedWaitUntil:
+    visible: "Speak needs permission to access your microphone.*"
+    timeout: 15000
+- takeScreenshot: ${SHOT || "mic"}-required
+- tapOn: "^OK$"
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: card_count
+- assertNotVisible: "Speak needs permission to access your microphone.*"

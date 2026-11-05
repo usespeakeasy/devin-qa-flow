@@ -1,0 +1,21 @@
+# Video lesson: rotate to landscape and back with a dialog open; the dialog TEXT stays (one copy) both ways.
+# Entry: a video lesson dialog showing TEXT (resume prompt, quit sheet). Exit: same dialog, portrait.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TEXT: ${TEXT || "Are you sure you want to quit this lesson\\?"}
+---
+- assertVisible: ${TEXT}
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible: ${TEXT}
+    timeout: 10000
+- takeScreenshot: ${SHOT || "rotate-dialog"}-landscape
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible: ${TEXT}
+    timeout: 10000
