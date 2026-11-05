@@ -1,0 +1,35 @@
+# Global Manage Account: the Delete Account row and its membership footer, then Delete Account shows
+# "Confirm account deletion"; Cancel closes it. Nothing is deleted.
+# Entry: Home (`home_root_ready`), signed in on a global build. Exit: Manage Account.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "delete_account_footer"}
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn:
+    id: settings_manage_account_option
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 15000
+- scrollUntilVisible:
+    element: "Note: Deleting your account does not cancel your Speak Membership.*"
+- assertVisible:
+    id: edit_delete_account
+- assertVisible: "Note: Deleting your account does not cancel your Speak Membership.*"
+- assertNotVisible:
+    id: edit_cross_border_transfer
+- takeScreenshot: ${SHOT}_account
+- tapOn:
+    id: edit_delete_account
+- extendedWaitUntil:
+    visible: "Confirm account deletion"
+    timeout: 10000
+- takeScreenshot: ${SHOT}
+- tapOn: "Cancel"
+- extendedWaitUntil:
+    notVisible: "Confirm account deletion"
+    timeout: 10000
+- assertVisible:
+    id: manage_account_screen
