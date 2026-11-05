@@ -1,13 +1,21 @@
 # SeriesLesson: the active line card failed ("Try again"): tap its Restart. Earlier answered cards above keep their
-# own `restart` button, so the tap is scoped below `failure_header`. Entry: failure card. Exit: the card listens again.
+# own `restart` button, so the tap is scoped below `failure_header`. The card can start listening again on its own
+# (Smart Review auto-retry) before the tap lands, so the tap only runs while the failure is still on screen.
+# Entry: failure card. Exit: the card listens again.
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
 ---
-- tapOn:
-    id: restart
-    below:
-      id: failure_header
+- runFlow:
+    when:
+      visible:
+        id: failure_header
+    commands:
+      - tapOn:
+          id: restart
+          below:
+            id: failure_header
+          optional: true
 - extendedWaitUntil:
     notVisible:
       id: failure_header
