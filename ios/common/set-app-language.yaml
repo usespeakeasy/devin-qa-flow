@@ -1,0 +1,43 @@
+# Home -> Profile -> Settings -> App Language -> LANGUAGE_ROW -> confirm. Ends on Home in the new language.
+# Works from an English or Vietnamese UI (tab and row selectors are regexes over both).
+# Fallbacks: text for Profile tab, App Language row, language row and confirm (no IDs at a747ff1);
+# point tap to dismiss the Home popover; swipes because off-screen language rows report bogus frames.
+# Required -e: APP_ID, LANGUAGE_ROW (native name, e.g. English or Tiếng Việt), SCROLL_LIST (true for rows below the fold), HOME_TAB_WAIT (Practice label in the new language).
+# No env defaults: Maestro 2.12.1 lets a flow env block override -e values.
+appId: ${APP_ID}
+---
+- runFlow:
+    when:
+      visible:
+        id: "PopoverDismissRegion"
+    commands:
+      - tapOn:
+          point: "50%,15%"
+- tapOn: "Profile|Trang cá nhân"
+- tapOn: "settings tab icon"
+- scrollUntilVisible:
+    element: "App Language|Ngôn ngữ trên ứng dụng"
+    direction: DOWN
+- tapOn: "App Language|Ngôn ngữ trên ứng dụng"
+- extendedWaitUntil:
+    visible: "en-US"
+    timeout: 15000
+- runFlow:
+    when:
+      true: ${SCROLL_LIST == "true"}
+    commands:
+      - swipe:
+          start: "50%,85%"
+          end: "50%,25%"
+      - swipe:
+          start: "50%,85%"
+          end: "50%,25%"
+      - waitForAnimationToEnd
+- tapOn: ${LANGUAGE_ROW}
+- extendedWaitUntil:
+    visible: "Confirm change|Xác nhận thay đổi"
+    timeout: 10000
+- tapOn: "Confirm change|Xác nhận thay đổi"
+- extendedWaitUntil:
+    visible: ${HOME_TAB_WAIT}
+    timeout: 30000

@@ -1,0 +1,36 @@
+# Home -> Practice -> SECTION (Mistakes/Interests, or Lỗi sai/Sở thích) -> first lesson row -> lesson sheet open.
+# Fallbacks: text for the Practice tab, section row and lesson row (first row by regex ".+, .+" below the header, which skips the status bar);
+# point tap to dismiss the Home popover. No IDs on these elements at a747ff1 or 7e8a41f.
+# Required -e: APP_ID, PRACTICE_TAB (Practice or Thực hành), SECTION (Mistakes, Interests, Lỗi sai or Sở thích).
+# No env defaults: Maestro 2.12.1 lets a flow env block override -e values.
+appId: ${APP_ID}
+---
+- runFlow:
+    when:
+      visible:
+        id: "PopoverDismissRegion"
+    commands:
+      - tapOn:
+          point: "50%,15%"
+- tapOn: ${PRACTICE_TAB}
+- scrollUntilVisible:
+    element: ${SECTION}
+    direction: DOWN
+    centerElement: true
+# Tapping right after the scroll can hit the Free Talk tile under the stale frame; let it settle.
+- waitForAnimationToEnd
+- tapOn: ${SECTION}
+- extendedWaitUntil:
+    visible:
+      id: ${SECTION}
+    timeout: 20000
+- tapOn:
+    text: ".+, .+"
+    index: 0
+    below:
+      id: ${SECTION}
+- extendedWaitUntil:
+    visible:
+      id: "PopoverDismissRegion"
+    timeout: 15000
+- waitForAnimationToEnd

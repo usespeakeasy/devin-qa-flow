@@ -36,6 +36,19 @@ describes.
 
 ## iOS
 
+- JRNY-4712 QA (prod Speak Debug, iOS 27.0, Maestro 2.12.1, 2026-11-05) lost about 40 min to four things.
+  (1) A flow's `env:` block overrides `maestro test -e` values, so a flow with `SECTION: Mistakes`
+  as default opened Mistakes when run with `-e SECTION=Interests`. Rule: don't put defaults for
+  required parameters in `env:`; list them in the header comment. (2) After a lesson opens, the
+  player can block the main thread for minutes on the simulator and `viewHierarchy` fails with
+  "XCTPerformOnMainRunLoop work timed out after 60.0s"; the Maestro step then hangs. Rule: end the
+  flow at the tap, check the destination from the app log (`AVAudioSessionCategoryPlayAndRecord`
+  marks the lesson player) or a `gtimeout`-bounded hierarchy, and terminate the app to quit.
+  (3) Killing the shell that runs `simctl io recordVideo` (SIGKILL) leaves CoreSimulator in "Host
+  recording is already in progress" until the simulator is shut down and booted again; stop
+  recordings only with `kill -INT`. (4) The first lesson shows the system microphone alert, which
+  also blocks the tree: run `simctl privacy <udid> grant microphone <bundle id>` after install.
+
 - The permission-off case (A4) did not get the "Allow notifications" alert, and about 15 min
   went to finding out why. Cause: Maestro `launchApp` `permissions: {notifications: deny}` has
   no effect on the iOS 27 simulator and `simctl privacy` has no notifications service. Rule:

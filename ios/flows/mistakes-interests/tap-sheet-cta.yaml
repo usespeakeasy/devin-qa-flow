@@ -1,0 +1,9 @@
+# Mistakes/Interests lesson sheet -> tap the primary CTA, whichever it reads (Start Lesson or Upgrade
+# to Premium Plus, English or Vietnamese). Ends right after the tap; check the destination outside
+# Maestro, because the lesson player blocks the main thread on the simulator and viewHierarchy then
+# fails with "XCTPerformOnMainRunLoop work timed out".
+# Fallback: text (the CTA has no identifier).
+# Required -e: APP_ID.
+appId: ${APP_ID}
+---
+- tapOn: "Start Lesson|Upgrade to Premium Plus|Bắt đầu bài học|Nâng cấp lên Premium Plus"
