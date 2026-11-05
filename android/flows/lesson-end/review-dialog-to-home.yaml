@@ -1,0 +1,26 @@
+# From the lesson end (or review dialog), dismiss the review dialog and walk to Home.
+# Entry: lesson end after drill-skip.yaml. Exit: home_root_ready.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- repeat:
+    while:
+      notVisible:
+        id: home_root_ready
+    times: 15
+    commands:
+      - tapOn:
+          id: ask_for_review_dialog_no
+          optional: true
+      - tapOn:
+          id: ask_for_review_negative_dialog_no
+          optional: true
+      - tapOn:
+          id: ask_for_review_positive_dialog_no
+          optional: true
+      - runFlow: ../../common/finish-lesson-end.yaml
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000

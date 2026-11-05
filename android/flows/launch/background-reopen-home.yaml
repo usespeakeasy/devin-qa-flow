@@ -1,0 +1,12 @@
+# Home key, then bring the app back from the launcher (warm, no kill). Exit: home_root_ready.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- pressKey: Home
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000

@@ -1,0 +1,22 @@
+# Signed out storybook > Get started > first onboarding screen > back > Log in > sign-in options.
+# Entry: storybook on screen. EXPECT_EMAIL=false for a China launch market. Exit: auth_options_screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  EXPECT_EMAIL: ${EXPECT_EMAIL || "true"}
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_get_started_button
+    timeout: 60000
+- tapOn:
+    id: onboarding_storybook_get_started_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_screen
+    timeout: 30000
+- back
+- runFlow:
+    file: ../auth/open-sign-in-options.yaml
+    env:
+      EXPECT_EMAIL: ${EXPECT_EMAIL}

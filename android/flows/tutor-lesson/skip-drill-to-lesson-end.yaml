@@ -1,0 +1,28 @@
+# Open a drill lesson, skip every card and stop at the lesson end.
+# Entry: Home, signed in, Subscription override Premium. Exit: a lesson end step or review dialog.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- tapOn:
+    text: "Later"
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      visible:
+        id: drill_lesson_skip
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "(lesson_end_.*|ask_for_review_.*dialog|home_root_ready)"
+    timeout: 60000

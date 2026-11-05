@@ -1,0 +1,16 @@
+# After a cold launch while signed in, wait for Home or the referral promo, dismiss Home popups, assert Home.
+# Entry: app launching, signed in. Exit: home_root_ready with no popup.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 45000
+    optional: true
+- runFlow: ../ai-data-consent/dismiss-home-popups.yaml
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
