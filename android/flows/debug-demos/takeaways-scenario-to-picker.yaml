@@ -1,0 +1,49 @@
+# Debug Menu > Demos > End-of-Lesson Takeaways Demo > SCENARIO: the step's actions return to the picker, not a real lesson.
+# Entry: signed in, any state (cold starts). Exit: Takeaways Demo picker.
+# maestro test -e SCENARIO="Multiple Cards" takeaways-scenario-to-picker.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- openLink: speak-dev://demos?id=end-of-lesson-takeaways
+- extendedWaitUntil:
+    visible: "^Takeaways Demo$"
+    timeout: 25000
+- tapOn: ^${SCENARIO}$
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_takeaways_root
+    timeout: 15000
+# Cards page (Next), then "Time to practice" (Start practice); develop's controller stays on "Time to practice".
+- repeat:
+    times: 8
+    while:
+      notVisible: "^Takeaways Demo$"
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: lesson_end_takeaways_generated_lesson_start_practice_button
+          commands:
+            - tapOn:
+                id: lesson_end_takeaways_generated_lesson_start_practice_button
+      - runFlow:
+          when:
+            visible:
+              id: lesson_end_takeaways_start_practice_button
+          commands:
+            - tapOn:
+                id: lesson_end_takeaways_start_practice_button
+      - runFlow:
+          when:
+            visible:
+              id: lesson_end_takeaways_primary_button
+          commands:
+            - tapOn:
+                id: lesson_end_takeaways_primary_button
+      - waitForAnimationToEnd
+- assertVisible: "^Takeaways Demo$"
+- assertNotVisible:
+    id: lesson_end_takeaways_root

@@ -1,0 +1,30 @@
+# Debug Menu > Demos > Level Progress Demo or Streak Progress Demo: Continue (every page) returns to the Demos list.
+# Entry: signed in, any state (cold starts). Exit: Demos list.
+# maestro test -e DEMO_ID=level-progress -e ROOT=lesson_end_level_progress_root -e ROW="Level Progress Demo" progress-continue.yaml
+# maestro test -e DEMO_ID=streak-progress -e ROOT=lesson_end_streak_progress_root -e ROW="Streak Progress Demo" progress-continue.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- openLink: speak-dev://demos?id=${DEMO_ID}
+- extendedWaitUntil:
+    visible:
+      id: ${ROOT}
+    timeout: 25000
+# Level Progress has two pages (level card, then LEVEL UP); develop's controller wrapper stays on the card after a restore.
+- repeat:
+    times: 4
+    while:
+      visible:
+        id: ${ROOT}
+    commands:
+      - tapOn: "^Continue$"
+      - waitForAnimationToEnd
+- assertNotVisible:
+    id: ${ROOT}
+- scrollUntilVisible:
+    element:
+      text: ^${ROW}$
+- assertVisible: ^${ROW}$

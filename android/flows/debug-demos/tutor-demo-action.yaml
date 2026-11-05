@@ -1,0 +1,57 @@
+# Debug Menu > Demos > Speak Tutor Everywhere Demo > BUTTON (Compose API or Controller API): chat until the
+# tutor offers Demo Action, tap it, the tutor closes onto the demo screen (no empty screen, no second tutor).
+# Entry: signed in, any state (cold starts); allows the AI data consent alert if it shows. Exit: tutor demo screen.
+# The reply is model output: it sometimes answers without the action, so the flow asks up to four times.
+# maestro test -e BUTTON="Controller API" tutor-demo-action.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- openLink: speak-dev://demos?id=speak-tutor-everywhere
+- extendedWaitUntil:
+    visible: "^Controller API$"
+    timeout: 25000
+- tapOn: ^${BUTTON}$
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert_allow
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_allow
+- extendedWaitUntil:
+    visible:
+      id: tutor_everywhere_sheet
+    timeout: 20000
+- repeat:
+    times: 4
+    while:
+      notVisible:
+        id: tutor_everywhere_action_button_demo_action
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: tutor_everywhere_input_field
+          commands:
+            - tapOn:
+                id: tutor_everywhere_keyboard_toggle_button
+      - tapOn:
+          id: tutor_everywhere_input_field
+      - inputText: "Show me the Demo Action button"
+      - tapOn:
+          id: tutor_everywhere_send_button
+      - extendedWaitUntil:
+          visible:
+            id: tutor_everywhere_action_button_demo_action
+          timeout: 50000
+          optional: true
+- tapOn:
+    id: tutor_everywhere_action_button_demo_action
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_everywhere_sheet
+    timeout: 10000
+- assertVisible: "^Controller API$"

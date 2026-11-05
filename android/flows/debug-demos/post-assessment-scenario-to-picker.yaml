@@ -1,0 +1,52 @@
+# Debug Menu > Demos > Post-Assessment Demo > SCENARIO: Next / Continue / Try again return to the picker, not a real Score Hub or lesson.
+# Entry: signed in, any state (cold starts). Exit: Post Assessment Demo picker.
+# maestro test -e SCENARIO="3 of 3 skills mastered" post-assessment-scenario-to-picker.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- openLink: speak-dev://demos?id=post-assessment
+- extendedWaitUntil:
+    visible: "^Select a scenario to test$"
+    timeout: 25000
+- scrollUntilVisible:
+    element:
+      text: ^${SCENARIO}$
+- tapOn: ^${SCENARIO}$
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_post_assessment_root
+    timeout: 15000
+- repeat:
+    times: 5
+    while:
+      visible:
+        id: lesson_end_post_assessment_root
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: lesson_end_post_assessment_try_again_button
+          commands:
+            - tapOn:
+                id: lesson_end_post_assessment_try_again_button
+      - runFlow:
+          when:
+            visible:
+              id: lesson_end_post_assessment_next_button
+          commands:
+            - tapOn:
+                id: lesson_end_post_assessment_next_button
+      - runFlow:
+          when:
+            visible:
+              id: lesson_end_post_assessment_continue_button
+          commands:
+            - tapOn:
+                id: lesson_end_post_assessment_continue_button
+      - waitForAnimationToEnd
+- assertVisible: "^Select a scenario to test$"
+- assertNotVisible:
+    id: lesson_end_post_assessment_root

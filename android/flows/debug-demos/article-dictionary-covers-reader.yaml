@@ -1,0 +1,43 @@
+# Debug Menu > Demos > Article Lesson Demo > ES fixture: word popover > expanded dictionary covers the reader
+# (narration controls gone), Back restores the reader, Finish lesson returns to the picker.
+# Entry: signed in, any state (cold starts). Exit: Article Lesson Demo picker.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- openLink: speak-dev://demos?id=article-lesson
+- extendedWaitUntil:
+    visible: "^Pick a fixture$"
+    timeout: 25000
+- tapOn: "^EN → ES · Latin script · key-vocab \\+ gloss spans$"
+- extendedWaitUntil:
+    visible:
+      id: article_lesson_screen
+    timeout: 15000
+- tapOn: "protestaron"
+- extendedWaitUntil:
+    visible:
+      id: article-popover-dictionary-icon
+    timeout: 10000
+- tapOn:
+    id: article-popover-dictionary-icon
+- extendedWaitUntil:
+    visible: "^About the word$"
+    timeout: 10000
+- assertNotVisible:
+    id: article-narration-play-pause
+- back
+- extendedWaitUntil:
+    visible:
+      id: article-narration-play-pause
+    timeout: 10000
+- assertNotVisible: "^About the word$"
+- scrollUntilVisible:
+    element:
+      text: "^Finish lesson$"
+- tapOn: "^Finish lesson$"
+- extendedWaitUntil:
+    visible: "^Pick a fixture$"
+    timeout: 10000

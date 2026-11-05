@@ -63,3 +63,4 @@ describes.
   exist" (logcat: "User 0 is not ready"). Rule: after the Play account sign-in, run
   `adb shell cmd lock_settings clear --old 1234` and `cmd lock_settings set-disabled true`; check
   `am get-started-user-state 0` is `RUNNING_UNLOCKED`. ([QA of speak-android#8834](https://github.com/usespeakeasy/speak-android/pull/8834), 2026-11-04)
+- android debug-demos (2026-11-05, speak-android#8855): the tutor reply to "Show me the Demo Action button" sometimes has no `tutor_everywhere_action_button_demo_action` (seen on develop and the PR, twice in a row once). `tutor-demo-action.yaml` then fails on the tap; rerun the case alone before calling a fail. On develop the Post-Assessment `Continue` and Takeaways generated-lesson `Start practice` stay on screen, so the two `*-to-picker` flows fail there by design.
