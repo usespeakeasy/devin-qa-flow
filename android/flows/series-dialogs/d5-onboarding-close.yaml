@@ -1,0 +1,55 @@
+# Onboarding mini lesson (QA-only patch debug.qa.mini=1): close double-tapped shows one "Skip your lesson?"
+# sheet; Back, rotation and Home/return leave no extra or stuck sheet, close opens it again, Skip lesson exits.
+# Entry: Home. Exit: off the lesson.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- runFlow: ../series-session/open-series.yaml
+- runFlow: ../series-session/first-line-card.yaml
+- doubleTapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Skip your lesson\\?"
+    timeout: 15000
+- takeScreenshot: d5-sheet
+- back
+- extendedWaitUntil:
+    notVisible: "Skip your lesson\\?"
+    timeout: 10000
+- assertVisible:
+    id: series_list
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Skip your lesson\\?"
+    timeout: 15000
+- setOrientation: LANDSCAPE_LEFT
+- extendedWaitUntil:
+    visible: "Skip your lesson\\?"
+    timeout: 10000
+- setOrientation: PORTRAIT
+- pressKey: Home
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible: "Skip your lesson\\?"
+    timeout: 15000
+- takeScreenshot: d5-sheet-restored
+- back
+- extendedWaitUntil:
+    notVisible: "Skip your lesson\\?"
+    timeout: 10000
+- assertNotVisible: "Skip your lesson\\?"
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Skip your lesson\\?"
+    timeout: 15000
+- tapOn: "^Skip lesson$"
+- extendedWaitUntil:
+    notVisible:
+      id: series_list
+    timeout: 20000
+- assertNotVisible: "Skip your lesson\\?"

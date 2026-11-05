@@ -1,0 +1,8 @@
+# Open LESSON_ID (Start over) and reach the first listening line card. Entry: Home. Exit: speak_now_header.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- runFlow: ../series-session/open-series.yaml
+- runFlow: ../series-session/first-line-card.yaml

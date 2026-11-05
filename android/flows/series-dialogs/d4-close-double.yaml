@@ -1,0 +1,97 @@
+# Close double-tapped: one quit sheet; Keep Learning, Back, rotation, Home/return and process death each leave
+# no extra or stuck sheet, and close opens it again afterwards. Entry: Home, debug.qa.close=1. Exit: series_list.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- runFlow: ../series-session/open-series.yaml
+- runFlow: ../series-session/first-line-card.yaml
+- doubleTapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- takeScreenshot: d4-close
+- tapOn: "^Keep Learning$"
+- extendedWaitUntil:
+    notVisible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- assertVisible:
+    id: series_list
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    notVisible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- setOrientation: LANDSCAPE_LEFT
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- setOrientation: PORTRAIT
+- pressKey: Home
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- tapOn: "^Keep Learning$"
+- extendedWaitUntil:
+    notVisible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: "series_list|home_root_ready"
+    timeout: 60000
+- assertVisible:
+    id: series_list
+- takeScreenshot: d4-after-death
+- runFlow:
+    when:
+      visible: "Are you sure you want to quit this lesson\\?"
+    commands:
+      - tapOn: "^Keep Learning$"
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "^Continue$"
+- extendedWaitUntil:
+    notVisible: "Are you sure you want to quit this lesson\\?|Continue where you left off\\?"
+    timeout: 10000
+- runFlow:
+    when:
+      visible:
+        id: tap_to_continue
+    commands:
+      - tapOn:
+          id: tap_to_continue
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- tapOn: "^Keep Learning$"
+- extendedWaitUntil:
+    notVisible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- assertVisible:
+    id: series_list

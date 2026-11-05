@@ -1,0 +1,46 @@
+# Control for d6/d7: a single tap on more options, then on overview, and Back closes each sheet. Then a double tap
+# and one Back: if the sheet is still up, a second Back closes it (a duplicate entry; count MoreOptionsDialog entries in logcat). Entry: line card. Exit: series_list.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: more_options
+- extendedWaitUntil:
+    visible: "^Content error$"
+    timeout: 10000
+- back
+- extendedWaitUntil:
+    notVisible: "^Content error$"
+    timeout: 10000
+- takeScreenshot: d6c-single-closed
+- tapOn:
+    id: overview_tap_target
+- extendedWaitUntil:
+    visible: "Lesson Outline"
+    timeout: 10000
+- back
+- extendedWaitUntil:
+    notVisible: "Lesson Outline"
+    timeout: 10000
+- doubleTapOn:
+    id: more_options
+- extendedWaitUntil:
+    visible: "^Content error$"
+    timeout: 10000
+- back
+- extendedWaitUntil:
+    notVisible: "^Content error$"
+    timeout: 5000
+    optional: true
+- takeScreenshot: d6c-double-after-one-back
+- runFlow:
+    when:
+      visible: "^Content error$"
+    commands:
+      - back
+      - extendedWaitUntil:
+          notVisible: "^Content error$"
+          timeout: 10000
+- assertVisible:
+    id: series_list

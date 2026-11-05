@@ -1,0 +1,45 @@
+# More options (flag, more_options) double-tapped: one report sheet, Back leaves none; Content error opens the
+# report screen, its close returns to the lesson and the sheet opens again. Entry: line card. Exit: series_list.
+# Selectors: the report reason rows have no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- doubleTapOn:
+    id: more_options
+- extendedWaitUntil:
+    visible: "^Content error$"
+    timeout: 15000
+- takeScreenshot: d6-sheet
+- back
+- extendedWaitUntil:
+    notVisible: "^Content error$"
+    timeout: 10000
+- assertVisible:
+    id: series_list
+- tapOn:
+    id: more_options
+- tapOn: "^Content error$"
+- extendedWaitUntil:
+    visible:
+      id: report_screen
+    timeout: 15000
+- tapOn:
+    id: report_close_button
+- extendedWaitUntil:
+    visible:
+      id: series_list
+    timeout: 15000
+- assertNotVisible:
+    id: report_screen
+- assertNotVisible: "^Content error$"
+- tapOn:
+    id: more_options
+- extendedWaitUntil:
+    visible: "^Content error$"
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    notVisible: "^Content error$"
+    timeout: 10000

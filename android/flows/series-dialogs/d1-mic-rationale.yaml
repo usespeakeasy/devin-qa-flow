@@ -1,0 +1,119 @@
+# SeriesLesson mic denied: the rationale is requested on the card, again on rotation and on return from Home;
+# only one rationale is shown (Allow leaves none behind), denying again gives one "Microphone permissions needed"
+# alert, OK exits the lesson with no dialog left (develop leaves a stale rationale over Home). Entry: Home; the runner clears RECORD_AUDIO grant/flags first.
+# Exit: Home or the lesson, no dialog. Selectors: dialog buttons by text (the branch SimpleDialog entry has no button ids).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- launchApp:
+    stopApp: true
+    permissions:
+      microphone: deny
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: "permission_deny_button|permission_deny_and_dont_ask_again_button|tap_to_continue|button2"
+    timeout: 60000
+- repeat:
+    while:
+      notVisible:
+        id: "permission_deny_button|permission_deny_and_dont_ask_again_button"
+    times: 6
+    commands:
+      - runFlow:
+          when:
+            visible: "^Start over$"
+          commands:
+            - tapOn: "^Start over$"
+      - runFlow:
+          when:
+            visible:
+              id: tap_to_continue
+          commands:
+            - tapOn:
+                id: tap_to_continue
+      - extendedWaitUntil:
+          visible:
+            id: "permission_deny_button|permission_deny_and_dont_ask_again_button"
+          timeout: 15000
+          optional: true
+- tapOn:
+    id: "permission_deny_button|permission_deny_and_dont_ask_again_button"
+- extendedWaitUntil:
+    visible: ".*Speak needs access to your microphone.*"
+    timeout: 10000
+- setOrientation: LANDSCAPE_LEFT
+- extendedWaitUntil:
+    visible: ".*Speak needs access to your microphone.*"
+    timeout: 10000
+- setOrientation: PORTRAIT
+- pressKey: Home
+- launchApp:
+    stopApp: false
+    permissions:
+      microphone: deny
+- extendedWaitUntil:
+    visible: ".*(Speak needs access to your microphone|Allow Speak - Dev to record audio).*"
+    timeout: 15000
+- takeScreenshot: d1-after-return
+- runFlow:
+    when:
+      visible:
+        id: "permission_deny_button|permission_deny_and_dont_ask_again_button"
+    commands:
+      - tapOn:
+          id: "permission_deny_button|permission_deny_and_dont_ask_again_button"
+- extendedWaitUntil:
+    visible: ".*(Speak needs access to your microphone|Microphone permissions needed).*"
+    timeout: 10000
+- runFlow:
+    when:
+      visible: ".*Speak needs access to your microphone.*"
+    commands:
+      - takeScreenshot: d1-rationale
+      - tapOn: "^Allow$"
+      - extendedWaitUntil:
+          notVisible: ".*Speak needs access to your microphone.*"
+          timeout: 10000
+      - repeat:
+          while:
+            notVisible: ".*(Allow Speak - Dev to record audio|Microphone permissions needed).*"
+          times: 6
+          commands:
+            - runFlow:
+                when:
+                  visible:
+                    id: tap_to_continue
+                commands:
+                  - tapOn:
+                      id: tap_to_continue
+            - extendedWaitUntil:
+                visible: ".*(Allow Speak - Dev to record audio|Microphone permissions needed).*"
+                timeout: 15000
+                optional: true
+      - runFlow:
+          when:
+            visible:
+              id: "permission_deny_button|permission_deny_and_dont_ask_again_button"
+          commands:
+            - tapOn:
+                id: "permission_deny_button|permission_deny_and_dont_ask_again_button"
+- extendedWaitUntil:
+    visible: "Microphone permissions needed"
+    timeout: 10000
+- assertNotVisible: ".*Speak needs access to your microphone.*"
+- takeScreenshot: d1-required
+- tapOn: "^OK$"
+- extendedWaitUntil:
+    notVisible: "Microphone permissions needed"
+    timeout: 10000
+- assertNotVisible: ".*Speak needs access to your microphone.*"
+- assertNotVisible: "Microphone permissions needed"
+- assertVisible:
+    id: "series_list|home_root_ready"

@@ -1,0 +1,47 @@
+# Hands-free on: a word tapped during the line opens one pronunciation sheet (double tap); Back closes it and the
+# hands-free countdown resumes, so the card listens again instead of staying Paused. Hands-free is switched off at the end.
+# Entry: line card of EN_ES_A1-1_quetal_SP. Exit: speak_now_header. Point fallback: the line's first word has no id.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: hands_free_mode_toggle
+- extendedWaitUntil:
+    visible: "AUTO|ON"
+    timeout: 5000
+    optional: true
+- takeScreenshot: d8b-auto-on
+- doubleTapOn:
+    point: "43%,37%"
+- extendedWaitUntil:
+    visible:
+      id: pronunciation_phoneme_coach_root
+    timeout: 15000
+- takeScreenshot: d8b-sheet
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: pronunciation_phoneme_coach_root
+    timeout: 5000
+    optional: true
+- takeScreenshot: d8b-after-one-back
+# A second sheet left by the double tap (count PronunciationPhonemeCoach entries in logcat) is closed here.
+- runFlow:
+    when:
+      visible:
+        id: pronunciation_phoneme_coach_root
+    commands:
+      - back
+- extendedWaitUntil:
+    notVisible:
+      id: pronunciation_phoneme_coach_root
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: speak_now_header
+    timeout: 20000
+- assertNotVisible: "^Paused$"
+- takeScreenshot: d8b-resumed
+- tapOn:
+    id: hands_free_mode_toggle

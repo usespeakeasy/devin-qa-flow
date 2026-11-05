@@ -1,0 +1,29 @@
+# Open LESSON_ID with saved progress and reach the noncancelable resume prompt. The pool account has no saved
+# line progress, so the build carries the QA-only patch: debug.qa.resume=1 forces ASK_BEFORE_RESUMING and
+# saved progress at line 3. Entry: Home or the lesson. Exit: "Continue where you left off?".
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- runFlow:
+    when:
+      visible:
+        id: exit
+    commands:
+      - tapOn:
+          id: exit
+      - runFlow:
+          when:
+            visible: "^Quit$"
+          commands:
+            - tapOn: "^Quit$"
+      - extendedWaitUntil:
+          visible:
+            id: "series_list|home_root_ready"
+          timeout: 20000
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible: "Continue where you left off\\?"
+    timeout: 90000
+- assertVisible: "^Start over$"
