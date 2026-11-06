@@ -1,0 +1,17 @@
+# Course Lesson Finished: Continue runs the rest of the EOL flow and lands back on the Learning
+# Path (or the next activity auto-starts when the server sends nextActivityAutoStart; check the
+# app log for a second lessonStarted).
+# Entry: course Lesson Finished screen (course-lesson-finished.yaml). Dev build.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: "lesson.end.action.continue"
+- runFlow:
+    file: ../../common/finish-eol-flow.yaml
+    env:
+      DONE: "Make small talk"
+- assertVisible:
+    id: "home.root.ready"
+- takeScreenshot: course-lesson-continue-learning-path

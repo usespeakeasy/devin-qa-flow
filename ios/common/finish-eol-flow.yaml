@@ -1,0 +1,32 @@
+# End-of-lesson flow after the Lesson Finished screen: taps each later EOL screen's continue
+# (level progress, new concepts, streak progress/saved/freeze, widget prompt skip, and Skip on the
+# advance commitment "Ready to make it a habit?" sheet, which has no identifier) until the screen
+# the lesson was opened from shows. DONE is that screen's text regex.
+# Entry: any EOL screen after Lesson Finished.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- repeat:
+    while:
+      notVisible:
+        text: ${DONE}
+    times: 8
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "lesson.end.(level-progress|new-concepts|streak-progress|streak-saved|streak-freeze).action.continue|lesson.end.widget-prompt.action.skip|home.root.ready"
+          timeout: 15000
+          optional: true
+      - tapOn:
+          id: "lesson.end.(level-progress|new-concepts|streak-progress|streak-saved|streak-freeze).action.continue|lesson.end.widget-prompt.action.skip"
+          optional: true
+      - runFlow:
+          when:
+            visible: "Ready to make it a habit\\?"
+          commands:
+            - tapOn: "^Skip$"
+- extendedWaitUntil:
+    visible:
+      text: ${DONE}
+    timeout: 20000

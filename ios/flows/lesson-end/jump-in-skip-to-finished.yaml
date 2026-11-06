@@ -1,0 +1,29 @@
+# Jump-in lesson web view: tap the web debug ">" skip until the jump-in Lesson Finished screen
+# shows its two-button stack (lesson.end.action.keep-going "Keep Learning",
+# lesson.end.action.go-home "Maybe Later"; no single lesson.end.action.continue).
+# Entry: a jump-in lesson card in the jump-in lesson group web view. Dev build (">" is a dev
+# web debug control with no identifier).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "Check"
+    timeout: 30000
+- repeat:
+    while:
+      notVisible:
+        id: "lesson.end.action.keep-going|lesson.end.action.go-home|lesson.end.action.continue"
+    times: 14
+    commands:
+      - tapOn:
+          text: ">"
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "lesson.end.action.keep-going"
+    timeout: 45000
+- assertVisible:
+    id: "lesson.end.action.go-home"
+- assertNotVisible:
+    id: "lesson.end.action.continue"

@@ -1,0 +1,16 @@
+# Jump-in Lesson Finished: Keep going (lesson.end.action.keep-going, "Keep Learning") opens the
+# jump-in lesson group web view again (variantDidRequestWebView, ?eolFlow=true) on its next lesson.
+# Close (web X) returns to the Practice tab.
+# Entry: jump-in Lesson Finished screen (jump-in-vocab-finish.yaml). Dev build.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: "lesson.end.action.keep-going"
+- extendedWaitUntil:
+    visible: "Check"
+    timeout: 30000
+- assertVisible: "Translate"
+- assertVisible: "1 / .*"
+- takeScreenshot: jump-in-keep-going-webview

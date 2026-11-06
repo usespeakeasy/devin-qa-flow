@@ -1,0 +1,20 @@
+# Jump-in lesson from Practice > Vocab (a jumpInLessonGroup web view, the same group the
+# Learning Path side quest opens) finished with the web debug ">" skip: Lesson Finished shows
+# Keep going and Go home (lessonType .jumpIn).
+# Entry: Home (home.root.ready). Dev build. Precondition: Premium (debug premium override).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn: "Practice"
+- tapOn: "Vocab.*"
+- extendedWaitUntil:
+    visible: "Get started|Check"
+    timeout: 30000
+- runFlow:
+    when:
+      visible: "Get started"
+    commands:
+      - tapOn: "Get started"
+- runFlow: jump-in-skip-to-finished.yaml
+- takeScreenshot: jump-in-lesson-finished

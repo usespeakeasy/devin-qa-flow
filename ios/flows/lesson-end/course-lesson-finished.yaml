@@ -1,0 +1,35 @@
+# Course lesson (EN_ES_A1-1 "Make small talk" day, Speaking Drill tutor lesson
+# EN_ES_A1-1_quetal_SP_DL_IC in its Learning Path context) finished with the debug "End"
+# control: Lesson Finished shows one Continue (lesson.end.action.continue) and no
+# Keep going / Go home stack.
+# Entry: the lesson open. The case script opens it over Home with
+# speak-dev://lesson?id=EN_ES_A1-1_quetal_SP_DL_IC&context-id=yiga969kwex0hr50hnelsape
+# (the Learning Path popover's selected activity moves after each finish). Dev build.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "End"
+    timeout: 30000
+- repeat:
+    while:
+      notVisible:
+        id: "lesson.end.action.continue|lesson.end.action.keep-going"
+    times: 3
+    commands:
+      - tapOn:
+          text: "End"
+          optional: true
+      - extendedWaitUntil:
+          visible:
+            id: "lesson.end.action.continue|lesson.end.action.keep-going"
+          timeout: 15000
+          optional: true
+- assertVisible:
+    id: "lesson.end.action.continue"
+- assertNotVisible:
+    id: "lesson.end.action.keep-going"
+- assertNotVisible:
+    id: "lesson.end.action.go-home"
+- takeScreenshot: course-lesson-finished

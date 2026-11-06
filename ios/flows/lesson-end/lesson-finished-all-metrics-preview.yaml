@@ -1,0 +1,32 @@
+# Settings > Previews > "Lesson Finished: All Metrics" (SUILessonFinishedScreen debug preview, EOL section)
+# renders the Lesson Finished screen; screenshot it to compare builds. Back returns to the list.
+# Entry: Home (home.root.ready), signed-in dev build. Older develop builds have no
+# debug.previews.list / debug.previews.item.* identifiers, so the catalog steps use text.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/open-settings.yaml
+- scrollUntilVisible:
+    element: "Previews"
+    direction: DOWN
+- tapOn: "Previews"
+- extendedWaitUntil:
+    visible: "Search"
+    timeout: 10000
+- tapOn: "Search"
+- inputText: "Lesson Finished"
+- extendedWaitUntil:
+    visible: "Lesson Finished: All Metrics"
+    timeout: 10000
+- tapOn: "Lesson Finished: All Metrics"
+- extendedWaitUntil:
+    visible:
+      id: "lesson.end.action.keep-going|lesson.end.action.continue"
+    timeout: 15000
+- takeScreenshot: preview-lesson-finished-all-metrics
+- tapOn:
+    id: "BackButton"
+- extendedWaitUntil:
+    visible: "Lesson Finished: All Metrics"
+    timeout: 10000
