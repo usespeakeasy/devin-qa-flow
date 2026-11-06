@@ -216,9 +216,11 @@ When a flow needs a text or point fallback because the element has no ID:
    (`git_create_pr` with `author_user_id` set to that author's Devin user). When the request has
    no PR (a commit, branch or release sweep, or a ticket with no PR), the author is the person who
    asked; when a bot asked (seanbot2, Sean Kim Bot), it is Sean Kim. With no PR there is no
-   ticket either: create one in Linear for the ID PR (team EPD - Client Platform, label `android`
-   or `ios`, assigned to that author) and use it in the branch and title. "No PR" is never a
-   reason to skip the ID PR. Then comment
+   ticket either: create one in Linear for the ID PR (team EPD - Client Platform, project
+   [Mobile automation IDs](https://linear.app/speak/project/mobile-automation-ids-f8f4cf404aff)
+   (`P-CLNT-887`), label `android` or `ios`, assigned to that author) and use it in the branch
+   and title. Any other Linear ticket for missing automation IDs goes in that project too.
+   "No PR" is never a reason to skip the ID PR. Then comment
    `@codex review` on it as the ID PR's author, not as Devin's bot: Codex declines the bot's
    request. Check the PR's and the comment's author; if either is the bot, say so in the report.
    Request a review from the `qa-devin` team

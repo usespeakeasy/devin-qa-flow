@@ -21,6 +21,11 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-06
 
+- **Instructions**: Linear tickets for ID PRs, and any other missing-ID ticket, go in the
+  [Mobile automation IDs](https://linear.app/speak/project/mobile-automation-ids-f8f4cf404aff)
+  project. Why: Sean asked for every ID ticket to sit there; earlier ones were created with no
+  project.
+
 - **qa-request-mobile 2026.11.06.1**: after a mid-run fix to a flow, the case script or a patch,
   rerun only the cases that use the changed file, never a whole pass. When a request says "add the
   cases you think are missing", added cases stop at 8 in total; author cases are never dropped.
