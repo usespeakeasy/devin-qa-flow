@@ -1,0 +1,62 @@
+# Free Talk tab > Topics > scenario card > pre-lesson screen > Immersive (mode_toggle_immersive) > Start lesson: the AI lesson opens in immersive mode.
+# Entry: cold start (launch-home). Precondition: signed-in dev account, Subscription override Premium,
+# ai_lesson_immersive_toggle on (the pre-lesson mode toggle shows only then).
+# TOPIC is a scenario card title on the Free Talk Topics tab (dev data). Exit: AI lesson in immersive mode,
+# mic not recording (ai_lesson_primary_record).
+# Selectors: the bottom tab, the Topics tab, the FTUX "Get started" and the scenario card
+# have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  TOPIC: "At a Bad Bunny Concert"
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn: "Free Talk"
+- runFlow:
+    when:
+      visible: "^Get started$"
+    commands:
+      - tapOn: "^Get started$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000
+- tapOn: "^Topics$"
+- extendedWaitUntil:
+    visible: ${TOPIC}
+    timeout: 20000
+- tapOn: ${TOPIC}
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_start
+    timeout: 20000
+- tapOn:
+    id: mode_toggle_immersive
+- tapOn:
+    id: ai_lesson_pre_lesson_start
+# An unfinished earlier run of the same scenario asks to continue; start over so every case starts the same.
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_resume_start_over
+    commands:
+      - tapOn:
+          id: ai_lesson_resume_start_over
+- extendedWaitUntil:
+    visible:
+      id: "ai_lesson_primary_(send|record)"
+    timeout: 60000
+# The chat can start with the mic already recording; cancel it so taps reach the controls.
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_record_cancel
+    commands:
+      - tapOn:
+          id: ai_lesson_record_cancel
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_primary_record
+    timeout: 10000
+- assertVisible:
+    id: ai_lesson_screen

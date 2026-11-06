@@ -34,6 +34,14 @@ env:
       visible: "^Chat mode$"
     commands:
       - tapOn: "^Chat mode$"
+# With ai_lesson_immersive_toggle on, the pre-lesson shows a Chat/Immersive toggle that keeps the last mode.
+- runFlow:
+    when:
+      visible:
+        id: mode_toggle_chat
+    commands:
+      - tapOn:
+          id: mode_toggle_chat
 - tapOn:
     id: ai_lesson_pre_lesson_start
 # An unfinished earlier run of the same scenario asks to continue; start over so every case starts the same.

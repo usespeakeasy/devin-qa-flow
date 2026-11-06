@@ -6,6 +6,18 @@ env:
 ---
 - launchApp:
     stopApp: true
+# A signed-in cold start can show the referral promo over Home; close it so learning_path_ready shows.
+- extendedWaitUntil:
+    visible:
+      id: "learning_path_ready|referral_welcome_dialog_later_button"
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: referral_welcome_dialog_later_button
+    commands:
+      - tapOn:
+          id: referral_welcome_dialog_later_button
 - extendedWaitUntil:
     visible:
       id: learning_path_ready
