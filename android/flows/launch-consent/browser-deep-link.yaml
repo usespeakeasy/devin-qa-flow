@@ -1,0 +1,35 @@
+# Open a Speak deep link from Chrome: load PAGE (a local page with one <a> "Open Speak" to the deep link), tap it,
+# accept Chrome's optional "Open in app" prompt, then wait for WAIT (the notice id on a China launch without
+# consent, else the link's screen).
+# Entry: any. Serve deep-link-page.html (it links speak-dev://debug-menu) with `python3 -m http.server 8765` from this
+# folder and `adb reverse tcp:8765 tcp:8765`; Chrome sometimes shows the page with an empty tree, so rerun once
+# before calling it a finding. Exit: WAIT on screen.
+appId: com.android.chrome
+env:
+  PAGE: ${PAGE || "http://localhost:8765/deep-link-page.html"}
+  WAIT: ${WAIT || "debug_menu_screen"}
+---
+- openLink:
+    link: ${PAGE}
+    browser: true
+- waitForAnimationToEnd
+- runFlow:
+    when:
+      visible:
+        id: com.android.chrome:id/negative_button
+    commands:
+      - tapOn:
+          id: com.android.chrome:id/negative_button
+- extendedWaitUntil:
+    visible: "Open Speak"
+    timeout: 30000
+- tapOn: "Open Speak"
+- runFlow:
+    when:
+      visible: "^(Open|Continue|Open app)$"
+    commands:
+      - tapOn: "^(Open|Continue|Open app)$"
+- extendedWaitUntil:
+    visible:
+      id: ${WAIT}
+    timeout: 60000

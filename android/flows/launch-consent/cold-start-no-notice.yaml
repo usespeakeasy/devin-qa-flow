@@ -1,0 +1,23 @@
+# Cold start that must not show the launch consent notice: a global launch, a China launch that already agreed,
+# or a build without the notice (develop before speak-android#8947). Waits for ARRIVAL (default the signed-out
+# welcome screen), then checks the notice is absent.
+# Entry: any; LAUNCH=false checks the screen already up (e.g. after a deep link or Agree).
+# Exit: ARRIVAL on screen, no notice.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ARRIVAL: ${ARRIVAL || "onboarding_storybook_sign_in_button"}
+  LAUNCH: ${LAUNCH || "true"}
+---
+- runFlow:
+    when:
+      true: ${LAUNCH == "true"}
+    commands:
+      - launchApp:
+          stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 60000
+- assertNotVisible:
+    id: launch_consent_screen
