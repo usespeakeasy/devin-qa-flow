@@ -1,0 +1,20 @@
+# Sign-in options > market switch button (I have a global / China account) > Relaunch required > confirm.
+# The app closes; the caller checks that it does not reopen.
+# Entry: auth_options_screen with the market switch button (a China launch, or a global launch whose signals say China).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: auth_options_market_switch_button
+    timeout: 30000
+- tapOn:
+    id: auth_options_market_switch_button
+- extendedWaitUntil:
+    visible:
+      id: auth_options_market_switch_dialog
+    timeout: 10000
+- assertVisible: "Relaunch required"
+- tapOn:
+    id: auth_options_market_switch_confirm_button
