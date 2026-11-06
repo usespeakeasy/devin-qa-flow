@@ -1,0 +1,42 @@
+# Home > Tutor (mascot button) > Chat History (SUITutorChatHistoryScreen, pushed on the Tutor nav stack).
+# Exit: Chat History loaded (automation marker tutor-chat.history.ready) with the "Recent" and "Older"
+# section titles on screen. Dismisses the AI consent screen and the "You have a new learning goal"
+# sheet (organization accounts, once after sign-in) when they show.
+# Entry: Home (home.root.ready), the AI consent screen or the learning goal sheet.
+# Preconditions: signed in, dev, launched with
+# `SIMCTL_CHILD_SPEAK_AUTOMATION_MARKERS=1 xcrun simctl launch <UDID> com.selabs.speak-v2.dev`
+# (no launchApp here, so the markers stay on); at least one Tutor chat from the last 7 days and one
+# older (Recent/Older split at 7 days in SUITutorChatHistoryScreen+ViewModel mapToListItems). To seed a
+# Recent chat: open Tutor, type into tutor-chat.input.text-view and tap tutor-chat.input.action.send.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|ai-data-consent.action.agree|organization-goals.assigned-sheet.action.close"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: "organization-goals.assigned-sheet.action.close"
+    commands:
+      - tapOn:
+          id: "organization-goals.assigned-sheet.action.close"
+- runFlow: dismiss-ai-data-consent.yaml
+- tapOn:
+    id: "home.tutor.action.open"
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.action.history"
+    timeout: 30000
+- tapOn:
+    id: "tutor-chat.action.history"
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.history.ready"
+    timeout: 30000
+# Section titles are plain Text with no accessibility id (SUIThreadHistorySectionView).
+- assertVisible: "^Recent$"
+- assertVisible: "^Older$"
+- waitForAnimationToEnd

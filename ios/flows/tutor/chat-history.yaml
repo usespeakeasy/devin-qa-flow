@@ -1,0 +1,42 @@
+# Chat History back navigation: nav bar back button, then reopen and a left edge swipe. Each back must
+# land on Tutor chat (tutor-chat.action.history visible, history marker gone).
+# Entry: Chat History (common/open-tutor-chat-history.yaml). Exit: Chat History again (reopened).
+# Preconditions: as common/open-tutor-chat-history.yaml (launched with automation markers).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible:
+    id: "tutor-chat.history.ready"
+- tapOn:
+    id: "BackButton"
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.action.history"
+    timeout: 10000
+- assertNotVisible:
+    id: "tutor-chat.history.ready"
+- tapOn:
+    id: "tutor-chat.action.history"
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.history.ready"
+    timeout: 30000
+- waitForAnimationToEnd
+# Interactive pop gesture: a drag from the left screen edge (point, there is no element to target).
+- swipe:
+    start: 0%, 50%
+    end: 80%, 50%
+    duration: 600
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.action.history"
+    timeout: 10000
+- assertNotVisible:
+    id: "tutor-chat.history.ready"
+- tapOn:
+    id: "tutor-chat.action.history"
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.history.ready"
+    timeout: 30000

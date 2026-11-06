@@ -1,0 +1,16 @@
+# Chat History: drag the list up about 130 pt so the "Recent" card and the "Older" title stay on
+# screen, for a frame check of title vs card after a scroll (maestro hierarchy after the flow).
+# Entry and exit: Chat History (common/open-tutor-chat-history.yaml). Changes nothing on the account.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible:
+    id: "tutor-chat.history.ready"
+# The list has no accessibility id; a point drag inside it.
+- swipe:
+    start: 50%, 60%
+    end: 50%, 45%
+    duration: 800
+- waitForAnimationToEnd
+- assertVisible: "^Older$"
