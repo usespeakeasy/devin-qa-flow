@@ -1,0 +1,43 @@
+# Debug Menu Market or Storefront country pick: answer the "Restart to apply" dialog (speak-android#8965).
+# CONFIRM=restart taps Restart (the app saves the pick, closes and opens again), CONFIRM=cancel taps Cancel and
+# checks OPTION stays unselected. The dialog must say PICKED (regex, e.g. "Market: China"). Builds before #8965 show
+# no dialog: run them with CONFIRM=none, which checks OPTION is selected.
+# Selectors: the dialog's test tags (debug_market_restart_dialog, _confirm, _cancel) are not resource IDs, since the
+# AlertDialog window has no testTagsAsResourceId (develop 68bc5399c62); text fallbacks "Restart to apply", Restart, Cancel.
+# Entry: right after tapping OPTION in the filtered Debug Menu.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  OPTION: ${OPTION}
+  CONFIRM: ${CONFIRM || "restart"}
+  PICKED: ${PICKED || ".*"}
+---
+- runFlow:
+    when:
+      true: ${CONFIRM != "none"}
+    commands:
+      - extendedWaitUntil:
+          visible: "Restart to apply"
+          timeout: 10000
+      - assertVisible: "${PICKED}\\. The app saves it, then closes and opens again\\. Cancel keeps the current value\\."
+      - runFlow:
+          when:
+            true: ${CONFIRM == "cancel"}
+          commands:
+            - tapOn: "Cancel"
+            - assertNotVisible: "Restart to apply"
+            - assertVisible:
+                id: ${OPTION}
+                checked: false
+      - runFlow:
+          when:
+            true: ${CONFIRM == "restart"}
+          commands:
+            - tapOn: "Restart"
+- runFlow:
+    when:
+      true: ${CONFIRM == "none"}
+    commands:
+      - assertVisible:
+          id: ${OPTION}
+          checked: true

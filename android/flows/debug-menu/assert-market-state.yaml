@@ -1,0 +1,30 @@
+# Debug Menu > search "Market": the launch row says "this launch: LAUNCH", the Market row has MARKET selected
+# (default, global, china) and the Storefront country row has COUNTRY selected (default, us, kr, ..., cn).
+# Then search "Server": the Server URL matches SERVER_RE (e.g. a host not ending in .cn).
+# Entry: any state; opens the Debug Menu by deep link. Exit: on the Debug Menu filtered by "Server".
+# maestro test -e LAUNCH=Global -e MARKET=default -e COUNTRY=kr assert-market-state.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LAUNCH: ${LAUNCH || "Global"}
+  MARKET: ${MARKET || "default"}
+  COUNTRY: ${COUNTRY || "default"}
+  SERVER_RE: ${SERVER_RE || "https://.*"}
+---
+- runFlow: assert-launch-market.yaml
+- assertVisible:
+    id: debug_market_override_${MARKET}
+    checked: true
+- assertVisible:
+    id: debug_storefront_country_override_${COUNTRY}
+    checked: true
+- tapOn:
+    text: Market
+    index: 0
+- eraseText: 10
+- inputText: Server
+- hideKeyboard
+- extendedWaitUntil:
+    visible: "Server URL"
+    timeout: 15000
+- assertVisible: "${SERVER_RE}"

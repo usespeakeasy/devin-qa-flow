@@ -1,0 +1,40 @@
+# China launch consent notice (speak-android#8947): wait for it, then ACTION=agree taps 同意 (the app goes on to
+# ARRIVAL) or ACTION=disagree taps 不同意 (the app closes; the caller checks the process is gone).
+# Entry: cold start of a China launch that has not agreed yet. Exit: agree: ARRIVAL on screen; disagree: app closed.
+# maestro test -e ACTION=agree -e ARRIVAL=onboarding_storybook_sign_in_button answer-notice.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ACTION: ${ACTION || "agree"}
+  ARRIVAL: ${ARRIVAL || "onboarding_storybook_sign_in_button"}
+---
+- extendedWaitUntil:
+    visible:
+      id: launch_consent_screen
+    timeout: 60000
+- assertVisible:
+    id: launch_consent_title
+- assertVisible:
+    id: launch_consent_agree
+- assertVisible: "同意"
+- assertVisible:
+    id: launch_consent_disagree
+- assertVisible: "不同意"
+- runFlow:
+    when:
+      true: ${ACTION == "disagree"}
+    commands:
+      - tapOn:
+          id: launch_consent_disagree
+- runFlow:
+    when:
+      true: ${ACTION == "agree"}
+    commands:
+      - tapOn:
+          id: launch_consent_agree
+      - extendedWaitUntil:
+          visible:
+            id: ${ARRIVAL}
+          timeout: 60000
+      - assertNotVisible:
+          id: launch_consent_screen

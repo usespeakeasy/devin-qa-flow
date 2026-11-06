@@ -1,0 +1,48 @@
+# Debug Menu > search "Market" > Storefront country row: pick COUNTRY (default, us, kr, tw, jp, gb, de, br, in, cn).
+# The "Restart to apply" dialog (speak-android#8965) must say PICKED; CONFIRM=restart taps Restart (the app closes and
+# opens again by itself), CONFIRM=cancel taps Cancel and the old value stays.
+# Entry: any state, signed in or signed out. OPEN=false uses the Debug Menu already on screen.
+# Exit: CONFIRM=restart: the app is restarting. CONFIRM=cancel: on the filtered Debug Menu.
+# maestro test -e COUNTRY=kr -e PICKED="Storefront country: KR" set-storefront.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  COUNTRY: ${COUNTRY || "default"}
+  OPEN: ${OPEN || "true"}
+  CONFIRM: ${CONFIRM || "restart"}
+  PICKED: ${PICKED || ".*"}
+---
+- runFlow:
+    when:
+      true: ${OPEN == "true"}
+    commands:
+      - repeat:
+          times: 2
+          commands:
+            - runFlow:
+                when:
+                  visible: "Debug Menu"
+                commands:
+                  - back
+      - openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 30000
+- tapOn:
+    text: Search
+- waitForAnimationToEnd
+- inputText: Market
+- hideKeyboard
+- extendedWaitUntil:
+    visible:
+      id: debug_storefront_country_override_${COUNTRY}
+    timeout: 15000
+- tapOn:
+    id: debug_storefront_country_override_${COUNTRY}
+- runFlow:
+    file: ../../common/debug-market-restart-dialog.yaml
+    env:
+      OPTION: debug_storefront_country_override_${COUNTRY}
+      CONFIRM: ${CONFIRM}
+      PICKED: ${PICKED}

@@ -1,14 +1,20 @@
-# Debug Menu > search "Market" > Market (relaunch required, ...) row: pick MARKET (default, global, china).
-# The pick applies on the next launch; the caller relaunches the app (force-stop, then launch).
+# Debug Menu > search "Market" > Market row: pick MARKET (default, global, china).
+# Builds with speak-android#8965 ask "Restart to apply" first: CONFIRM=restart taps Restart (the app saves the pick,
+# closes and opens again by itself), CONFIRM=cancel taps Cancel (keeps the old value). The dialog must say PICKED
+# (default any text, e.g. "Market: China"). Builds before #8965 show no dialog: the pick applies on the next launch
+# and the caller relaunches the app (force-stop, then launch).
 # Entry: any state, signed in or signed out (the deep link opens the Debug Menu in both on dev).
 # OPEN=false skips the deep link and uses the Debug Menu already on screen (opened by a shake).
-# Exit: on the filtered Debug Menu with the option selected.
+# Exit: CONFIRM=restart: the app is restarting. Otherwise on the filtered Debug Menu (option selected, or the old one
+# kept on cancel).
 # maestro test -e MARKET=china set-market.yaml
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
   MARKET: ${MARKET || "default"}
   OPEN: ${OPEN || "true"}
+  CONFIRM: ${CONFIRM || "restart"}
+  PICKED: ${PICKED || ".*"}
 ---
 # An open Debug Menu keeps its search text and the Search tap lands mid-text; leave it first.
 - runFlow:
@@ -39,6 +45,9 @@ env:
     timeout: 15000
 - tapOn:
     id: debug_market_override_${MARKET}
-- assertVisible:
-    id: debug_market_override_${MARKET}
-    checked: true
+- runFlow:
+    file: ../../common/debug-market-restart-dialog.yaml
+    env:
+      OPTION: debug_market_override_${MARKET}
+      CONFIRM: ${CONFIRM}
+      PICKED: ${PICKED}
