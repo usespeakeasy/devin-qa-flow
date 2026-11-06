@@ -1,0 +1,30 @@
+# Learning Path: scroll to the first custom unit header and tap its pencil (edit) button, then wait
+# for the custom unit edit screen: Review (`custom-unit.plan-details.ready`) or the edit chat
+# (`custom-unit.planning.ready`), whichever the build opens.
+# Entry: Home (home.root.ready) with a custom unit on the Learning Path.
+# Preconditions: dev, Premium Plus (Developer Settings > Subscription plan Plus), split
+# `dynamic_on_demand_unit_gen=on`. The pencil has no accessibility identifier on develop
+# (LearningPathScreen unit header); it is selected by its image label `pencil-edit-icon`.
+# Launch with `SIMCTL_CHILD_SPEAK_AUTOMATION_MARKERS=1 xcrun simctl launch <UDID> <APP_ID>`; no
+# launchApp here so the markers stay on.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|ai-data-consent.action.agree"
+    timeout: 30000
+- runFlow: dismiss-ai-data-consent.yaml
+- scrollUntilVisible:
+    element:
+      text: "pencil-edit-icon"
+    direction: DOWN
+    timeout: 20000
+# TEMPORARY TEXT FALLBACK: the unit header pencil has no accessibility identifier on develop.
+- tapOn:
+    text: "pencil-edit-icon"
+- extendedWaitUntil:
+    visible:
+      id: "custom-unit.plan-details.ready|custom-unit.planning.ready"
+    timeout: 30000

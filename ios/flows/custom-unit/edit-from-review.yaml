@@ -1,0 +1,84 @@
+# B (speak-ios#10054): ask for a change (CHANGE, default "Make it harder") and reach the updated
+# plan with the approve/Update button. Two routes, picked by what the pencil opens:
+# - Review (after #10054): wait for Make a change/Edit to enable, tap it, type CHANGE in the edit
+#   panel (`custom-unit.edit-panel.ready`) and send.
+# - Edit chat only (develop before #10054): type CHANGE in the chat and let Review auto-open when
+#   the AI proposes the change; answers up to two follow-up questions with a confirmation.
+# Checks: Review (`custom-unit.plan-details.ready`) with approve/Update visible. Does not approve,
+# so the unit is unchanged. Entry and preconditions as `common/open-custom-unit-edit.yaml`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  CHANGE: Make it harder
+---
+- runFlow: ../../common/open-custom-unit-edit.yaml
+# Edit chat route (no Review from the pencil).
+- runFlow:
+    when:
+      notVisible:
+        id: custom-unit.plan-details.ready
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: custom-unit.planning.user-turn-ready
+          timeout: 60000
+      - tapOn:
+          id: custom-unit.planning.input
+      - inputText: ${CHANGE}
+      - tapOn:
+          id: custom-unit.planning.action.send
+      - repeat:
+          times: 3
+          while:
+            notVisible:
+              id: custom-unit.plan-details.action.approve
+          commands:
+            - extendedWaitUntil:
+                visible:
+                  id: "custom-unit.plan-details.action.approve|custom-unit.planning.user-turn-ready"
+                timeout: 90000
+            - runFlow:
+                when:
+                  notVisible:
+                    id: custom-unit.plan-details.action.approve
+                commands:
+                  - tapOn:
+                      id: custom-unit.planning.input
+                  - inputText: "Yes, go ahead with that change."
+                  - tapOn:
+                      id: custom-unit.planning.action.send
+# Review route (Review opened by the pencil, approve not shown yet).
+- runFlow:
+    when:
+      notVisible:
+        id: custom-unit.plan-details.action.approve
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: custom-unit.plan-details.action.make-change
+            enabled: true
+          timeout: 60000
+      - tapOn:
+          id: custom-unit.plan-details.action.make-change
+      - extendedWaitUntil:
+          visible:
+            id: custom-unit.edit-panel.ready
+          timeout: 15000
+      - runFlow:
+          when:
+            visible:
+              id: custom-unit.edit-panel.action.switch-to-text
+          commands:
+            - tapOn:
+                id: custom-unit.edit-panel.action.switch-to-text
+      - tapOn:
+          id: "custom-unit.edit-panel.text-input|custom-unit.edit-panel.input"
+      - inputText: ${CHANGE}
+      - tapOn:
+          id: custom-unit.edit-panel.action.send
+- extendedWaitUntil:
+    visible:
+      id: custom-unit.plan-details.action.approve
+    timeout: 120000
+- assertVisible:
+    id: custom-unit.plan-details.ready

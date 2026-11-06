@@ -1,0 +1,32 @@
+# C (speak-ios#10054): from the Review the pencil opens, Back (nav bar BackButton) returns to the edit chat with
+# the AI's greeting. Checks: Review arrives with Edit enabled, Back tap, then the edit chat
+# (`custom-unit.planning.ready`) with its input and no Review. The greeting bubble has no
+# identifier; the case script reads it from the tree. Develop before #10054 never shows the
+# Review from the pencil, so this flow fails there at the first wait.
+# Entry: Home with a custom unit on the Learning Path. Preconditions as
+# `common/open-custom-unit-edit.yaml`. Changes nothing on the account.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/open-custom-unit-edit.yaml
+- assertVisible:
+    id: custom-unit.plan-details.ready
+- extendedWaitUntil:
+    visible:
+      id: custom-unit.plan-details.action.make-change
+      enabled: true
+    timeout: 60000
+# Back is the "Current plan" nav bar back button; its close (X) leaves the whole edit flow.
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: custom-unit.planning.ready
+    timeout: 15000
+- extendedWaitUntil:
+    notVisible:
+      id: custom-unit.plan-details.ready
+    timeout: 10000
+- assertVisible:
+    id: custom-unit.planning.input

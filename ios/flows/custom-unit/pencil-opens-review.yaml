@@ -1,0 +1,32 @@
+# A (speak-ios#10054): the Learning Path unit header pencil opens the read-only "Current plan" Review
+# over the edit chat. Checks: Review (`custom-unit.plan-details.ready`) is up right after the tap,
+# Make a change/Edit is there and the approve/Update button is not; Edit is disabled while the AI's
+# opening edit turn streams (optional check, logged as WARNED when the stream already ended) and
+# becomes enabled after. Develop before #10054 opens only the edit chat, so this flow fails there.
+# Entry: Home with a custom unit on the Learning Path. Preconditions as
+# `common/open-custom-unit-edit.yaml` (markers on, Premium Plus, `dynamic_on_demand_unit_gen=on`).
+# Changes nothing on the account.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/open-custom-unit-edit.yaml
+- assertVisible:
+    id: custom-unit.plan-details.ready
+- assertVisible:
+    id: custom-unit.plan-details.action.make-change
+- assertNotVisible:
+    id: custom-unit.plan-details.action.approve
+- assertVisible:
+    id: custom-unit.plan-details.action.make-change
+    enabled: false
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: custom-unit.plan-details.action.make-change
+      enabled: true
+    timeout: 60000
+- assertNotVisible:
+    id: custom-unit.plan-details.action.approve
+- assertVisible:
+    id: custom-unit.plan-details.ready
