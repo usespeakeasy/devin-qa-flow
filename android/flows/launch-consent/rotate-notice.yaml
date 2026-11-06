@@ -1,0 +1,22 @@
+# Rotate to landscape and back on the launch consent notice: the notice and its buttons stay.
+# Entry: launch_consent_screen. Exit: launch_consent_screen, portrait.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: launch_consent_screen
+    timeout: 15000
+- assertVisible:
+    id: launch_consent_agree
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: launch_consent_screen
+    timeout: 15000
+- assertVisible:
+    id: launch_consent_agree

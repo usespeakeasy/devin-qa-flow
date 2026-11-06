@@ -1,0 +1,33 @@
+# Adds the Speak streak widget (4 x 2) to an empty Pixel Launcher home screen through the widget picker,
+# then waits for the widget to draw EXPECT (a regex on its text, e.g. "Start a Lesson", "Sign in to continue").
+# The Speak dev app has no IDs on the launcher; the launcher's own IDs are used where it has them.
+# Entry: any; the home screen must have room at 50%,55% (clear the launcher first to remove an old widget:
+#   adb shell pm clear com.google.android.apps.nexuslauncher).
+# Exit: home screen, widget drawn with EXPECT.
+appId: com.google.android.apps.nexuslauncher
+env:
+  APP_LABEL: ${APP_LABEL || "Speak - Dev"}
+  EXPECT: ${EXPECT || ".+"}
+---
+- pressKey: Home
+- waitForAnimationToEnd
+- longPressOn:
+    label: Long-press an empty spot on the home screen
+    point: "50%,55%"
+- tapOn: "Widgets"
+- tapOn:
+    id: widgets_search_bar_edit_text
+- inputText: "Speak"
+- tapOn:
+    id: app_title
+    text: ${APP_LABEL}
+- tapOn:
+    label: Pick the 4 x 2 widget
+    text: ".*4 wide by 2 high.*"
+- tapOn:
+    id: widget_add_button
+- pressKey: Home
+- extendedWaitUntil:
+    visible:
+      text: ${EXPECT}
+    timeout: 30000
