@@ -28,6 +28,7 @@ env:
     visible:
       id: drill_lesson_skip
     timeout: 60000
+- runFlow: tap-debug-finish.yaml
 - repeat:
     while:
       notVisible: "QA Leagues Progress"

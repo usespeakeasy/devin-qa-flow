@@ -17,6 +17,7 @@ env:
     visible:
       id: drill_lesson_skip
     timeout: 60000
+- runFlow: ../../common/tap-debug-finish.yaml
 - repeat:
     while:
       notVisible:

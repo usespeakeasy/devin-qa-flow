@@ -9,7 +9,8 @@ INDEX.md row are in [AGENTS.md](../AGENTS.md).
 1. `git pull --rebase` on `main`, then read [LEARNINGS.md](../LEARNINGS.md).
 2. For each case in the PR's "How to test?", grep [INDEX.md](../INDEX.md) for the screen, the
    classes the diff touches, the deep link and the resource IDs. Reuse a matching flow as is.
-   Skip flows listed under Known broken unless this run repairs them.
+   Skip flows listed under Known broken unless this run repairs them. On Android, check
+   [Debug shortcuts](#debug-shortcuts-android) before planning a lesson end or demo route.
 3. No match: write a new flow, following the Flow rules in [AGENTS.md](../AGENTS.md#flow-rules). Compose it from `<platform>/common/` subflows with `runFlow`
    and copy steps from the closest existing flow. Extend a common subflow with `env`
    parameters instead of forking it.
@@ -48,6 +49,47 @@ share the CPU and recordings drop frames.
   packet's toggle.
 - Keep each case under 180 s (`screenrecord` stops there). Split a longer case into two flows.
 - Find selectors with harness `dump` on the base build, only while no flow is running.
+
+## Debug shortcuts (Android)
+
+speak-android debug builds have three shortcuts that skip the slow way to a screen. Use them
+instead of a Skip loop, a Debug > Demos list tap or a `LessonEndFlowViewModel.updateScreens`
+patch. Before you use one, check that both builds have it: `git merge-base --is-ancestor <commit>
+<base SHA>` in the app repo. If the base build predates it, use the old route on both builds.
+
+| Shortcut | Commit on develop | What it replaces | Flow |
+| --- | --- | --- | --- |
+| Drill lesson **Finish** chip `drill_lesson_debug_finish` (CLNT-1520) | `46a878f717` (speak-android#8845) | The Skip loop to the lesson end (about 110 s down to about 20 s). Same `finishLesson()`, same `POST v2/users/lesson-progress`, same lesson end flow | `android/common/tap-debug-finish.yaml`, already in every "skip to the lesson end" subflow |
+| `speak-dev://demos?id=<id>` (CLNT-1521) | `925e5e88e1` (speak-android#8848) | Opening Debug > Demos and tapping a row. Ids are kebab-case, in `DebugDemoRegistry.kt`. An unknown id opens the list | `openLink` in `android/flows/debug-demos/` |
+| `speak-dev://debug-lesson-end?lessonId=<id>&screens=<A,B,...>` (CLNT-1519) | `c29201b0de` (speak-android#8846) | Playing a lesson plus the QA-only `updateScreens` patch, for the steps it supports | `android/common/open-debug-lesson-end.yaml` |
+
+- Finish chip: turn on Debug Menu > **Debug features enabled** once after `login`
+  (`flows/debug-menu/set-debug-toggle-on.yaml` with `LABEL="Debug features enabled"
+  PREV="Chucker enabled" NEXT="Debug recognition enabled"`). It stays on until `pm clear`. When the
+  chip is missing, `tap-debug-finish.yaml` does nothing and the Skip loop after it runs as before.
+  Steps that need a QA patch (unit end, post-assessment, community and others) still need it; the
+  chip only replaces the skipping.
+- `debug-lesson-end` uses fixed demo data, posts no lesson progress and skips
+  `fetchLessonFinishedFlow`. It supports only these steps; any other name, or a missing `lessonId`,
+  opens nothing:
+
+  | `screens=` | Shows | Wait for | Replaces |
+  | --- | --- | --- | --- |
+  | `STREAK` | streak saved, 12 days | `lesson_end_streak_saved_root` | `open-streak-saved.yaml` + `STREAK` patch |
+  | `ASK_FOR_REVIEW` | review dialog | `ask_for_review_dialog` | `open-ask-for-review.yaml` + `Screen.AskForReview` patch |
+  | `LEVEL_PROGRESS` | Novice to Discoverer | `lesson_end_level_progress_root` | `open-level-progress.yaml` + `debug.qa.level` patch |
+  | `LEAGUES` | Bronze League, "You" 4th | `lesson_end_leagues_progress_root` | `open-leagues-progress-step.yaml` + `Screen.LeagueProgress` patch |
+  | `SUMMARY` | 20 XP, 12 sentences | `lesson_end_reskin_root` | `open-summary.yaml` + `debug.qa.summary first` |
+  | `TAKEAWAYS` | the Single Card demo | `lesson_end_takeaways_root` | `open-takeaways.yaml` + demo takeaways patch |
+
+  Flows that check the patched data (`QA Leagues Progress`, Multiple Cards takeaways, `debug.qa.level up`
+  or `jumpin`) keep the patch. With the `core_lesson_end_flow` kill switch on, the link opens
+  `LessonEndFlowController2` and the steps still work.
+- Keep the real route when the PR changes it: a PR that touches lesson finishing, the lesson end
+  fetch, `DeepLinkRouter` or the demos list needs at least one case that plays the lesson or taps
+  the row. The shortcut is for cases about the screen, not the way in.
+- The QA packet says which shortcut each case used, the same way it names a QA patch. A case on
+  `debug-lesson-end` has no `patch=` to disclose.
 
 ## Pre-auth flows
 
@@ -305,6 +347,8 @@ This applies to ID PRs, PRs in this repo, and every Slack post about them.
 ## Gotchas
 
 - Maestro installs its driver on a device the first time it runs there (about 10 to 20 s).
+- A plain `env:` value in a flow wins over `maestro test -e`, so a parameter with a default must be
+  written `X: ${X || "default"}`; `X: default` ignores the caller's value.
 - `screenrecord` stops at 180 s; split long cases into two flows or two recordings.
 - Maestro is slow on the software-rendered emulator: `inputText` takes ~10 s and
   `eraseText` ~15 s. Don't erase fields that are already empty.

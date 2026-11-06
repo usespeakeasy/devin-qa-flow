@@ -1,0 +1,17 @@
+# Tap the drill lesson's debug Finish chip when it shows. One tap runs the real `finishLesson()`
+# (same `POST v2/users/lesson-progress`, same lesson end flow) instead of skipping card by card.
+# Entry: a drill or Tutor lesson with `drill_lesson_skip` on screen.
+# Preconditions: Debug Menu > Debug features enabled (see flows/debug-menu/set-debug-toggle-on.yaml)
+# on a build with develop `46a878f717` (speak-android#8845). Without either, the chip is missing and
+# this does nothing, so callers keep their Skip loop after it as the fallback.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    when:
+      visible:
+        id: drill_lesson_debug_finish
+    commands:
+      - tapOn:
+          id: drill_lesson_debug_finish
