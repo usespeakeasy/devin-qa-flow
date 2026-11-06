@@ -1,0 +1,29 @@
+# Settings > Notifications: Daily Reminders, every topic toggle and Marketing Communications show.
+# Entry: `home_root_ready`. Exit: the Notifications screen.
+# Selectors: the Settings row has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: ${SHOT || "notifications"}
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn: "^Notifications$"
+- extendedWaitUntil:
+    visible:
+      id: notifications_daily_reminder
+    timeout: 15000
+- assertVisible:
+    id: toggle_streak
+- assertVisible:
+    id: toggle_speakTutor
+- assertVisible:
+    id: toggle_communityFavorites
+- assertVisible:
+    id: toggle_challenge
+- assertVisible:
+    id: toggle_referral
+- assertVisible:
+    id: toggle_smartReview
+- assertVisible:
+    id: notifications_marketing_channels
+- takeScreenshot: ${SHOT}
