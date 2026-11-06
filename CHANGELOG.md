@@ -19,6 +19,15 @@ GROUP BY 1, 2 ORDER BY 1 DESC, 2
 
 Runs before 2026-11-01 have no `skill_version`.
 
+## 2026-11-06
+
+- **qa-request-mobile 2026.11.06.1**: after a mid-run fix to a flow, the case script or a patch,
+  rerun only the cases that use the changed file, never a whole pass. When a request says "add the
+  cases you think are missing", added cases stop at 8 in total; author cases are never dropped.
+  Why: Nav3 runs from Nov 2 to 5 took up to 5.5 h. They had 10 to 15 cases, each run 4 times (base
+  and head, kill switch SERVER and ON), and some reran whole passes after one fix.
+  ([#21](https://github.com/usespeakeasy/devin-qa-flow/pull/21))
+
 ## 2026-11-01
 
 - **qa-request-mobile 2026.11.01.11**: a request with no PR (a commit or release sweep) still opens
