@@ -2,7 +2,7 @@
 name: qa-request-mobile
 description: Run a QA request on a Speak mobile PR (speak-android or speak-ios). Read the PR's "How to test?" section, build the base and the branch against dev or prod, record both runs, and write the Before | After result into the PR description. Use when someone asks for QA, a no-diff check, a before and after recording, or writes "qa-request-mobile <PR link>" in Slack, a PR comment or a Linear issue. Also use it for every @Devin request with a PR or ticket link in #devin-qa-request-mobile, whatever the wording ("test <link>", "check this").
 metadata:
-  version: 2026.11.06.1
+  version: 2026.11.06.2
 ---
 
 # qa-request-mobile
@@ -103,7 +103,7 @@ Every run records its duration in BigQuery table `speak-v2-2a1f1.devin_qa.qa_req
 A run's cost follows its number of agent steps and the screenshots it opens, not its wall time. In late October 2026, 39 of 40 Android runs wrote their own `ui.sh` or `uiautomator dump` loops and drove cases one tap per tool call. They averaged $8.4 and 92 min, with 47 to 137 opened images each. The one run that used the bundled harness cost $6.3 and took 48 min for 6 cases.
 
 1. On Android, every emulator action goes through `qa_android.py` (see "Android harness") or a Maestro flow from devin-qa-flow (see "Reusable flows"). Don't write `ui.sh`, `uiautomator dump` loops, or `adb input tap` / `sleep` / `screencap` chains. This applies to every step, including exploring a screen and rerunning a case. Using the harness only for `emu`, `lease` and `login` and then driving the cases with your own script doesn't count. If neither has a step, put one plain `adb` line inside the case script.
-2. One script per build. Write all cases as one script and run it in one exec. Don't drive a case step by step in separate tool calls. Rerun only the case that failed, alone.
+2. One script per build. Write all cases as one script and run it in one exec. Don't drive a case step by step in separate tool calls. Rerun only the case that failed, alone. After you fix a flow, the case script or a patch mid-run, rerun only the cases that use the changed file, on each build that ran them. Keep the results and recordings of the other cases. Never rerun a whole pass (all cases on one build or flag setting) for one fix.
 3. Check arrival with text, not images. `wait`, `has` and `dump` print the matched node; that is the assertion. Don't open a screenshot (`view_image`, the desktop) to confirm a tap, a load or where you are. When lost, read `dump` first; open a screenshot only when the tree can't explain it.
 4. Open each case's full resolution screenshot pair once, at write-up, to compare the builds.
 5. The iOS macOS child follows the same rules: one script per build that runs Maestro flows from devin-qa-flow (see "Reusable flows"), arrival asserted from the accessibility tree, screenshot pairs opened once at write-up, and one report at the end. It messages the parent before then only when it is blocked.
@@ -142,6 +142,8 @@ Check the cases against the screens the PR touches:
 Write each gap as a case in the author's style, one line each.
 
 In `mode=run`, do not post proposals and do not edit the section. Record the author's list as written. Before recording, check in code that each case reaches the changed path. If a written step takes another route (a snackbar instead of a dialog, a deep link that does not route), run the route that reaches the change on both builds, and say so in a numbered note and in the thread. If you found gaps, end the thread report with "Not covered by the list" and one line per gap, three at most, with no case labels (the author may add cases later and the labels would collide).
+
+When the request itself asks you to add missing cases and go (for example "Add the cases you think are missing and go"), append gaps as cases with the suffix `(added by QA)` until the list has 8 cases, most important gap first. Never drop an author's case to stay under 8. If the author's list already has 8 or more, add none. Put the gaps you did not add under "Not covered by the list", as above.
 
 In `mode=review`, post the proposals in the thread and stop. Start the proposals with the prerequisites the cases need and the section does not state, or states wrong: one line per flag or experiment with its value and where to set it (Debug Menu > Feature flag override on Android, `speak-dev://set-split-overrides?<flag>=on` on iOS dev, the debug screen on iOS prod), plus account type and language pair when missing. Take them from the code path each case reaches. When the author agrees, add them to the prerequisites in "How to test?" with the suffix `(added by QA)`, and fix a wrong flag in place with the same suffix. Resume only when the author answers. "Go" means record the author's list. "Add B and C" means append the agreed cases to "How to test?" with the suffix `(added by QA)`, then record all of them. No answer means nothing is recorded, and the thread says so.
 

@@ -1,0 +1,35 @@
+# Onboarding chat: Start, then the first answer sent with the network off shows the error state and the turn
+# stays; with the network back the same Continue advances past it.
+# Entry: onboarding chat on screen (`onboarding_magic_action_start`), e.g. after submit-sign-up.yaml.
+# Selectors: the error copy has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: ${SHOT || "chat_offline_error"}
+---
+- tapOn:
+    id: onboarding_magic_action_start
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_action_continue
+    timeout: 60000
+- setAirplaneMode: enabled
+- tapOn:
+    id: onboarding_magic_action_continue
+- extendedWaitUntil:
+    visible: "Something went wrong, please try again\\."
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- assertVisible:
+    id: onboarding_magic_action_continue
+- setAirplaneMode: disabled
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_action_continue
+      enabled: true
+    timeout: 15000
+- tapOn:
+    id: onboarding_magic_action_continue
+- extendedWaitUntil:
+    notVisible: "Something went wrong, please try again\\."
+    timeout: 60000

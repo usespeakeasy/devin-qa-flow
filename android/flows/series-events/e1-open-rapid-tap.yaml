@@ -1,0 +1,25 @@
+# SeriesLesson view events: open LESSON_ID (Start over), double-tap Tap to continue on the intro card: one advance,
+# the first line card listens. Entry: Home. Exit: speak_now_header on LINE.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+  QA_SR: ${QA_SR || "false"}
+  LINE: ${LINE || "¿Qué tal\\?"}
+---
+- runFlow: ../series-session/open-series.yaml
+- extendedWaitUntil:
+    visible:
+      id: tap_to_continue
+    timeout: 60000
+- takeScreenshot: e1-intro
+- doubleTapOn:
+    id: tap_to_continue
+- extendedWaitUntil:
+    visible:
+      id: speak_now_header
+    timeout: 20000
+- assertVisible:
+    id: line
+    text: ${LINE}
+- takeScreenshot: e1-line

@@ -1,0 +1,29 @@
+# Answered line card (runner answers with DebugBridge mockRecognition): Example, You, then double-tap Tap to
+# continue: one advance, to the NEXT card, not past it. Entry: answered card. Exit: NEXT card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  NEXT: ${NEXT || "Used as both a greeting and a question\\."}
+---
+- extendedWaitUntil:
+    visible:
+      id: play_recording
+    timeout: 15000
+- tapOn:
+    id: example
+- tapOn:
+    id: play_recording
+# Tap to continue waits for the recording playback; let it finish so the double tap is the only input.
+- extendedWaitUntil:
+    visible:
+      id: play_recording
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 8000
+- takeScreenshot: e3-answered
+- doubleTapOn:
+    id: tap_to_continue
+- extendedWaitUntil:
+    visible: ${NEXT}
+    timeout: 40000
+- takeScreenshot: e3-next

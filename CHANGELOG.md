@@ -21,7 +21,7 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-06
 
-- **qa-request-mobile 2026.11.06.1**: Android runs use the speak-android debug shortcuts instead of
+- **qa-request-mobile 2026.11.06.2**: Android runs use the speak-android debug shortcuts instead of
   slow routes and lesson end patches: the drill lesson Finish chip (speak-android#8845), now tapped by
   every "skip to the lesson end" subflow through `android/common/tap-debug-finish.yaml` with the Skip
   loop as fallback; `speak-dev://demos?id=` (speak-android#8848); and `speak-dev://debug-lesson-end`
@@ -30,6 +30,12 @@ Runs before 2026-11-01 have no `skill_version`.
   has a shortcut, which steps `debug-lesson-end` replaces, and when to keep the real route. Why: the
   Skip loop took about 110 s per lesson end against about 20 s for Finish, and most lesson end cases
   needed a per-run `updateScreens` patch.
+- **qa-request-mobile 2026.11.06.1**: after a mid-run fix to a flow, the case script or a patch,
+  rerun only the cases that use the changed file, never a whole pass. When a request says "add the
+  cases you think are missing", added cases stop at 8 in total; author cases are never dropped.
+  Why: Nav3 runs from Nov 2 to 5 took up to 5.5 h. They had 10 to 15 cases, each run 4 times (base
+  and head, kill switch SERVER and ON), and some reran whole passes after one fix.
+  ([#21](https://github.com/usespeakeasy/devin-qa-flow/pull/21))
 
 ## 2026-11-01
 

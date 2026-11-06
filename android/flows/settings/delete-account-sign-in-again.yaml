@@ -1,0 +1,34 @@
+# Manage Account > Delete Account > password > Confirm deletes the account and signs out to the welcome screen;
+# email sign-in with the same credentials right after shows "The email or password is incorrect." (dev).
+# Deletes the account: pass a throwaway sign-up account only (qa_android.py newuser), never a pool account.
+# Entry: `home_root_ready`, signed in with email. Params (run time only): EMAIL, PASSWORD.
+# Selectors: the confirm dialog button has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: ${SHOT || "deleted_sign_in"}
+---
+- runFlow: delete-account-open-reauth.yaml
+- extendedWaitUntil:
+    visible:
+      id: delete_account_password_dialog
+    timeout: 10000
+- tapOn:
+    id: delete_account_password_input
+- inputText: ${PASSWORD}
+- tapOn:
+    id: delete_account_password_confirm_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_sign_in_button
+    timeout: 30000
+- runFlow: ../../common/open-email-sign-in.yaml
+- runFlow: ../../common/submit-email-sign-in.yaml
+- extendedWaitUntil:
+    visible:
+      id: onboarding_sign_in_error
+      text: "The email or password is incorrect\\."
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- assertNotVisible:
+    id: home_root_ready

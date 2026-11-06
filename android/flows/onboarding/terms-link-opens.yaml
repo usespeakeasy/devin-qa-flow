@@ -1,0 +1,45 @@
+# Sign-up options sheet: tap a link in "By continuing, you agree to Speak's Terms of Service and Privacy Policy.";
+# Chrome opens the page. The address bar hides "https://www.", so the flow taps it and then "Edit" to put the full
+# URL in the field, which must match URL_RE. Back returns to the sheet.
+# Entry: `auth_options_screen` (sign-up, full screen, after storybook-get-started.yaml and pick-spanish-open-auth.yaml). Chrome's first-run screen already dismissed.
+# Selectors: the links are inline runs of one text, so they have no node of their own (point fallback, LINK_POINT).
+# Chrome's "Edit" suggestion button has only a content description (text fallback, Chrome's own UI).
+# English copy on 1080x2400: Terms LINK_POINT=79%,47% (URL_RE=.*speak\.com/terms.*), Privacy LINK_POINT=60%,49%.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LINK_POINT: ${LINK_POINT || "79%,47%"}
+  URL_RE: ${URL_RE || ".*"}
+  SHOT: ${SHOT || "terms_link"}
+---
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 15000
+- assertVisible: "By continuing, you agree to Speak's Terms of Service and Privacy Policy\\."
+- tapOn:
+    point: ${LINK_POINT}
+- extendedWaitUntil:
+    visible:
+      id: url_bar
+    timeout: 30000
+- tapOn:
+    id: url_bar
+- tapOn: Edit
+- extendedWaitUntil:
+    visible:
+      id: url_bar
+      text: ${URL_RE}
+    timeout: 10000
+- takeScreenshot: ${SHOT}
+- repeat:
+    while:
+      notVisible:
+        id: auth_options_screen
+    times: 4
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 15000

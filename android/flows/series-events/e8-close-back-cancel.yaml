@@ -1,0 +1,39 @@
+# Close confirmation: system Back opens it, Keep Learning cancels; the close button opens it, Back cancels;
+# close double-tapped opens one, Keep Learning; then Home and back. Entry: line card, QA patch close modal on
+# every card. Exit: series_list. Selectors: the quit sheet has no app resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- back
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- takeScreenshot: e8-back-sheet
+- tapOn: "^Keep Learning$"
+- extendedWaitUntil:
+    notVisible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    notVisible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- doubleTapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- tapOn: "^Keep Learning$"
+- extendedWaitUntil:
+    notVisible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- assertVisible:
+    id: series_list
+- runFlow: ../series-session/background-resume.yaml
+- assertNotVisible: "Are you sure you want to quit this lesson\\?"
+- takeScreenshot: e8-resumed

@@ -1,0 +1,16 @@
+# Leave the open series lesson: close, quit sheet, Quit; the lesson closes. Entry: any series card.
+# Exit: the screen under the lesson. Selectors: the quit sheet has no app resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    notVisible:
+      id: series_list
+    timeout: 30000
