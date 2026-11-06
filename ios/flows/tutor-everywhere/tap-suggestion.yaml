@@ -1,0 +1,17 @@
+# Taps the first initial suggestion pill in the open Tutor Everywhere sheet and waits for the
+# tutor reply's follow-up pills. Screenshot ${SHOT}-reply. Generated wording is not asserted.
+# Entry: sheet open with initial pills. Params: SHOT (absolute path prefix, no extension).
+appId: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: "tutor-everywhere.suggestion.*"
+    index: 0
+- extendedWaitUntil:
+    notVisible: "Ask me anything"
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: "tutor-everywhere.suggestion.*"
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-reply

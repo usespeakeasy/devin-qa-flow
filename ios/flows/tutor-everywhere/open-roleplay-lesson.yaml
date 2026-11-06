@@ -1,0 +1,51 @@
+# Cold start > Free Talk tab > Topics > first Roleplay topic card > Chat mode > Start lesson,
+# ending when the native chat lesson shows its first tutor turn ("What should I say?").
+# Entry: any state. Precondition: signed in; split overrides chat_mode_native=on,
+# ai_lesson_native=default_chat, tutor_everywhere_ai_lessons_enabled=on set and app relaunched.
+# Param TOPIC: topic card title text (regex), e.g. "At a Beach Bar in San Juan".
+appId: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow:
+    when:
+      visible:
+        id: PopoverDismissRegion
+    commands:
+      - tapOn:
+          point: "50%,10%"
+- tapOn:
+    id: "tab-bar.tab.aiTutor"
+- runFlow:
+    when:
+      visible: "Get started"
+    commands:
+      - tapOn: "Get started"
+- tapOn: "Topics"
+- scrollUntilVisible:
+    element:
+      text: ${TOPIC}
+    timeout: 20000
+- tapOn:
+    text: ${TOPIC}
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: "lesson.pre-ai.action.start"
+    timeout: 20000
+- tapOn: "Chat mode"
+- tapOn:
+    id: "lesson.pre-ai.action.start"
+- runFlow:
+    when:
+      visible: "Start over"
+    commands:
+      - tapOn: "Start over"
+- runFlow:
+    when:
+      visible: "Allow Speak to send your voice and text to AI\\?.*"
+    commands:
+      - tapOn: "Allow"
+# The lesson's Bloo button has no id; the first tutor bubble's hint chip marks the lesson as ready.
+- extendedWaitUntil:
+    visible: "What should I say\\?"
+    timeout: 60000

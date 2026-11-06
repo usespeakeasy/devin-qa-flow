@@ -1,0 +1,9 @@
+# Closes the open Tutor Everywhere sheet with its X. Entry: sheet open.
+appId: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: "tutor-everywhere.action.close"
+- extendedWaitUntil:
+    notVisible:
+      id: "tutor-everywhere.action.close"
+    timeout: 10000

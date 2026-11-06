@@ -1,0 +1,19 @@
+# In a native chat AI lesson, taps the Tutor Everywhere (Bloo) button bottom right and waits for
+# the sheet, then for the initial suggestion pills. Screenshots ${SHOT}-open and ${SHOT}-pills.
+# Entry: open-roleplay-lesson.yaml end state (iPhone 18 Pro: Bloo at 307,794 pt; it has no id).
+# Params: SHOT (absolute screenshot path prefix, no extension).
+appId: com.selabs.speak-v2.dev
+---
+- tapOn:
+    point: "307,794"
+- extendedWaitUntil:
+    visible:
+      id: "tutor-everywhere.action.close"
+    timeout: 15000
+- takeScreenshot: ${SHOT}-open
+- extendedWaitUntil:
+    visible:
+      id: "tutor-everywhere.suggestion.*"
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-pills

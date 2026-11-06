@@ -38,6 +38,8 @@ describes.
 
 ## iOS
 
+- Native chat AI lessons on the macOS VM simulator failed before the first turn ("this lesson is unable to play", then `Initialize: RPC timeout. Apparently deadlocked. Aborting now.`) on both builds; restarting coreaudiod, rebooting the sim and a mic-state bypass did not help. Rule: when a LiveKit lesson must run on the VM, apply the same uncommitted QA-only patch to both trees in `AudioIOController.init`: `#if targetEnvironment(simulator) try? AudioManager.shared.setManualRenderingMode(true) #endif` (plus a `return` at the top of `updateMicrophoneState`), and put its diff in the toggle. With it the lesson, Tutor Everywhere and its tutor reply ran.
+- Maestro 2.12.1 `takeScreenshot` with an absolute path (`${SHOT}` = `/Users/...`) fails with no reason in the log. Rule: pass a relative name and run `maestro test --test-output-dir <dir>`; the PNGs land under `<dir>/**/takeScreenshot/` at full resolution (1206x2622).
 - JRNY-4712 QA (prod Speak Debug, iOS 27.0, Maestro 2.12.1, 2026-11-05) lost about 40 min to four things.
   (1) A flow's `env:` block overrides `maestro test -e` values, so a flow with `SECTION: Mistakes`
   as default opened Mistakes when run with `-e SECTION=Interests`. Rule: don't put defaults for
