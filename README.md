@@ -9,6 +9,47 @@ reuses the flows that already cover the screens a PR touches, adds the missing o
 pushes them back so the next run on that screen starts from a working script instead of
 rewriting taps from scratch.
 
+## Request QA
+
+1. Post `qa-request-mobile <PR link>` in #devin-qa-request-mobile (a PR comment or Linear issue works too).
+2. Devin replies with an ETA.
+3. Read the verdict in Slack and the Before | After table in the PR description.
+
+| Channel | What happens there |
+| --- | --- |
+| #devin-qa-request-mobile | Anyone (or a bot) asks for QA. Devin replies with an ETA, runs it and posts the verdict. |
+| #devin-qa-flow | Devin posts each ID PR as one top-level post, with details and the QA thread link in a reply. |
+
+## How a run works
+
+```mermaid
+flowchart TD
+    A["qa-request-mobile PR link<br/>#devin-qa-request-mobile"] --> B["Read the PR's How to test?"]
+    B --> C["Look up INDEX.md<br/>(screen → existing flows)"]
+    C --> D{"Flows exist?"}
+    D -- yes --> E["Reuse the Maestro YAML<br/>(script ready during the build)"]
+    D -- no --> F["Find the taps on the emulator<br/>and write new flows"]
+    B --> G["Build base + branch"]
+    G --> H["Lease a pool account<br/>(no sign-up, no onboarding)"]
+    E --> I["Record Before and After"]
+    F --> I
+    H --> I
+    I --> J["Before | After packet in the PR<br/>+ verdict in Slack"]
+    I --> K["Log the run in BigQuery<br/>(skill_version, flow_repo_sha, phase times)"]
+    F --> L["Push new flows + INDEX row<br/>to main"]
+    I --> M{"Missing or text-only<br/>selectors?"}
+    M -- yes --> N["Open an ID PR in speak-android / speak-ios<br/>authored by the QA'd PR's author"]
+    N --> O["Post it in #devin-qa-flow"]
+    N -. "merged IDs" .-> C
+    I --> P{"Major failure?"}
+    P -- yes --> Q["Add a rule to LEARNINGS.md"]
+    Q -. "read before the next run" .-> B
+    L -. "next run reuses it" .-> C
+```
+
+The dotted lines are the learning loop: whatever one run adds (flows, IDs, rules) is ready for
+the next run.
+
 ## Layout
 
 ```
@@ -33,6 +74,9 @@ Pre-auth flows (`android/flows/auth/`, `android/flows/onboarding/`) start signed
 their header says `Entry: app data cleared` and the harness `fresh` command gets the app there.
 Account lease, login, screen recording and the Before | After packet come from the
 `qa-request-mobile` skill and its Android harness, not from this repo.
+
+Flows are plain steps on resource IDs (`tapOn: {id: ...}`, `assertVisible`, `openLink`), so each
+step maps directly to Espresso / UiAutomator, XCUITest or Appium if we move away from Maestro or Devin.
 
 QA runs follow [docs/qa-pr-instructions.md](docs/qa-pr-instructions.md) (workflow for Android and
 iOS, two emulators, committing, conflicts, missing and stale IDs, learnings, PR and Slack writing)
