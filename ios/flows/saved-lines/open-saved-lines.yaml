@@ -1,0 +1,19 @@
+# Practice tab > Saved lines card > Saved lines list (All filter).
+# Entry: Home (common/launch-home.yaml). Arrival: the "Recent" section header of the list.
+# Fallbacks (no IDs on the card or the list): text "Saved lines, .*" (card), "Recent" (arrival).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: tab-bar.tab.practice
+- scrollUntilVisible:
+    element:
+      text: "Saved lines, .*"
+    direction: DOWN
+- tapOn:
+    text: "Saved lines, .*"
+- extendedWaitUntil:
+    visible:
+      text: "Recent"
+    timeout: 15000

@@ -1,0 +1,40 @@
+# Case: search, clear, scroll far down the full list, search the same word again.
+# Entry: Saved lines list at the top (open-saved-lines.yaml).
+# Params (pass with -e): WORD, a word that matches exactly one saved line; NEXT, the line
+# right below it in the full list (proves the full list is back after Clear).
+# Ends at the check point with the second query typed; the caller checks the result row's
+# frame in the accessibility tree (the result's position is what differs between builds).
+# Point swipes scroll the list (no swipe selector). Fallbacks (CollapsibleSearchBar gets no SearchBarAccessibilityIdentifiers here):
+# text "Search" (search button, then the field), "Clear" (clear button).
+appId: ${APP_ID}
+---
+- tapOn:
+    text: "Search"
+- inputText: ${WORD}
+- extendedWaitUntil:
+    notVisible:
+      text: ${NEXT}
+    timeout: 10000
+- tapOn:
+    text: "Clear"
+- extendedWaitUntil:
+    visible:
+      text: ${NEXT}
+    timeout: 10000
+- repeat:
+    times: 5
+    commands:
+      # Point swipe: `direction: UP` does not move this SwiftUI ScrollView on the iOS 27 simulator.
+      - swipe:
+          start: 50%, 75%
+          end: 50%, 25%
+          duration: 400
+- extendedWaitUntil:
+    notVisible:
+      text: "Recent"
+    timeout: 5000
+- tapOn:
+    text: "Search"
+- inputText: ${WORD}
+- waitForAnimationToEnd:
+    timeout: 3000

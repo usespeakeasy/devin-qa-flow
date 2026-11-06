@@ -1,0 +1,23 @@
+# Case: with the All filter, scroll far down the list, then open search.
+# Entry: Saved lines list at the top (open-saved-lines.yaml).
+# Ends at the check point with search open; the caller reads the first visible row from the
+# accessibility tree (where the list starts is what differs between builds).
+# Point swipes scroll the list. Fallback: text "Search" (search button, no SearchBarAccessibilityIdentifiers here).
+appId: ${APP_ID}
+---
+- repeat:
+    times: 5
+    commands:
+      # Point swipe: `direction: UP` does not move this SwiftUI ScrollView on the iOS 27 simulator.
+      - swipe:
+          start: 50%, 75%
+          end: 50%, 25%
+          duration: 400
+- extendedWaitUntil:
+    notVisible:
+      text: "Recent"
+    timeout: 5000
+- tapOn:
+    text: "Search"
+- waitForAnimationToEnd:
+    timeout: 3000
