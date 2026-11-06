@@ -1,0 +1,45 @@
+# Tutor Everywhere tooltip tap: same journey as te-ail-intro-tooltip.yaml, then a point tap on the tooltip
+# right away (no screenshot first: it is gone ~1 s after it shows on the no-audio sim) and a screenshot.
+# The sheet is a separate window, not in the tree: assert it from the app log ('Speak Tutor Tapped',
+# 'Speak Tutor Opened', screen 'Speak Tutor Screen') and the screenshot.
+# Entry: Home (home.root.ready). Exit: Tutor Everywhere sheet open over the AI lesson.
+# Preconditions: signed in, dev, Premium, split overrides tutor_everywhere_ai_lessons_enabled=on and
+# chat_mode_native=on, AppDefaults tutorEverywhere_hasSeenFTUX_aiLesson unset (the tooltip shows once),
+# launched with SIMCTL_CHILD_SPEAK_AUTOMATION_MARKERS=1. On the no-audio macOS sim the tooltip is gone
+# ~1 s after it shows (the mic goes live), so screenshot first; QA-only AudioIOController patch needed there.
+# Params: CARD (topic card title, regex; default At a Crêperie), SHOT (screenshot name prefix, required: -e SHOT=...).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  CARD: "At a Cr.perie"
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|ai-data-consent.action.agree"
+    timeout: 30000
+- runFlow: ../../common/dismiss-ai-data-consent.yaml
+- tapOn:
+    id: "tab-bar.tab.aiTutor"
+- tapOn: "Topics"
+- tapOn:
+    text: ${CARD}
+- extendedWaitUntil:
+    visible:
+      id: "lesson.pre-ai.ready"
+    timeout: 30000
+- runFlow:
+    when:
+      visible: "Chat"
+    commands:
+      - tapOn: "Chat"
+- tapOn:
+    id: "lesson.pre-ai.action.start"
+- extendedWaitUntil:
+    visible: "Need help\\? Tap here\\."
+    timeout: 90000
+# TEMPORARY POINT FALLBACK: the tooltip has no ID; its centre on iPhone 18 Pro (frame 201,690 193x53 pt).
+- tapOn:
+    point: "74%,82%"
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${SHOT}-te
