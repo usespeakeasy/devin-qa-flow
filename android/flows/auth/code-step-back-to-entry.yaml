@@ -1,0 +1,17 @@
+# Sign-in sheet back arrow on the code step (`otp_sign_in_code_screen`) returns to the entry step
+# (`otp_sign_in_entry_screen`) inside the sheet; the arrow stays.
+# Entry: `otp_sign_in_code_screen` in the onboarding sign-in sheet (after send-otp-code.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: onboarding_auth_back_button
+- extendedWaitUntil:
+    visible:
+      id: otp_sign_in_entry_screen
+    timeout: 15000
+- assertNotVisible:
+    id: otp_sign_in_code_screen
+- assertVisible:
+    id: onboarding_auth_back_button

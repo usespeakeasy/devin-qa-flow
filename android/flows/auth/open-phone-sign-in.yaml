@@ -1,7 +1,6 @@
 # Signed-out welcome screen > Log in > sign-in options sheet shows "Continue with Phone" (Speak session,
 # `sms_otp_enabled` ON or served ON), e.g. on chinaDevelopDebug. Stops on the options sheet.
 # Entry: app data cleared, storybook on screen.
-# Selectors: the "Continue with Phone" row has no resource-id yet (text fallback).
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
@@ -17,5 +16,6 @@ env:
       id: auth_options_screen
     timeout: 30000
 - extendedWaitUntil:
-    visible: "Continue with Phone"
+    visible:
+      id: auth_options_phone_otp_button
     timeout: 15000

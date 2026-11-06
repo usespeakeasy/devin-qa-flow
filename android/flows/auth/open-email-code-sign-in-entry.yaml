@@ -1,0 +1,20 @@
+# Signed-out welcome > Log in > "Continue with Email Code": the sign-in email code entry step inside the sign-in sheet.
+# Stops before typing. Needs a Speak session with `email_otp_enabled` ON or served ON.
+# Entry: `onboarding_storybook_sign_in_button` (app data cleared or a cold start while signed out).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-sign-in-options.yaml
+- extendedWaitUntil:
+    visible:
+      id: auth_options_email_otp_button
+    timeout: 15000
+- tapOn:
+    id: auth_options_email_otp_button
+- extendedWaitUntil:
+    visible:
+      id: otp_sign_in_entry_screen
+    timeout: 15000
+- assertVisible:
+    id: onboarding_auth_back_button

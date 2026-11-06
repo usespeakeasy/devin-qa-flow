@@ -1,0 +1,19 @@
+# Sign-in sheet back arrow (`onboarding_auth_back_button`) from a step (email form, email or phone code entry) back to
+# the options list (`auth_options_screen`), which hides the arrow again. The sheet stays open.
+# Entry: a step inside the sign-in or sign-up sheet with the back arrow shown.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: onboarding_auth_back_button
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 15000
+- assertNotVisible:
+    id: otp_sign_in_entry_screen
+- assertNotVisible:
+    id: onboarding_sign_in_screen
+- assertNotVisible:
+    id: onboarding_auth_back_button
