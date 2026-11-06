@@ -1,6 +1,7 @@
 # Data & Analytics: tap the privacy policy link at the end of the copy; Chrome opens. The address bar hides "https://www.",
 # so the flow taps it and then "Edit" to put the full URL in the field, which must match URL_RE.
 # Back returns to Data & Analytics. Entry: `data_collection_screen`. Chrome's first-run screen already dismissed.
+# On dev, app.usespeak.dev/privacy is a client-side redirect to www.speak.com/privacy, so the address bar ends on www.speak.com.
 # Selectors: the link is an inline span in the copy, so it has no node of its own (point fallback, LINK_POINT).
 # Chrome's "Edit" suggestion button has only a content description (text fallback, Chrome's own UI).
 # English copy: LINK_POINT=79%,87%.

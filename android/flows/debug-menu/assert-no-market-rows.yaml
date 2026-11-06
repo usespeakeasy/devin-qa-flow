@@ -24,8 +24,8 @@ env:
 - extendedWaitUntil:
     visible: "Debug Menu"
     timeout: 15000
-- assertNotVisible: "Market \\(relaunch required\\)"
-- assertNotVisible: "Storefront country \\(relaunch required\\)"
+- assertNotVisible: "Market \\((relaunch required|restarts the app).*\\)"
+- assertNotVisible: "Storefront country \\((relaunch required|restarts the app)\\)"
 - assertNotVisible:
     id: debug_market_override_default
 - takeScreenshot: ${SHOT}

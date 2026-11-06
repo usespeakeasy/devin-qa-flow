@@ -1,5 +1,5 @@
 # Debug Menu > search "Market": the market row names this launch's market,
-# "Market (relaunch required, this launch: LAUNCH)" (LAUNCH = Global or China).
+# "Market (relaunch required, this launch: LAUNCH)" or, from 4.74.0, "Market (restarts the app, this launch: LAUNCH)" (LAUNCH = Global or China).
 # Entry: any state, signed in or signed out. Exit: on the filtered Debug Menu.
 # maestro test -e LAUNCH=China assert-launch-market.yaml
 appId: ${APP_ID}
@@ -26,5 +26,5 @@ env:
 - inputText: Market
 - hideKeyboard
 - extendedWaitUntil:
-    visible: "Market \\(relaunch required, this launch: ${LAUNCH}\\)"
+    visible: "Market \\((relaunch required|restarts the app), this launch: ${LAUNCH}\\)"
     timeout: 15000

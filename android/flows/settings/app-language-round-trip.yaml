@@ -1,0 +1,46 @@
+# Settings > App Language > LANGUAGE, Home shows HOME_TAB (that language), then Profile > Settings > App Language >
+# English, Home shows "Home" again. No restart: the case script compares the app pid before and after.
+# Entry: `home_root_ready` in English. Exit: Home in English.
+# Selectors: bottom tabs and language rows have no resource-id (text fallback).
+# maestro test -e LANGUAGE=Español -e HOME_TAB=Inicio -e PROFILE_TAB=Perfil -e "ROW=Idioma de la aplicación" ...
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LANGUAGE: ${LANGUAGE || "Español"}
+  HOME_TAB: ${HOME_TAB || "Inicio"}
+  PROFILE_TAB: ${PROFILE_TAB || "Perfil"}
+  ROW: ${ROW || "Idioma de la aplicación"}
+---
+- runFlow: ../../common/open-settings.yaml
+- runFlow:
+    file: app-language-switch.yaml
+    env:
+      LANGUAGE: ${LANGUAGE}
+- tapOn: ${HOME_TAB}
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- assertVisible: ${PROFILE_TAB}
+- assertNotVisible: "^Profile$"
+- takeScreenshot: home_other_language
+- tapOn: ${PROFILE_TAB}
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 15000
+- runFlow:
+    file: app-language-switch.yaml
+    env:
+      APP_LANGUAGE_ROW: ${ROW}
+      LANGUAGE: "English"
+- tapOn: "^Home$"
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- assertVisible: "^Profile$"
+- assertNotVisible: ${PROFILE_TAB}
+- takeScreenshot: home_english

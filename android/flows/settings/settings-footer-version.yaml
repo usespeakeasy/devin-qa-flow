@@ -1,0 +1,21 @@
+# Settings footer: "APP_NAME vVERSION (BUILD) (Flavor)" with the build number in brackets, and no "-china" suffix.
+# Entry: Settings (open-settings.yaml). Exit: Settings scrolled to the footer.
+# Selectors: the footer row has no resource-id (text fallback).
+# maestro test -e VERSION=4.74.0 settings-footer-version.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  VERSION: ${VERSION || "4.74.0"}
+  SHOT: ${SHOT || "settings_footer"}
+---
+- scrollUntilVisible:
+    element:
+      id: settings_log_out_option
+    direction: DOWN
+    timeout: 20000
+- scrollUntilVisible:
+    element: ".* v${VERSION} \\(\\d+\\).*"
+    direction: DOWN
+    timeout: 10000
+- assertNotVisible: ".*-china.*"
+- takeScreenshot: ${SHOT}

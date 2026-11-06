@@ -1,0 +1,82 @@
+# Free Talk > Community: heart topic ID (count COUNT -> COUNT+1 = LIKED), Favorites lists it with the same count,
+# back and unlike (count back to COUNT), Favorites no longer lists it.
+# Entry: Free Talk tab, Community page (heart-community-topic.yaml TAP=false). ID is the community id
+# (ai_tutor_community_item_<ID>); the script reads ID and COUNT from a dump. Precondition: ID not liked.
+# The heart's liked state has no semantics (icon tint only), so the screenshots are the visual check and the
+# count under the button is the mechanical one.
+# Selectors: Community tab and Favorites title fall back to text.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: ai_tutor_favorites_button
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_favorites_screen
+    timeout: 20000
+- assertNotVisible:
+    id: ai_tutor_community_item_${ID}
+- back
+- tapOn: "^Community$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_like_button_${ID}
+    timeout: 20000
+- tapOn:
+    id: ai_tutor_community_like_button_${ID}
+- extendedWaitUntil:
+    visible:
+      text: ${LIKED}
+      childOf:
+        id: ai_tutor_community_like_button_${ID}
+    timeout: 10000
+- takeScreenshot: liked_community
+- tapOn:
+    id: ai_tutor_favorites_button
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_item_${ID}
+    timeout: 20000
+- assertVisible:
+    text: ${LIKED}
+    childOf:
+      id: ai_tutor_community_like_button_${ID}
+- takeScreenshot: liked_favorites
+- back
+- tapOn: "^Community$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_like_button_${ID}
+    timeout: 20000
+- assertVisible:
+    text: ${LIKED}
+    childOf:
+      id: ai_tutor_community_like_button_${ID}
+- tapOn:
+    id: ai_tutor_community_like_button_${ID}
+- extendedWaitUntil:
+    visible:
+      text: ${COUNT}
+      childOf:
+        id: ai_tutor_community_like_button_${ID}
+    timeout: 10000
+- takeScreenshot: unliked_community
+- tapOn:
+    id: ai_tutor_favorites_button
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_favorites_screen
+    timeout: 20000
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_favorites_loading
+    timeout: 15000
+- assertNotVisible:
+    id: ai_tutor_community_item_${ID}
+- takeScreenshot: unliked_favorites
+- back
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 15000

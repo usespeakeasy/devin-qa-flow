@@ -16,6 +16,12 @@ env:
         id: course_streak_repair_dialog_root
     commands:
       - pressKey: Back
+# Builds before 4.74.0 (e.g. release/4.73.0) show the sheet without the root id: text fallback.
+- runFlow:
+    when:
+      visible: "We saved your .*streak!"
+    commands:
+      - pressKey: Back
 - extendedWaitUntil:
     visible:
       id: home_root_ready

@@ -1,0 +1,32 @@
+# Debug Menu > search "Server": the Server URL field shows an https URL whose host does not end in .cn.
+# Entry: any state. Exit: on the filtered Debug Menu.
+# Selectors: the Server URL field has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "server_url"}
+---
+- repeat:
+    times: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Debug Menu"
+          commands:
+            - back
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 30000
+- tapOn:
+    text: Search
+- waitForAnimationToEnd
+- inputText: Server
+- hideKeyboard
+- extendedWaitUntil:
+    visible: "Server URL"
+    timeout: 15000
+- assertVisible: "https://[^ ]*"
+- assertNotVisible: "https?://[^ /]*\\.cn(/.*)?"
+- takeScreenshot: ${SHOT}

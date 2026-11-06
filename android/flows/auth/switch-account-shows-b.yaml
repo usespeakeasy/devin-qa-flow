@@ -1,0 +1,49 @@
+# Signed in as A: Profile shows NAME_A; log out, email sign-in as B; Home shows B's course (PAIR_B) and Profile
+# B's name and streak, never A's name or streak.
+# Entry: `home_root_ready` as A. Params (run time only): EMAIL, PASSWORD (B), NAME_A, STREAK_A, NAME_B, STREAK_B
+# (Profile "LONGEST STREAK", e.g. "3 days"), PAIR_B (Home learning path language pair id, e.g. english-spanish).
+# Selectors: Profile tab and the log out confirm have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn: "Profile"
+- extendedWaitUntil:
+    visible:
+      id: title
+      text: ${NAME_A}
+    timeout: 15000
+- takeScreenshot: profile_a
+- tapOn:
+    id: action_settings
+- scrollUntilVisible:
+    element:
+      id: settings_log_out_option
+    direction: DOWN
+- tapOn:
+    id: settings_log_out_option
+- assertVisible: "Are you sure you want to sign out\\?"
+- tapOn:
+    text: "Log out"
+    below: "Are you sure you want to sign out\\?"
+- runFlow: ../../common/open-email-sign-in.yaml
+- runFlow: ../../common/submit-email-sign-in.yaml
+- runFlow: ../../common/dismiss-premium-intro.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_language_pair_${PAIR_B}
+    timeout: 30000
+- assertNotVisible: ${NAME_A}
+- takeScreenshot: home_b
+- tapOn: "Profile"
+- extendedWaitUntil:
+    visible:
+      id: title
+      text: ${NAME_B}
+    timeout: 15000
+- assertVisible:
+    id: stat_streak_title
+    text: ${STREAK_B}
+- assertNotVisible: ${NAME_A}
+- assertNotVisible: ${STREAK_A}
+- takeScreenshot: profile_b
