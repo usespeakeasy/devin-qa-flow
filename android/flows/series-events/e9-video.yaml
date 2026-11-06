@@ -1,0 +1,39 @@
+# Injected video card (QA patch qaWithVideo): player tap shows controls, play/pause, redo, subtitles (optional:
+# controls auto-hide), Home and back, then Tap to continue leaves the video. Entry: Home. Exit: series_list.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-2_mexico_city_survival__requestmedicine__SP"}
+  QA_SR: ${QA_SR || "false"}
+---
+- runFlow: ../series-session/c1-video-a-open.yaml
+- takeScreenshot: e9-video
+- tapOn:
+    id: player
+- tapOn:
+    id: play_video
+    optional: true
+- tapOn:
+    id: player
+- tapOn:
+    id: subtitles_video
+    optional: true
+- tapOn:
+    id: redo_video
+    optional: true
+- takeScreenshot: e9-controls
+- runFlow: ../series-session/c1-video-b-background.yaml
+- extendedWaitUntil:
+    visible:
+      id: tap_to_continue
+    timeout: 60000
+- doubleTapOn:
+    id: tap_to_continue
+- extendedWaitUntil:
+    notVisible:
+      id: player
+    timeout: 20000
+    optional: true
+- assertVisible:
+    id: series_list
+- takeScreenshot: e9-after-video

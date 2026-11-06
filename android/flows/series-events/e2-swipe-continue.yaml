@@ -1,0 +1,30 @@
+# Swipe back to the previous card and let it settle: Continue shows; double-tap Continue: one return to the
+# current card. Entry: current line card. Exit: the current card (speak_now_header or paused_header) on LINE.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LINE: ${LINE || "¿Qué tal\\?"}
+---
+- swipe:
+    start: "50%,30%"
+    end: "50%,85%"
+    duration: 600
+- extendedWaitUntil:
+    visible:
+      id: continue_button
+    timeout: 15000
+- takeScreenshot: e2-previous-card
+- doubleTapOn:
+    id: continue_button
+- extendedWaitUntil:
+    notVisible:
+      id: continue_button
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: "speak_now_header|paused_header|failure_header"
+    timeout: 20000
+- assertVisible:
+    id: line
+    text: ${LINE}
+- takeScreenshot: e2-back-on-current

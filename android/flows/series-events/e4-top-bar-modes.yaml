@@ -1,0 +1,52 @@
+# Top bar: hands free on and off (toggle text), transcription mode twice, listen mode on (screenshot) and off.
+# Entry: listening line card. Exit: same card, modes back to the start.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: hands_free_mode_toggle
+- extendedWaitUntil:
+    visible:
+      id: toggle
+      text: "ON"
+    timeout: 5000
+- takeScreenshot: e4-hands-free-on
+- tapOn:
+    id: hands_free_mode_toggle
+- extendedWaitUntil:
+    visible:
+      id: toggle
+      text: "OFF"
+    timeout: 5000
+- tapOn:
+    id: transcription_mode_toggle
+- takeScreenshot: e4-transcription-1
+- tapOn:
+    id: transcription_mode_toggle
+- tapOn:
+    id: listen_mode_toggle
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: e4-listen-on
+- tapOn:
+    id: listen_mode_toggle
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: series_list
+- takeScreenshot: e4-listen-off
+# Listen mode turns hands free on; put it back off.
+- runFlow:
+    when:
+      visible:
+        id: toggle
+        text: "ON"
+    commands:
+      - tapOn:
+          id: hands_free_mode_toggle
+- extendedWaitUntil:
+    visible:
+      id: toggle
+      text: "OFF"
+    timeout: 5000

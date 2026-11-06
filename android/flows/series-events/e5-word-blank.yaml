@@ -1,0 +1,69 @@
+# Word tap opens one pronunciation sheet (double tap), Back closes it; listen mode hides the line, a tap on the
+# hidden line reveals it. The blank (QA patch blanks "tal" in "¿Qué tal?") is tapped before listen mode. Point fallback: words and blanks have no resource-id. The runner counts
+# "Speaking Card Word Tapped" / "Speaking Card Hidden Text Revealed". Entry: line card. Exit: same card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- doubleTapOn:
+    point: "40%,37%"
+- extendedWaitUntil:
+    visible:
+      id: magic_dictionary
+    timeout: 15000
+- takeScreenshot: e5-word-sheet
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: magic_dictionary
+    timeout: 5000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: magic_dictionary
+    commands:
+      - takeScreenshot: e5-second-sheet
+      - back
+- extendedWaitUntil:
+    notVisible:
+      id: magic_dictionary
+    timeout: 10000
+- tapOn:
+    point: "59%,36%"
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: e5-blank-tapped
+- tapOn:
+    id: listen_mode_toggle
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn:
+    point: "50%,37%"
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: e5-blank-revealed
+- runFlow:
+    when:
+      visible:
+        id: magic_dictionary
+    commands:
+      - back
+- tapOn:
+    id: listen_mode_toggle
+- assertVisible:
+    id: series_list
+# Listen mode turns hands free on; put it back off.
+- runFlow:
+    when:
+      visible:
+        id: toggle
+        text: "ON"
+    commands:
+      - tapOn:
+          id: hands_free_mode_toggle
+- extendedWaitUntil:
+    visible:
+      id: toggle
+      text: "OFF"
+    timeout: 5000

@@ -1,0 +1,30 @@
+# Line playback and retry: play_line twice, redo_line (retry) restarts listening. Entry: line card before the
+# answer. Exit: speak_now_header.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: play_line
+- tapOn:
+    id: play_line
+- takeScreenshot: e6-play
+- runFlow:
+    when:
+      visible:
+        id: redo_line
+    commands:
+      - tapOn:
+          id: redo_line
+- runFlow:
+    when:
+      visible:
+        id: restart
+    commands:
+      - tapOn:
+          id: restart
+- extendedWaitUntil:
+    visible:
+      id: speak_now_header
+    timeout: 20000
+- takeScreenshot: e6-listening

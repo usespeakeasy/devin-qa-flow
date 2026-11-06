@@ -1,0 +1,35 @@
+# Tutor button double-tapped: one Speak Tutor sheet; Back closes it and the card listens again. The runner counts
+# "Speak Tutor Tapped". Entry: line card, tutor_button. Exit: speak_now_header or paused_header.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- doubleTapOn:
+    id: "tutor_button_(line|restart)"
+- extendedWaitUntil:
+    visible:
+      id: tutor_everywhere_sheet
+    timeout: 20000
+- takeScreenshot: e7-tutor
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_everywhere_sheet
+    timeout: 10000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: tutor_everywhere_sheet
+    commands:
+      - takeScreenshot: e7-second-sheet
+      - back
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_everywhere_sheet
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: "speak_now_header|paused_header"
+    timeout: 20000
+- takeScreenshot: e7-after
