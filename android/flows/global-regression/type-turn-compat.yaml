@@ -1,0 +1,34 @@
+# AI lesson chat mode: type TEXT and send it as the learner turn; the partner answers.
+# Entry: AI lesson in chat mode, mic not recording (open-free-talk-scenario.yaml).
+# Exit: the keyboard stays open, the partner's next turn has arrived. Waits on ai_lesson_partner_message_actions, which release/4.73.0 has too (ai_lesson_transcript_report is newer).
+# maestro test -e TEXT="Hola" type-turn.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_keyboard_field
+    commands:
+      - tapOn:
+          id: ai_lesson_keyboard_toggle
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_keyboard_field
+    timeout: 10000
+- tapOn:
+    id: ai_lesson_keyboard_field
+- inputText: ${TEXT}
+- tapOn:
+    id: ai_lesson_keyboard_send
+# The sent turn shows as feedback, not as typed, so wait for the emptied field and the partner's answer.
+- extendedWaitUntil:
+    visible: "^Reply\\.\\.\\.$"
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_partner_message_actions
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 10000

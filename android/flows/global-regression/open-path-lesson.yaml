@@ -1,0 +1,55 @@
+# Opens a Home path lesson popover by lesson id. Home scrolls to the current path item, so an earlier lesson can sit
+# above it off screen, and a finished loop shows only its bubble (learning_path_loop_<id>, tagged since 4.74.0); tap it to open.
+# A short swipe brings the earlier loop into view: a tap right after scrollUntilVisible only settled the list and opened nothing.
+# 4.73.0 has no loop tag: fall back to the loop title text LOOP_TEXT (index LOOP_TEXT_INDEX; index 0 is the unit header).
+# Entry: Home. Exit: the lesson's item tapped.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LOOP_TEXT: ${LOOP_TEXT || 'Introduction'}
+  LOOP_TEXT_INDEX: ${LOOP_TEXT_INDEX || 1}
+---
+- repeat:
+    while:
+      notVisible:
+        id: learning_path_lesson_item_${LESSON_ID}
+    times: 3
+    commands:
+      - swipe:
+          start: 50%, 35%
+          end: 50%, 60%
+          duration: 600
+      - waitForAnimationToEnd:
+          timeout: 3000
+      - runFlow:
+          when:
+            visible:
+              id: learning_path_loop_${LOOP_ID}
+          commands:
+            - tapOn:
+                id: learning_path_loop_${LOOP_ID}
+            - extendedWaitUntil:
+                visible:
+                  id: learning_path_lesson_item_${LESSON_ID}
+                timeout: 5000
+                optional: true
+      - runFlow:
+          when:
+            notVisible:
+              id: learning_path_lesson_item_${LESSON_ID}
+          commands:
+            - runFlow:
+                when:
+                  notVisible:
+                    id: "learning_path_loop_.*"
+                commands:
+                  - tapOn:
+                      text: ${LOOP_TEXT}
+                      index: ${LOOP_TEXT_INDEX}
+                  - extendedWaitUntil:
+                      visible:
+                        id: learning_path_lesson_item_${LESSON_ID}
+                      timeout: 5000
+                      optional: true
+- tapOn:
+    id: learning_path_lesson_item_${LESSON_ID}

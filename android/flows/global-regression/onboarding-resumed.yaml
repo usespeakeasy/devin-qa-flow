@@ -1,0 +1,24 @@
+# After am kill mid-onboarding and a relaunch: onboarding resumes past sign-up (not the welcome, language or auth screen).
+# Entry: relaunched after onboarding-to-chat.yaml. Exit: the onboarding chat (or the notification prompt over it).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT_PREFIX: ${SHOT_PREFIX || "c41"}
+---
+- extendedWaitUntil:
+    visible:
+      id: "(onboarding_magic_.*|permission_allow_button)"
+    timeout: 60000
+- assertNotVisible:
+    id: onboarding_language_screen
+- assertNotVisible:
+    id: auth_options_screen
+- takeScreenshot: ${SHOT_PREFIX}-05-resumed
+- runFlow:
+    when:
+      visible:
+        id: permission_allow_button
+    commands:
+      - takeScreenshot: ${SHOT_PREFIX}-06-notification-prompt
+      - tapOn:
+          id: permission_allow_button

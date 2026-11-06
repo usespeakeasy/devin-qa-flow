@@ -1,0 +1,86 @@
+# Free Talk tab > Topics > "At a Coffee Shop" (French course topic; steps of open-free-talk-scenario.yaml, inlined because its TOPIC env default wins over a runFlow env) in chat mode, one typed turn. Entry: signed in, Premium. Exit: partner answered turn 1.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT_PREFIX: ${SHOT_PREFIX || "c44"}
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn: "Free Talk"
+- runFlow:
+    when:
+      visible: "^Get started$"
+    commands:
+      - tapOn: "^Get started$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000
+- tapOn: "^Topics$"
+# A banner (e.g. "Get full access to Speak") can push the topic below the fold.
+- scrollUntilVisible:
+    element: "At a Coffee Shop"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "At a Coffee Shop"
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_start
+    timeout: 20000
+- runFlow:
+    when:
+      visible: "^Chat mode$"
+    commands:
+      - tapOn: "^Chat mode$"
+# With ai_lesson_immersive_toggle on, the pre-lesson shows a Chat/Immersive toggle that keeps the last mode.
+- runFlow:
+    when:
+      visible:
+        id: mode_toggle_chat
+    commands:
+      - tapOn:
+          id: mode_toggle_chat
+- tapOn:
+    id: ai_lesson_pre_lesson_start
+- waitForAnimationToEnd:
+    timeout: 3000
+# ai_data_consent_mode (new in 4.74.0) asks once before the first AI request; allow so the lesson can start.
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert
+    commands:
+      - takeScreenshot: ${SHOT_PREFIX}-ai-data-consent-alert
+      - tapOn:
+          id: ai_data_consent_alert_allow
+# An unfinished earlier run of the same scenario asks to continue; start over so every case starts the same.
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_resume_start_over
+    commands:
+      - tapOn:
+          id: ai_lesson_resume_start_over
+- extendedWaitUntil:
+    visible:
+      id: "ai_lesson_primary_(send|record)"
+    timeout: 60000
+# The chat can start with the mic already recording; cancel it so taps reach the controls.
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_record_cancel
+    commands:
+      - tapOn:
+          id: ai_lesson_record_cancel
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_primary_record
+    timeout: 10000
+- assertVisible:
+    id: ai_lesson_screen
+- runFlow:
+    file: type-turn-compat.yaml
+    env:
+      TEXT: "Bonjour ! Un café, s'il vous plaît."
+- hideKeyboard
+- takeScreenshot: c44-05-freetalk-before-background

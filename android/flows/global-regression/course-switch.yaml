@@ -1,0 +1,58 @@
+# Settings > Language Course > LANG: Home shows the PAIR course (learning_path_language_pair_PAIR).
+# Entry: Home tab, signed in. Exit: Home on the new course. Selectors: Language Course row and language names (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LANG: ${LANG || "Spanish"}
+  PAIR: ${PAIR || "english-spanish"}
+---
+- runFlow:
+    when:
+      notVisible:
+        id: main_navigation
+    commands:
+      - runFlow: ../../common/launch-home.yaml
+- runFlow: ../../common/open-settings.yaml
+- scrollUntilVisible:
+    element: "^Language Course$"
+    direction: DOWN
+- tapOn: "^Language Course$"
+- extendedWaitUntil:
+    visible: "I am learning"
+    timeout: 20000
+- takeScreenshot: c45-${PAIR}-01-language-course
+- tapOn: "^${LANG}$"
+# The referral popup ("Invite friends and get $10") can open over Home after the switch, before home_root_ready shows.
+- repeat:
+    while:
+      notVisible:
+        id: home_root_ready
+    times: 30
+    commands:
+      - runFlow:
+          when:
+            visible: "^Later$"
+          commands:
+            - takeScreenshot: c45-${PAIR}-01b-referral-popup
+            - tapOn: "^Later$"
+      - waitForAnimationToEnd:
+          timeout: 2000
+- runFlow:
+    when:
+      visible: "^Later$"
+    commands:
+      - takeScreenshot: c45-${PAIR}-01b-referral-popup
+      - tapOn: "^Later$"
+- assertVisible:
+    id: home_root_ready
+- extendedWaitUntil:
+    visible:
+      id: learning_path_language_pair_${PAIR}
+    timeout: 60000
+- assertVisible:
+    id: home_root_ready
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- takeScreenshot: c45-${PAIR}-02-home

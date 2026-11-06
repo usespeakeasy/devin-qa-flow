@@ -1,0 +1,131 @@
+# Settings: open every row once and Back: Notifications (+ Daily Reminders), Manage Account, Manage Membership,
+# App Language, Language Course, Preferences, Support Center, Get Subscription History, Clear Cache, About,
+# Improve Voice Recognition. Entry: Home, signed in (Premium override). Exit: Settings.
+# Selectors: rows without resource-ids use their English titles (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  EMAIL: ${EMAIL}
+---
+- runFlow: ../../common/launch-home.yaml
+# notifications-open.yaml asserts every topic toggle; topics are per-account server data, so only the screen is asserted here.
+- runFlow: ../../common/open-settings.yaml
+- tapOn: "^Notifications$"
+- extendedWaitUntil:
+    visible:
+      id: notifications_daily_reminder
+    timeout: 15000
+- takeScreenshot: c46-01-notifications
+- tapOn:
+    id: notifications_daily_reminder
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: c46-02-reminders
+- repeat:
+    while:
+      notVisible:
+        id: settings_manage_account_option
+    times: 3
+    commands:
+      - back
+      - waitForAnimationToEnd:
+          timeout: 3000
+- back
+- tapOn: "^Home$"
+- runFlow:
+    file: ../settings/manage-account.yaml
+    env:
+      EMAIL: ${EMAIL}
+- tapOn: "^Home$"
+- runFlow: ../settings/manage-membership.yaml
+- tapOn: "^Home$"
+- runFlow: ../settings/app-language-cancel.yaml
+- tapOn: "^Home$"
+- runFlow: ../../common/open-settings.yaml
+# about_sheet is not on release/4.73.0 (added with the ICP row work), so the sheet is matched by its rows.
+- scrollUntilVisible:
+    element: "^About$"
+    direction: DOWN
+- tapOn: "^About$"
+- extendedWaitUntil:
+    visible: "^Terms of Service$"
+    timeout: 15000
+- assertVisible: "^Open source licenses$"
+- takeScreenshot: c46-03-about
+- back
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 10000
+- scrollUntilVisible:
+    element: "^Preferences$"
+    direction: DOWN
+- tapOn: "^Preferences$"
+- extendedWaitUntil:
+    visible: "Join Beta"
+    timeout: 15000
+- takeScreenshot: c46-04-preferences
+- back
+- extendedWaitUntil:
+    visible: "^Preferences$"
+    timeout: 10000
+- tapOn: "^Support Center$"
+- extendedWaitUntil:
+    visible: "How can we help\\?"
+    timeout: 30000
+- takeScreenshot: c46-05-support
+- back
+- extendedWaitUntil:
+    visible: "^Support Center$"
+    timeout: 15000
+- scrollUntilVisible:
+    element: "^Language Course$"
+    direction: DOWN
+- tapOn: "^Language Course$"
+- extendedWaitUntil:
+    visible: "I am learning"
+    timeout: 15000
+- takeScreenshot: c46-06-language-course
+- back
+- extendedWaitUntil:
+    visible: "^Language Course$"
+    timeout: 10000
+- tapOn:
+    id: settings_clear_cache_option
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: c46-07-clear-cache
+- runFlow:
+    when:
+      notVisible:
+        id: settings_clear_cache_option
+    commands:
+      - back
+- scrollUntilVisible:
+    element: "^Improve Voice Recognition$"
+    direction: DOWN
+- tapOn: "^Improve Voice Recognition$"
+# data_collection_screen is not on release/4.73.0 (added in develop 8807359c14), so the screen is matched by its title and switch row.
+- extendedWaitUntil:
+    visible: "^Data & Analytics$"
+    timeout: 15000
+- assertVisible: "Allow Voice Data Collection"
+- takeScreenshot: c46-08-voice
+- back
+- extendedWaitUntil:
+    visible: "^Improve Voice Recognition$"
+    timeout: 10000
+- scrollUntilVisible:
+    element: "^Get Subscription History$"
+    direction: UP
+- tapOn: "^Get Subscription History$"
+- extendedWaitUntil:
+    visible: "^Request$"
+    timeout: 15000
+- takeScreenshot: c46-09-subscription-history
+- tapOn: "^Cancel$"
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 10000
+- takeScreenshot: c46-10-settings

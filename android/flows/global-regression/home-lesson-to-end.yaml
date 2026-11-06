@@ -1,0 +1,90 @@
+# Regular (drill) lesson started from its Home path item: popover Start, Back mid-lesson (close sheet > Keep Learning),
+# skip every card, lesson end (review dialog, readout, streak, goal), Home shows the next lesson's Start.
+# Entry: signed in, Premium override, the course containing LESSON_ID. Exit: home_root_ready.
+# Selectors: the path popover Start of a done lesson and the close sheet have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LOOP_ID: ${LOOP_ID || "gyiwsoj99155u0eaoclnyhhbdn0zf4y8x0iwg4fgnsw7oztz"}
+  LESSON_ID: ${LESSON_ID || "EN_FR_L1-rev_cava_SP_DL_IC"}
+  SHOT_PREFIX: ${SHOT_PREFIX || "c43"}
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow:
+    file: open-path-lesson.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+      LOOP_ID: ${LOOP_ID}
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT_PREFIX}-01-popover
+- runFlow:
+    when:
+      visible:
+        id: learning_path_lesson_start_${LESSON_ID}
+    commands:
+      - tapOn:
+          id: learning_path_lesson_start_${LESSON_ID}
+- runFlow:
+    when:
+      notVisible:
+        id: learning_path_lesson_start_${LESSON_ID}
+    commands:
+      - tapOn: "^(Start|Review|Practice again|Redo)$"
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_root
+    timeout: 15000
+    optional: true
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "^Start over$"
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- takeScreenshot: ${SHOT_PREFIX}-02-lesson
+- runFlow:
+    file: back-in-drill.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+      SHOT: ${SHOT_PREFIX}-03-after-back-in-lesson
+- repeat:
+    while:
+      visible:
+        id: drill_lesson_skip
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "(lesson_end_.*|ask_for_review_.*dialog)"
+    timeout: 60000
+- takeScreenshot: ${SHOT_PREFIX}-04-lesson-end-first-step
+- runFlow:
+    when:
+      visible:
+        id: ask_for_review_.*dialog
+    commands:
+      - back
+      - waitForAnimationToEnd:
+          timeout: 3000
+      - takeScreenshot: ${SHOT_PREFIX}-05-after-back-on-review
+- runFlow:
+    when:
+      visible:
+        id: lesson_end_reskin_continue_button
+    commands:
+      - takeScreenshot: ${SHOT_PREFIX}-06-readout
+- runFlow: ../lesson-end/review-dialog-to-home.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT_PREFIX}-07-home-next-lesson

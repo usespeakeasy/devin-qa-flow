@@ -1,0 +1,38 @@
+# System Back in a drill lesson: either the close sheet ("Are you sure you want to quit this lesson?") opens
+# and Keep Learning returns to the lesson, or the lesson closes to Home (no confirm for this lesson state) and
+# it is reopened with Continue. Screenshot SHOT shows what Back did. Entry: drill lesson. Exit: drill lesson, Next visible.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: ${LESSON_ID || "EN_FR_L1-rev_cava_SP_DL_IC"}
+  SHOT: ${SHOT || "back-in-drill"}
+---
+- assertVisible:
+    id: drill_lesson_root
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      visible: "Are you sure you want to quit this lesson\\?"
+    commands:
+      - runFlow: ../tutor-lesson/close-sheet-keep-learning.yaml
+- runFlow:
+    when:
+      notVisible:
+        id: drill_lesson_root
+    commands:
+      - runFlow:
+          file: ../tutor-lesson/open.yaml
+          env:
+            LESSON_ID: ${LESSON_ID}
+      - runFlow:
+          when:
+            visible: "Continue where you left off\\?"
+          commands:
+            - tapOn: "^Continue$"
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 30000

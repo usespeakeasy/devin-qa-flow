@@ -1,0 +1,85 @@
+# Cold start to Home, then every bottom tab (Home, Free Talk Topics and Community, Practice (Review section), Challenge, Profile):
+# each tab's content loads, scroll down and back up, screenshot scrolled. Entry: signed in. Exit: Home tab.
+# Selectors: bottom tabs, Free Talk sub-tabs and the Free Talk FTUX "Get started" have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+- takeScreenshot: c42-01-home
+- scroll
+- scroll
+- takeScreenshot: c42-02-home-scrolled
+- swipe:
+    direction: DOWN
+- swipe:
+    direction: DOWN
+- tapOn: "^Free Talk$"
+- runFlow:
+    when:
+      visible: "^Get started$"
+    commands:
+      - tapOn: "^Get started$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000
+- tapOn: "^Topics$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_overview_root
+    timeout: 20000
+- takeScreenshot: c42-03-freetalk-topics
+- scroll
+- scroll
+- takeScreenshot: c42-04-freetalk-topics-scrolled
+- tapOn: "^Community$"
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: c42-05-freetalk-community
+- scroll
+- takeScreenshot: c42-06-freetalk-community-scrolled
+- tapOn: "^Practice$"
+- extendedWaitUntil:
+    visible: "^Review$"
+    timeout: 30000
+- takeScreenshot: c42-07-practice
+- scroll
+- scroll
+- takeScreenshot: c42-08-practice-scrolled
+- tapOn: "^Challenge$"
+- extendedWaitUntil:
+    visible: "^Leagues$"
+    timeout: 30000
+# A finished league week shows its result ("You finished in position N ...") with Continue before the tier list.
+- runFlow:
+    when:
+      visible: "You finished in position.*"
+    commands:
+      - takeScreenshot: c42-09a-challenge-league-result
+      - tapOn: "^Continue$"
+- extendedWaitUntil:
+    visible:
+      id: "(placeholder_title|tier_list)"
+    timeout: 30000
+- takeScreenshot: c42-09-challenge
+- scroll
+- takeScreenshot: c42-10-challenge-scrolled
+- tapOn: "^Profile$"
+- extendedWaitUntil:
+    visible:
+      id: stat_streak_title
+    timeout: 30000
+- takeScreenshot: c42-11-profile
+- scroll
+- scroll
+- takeScreenshot: c42-12-profile-scrolled
+- tapOn: "^Home$"
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000

@@ -1,0 +1,39 @@
+# Dark mode + largest font (set by adb before this flow): Home, a drill lesson and its lesson end.
+# Entry: signed in, Premium override. Exit: Home.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: ${LESSON_ID || "EN_FR_L1-rev_cava_SP_DL_IC"}
+---
+- runFlow: ../../common/launch-home.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: c47-01-home
+- runFlow:
+    file: ../tutor-lesson/open-fresh.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: c47-02-lesson
+- repeat:
+    while:
+      visible:
+        id: drill_lesson_skip
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "(lesson_end_.*|ask_for_review_.*dialog)"
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: c47-03-lesson-end
+- runFlow: ../lesson-end/review-dialog-to-home.yaml

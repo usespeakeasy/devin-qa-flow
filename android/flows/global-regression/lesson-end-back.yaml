@@ -1,0 +1,55 @@
+# Drill lesson to the lesson end, then system Back on each lesson end step until Home (max 6 presses):
+# Back never leaves a blank screen or reopens the lesson. Entry: Home. Exit: home_root_ready.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: ${LESSON_ID || "EN_FR_L1-rev_cava_SP_DL_IC"}
+  SHOT_PREFIX: ${SHOT_PREFIX || "c43b"}
+---
+- runFlow:
+    file: ../tutor-lesson/open-fresh.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- repeat:
+    while:
+      visible:
+        id: drill_lesson_skip
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "(lesson_end_.*|ask_for_review_.*dialog)"
+    timeout: 60000
+- takeScreenshot: ${SHOT_PREFIX}-01-lesson-end
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT_PREFIX}-02-after-back-1
+- runFlow:
+    when:
+      notVisible:
+        id: home_root_ready
+    commands:
+      - back
+      - waitForAnimationToEnd:
+          timeout: 3000
+      - takeScreenshot: ${SHOT_PREFIX}-03-after-back-2
+- repeat:
+    while:
+      notVisible:
+        id: home_root_ready
+    times: 4
+    commands:
+      - back
+      - waitForAnimationToEnd:
+          timeout: 3000
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- assertNotVisible:
+    id: drill_lesson_root
+- takeScreenshot: ${SHOT_PREFIX}-04-home

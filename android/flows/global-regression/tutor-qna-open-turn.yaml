@@ -1,0 +1,83 @@
+# Tutor Q&A lesson (Speak Embedded) from its Home path item: preview > Start > text mode > answer question 1.
+# Entry: signed in, Premium override, course with QNA_ID. Exit: QUESTION 2 showing.
+# Selectors: Speak Embedded web ids (ai-lesson-*), "QUESTION n/m" text.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT_PREFIX: ${SHOT_PREFIX || "c44"}
+  LOOP_ID: ${LOOP_ID || "gyiwsoj99155u0eaoclnyhhbdn0zf4y8x0iwg4fgnsw7oztz"}
+  QNA_ID: ${QNA_ID || "EN_FR_L1-rev_cava_QNA"}
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow:
+    file: open-path-lesson.yaml
+    env:
+      LESSON_ID: ${QNA_ID}
+      LOOP_ID: ${LOOP_ID}
+- runFlow:
+    when:
+      visible:
+        id: learning_path_lesson_start_${QNA_ID}
+    commands:
+      - tapOn:
+          id: learning_path_lesson_start_${QNA_ID}
+# A finished lesson's popover button has no resource-id and reads Review (text fallback).
+- runFlow:
+    when:
+      notVisible:
+        id: learning_path_lesson_start_${QNA_ID}
+      visible: "^(Start|Review|Practice again|Redo)$"
+    commands:
+      - tapOn: "^(Start|Review|Practice again|Redo)$"
+- extendedWaitUntil:
+    visible:
+      id: ai-lesson-start-button
+    timeout: 60000
+- takeScreenshot: c44-01-tutor-preview
+- tapOn:
+    id: ai-lesson-start-button
+- waitForAnimationToEnd:
+    timeout: 3000
+# ai_data_consent_mode (new in 4.74.0) asks once before the first AI request; allow so the lesson can start.
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert
+    commands:
+      - takeScreenshot: ${SHOT_PREFIX}-ai-data-consent-alert
+      - tapOn:
+          id: ai_data_consent_alert_allow
+- extendedWaitUntil:
+    visible:
+      id: "ai-lesson-(text-input-mode-button|text-input|recording-submit-button)"
+    timeout: 15000
+    optional: true
+# Saved progress from an earlier run opens "Continue where you left off?"; start over so both builds start on question 1.
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "^Start Over$"
+- extendedWaitUntil:
+    visible:
+      id: "ai-lesson-(text-input-mode-button|text-input)"
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: ai-lesson-text-input-mode-button
+    commands:
+      - tapOn:
+          id: ai-lesson-text-input-mode-button
+- extendedWaitUntil:
+    visible: "QUESTION 1/.*"
+    timeout: 30000
+- tapOn:
+    id: ai-lesson-text-input
+- inputText: "Ça va ?"
+- tapOn:
+    id: ai-lesson-text-submit-button
+- extendedWaitUntil:
+    visible: "QUESTION 2/.*"
+    timeout: 60000
+- takeScreenshot: c44-02-tutor-before-background

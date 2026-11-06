@@ -1,0 +1,42 @@
+# After Home + am kill + relaunch mid-lesson: the drill lesson is back (or the restore dialog; Continue),
+# on the card it was on (CARD_TEXT), then Back closes it (close sheet > Quit, or straight back). Entry: relaunched. Exit: the main tabs.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  CARD_TEXT: ${CARD_TEXT || '.*'}
+---
+- extendedWaitUntil:
+    visible:
+      id: "(drill_lesson_root|home_root_ready)"
+    timeout: 60000
+- takeScreenshot: c48-02-after-relaunch
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - takeScreenshot: c48-03-restore-dialog
+      - tapOn: "^Continue$"
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 30000
+- takeScreenshot: c48-04-restored
+# CARD_TEXT is the card's line before the kill: the lesson must restore on that card, not on card 1.
+- assertVisible: ${CARD_TEXT}
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: c48-05-after-back
+- runFlow:
+    when:
+      visible: "^Quit$"
+    commands:
+      - tapOn: "^Quit$"
+# Back after the restore either opens the close sheet (Quit) or closes the lesson straight to the tab it was opened from.
+- extendedWaitUntil:
+    visible:
+      id: main_navigation
+    timeout: 30000
+- assertNotVisible:
+    id: drill_lesson_root
+- takeScreenshot: c48-06-after-quit

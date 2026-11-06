@@ -1,0 +1,56 @@
+# After 30 s in the background: the Tutor Q&A lesson is still on QUESTION 2; answer every question by text until the lesson ends.
+# Entry: tutor-qna-open-turn.yaml, app brought back from the background. Exit: Home.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible: "QUESTION 2/.*"
+    timeout: 30000
+- assertVisible:
+    id: ai-lesson-text-input
+- takeScreenshot: c44-03-tutor-after-background
+# The lesson has parts ("Part 1 of 2 completed!" > Continue); answer every question by text until the lesson end.
+- repeat:
+    while:
+      notVisible:
+        id: "(lesson_end_.*|ask_for_review_.*dialog|home_root_ready)"
+    times: 40
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: ai-lesson-text-input-mode-button
+          commands:
+            - tapOn:
+                id: ai-lesson-text-input-mode-button
+      - runFlow:
+          when:
+            visible:
+              id: ai-lesson-text-input
+          commands:
+            - tapOn:
+                id: ai-lesson-text-input
+            - inputText: "Oui, ça va bien, merci !"
+            - tapOn:
+                id: ai-lesson-text-submit-button
+                optional: true
+      - runFlow:
+          when:
+            visible: "^Continue$"
+          commands:
+            - takeScreenshot: c44-03b-tutor-part-done
+            - tapOn: "^Continue$"
+      - waitForAnimationToEnd:
+          timeout: 8000
+- takeScreenshot: c44-04-tutor-end
+- runFlow:
+    when:
+      notVisible:
+        id: home_root_ready
+    commands:
+      - runFlow: ../lesson-end/review-dialog-to-home.yaml
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000

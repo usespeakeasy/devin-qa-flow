@@ -1,0 +1,57 @@
+# After 30 s in the background: the Free Talk lesson is still open with turn 1; talk until End lesson, lesson end, Home.
+# Entry: free-talk-open-turn.yaml, app brought back from the background. Exit: Free Talk tab (the lesson was opened there), topic marked Completed.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_screen
+    timeout: 30000
+- assertVisible:
+    id: ai_lesson_partner_message
+- takeScreenshot: c44-06-freetalk-after-background
+- repeat:
+    while:
+      notVisible:
+        id: ai_lesson_end_lesson
+    times: 5
+    commands:
+      - runFlow:
+          file: type-turn-compat.yaml
+          env:
+            TEXT: "Merci beaucoup ! C'est combien ? Au revoir !"
+      - hideKeyboard
+      - runFlow:
+          when:
+            visible:
+              id: ai_lesson_quit_sheet
+          commands:
+            - tapOn: "^Keep Learning$"
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_end_lesson
+    timeout: 90000
+- tapOn:
+    id: ai_lesson_end_lesson
+- extendedWaitUntil:
+    visible:
+      id: "(lesson_end_.*|ask_for_review_.*dialog)"
+    timeout: 60000
+- takeScreenshot: c44-07-freetalk-lesson-end
+- repeat:
+    while:
+      notVisible:
+        id: main_navigation
+    times: 15
+    commands:
+      - tapOn:
+          id: "(ask_for_review_dialog_no|ask_for_review_negative_dialog_no|ask_for_review_positive_dialog_no|lesson_end_reskin_continue_button|lesson_end_streak_progress_continue_button|goal_7days|primary_button)"
+          optional: true
+      - tapOn:
+          text: "Maybe later"
+          optional: true
+- extendedWaitUntil:
+    visible: "^Completed$"
+    timeout: 20000
+- takeScreenshot: c44-08-freetalk-completed

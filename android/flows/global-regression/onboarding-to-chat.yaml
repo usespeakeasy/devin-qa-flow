@@ -1,0 +1,57 @@
+# Fresh install: welcome > language pick (Spanish) > email sign-up > onboarding chat (mid-onboarding).
+# Entry: cleared app data, notifications not granted (qa_android.py fresh --no-grant). Params: EMAIL, PASSWORD.
+# Exit: onboarding chat (onboarding_magic_*); SHOT_PREFIX-*.png saved in the working directory.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT_PREFIX: ${SHOT_PREFIX || "c41"}
+---
+- runFlow: ../onboarding/storybook-get-started.yaml
+- takeScreenshot: ${SHOT_PREFIX}-01-language
+- runFlow: ../onboarding/pick-spanish-open-auth.yaml
+- takeScreenshot: ${SHOT_PREFIX}-02-auth
+# email-sign-up.yaml's steps, plus the required AI data consent row (ai_data_consent_mode, new in 4.74.0) when it is shown.
+- tapOn:
+    id: button_email
+- assertVisible:
+    id: onboarding_sign_up_screen
+- tapOn:
+    id: onboarding_sign_up_email_field
+- inputText: ${EMAIL}
+- tapOn:
+    id: onboarding_sign_up_password_field
+- inputText: ${PASSWORD}
+- hideKeyboard
+- takeScreenshot: ${SHOT_PREFIX}-02b-sign-up-form
+- runFlow:
+    when:
+      visible:
+        id: "(onboarding_sign_up_consent_ai_data|auth_consent_option_ai_data)"
+    commands:
+      - tapOn:
+          id: "(onboarding_sign_up_consent_ai_data|auth_consent_option_ai_data)"
+      - takeScreenshot: ${SHOT_PREFIX}-02c-ai-data-ticked
+- tapOn:
+    id: onboarding_sign_up_submit_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_.*
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: permission_allow_button
+    timeout: 10000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: permission_allow_button
+    commands:
+      - takeScreenshot: ${SHOT_PREFIX}-03-notification-prompt
+      - tapOn:
+          id: permission_allow_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_.*
+    timeout: 60000
+- takeScreenshot: ${SHOT_PREFIX}-04-chat-before-kill

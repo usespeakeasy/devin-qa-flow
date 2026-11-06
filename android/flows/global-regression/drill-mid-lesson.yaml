@@ -1,0 +1,15 @@
+# Drill lesson, Next 3 times (mid-lesson), ready for Home + am kill. Entry: Home. Exit: drill lesson on card 4.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: ${LESSON_ID || "EN_FR_L1-rev_cava_SP_DL_IC"}
+---
+- runFlow:
+    file: ../tutor-lesson/open-fresh.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- runFlow:
+    file: ../tutor-lesson/skip-cards.yaml
+    env:
+      N: 3
+- takeScreenshot: c48-01-before-kill

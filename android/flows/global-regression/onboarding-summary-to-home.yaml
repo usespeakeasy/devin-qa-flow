@@ -1,0 +1,35 @@
+# Onboarding: Generate my curriculum > summary > "I'm committed" (onboarding_curriculum_action_get_started) > premium intro > Home.
+# Entry: onboarding_magic_action_generate_curriculum visible. Exit: Home with the learning path.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT_PREFIX: ${SHOT_PREFIX || "c41"}
+---
+- tapOn:
+    id: onboarding_magic_action_generate_curriculum
+- extendedWaitUntil:
+    visible: "Building your custom course"
+    timeout: 15000
+- takeScreenshot: ${SHOT_PREFIX}-07-summary-loading
+- extendedWaitUntil:
+    visible:
+      id: onboarding_curriculum_action_get_started
+    timeout: 60000
+- takeScreenshot: ${SHOT_PREFIX}-08-summary
+- tapOn:
+    id: onboarding_curriculum_action_get_started
+- extendedWaitUntil:
+    visible:
+      id: (onboarding_premium_intro_(ready|error)|home_root_ready)
+    timeout: 60000
+- takeScreenshot: ${SHOT_PREFIX}-09-premium-intro
+- runFlow: ../../common/dismiss-premium-intro.yaml
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+- takeScreenshot: ${SHOT_PREFIX}-10-home
