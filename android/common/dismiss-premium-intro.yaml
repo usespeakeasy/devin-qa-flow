@@ -8,8 +8,19 @@ env:
 - extendedWaitUntil:
     visible:
       # The error dialog hides the `_ready` root from the hierarchy, so match either.
-      id: (onboarding_premium_intro_(ready|error)|main-editor-container)
+      id: (onboarding_premium_intro_(ready|error)|main-editor-container|home_root_ready)
     timeout: 60000
+    optional: true
+# A premium pool account skips the intro and gets an id-less "Welcome to your Speak Premium account" alert over Home.
+- extendedWaitUntil:
+    visible: "(?s)(Welcome to your Speak Premium account.*|An unexpected error occurred.*)"
+    timeout: 5000
+    optional: true
+- runFlow:
+    when:
+      visible: "Welcome to your Speak Premium account.*"
+    commands:
+      - tapOn: "OK"
 - runFlow:
     when:
       visible:

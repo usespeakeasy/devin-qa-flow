@@ -1,0 +1,14 @@
+# Sign-in options > "Continue with KakaoTalk" opens Kakao's own login (KakaoTalk app, or a Chrome Custom Tab on
+# kakao.com when KakaoTalk isn't installed). Stops on the page; the caller backs out.
+# Entry: sign-in options sheet with "Continue with KakaoTalk". Chrome's first-run screen already dismissed.
+# Selectors: the KakaoTalk button has no resource-id (text fallback); `url_bar` is Chrome's.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn: "Continue with KakaoTalk"
+- extendedWaitUntil:
+    visible:
+      id: url_bar
+      text: ".*kakao\\.com.*"
+    timeout: 30000

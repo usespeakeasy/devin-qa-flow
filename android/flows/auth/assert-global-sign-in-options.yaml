@@ -1,0 +1,23 @@
+# Sign-in options on a global launch: Email, Google, Facebook, Apple, KakaoTalk, Naver and LINE show,
+# and the market switch button ("I have a China account") does not.
+# Entry: `auth_options_screen` (sign-in, after open-sign-in-options). Exit: same screen.
+# Selectors: the provider rows other than Email have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 30000
+- assertVisible:
+    id: button_email
+- assertVisible: "Continue with Google"
+- assertVisible: "Continue with Facebook"
+- assertVisible: "Continue with Apple"
+- assertVisible: "Continue with KakaoTalk"
+- assertVisible: "Continue with Naver"
+- assertVisible: "Continue with LINE"
+- assertNotVisible:
+    id: auth_options_market_switch_button
+- assertNotVisible: "I have a China account"

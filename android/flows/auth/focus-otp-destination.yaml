@@ -1,0 +1,14 @@
+# Phone or email code entry: tap the destination field so the keyboard opens, and wait for the layout to settle.
+# The run script then reads the entry screen's bounds and the keyboard frame (dumpsys window InputMethod).
+# Entry: `otp_sign_in_entry_screen`. Exit: same screen, keyboard shown.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: otp_sign_in_destination_field
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: otp_sign_in_destination_field
+    focused: true

@@ -1,0 +1,27 @@
+# Sign-in options > market switch button ("I have a China account") > "Relaunch required" dialog > Cancel:
+# the dialog closes and the sign-in options stay; the app keeps running.
+# Entry: auth_options_screen with the market switch button (a global launch whose signals say China, e.g. the
+# Asia/Shanghai time zone). Exit: auth_options_screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: auth_options_market_switch_button
+    timeout: 30000
+- assertVisible: "I have a China account"
+- tapOn:
+    id: auth_options_market_switch_button
+- extendedWaitUntil:
+    visible:
+      id: auth_options_market_switch_dialog
+    timeout: 10000
+- tapOn:
+    id: auth_options_market_switch_cancel_button
+- extendedWaitUntil:
+    notVisible:
+      id: auth_options_market_switch_dialog
+    timeout: 10000
+- assertVisible:
+    id: auth_options_screen

@@ -1,0 +1,21 @@
+# Signed-out welcome screen stays up for WINDOW ms (default 10 s) after a cold start: nothing replaces it
+# (no launch notice, no crash, no sign-in sheet).
+# Entry: app data cleared and the app cold-started (`qa_android.py fresh`). Exit: welcome screen on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WINDOW: ${WINDOW || "10000"}
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_sign_in_button
+    timeout: 60000
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding_storybook_screen
+    timeout: ${WINDOW}
+    optional: true
+- assertVisible:
+    id: onboarding_storybook_sign_in_button
+- assertNotVisible:
+    id: launch_consent_screen

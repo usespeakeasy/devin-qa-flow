@@ -1,0 +1,21 @@
+# Debug Menu > Feature flag override, filtered to FLAG: shows the flag's current value chip (`debug_feature_flag_value_<flag>`).
+# Read-only. Entry: any state. Exit: the filtered override list.
+# maestro test -e FLAG=ai_data_consent_mode read-feature-flag.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 30000
+- tapOn: Feature flag override
+- tapOn:
+    text: Search
+- inputText: ${FLAG}
+- hideKeyboard
+- extendedWaitUntil:
+    visible:
+      id: debug_feature_flag_value_${FLAG}
+    timeout: 15000

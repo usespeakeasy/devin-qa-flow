@@ -1,0 +1,18 @@
+# From a provider's login page (Custom Tab or app) opened from sign-in options, Back until the sign-in options
+# sheet shows again. Entry: a provider login page. Exit: `auth_options_screen`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- repeat:
+    while:
+      notVisible:
+        id: auth_options_screen
+    times: 3
+    commands:
+      - back
+      - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 15000
