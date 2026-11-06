@@ -26,6 +26,7 @@ Runs before 2026-11-01 have no `skill_version`.
   cases you think are missing", added cases stop at 8 in total; author cases are never dropped.
   Why: Nav3 runs from Nov 2 to 5 took up to 5.5 h. They had 10 to 15 cases, each run 4 times (base
   and head, kill switch SERVER and ON), and some reran whole passes after one fix.
+  ([#21](https://github.com/usespeakeasy/devin-qa-flow/pull/21))
 
 ## 2026-11-01
 
