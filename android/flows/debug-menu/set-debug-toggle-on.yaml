@@ -1,5 +1,6 @@
 # Debug Menu: turn one switch row on (e.g. "Debug features enabled", which shows the series
-# lesson's debug Skip card / Skip lesson buttons). Leaves it on when it already is.
+# lesson's debug Skip card / Skip lesson buttons and the drill lesson's debug Finish chip). Leaves it on
+# when it already is.
 # Entry: any state, signed in. Exit: on the Debug Menu. Check the switch with harness `dump`
 # afterwards (checked state of the switch on the LABEL row).
 # maestro test -e LABEL="Debug features enabled" -e PREV="Chucker enabled" -e NEXT="Debug recognition enabled" set-debug-toggle-on.yaml

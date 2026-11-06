@@ -1,0 +1,22 @@
+# Open the lesson end with only the steps in SCREENS, with fixed demo data, through the debug deep
+# link `speak-dev://debug-lesson-end` (speak-android#8846, CLNT-1519). No lesson is played, no
+# lesson progress is posted, and no `LessonEndFlowViewModel.updateScreens` patch is needed.
+# SCREENS: comma list of `LessonFinishedFlow.Component` names, shown in that order. Supported:
+# STREAK (streak saved, 12 days), ASK_FOR_REVIEW, LEVEL_PROGRESS (Novice to Discoverer), LEAGUES
+# (Bronze League, "You" at 4th), SUMMARY (20 XP), TAKEAWAYS (Single Card demo). Any other name opens
+# nothing. WAIT: root ID of the first step (table in docs/qa-pr-instructions.md, Debug shortcuts);
+# the default matches any step.
+# Entry: any screen, signed in, a build that has the link. Exit: WAIT visible.
+# maestro test -e SCREENS=STREAK,SUMMARY -e WAIT=lesson_end_streak_saved_root open-debug-lesson-end.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+  SCREENS: ${SCREENS || "STREAK"}
+  WAIT: ${WAIT || "(lesson_end_.*_root|ask_for_review_.*dialog)"}
+---
+- openLink: speak-dev://debug-lesson-end?lessonId=${LESSON_ID}&screens=${SCREENS}
+- extendedWaitUntil:
+    visible:
+      id: ${WAIT}
+    timeout: 30000

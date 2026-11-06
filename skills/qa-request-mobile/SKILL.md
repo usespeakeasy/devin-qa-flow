@@ -2,7 +2,7 @@
 name: qa-request-mobile
 description: Run a QA request on a Speak mobile PR (speak-android or speak-ios). Read the PR's "How to test?" section, build the base and the branch against dev or prod, record both runs, and write the Before | After result into the PR description. Use when someone asks for QA, a no-diff check, a before and after recording, or writes "qa-request-mobile <PR link>" in Slack, a PR comment or a Linear issue. Also use it for every @Devin request with a PR or ticket link in #devin-qa-request-mobile, whatever the wording ("test <link>", "check this").
 metadata:
-  version: 2026.11.01.11
+  version: 2026.11.06.1
 ---
 
 # qa-request-mobile
@@ -135,7 +135,7 @@ Check the cases against the screens the PR touches:
 2. Back on every screen the case passes through. On Android that is system back and the in-app back arrow; on iOS the swipe and the navigation bar button.
 3. The error or offline state when the screen loads data.
 4. Rotation, backgrounding and process death when the change touches navigation, lifecycle or saved state. The Lifecycle check runs these even when the list does not. `SpeakActivity` is portrait-locked, so on Android rotate by emulating a tablet: `adb shell wm size 1600x2560; adb shell wm density 280; adb shell wm user-rotation lock 1`, then restore with `wm user-rotation lock 0; wm size reset; wm density reset`. On Android: Home, then `adb shell am kill <package>`, relaunch ("Don't keep activities" leaves the activity alive on the API 36 image). On iOS: background the app, `xcrun simctl terminate <simulator> <bundle id>`, relaunch. Do not swipe it away in the app switcher; that discards restoration state.
-5. Gated state (flag, account type, server state) with a way to reach it, or a `patch=` to hard-code it on both builds.
+5. Gated state (flag, account type, server state) with a way to reach it, or a `patch=` to hard-code it on both builds On Android, a debug shortcut (the drill lesson Finish chip, `speak-dev://demos?id=`, `speak-dev://debug-lesson-end`) comes before a patch; see devin-qa-flow `docs/qa-pr-instructions.md` "Debug shortcuts".
 6. Analytics or screen-view events when the change touches lifecycle.
 7. A screen that opens the changed screen and reacts to what it returns.
 

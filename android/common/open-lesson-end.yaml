@@ -30,6 +30,7 @@ env:
           timeout: 30000
       - tapOn:
           id: debug_skip_lesson
+- runFlow: tap-debug-finish.yaml
 - repeat:
     while:
       notVisible: "Are you enjoying learning languages with Speak\\?"
