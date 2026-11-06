@@ -1,0 +1,20 @@
+# Series line card hidden word (blank) that stays revealed (shouldBlankOut = false, an extra practice line or a
+# QA patch): one tap at POINT reveals the blank in place and does not open the word sheet. Entry: line card
+# listening (`speak_now_header`, e.g. after series-dialogs/line-card.yaml). Exit: same card.
+# Point fallback: the blank is a span inside the line text, no node. Whether it stays shown is read from logcat
+# by the case script (no node exposes the blank's alpha).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  POINT: ${POINT || "59%,36%"}
+---
+- assertVisible:
+    id: speak_now_header
+- tapOn:
+    point: ${POINT}
+- extendedWaitUntil:
+    notVisible:
+      id: magic_dictionary
+    timeout: 1500
+- assertVisible:
+    id: series_list
