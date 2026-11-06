@@ -1,0 +1,30 @@
+# Developer Settings > Subscription > Plan override set to PLAN, a local override sent to the server.
+# Entry: any state (cold-starts to Home first). Precondition: Speak-Dev Debug build.
+# Params: PLAN (segment label: Premium or Plus; default Premium).
+# The override is a local UserDefault, so it survives reinstalling another build over the same bundle id.
+# The main list's subscription segment sits under the bottom search field, so go through search.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  PLAN: Premium
+---
+- runFlow: launch-home.yaml
+- openLink: speak-dev://debug
+- extendedWaitUntil:
+    visible:
+      id: debug.row.subscription
+    timeout: 15000
+- tapOn: "Search developer settings"
+- inputText: "Subscription"
+- tapOn:
+    id: debug.search.result.useDebugPremium
+- extendedWaitUntil:
+    visible: "Plan override"
+    timeout: 5000
+- tapOn:
+    text: ${PLAN}
+    below: "Plan override"
+    above: "Tier signals"
+- extendedWaitUntil:
+    visible: "Premium, yes"
+    timeout: 15000

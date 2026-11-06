@@ -1,0 +1,45 @@
+# Free Talk > Topics > TOPIC > Chat mode > Start lesson, the native chat-mode roleplay (CML).
+# Entry: any state (cold-starts to Home first). Exit: the lesson, tutor's first turn loading.
+# Preconditions: signed in; split overrides ai_lesson_native=default_chat&chat_mode_native=on;
+# Show Debug Controls on (the arrival check is the AIL debug overlay's answer button).
+# Params: TOPIC (topic card title on the Topics tab).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  TOPIC: At a Bad Bunny Concert
+---
+- runFlow: launch-home.yaml
+- tapOn:
+    id: tab-bar.tab.aiTutor
+- extendedWaitUntil:
+    visible: "Topics"
+    timeout: 15000
+# First visit to Free Talk shows an intro card over the tab.
+- tapOn:
+    text: "Get started"
+    optional: true
+- tapOn: "Topics"
+- tapOn: ${TOPIC}
+- extendedWaitUntil:
+    visible:
+      id: lesson.pre-ai.action.start
+    timeout: 15000
+- tapOn: "Chat mode"
+- tapOn:
+    id: lesson.pre-ai.action.start
+# Lesson-level AI data consent shows once per account.
+- runFlow:
+    when:
+      visible:
+        id: ai-data-consent.alert.allow
+    commands:
+      - tapOn:
+          id: ai-data-consent.alert.allow
+# A lesson left mid-way shows "Continue where you left off?"; start over so every run gets the same first turn.
+- tapOn:
+    text: "Start over"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: debug.ail.correct-response
+    timeout: 40000
