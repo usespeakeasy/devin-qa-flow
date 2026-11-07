@@ -1,0 +1,18 @@
+# Explore: press system back until Explore is left (develop steps back through visited categories first).
+# Entry: Explore. Exit: Profile (action_settings).
+# Selectors: action_settings (Profile toolbar).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- repeat:
+    times: 6
+    while:
+      notVisible:
+        id: action_settings
+    commands:
+      - back
+      - waitForAnimationToEnd:
+          timeout: 2000
+- assertVisible:
+    id: action_settings

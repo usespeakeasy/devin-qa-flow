@@ -1,0 +1,16 @@
+# Explore: press system back once. Pushed Explore (Profile > Explore) either leaves to Profile
+# (action_settings) or stays on Explore (action_history); the caller checks which. Use explore-system-back.yaml
+# when the case expects Profile.
+# Entry: Explore. Exit: Profile or Explore.
+# Selectors: action_settings, action_history.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- waitForAnimationToEnd:
+    timeout: 2000
+- extendedWaitUntil:
+    visible:
+      id: "action_settings|action_history"
+    timeout: 15000

@@ -1,0 +1,41 @@
+# Explore: tap the CATEGORY chip; that category's list shows.
+# Entry: Explore (open-explore.yaml). Exit: Explore on the CATEGORY chip.
+# maestro test -e CATEGORY="일상" select-category.yaml
+# Selectors: singles_category_tab (picked by its text), category_list, list. Works on Saved too (no "Popular:" header,
+# unlike category-tab.yaml). The selected chip is not in the accessibility tree (selected=false), so check it from a screenshot.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+# The chip row scrolls sideways; bring CATEGORY's chip on screen first (left, then right).
+- repeat:
+    times: 3
+    while:
+      notVisible:
+        id: singles_category_tab
+        text: ${CATEGORY}
+    commands:
+      - swipe:
+          from:
+            id: category_list
+          direction: RIGHT
+- repeat:
+    times: 3
+    while:
+      notVisible:
+        id: singles_category_tab
+        text: ${CATEGORY}
+    commands:
+      - swipe:
+          from:
+            id: category_list
+          direction: LEFT
+- tapOn:
+    id: singles_category_tab
+    text: ${CATEGORY}
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: list
+- assertVisible:
+    id: action_history

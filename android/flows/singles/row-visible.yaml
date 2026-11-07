@@ -1,0 +1,14 @@
+# Explore list: the LESSON row is shown in the current category (Saved keeps a lesson unsaved from the details sheet
+# until the tab is left).
+# Entry: a category list. Exit: same.
+# maestro test -e LESSON="집에서 넷플릭스 보기" row-visible.yaml
+# Selectors: single_title (picked by its text).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: single_title
+      text: ${LESSON}
+    timeout: 10000
