@@ -1,0 +1,12 @@
+# Drags the collapsed AIL debug overlay (🐞 bar) from its default spot to the bottom-right so it doesn't cover bubble
+# or card icons. Entry: native AI lesson, overlay collapsed at its default position (iPhone 18 Pro).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- swipe:
+    start: "23,467"
+    end: "250,845"
+    duration: 800
+- assertVisible:
+    id: "debug.ail.correct-response"

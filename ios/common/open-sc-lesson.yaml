@@ -1,0 +1,26 @@
+# Opens a Structured Conversation (SC) lesson by deep link.
+# Entry: app launched to Home. Precondition: signed in, debug controls on (Debug-Dev default).
+# Exit: SC lesson screen (debug answer buttons visible). A resume sheet may still be coming: it renders in a separate
+# window Maestro can't see, so the caller waits for the "AI Lesson Continue Prompt Displayed" log line and runs
+# flows/ai-lesson/sc-start-over.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  SC_LESSON_ID: XX_EN_UC_L1_itschilly_SC
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|ai-data-consent.action.agree"
+    timeout: 30000
+- runFlow: dismiss-ai-data-consent.yaml
+- openLink: "speak-dev://lesson?id=${SC_LESSON_ID}"
+- runFlow: confirm-open-in-app.yaml
+- runFlow:
+    when:
+      visible: "Allow Speak to send your voice and text to AI\\?"
+    commands:
+      - tapOn: "Allow"
+- extendedWaitUntil:
+    visible:
+      id: "debug.ail.correct-response"
+    timeout: 30000

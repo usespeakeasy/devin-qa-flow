@@ -1,0 +1,14 @@
+# Flips the "Hands-free speaking" setting from the lesson Settings sheet. The caller reads the current mode from the app
+# log ("turnModeChanged(...auto|manual)" / "Not starting auto mode") because the toggle's state isn't in the tree.
+# Entry: native AI lesson open. Exit: lesson, settings closed.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: "gearshape.fill"
+- extendedWaitUntil:
+    visible: "Hands-free speaking"
+    timeout: 10000
+- tapOn: "Hands-free speaking"
+- tapOn: "close-icon"

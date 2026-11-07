@@ -1,0 +1,8 @@
+# Taps the hands-free pause/resume button (bottom center, 200,793 pt on iPhone 18 Pro). The caller reads paused vs
+# listening from the app log ("Pause successful" / "Resume successful"). Entry: native AI lesson with hands-free on.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    point: "200,793"

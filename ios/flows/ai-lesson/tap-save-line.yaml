@@ -1,0 +1,10 @@
+# Taps the save-line (bookmark) icon at the point the caller read from the hierarchy.
+# Entry: native AI lesson with an unsaved tutor bubble. Params X, Y (points).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible: "save-Icon-empty"
+- tapOn:
+    point: "${X},${Y}"
+    waitToSettleTimeoutMs: 200

@@ -1,0 +1,50 @@
+# Free Talk > Topics > roleplay topic > Chat mode > Start, fresh session.
+# Entry: app launched to Home (the caller launches it, e.g. simctl launch with SPEAK_HTTP_PROXY). Precondition: signed in,
+# split overrides ai_lesson_native=default_chat&chat_mode_native=on.
+# Exit: native chat-mode lesson open (debug answer buttons visible).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  TOPIC: At a Bad Bunny Concert
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|ai-data-consent.action.agree"
+    timeout: 30000
+- runFlow: dismiss-ai-data-consent.yaml
+- tapOn:
+    id: "tab-bar.tab.aiTutor"
+- runFlow:
+    when:
+      visible: "Get started"
+    commands:
+      - tapOn: "Get started"
+- tapOn: "Topics"
+- tapOn: ${TOPIC}
+- extendedWaitUntil:
+    visible:
+      id: "lesson.pre-ai.action.start"
+    timeout: 15000
+- tapOn: "Chat mode"
+- tapOn:
+    id: "lesson.pre-ai.action.start"
+- extendedWaitUntil:
+    visible: "Allow|Start over|Continue where you left off\\?|Mark As Read"
+    timeout: 20000
+- runFlow:
+    when:
+      visible: "Allow Speak to send your voice and text to AI\\?"
+    commands:
+      - tapOn: "Allow"
+- runFlow:
+    when:
+      visible: "Start over"
+    commands:
+      - tapOn: "Start over"
+- extendedWaitUntil:
+    visible:
+      id: "debug.ail.correct-response"
+    timeout: 30000
+- extendedWaitUntil:
+    visible: "replay-icon"
+    timeout: 30000

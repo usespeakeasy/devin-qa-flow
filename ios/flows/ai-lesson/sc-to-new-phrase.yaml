@@ -1,0 +1,31 @@
+# Advances the SC lesson with the debug correct-answer button to its first "New phrase" card, stops tapping, waits for
+# the next block that waits for input ("Build what you heard."), then scrolls the history back up to the card. The card auto-advances and
+# scrolls away within ~10 s, so the case acts on it once the list has settled (it keeps its save and speaker controls).
+# Entry: SC lesson at its first block (after sc-start-over.yaml). Param PHRASE: the card's title, matched exactly (while
+# expanded the card is one AX element labelled with it; "New phrase" is exposed only once it collapses). Exit: the "New phrase" card on screen, list idle.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- repeat:
+    while:
+      notVisible: ${PHRASE}
+    times: 12
+    commands:
+      - tapOn:
+          id: "debug.ail.correct-response"
+      - extendedWaitUntil:
+          visible: ${PHRASE}
+          timeout: 3000
+          optional: true
+- assertVisible: ${PHRASE}
+- extendedWaitUntil:
+    visible: "Build what you heard\\."
+    timeout: 45000
+- scrollUntilVisible:
+    element: "New phrase"
+    direction: UP
+    timeout: 20000
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible: "New phrase"

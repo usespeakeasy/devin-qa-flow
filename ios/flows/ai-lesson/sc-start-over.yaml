@@ -1,0 +1,12 @@
+# Taps "Start over" on the SC resume sheet. The sheet is a separate window outside the Maestro tree, so this taps
+# its point (iPhone 18 Pro, 201,792 pt; read from a screenshot). Entry: resume sheet shown (caller checks the app log).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    point: "201,792"
+- extendedWaitUntil:
+    visible:
+      id: "debug.ail.correct-response"
+    timeout: 10000

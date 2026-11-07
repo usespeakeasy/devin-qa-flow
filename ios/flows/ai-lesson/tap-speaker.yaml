@@ -1,0 +1,29 @@
+# Taps a lesson speaker (replay) icon at the point the caller read from the hierarchy.
+# Entry: native AI lesson with the icon on screen. Params X, Y (points). PAUSE=1 taps the hands-free pause/resume button
+# (bottom center, 200,793 pt; by point so it doesn't wait for the tree to settle) right after; RESUME=1 then resumes and taps
+# the speaker again. Pass PAUSE=0 RESUME=0 otherwise.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible: "replay-icon"
+- tapOn:
+    point: "${X},${Y}"
+    waitToSettleTimeoutMs: 200
+- runFlow:
+    when:
+      true: ${PAUSE == '1'}
+    commands:
+      - tapOn:
+          point: "200,793"
+          waitToSettleTimeoutMs: 200
+- runFlow:
+    when:
+      true: ${RESUME == '1'}
+    commands:
+      - tapOn:
+          point: "200,793"
+          waitToSettleTimeoutMs: 200
+      - tapOn:
+          point: "${X},${Y}"
+          waitToSettleTimeoutMs: 200
