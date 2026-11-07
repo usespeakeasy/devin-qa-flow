@@ -1,0 +1,15 @@
+# System Back dismisses the assessment popup to Home.
+# Entry: assessment popup open over Home. Exit: Home (home_root_ready) with no popup.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: app_assessment_popup
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: app_assessment_popup
+    timeout: 10000
+- assertVisible:
+    id: home_root_ready

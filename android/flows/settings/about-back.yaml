@@ -1,0 +1,15 @@
+# System Back closes the Settings About sheet (`about_sheet`) to Settings.
+# Entry: the About sheet open over Settings (about-open.yaml). Exit: Settings with no About sheet.
+# The Settings About row has no automation ID yet, so Settings is checked by its title text.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: about_sheet
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: about_sheet
+    timeout: 10000
+- assertVisible: "^About$"

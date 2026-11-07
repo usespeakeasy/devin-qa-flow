@@ -1,0 +1,17 @@
+# Home shows the "How has your English level changed?" assessment popup (`app_assessment_popup`) as a bottom sheet.
+# Entry: cold start on Home with the popup eligible (dev account, or an eligibility fixture). Exit: popup open over Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: referral_welcome_dialog_later_button
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: app_assessment_popup
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: app_assessment_popup

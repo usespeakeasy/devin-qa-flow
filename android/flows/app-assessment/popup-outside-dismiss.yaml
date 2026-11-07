@@ -1,0 +1,17 @@
+# Tapping the dimmed area above the assessment popup dismisses it to Home.
+# Entry: assessment popup open over Home. Exit: Home (home_root_ready) with no popup.
+# The scrim has no ID; the point is above the sheet, which starts at about 50% of the screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: app_assessment_popup
+- tapOn:
+    point: 50%, 20%
+- extendedWaitUntil:
+    notVisible:
+      id: app_assessment_popup
+    timeout: 10000
+- assertVisible:
+    id: home_root_ready
