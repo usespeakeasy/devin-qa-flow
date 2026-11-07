@@ -1,0 +1,26 @@
+# Home learning path loop CTA open and Back: tap the loop titled LOOP_TEXT, tap its popover CTA (CTA id), wait for ARRIVAL,
+# screenshot SHOT, Back, assert Home on the Home tab. CONTINUE (optional id, e.g. learning_path_jump_ahead_continue) is tapped
+# after CTA when it shows, to start the lesson behind the jump-ahead sheet.
+# Entry: Home tab showing learning_path_ready with LOOP_TEXT on screen. Exit: Home tab.
+# maestro test -e LOOP_TEXT="^Make small talk$" -e CTA=learning_path_popover_jump_ahead_button -e ARRIVAL=learning_path_jump_ahead_root -e SHOT=jump-ahead -e CONTINUE=none open-loop-cta-and-back.yaml
+# Selectors: the loop is tapped by its title (text fallback); the loop id is per-account.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- tapOn: ${LOOP_TEXT}
+- tapOn:
+    id: ${CTA}
+- runFlow:
+    when:
+      visible:
+        id: ${CONTINUE}
+    commands:
+      - tapOn:
+          id: ${CONTINUE}
+- runFlow:
+    file: open-and-back-arrival.yaml

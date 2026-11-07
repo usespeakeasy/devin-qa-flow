@@ -1,0 +1,40 @@
+# Streak Save on a Home tab that was never shown: cold start straight into Practice (speak-dev://practice); Streak Save shows;
+# Start a Lesson switches to Home and starts the next lesson (ARRIVAL) once; Back returns to Home; a tab switch does not restart it.
+# Entry: any; needs a Streak Save popup due (QA build: `setprop debug.qa.lp streaksave`). Exit: Home tab.
+# maestro test -e ARRIVAL=drill_lesson_root -e SHOT=streak-save streak-save-cold.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- stopApp
+- openLink: speak-dev://practice
+- extendedWaitUntil:
+    visible:
+      id: course_streak_save_screen_confirm
+    timeout: 45000
+- assertNotVisible:
+    id: learning_path_ready
+- takeScreenshot: ${SHOT}-dialog
+- tapOn:
+    id: course_streak_save_screen_confirm
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- takeScreenshot: ${SHOT}-back
+- runFlow: assert-nothing-reopened.yaml
+- tapOn:
+    id: main_tab_practice
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- runFlow: assert-nothing-reopened.yaml

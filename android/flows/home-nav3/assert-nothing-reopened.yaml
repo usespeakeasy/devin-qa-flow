@@ -1,0 +1,14 @@
+# Home is showing on the Home tab with no Home destination on top. Waits 3 s first so a late re-open shows.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: learning_path_ready
+- assertVisible:
+    id: main_tab_home
+    selected: true
+- assertNotVisible:
+    id: "drill_lesson_root|vocab_pre_lesson_intro_root|unit_refresher_popup|unit_personalization_opt_in|tutor_text|level_selector_ready|streak_title|unit_summaries_screen|learning_path_jump_ahead_root|onboarding_premium_intro_ready|course_streak_save_screen_root"

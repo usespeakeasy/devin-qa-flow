@@ -1,0 +1,24 @@
+# Rotate on Home: landscape then portrait. Home stays and nothing re-opens.
+# Entry: Home tab showing learning_path_ready. Exit: Home tab, portrait.
+# maestro test -e SHOT=rotate rotate-home.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- setOrientation: LANDSCAPE_LEFT
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- takeScreenshot: ${SHOT}-landscape
+- setOrientation: PORTRAIT
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- takeScreenshot: ${SHOT}
+- runFlow: assert-nothing-reopened.yaml

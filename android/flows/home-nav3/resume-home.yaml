@@ -1,0 +1,15 @@
+# Reopen the app without stopping it (after process death or backgrounding). Home shows and nothing re-opens.
+# Entry: app in background or killed. Exit: Home tab.
+# maestro test -e SHOT=process-death resume-home.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 45000
+- takeScreenshot: ${SHOT}
+- runFlow: assert-nothing-reopened.yaml

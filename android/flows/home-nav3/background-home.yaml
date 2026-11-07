@@ -1,0 +1,11 @@
+# Leave the app from Home with the launcher Home key (the caller then kills the process: `adb shell am kill <package>`).
+# Entry: Home tab showing learning_path_ready. Exit: launcher, app in background.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- pressKey: Home

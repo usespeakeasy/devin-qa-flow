@@ -1,0 +1,24 @@
+# System Back on Home with nothing open, then reopen from the launcher icon (no stop). Records where Back lands and that Home returns.
+# Entry: Home tab showing learning_path_ready, nothing open. Exit: Home tab.
+# maestro test -e SHOT=empty-back empty-back.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}
+- assertNotVisible:
+    id: learning_path_ready
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- runFlow: assert-nothing-reopened.yaml

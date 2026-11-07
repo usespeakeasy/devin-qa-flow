@@ -1,0 +1,46 @@
+# Shared tail of the open-and-back flows: wait for ARRIVAL (dismissing the dev paywall error and AI data alert), screenshot SHOT,
+# Back, assert Home on the Home tab. Entry: the destination is opening. Exit: Home tab.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: "${ARRIVAL}|ai_data_consent_alert_allow|onboarding_premium_intro_error"
+    timeout: 20000
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert_allow
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_allow
+- runFlow:
+    when:
+      visible:
+        id: onboarding_premium_intro_error
+    commands:
+      - takeScreenshot: ${SHOT}-error
+      - tapOn: "^OK$"
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 20000
+- takeScreenshot: ${SHOT}
+- back
+# A screen that opens with the keyboard up (Speak Tutor) spends the first Back on the keyboard.
+- runFlow:
+    when:
+      visible:
+        id: ${ARRIVAL}
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- assertVisible:
+    id: main_tab_home
+    selected: true
+- assertNotVisible:
+    id: ${ARRIVAL}

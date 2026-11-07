@@ -1,0 +1,36 @@
+# Closed app next-lesson link: leave the app on START_TAB, stop it, open speak-dev://course/next-lesson. The next lesson
+# (ARRIVAL) opens, Back returns to Home on the Home tab, and a tab switch does not start it again.
+# Entry: signed in, Home ready. Exit: Home tab.
+# maestro test -e START_TAB=main_tab_practice -e ARRIVAL=drill_lesson_root -e SHOT=next-lesson next-lesson-cold.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn:
+    id: ${START_TAB}
+- waitForAnimationToEnd:
+    timeout: 3000
+- stopApp
+- openLink: speak-dev://course/next-lesson
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 45000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- takeScreenshot: ${SHOT}-back
+- runFlow: assert-nothing-reopened.yaml
+- tapOn:
+    id: main_tab_practice
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- runFlow: assert-nothing-reopened.yaml

@@ -1,0 +1,25 @@
+# Home tab switch: Home -> TAB -> Home. Home shows again and no Home destination re-opens.
+# Entry: Home tab showing learning_path_ready. Exit: Home tab.
+# maestro test -e TAB=main_tab_practice -e SHOT=tab-switch tab-switch-back.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- tapOn:
+    id: ${TAB}
+- extendedWaitUntil:
+    notVisible:
+      id: learning_path_ready
+    timeout: 10000
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- takeScreenshot: ${SHOT}
+- runFlow: assert-nothing-reopened.yaml

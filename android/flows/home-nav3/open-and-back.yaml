@@ -1,0 +1,21 @@
+# Home destination open and Back: tap OPEN on Home, wait for ARRIVAL, screenshot SHOT, Back, assert Home on the Home tab.
+# Entry: Home tab showing learning_path_ready. Exit: Home tab.
+# maestro test -e OPEN=home_streak -e ARRIVAL=streak_title -e SHOT=streak open-and-back.yaml
+# A first Speak Tutor tap shows the AI data alert (ai_data_consent_alert_allow) once per install; the flow allows it.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: ${OPEN}
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    id: ${OPEN}
+- runFlow:
+    file: open-and-back-arrival.yaml

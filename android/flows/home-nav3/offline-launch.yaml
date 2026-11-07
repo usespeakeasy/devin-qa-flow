@@ -1,0 +1,17 @@
+# Cold start with the network off (caller runs `adb shell svc wifi disable; svc data disable` first). Screenshots what Home shows.
+# Entry: any, network off. Exit: app open on its offline state.
+# maestro test -e SHOT=offline offline-launch.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- launchApp:
+    stopApp: true
+- waitForAnimationToEnd:
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: main_tab_home
+    timeout: 30000
+    optional: true
+- takeScreenshot: ${SHOT}

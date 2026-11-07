@@ -1,0 +1,25 @@
+# After network comes back (caller re-enables wifi/data), Home loads, tapping a retry control if one shows.
+# Entry: offline-launch.yaml exit, network on. Exit: Home tab ready.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: learning_path_ready
+    commands:
+      - tapOn:
+          id: no_internet_refresh_button
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 40000
+- takeScreenshot: ${SHOT}
+- runFlow: assert-nothing-reopened.yaml
