@@ -1,0 +1,28 @@
+# Profile tab > "Earn ... per friend" row > referral screen (`Referral` from ProfileController.onReferralOptionClicked).
+# Entry: Home (main tabs showing). Precondition: the referrals app feature is on for the account; on dev pool accounts
+# (Spanish A1) it is off, so it needs the QA-only referral patch (`debug.qa.referral`, see the speak-android QA packet).
+# Selectors: the Profile referral row has no resource-id (text fallback "Earn .* per friend").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: main_tab_profile
+# The Profile list can rebuild while its referral data loads, so the scroll and tap retry once.
+- retry:
+    maxRetries: 2
+    commands:
+      - scrollUntilVisible:
+          element:
+            text: "Earn .* per friend"
+          direction: DOWN
+          timeout: 30000
+      - tapOn: "Earn .* per friend"
+      - extendedWaitUntil:
+          visible:
+            id: referral_screen
+          timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: referral_screen
+    timeout: 20000

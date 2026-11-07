@@ -1,0 +1,25 @@
+# Referral screen > Redeem on the claimable payout card, then dismiss the success dialog.
+# Entry: referral screen with a claimable payout (on dev pool accounts: the QA-only referral patch, `few` mode).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- scrollUntilVisible:
+    element:
+      id: payout_claimable_claim
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: payout_claimable_claim
+- extendedWaitUntil:
+    visible:
+      id: simple_dialog
+    timeout: 20000
+- tapOn:
+    id: simple_dialog_positive_button
+- extendedWaitUntil:
+    notVisible:
+      id: simple_dialog
+    timeout: 10000
+- assertVisible:
+    id: referral_screen

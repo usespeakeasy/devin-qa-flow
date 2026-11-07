@@ -1,0 +1,20 @@
+# Referral screen: scroll down until TEXT shows (a friend row, the empty state or the error).
+# Entry: referral screen (`open-from-profile.yaml`). TEXT is a regex, e.g. "QA Friend 006" with the QA-only patch's
+# fixed friends, or "You haven.t invited any friends yet\." for an account with no referrals.
+# Selectors: section rows have no resource-id (text fallback TEXT, default "Invited Friends").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  TEXT: ${TEXT || "Invited Friends"}
+  TIMEOUT: ${TIMEOUT || "30000"}
+---
+- assertVisible:
+    id: referral_screen
+- scrollUntilVisible:
+    element:
+      text: ${TEXT}
+    direction: DOWN
+    timeout: ${TIMEOUT}
+    visibilityPercentage: 50
+- assertNotVisible:
+    id: loading_bar

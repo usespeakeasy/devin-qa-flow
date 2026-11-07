@@ -1,0 +1,15 @@
+# Referral screen > system back returns to the Profile tab.
+# Entry: referral screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: referral_screen
+- back
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 15000
+- assertNotVisible:
+    id: referral_screen
