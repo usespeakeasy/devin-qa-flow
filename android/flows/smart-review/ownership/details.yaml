@@ -1,0 +1,32 @@
+# Smart Review info button opens Details; close returns to Main.
+# Entry: Home tab. Precondition: debug build with the QA Smart Review fixture (adb shell setprop debug.qa.srdata fixture) or an account with concepts.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_practice_tab
+    timeout: 20000
+- tapOn:
+    id: smart_review_info_button
+- extendedWaitUntil:
+    visible:
+      id: smart_review_details_screen
+    timeout: 10000
+- takeScreenshot: details
+- tapOn:
+    id: smart_review_details_close_button
+- extendedWaitUntil:
+    visible:
+      id: smart_review_start_button
+    timeout: 10000
+- takeScreenshot: details-closed

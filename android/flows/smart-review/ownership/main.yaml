@@ -1,0 +1,23 @@
+# Smart Review Main: Practice > Smart Review shows the practice tab with Start review.
+# Entry: Home tab. Precondition: debug build with the QA Smart Review fixture (adb shell setprop debug.qa.srdata fixture) or an account with concepts.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_practice_tab
+    timeout: 20000
+- assertVisible:
+    id: smart_review_start_button
+- assertVisible:
+    id: smart_review_mastery_score_card
+- takeScreenshot: main

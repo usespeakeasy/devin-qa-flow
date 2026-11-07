@@ -1,0 +1,47 @@
+# Smart Review non-premium: Unlock premium opens the paywall; back returns to the same Main screen.
+# Entry: Home tab. Precondition: non-premium account and QA fixture (adb shell setprop debug.qa.srdata fixture). The emulator has no billing, so the paywall may show an error dialog first.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_practice_tab
+    timeout: 20000
+- assertNotVisible:
+    id: smart_review_start_button
+- takeScreenshot: unlock-button
+- tapOn:
+    id: smart_review_unlock_premium_button
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_premium_intro_.*"
+    timeout: 20000
+- runFlow:
+    when:
+      visible:
+        id: "android:id/button1"
+    commands:
+      - tapOn:
+          id: "android:id/button1"
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_ready
+    timeout: 20000
+- takeScreenshot: paywall
+- back
+- extendedWaitUntil:
+    visible:
+      id: smart_review_unlock_premium_button
+    timeout: 10000
+- assertVisible:
+    id: smart_review_practice_tab
+- takeScreenshot: paywall-back

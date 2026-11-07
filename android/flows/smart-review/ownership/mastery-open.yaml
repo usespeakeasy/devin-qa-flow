@@ -1,0 +1,27 @@
+# Smart Review mastery page open (start state for rotation, background and process death checks).
+# Entry: Home tab. Precondition: QA fixture (adb shell setprop debug.qa.srdata fixture) or account with concepts.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_practice_tab
+    timeout: 20000
+- tapOn:
+    id: smart_review_mastery_score_card
+- extendedWaitUntil:
+    visible:
+      id: smart_review_mastery_score_page
+    timeout: 10000
+- assertVisible:
+    id: smart_review_review_status_row
+- takeScreenshot: mastery-open

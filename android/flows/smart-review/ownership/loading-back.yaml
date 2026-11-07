@@ -1,0 +1,29 @@
+# Smart Review held in loading: no child screen is shown; back leaves to Practice.
+# Entry: Home tab. Precondition: QA fixture build with adb shell setprop debug.qa.sr hold.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_smart_review
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: smart_review_practice_tab
+- assertNotVisible:
+    id: smart_review_empty_screen
+- assertNotVisible:
+    id: "android:id/message"
+- takeScreenshot: loading
+- back
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 10000
+- takeScreenshot: loading-left

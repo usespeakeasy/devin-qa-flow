@@ -1,0 +1,56 @@
+# Smart Review mastery page: system back and the in-app back both return to the main page; back from main leaves Smart Review.
+# Entry: Home tab. Precondition: debug build with the QA Smart Review fixture (adb shell setprop debug.qa.srdata fixture) or an account with concepts.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_practice_tab
+    timeout: 20000
+- tapOn:
+    id: smart_review_mastery_score_card
+- extendedWaitUntil:
+    visible:
+      id: smart_review_mastery_score_page
+    timeout: 10000
+- takeScreenshot: mastery-page
+- back
+- extendedWaitUntil:
+    visible:
+      id: smart_review_start_button
+    timeout: 10000
+- assertNotVisible:
+    id: smart_review_mastery_score_page
+- takeScreenshot: mastery-system-back
+- tapOn:
+    id: smart_review_mastery_score_card
+- extendedWaitUntil:
+    visible:
+      id: smart_review_mastery_score_page
+    timeout: 10000
+- tapOn:
+    id: smart_review_back_button
+- extendedWaitUntil:
+    visible:
+      id: smart_review_start_button
+    timeout: 10000
+- assertNotVisible:
+    id: smart_review_mastery_score_page
+- takeScreenshot: mastery-app-back
+- back
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 10000
+- assertNotVisible:
+    id: smart_review_screen
+- takeScreenshot: left-smart-review

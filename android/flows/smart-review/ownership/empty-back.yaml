@@ -1,0 +1,41 @@
+# Smart Review Empty: in-app back closes Smart Review to Practice; reopen and system back does the same.
+# Entry: Home tab. Precondition: account with no Smart Review concepts (live) or adb shell setprop debug.qa.sr empty.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_empty_screen
+    timeout: 20000
+- tapOn:
+    id: smart_review_empty_back_button
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 10000
+- assertNotVisible:
+    id: smart_review_empty_screen
+- takeScreenshot: empty-app-back
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_empty_screen
+    timeout: 20000
+- back
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 10000
+- assertNotVisible:
+    id: smart_review_empty_screen
+- takeScreenshot: empty-system-back

@@ -1,0 +1,20 @@
+# Smart Review deep link speak-dev://review opens the Smart Review host on Main.
+# Entry: Home tab.  Precondition: QA fixture (adb shell setprop debug.qa.srdata fixture) or account with concepts.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_practice_tab
+    timeout: 20000
+- assertVisible:
+    id: smart_review_start_button
+- takeScreenshot: deeplink
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: smart_review_screen
+    timeout: 10000
+- takeScreenshot: deeplink-back

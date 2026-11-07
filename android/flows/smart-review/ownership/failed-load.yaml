@@ -1,0 +1,43 @@
+# Smart Review failed load: error dialog, OK closes Smart Review back to Practice; reopening shows the dialog again.
+# Entry: Home tab. Precondition: QA fixture build with adb shell setprop debug.qa.sr fail.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: "android:id/message"
+    timeout: 20000
+- assertNotVisible:
+    id: smart_review_practice_tab
+- takeScreenshot: failed-dialog
+- tapOn:
+    id: "android:id/button1"
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 10000
+- assertNotVisible:
+    id: smart_review_screen
+- takeScreenshot: failed-dismissed
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: "android:id/message"
+    timeout: 20000
+- takeScreenshot: failed-reopen
+- tapOn:
+    id: "android:id/button1"
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 10000

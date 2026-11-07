@@ -1,0 +1,30 @@
+# Smart Review Empty: Go to my course closes Smart Review and lands on the course on Home.
+# Entry: Home tab. Precondition: account with no Smart Review concepts (live) or adb shell setprop debug.qa.sr empty.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_empty_screen
+    timeout: 20000
+- assertVisible:
+    id: smart_review_empty_back_button
+- takeScreenshot: empty
+- tapOn:
+    id: smart_review_empty_course_button
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 10000
+- assertNotVisible:
+    id: smart_review_empty_screen
+- takeScreenshot: empty-course
