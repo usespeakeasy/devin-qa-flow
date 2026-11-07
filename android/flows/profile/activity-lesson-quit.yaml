@@ -1,0 +1,22 @@
+# Video lesson opened from a Profile activity row > Back > "Are you sure you want to quit this lesson?" > Quit,
+# back to Profile.
+# Entry: video lesson opened from a Profile activity item. Exit: Profile (`action_settings`).
+# Selectors: the quit sheet has no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+    timeout: 30000
+- takeScreenshot: ${SHOT || "activity-lesson"}
+- back
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 15000
