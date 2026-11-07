@@ -1,0 +1,15 @@
+# Explore: tap the CATEGORY chip; that category's own content shows ("Popular: CATEGORY" header).
+# Entry: Explore. Exit: Explore on the CATEGORY tab.
+# maestro test -e CATEGORY="SNS" category-tab.yaml
+# Selectors: singles_category_tab (picked by its text); explore-loaded.yaml for the arrival.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: singles_category_tab
+    text: "^${CATEGORY}$"
+- runFlow:
+    file: explore-loaded.yaml
+    env:
+      CATEGORY: ${CATEGORY}

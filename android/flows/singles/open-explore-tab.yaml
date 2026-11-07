@@ -1,0 +1,15 @@
+# Explore bottom tab: the singles Explore tab shows with its category chips.
+# Entry: main tabs with an Explore tab (server-driven; QA builds can force it). Exit: Explore tab.
+# Selectors: main_tab_explore, singles_explore_screen, category_list.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: main_tab_explore
+- extendedWaitUntil:
+    visible:
+      id: category_list
+    timeout: 30000
+- assertVisible:
+    id: singles_explore_screen

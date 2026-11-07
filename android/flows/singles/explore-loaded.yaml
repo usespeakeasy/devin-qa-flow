@@ -1,0 +1,29 @@
+# Explore shows its category chips and the CATEGORY tab's content (its "Popular: CATEGORY" header and
+# carousel), with no spinner left and no error. Used after open, after a chip tap and after recreation.
+# Entry: Explore (profile or tab) on the CATEGORY tab, list at the top. Exit: same.
+# maestro test -e CATEGORY="전체" explore-loaded.yaml
+# Selectors: category_list, singles_category_tab, singles_carousel_item, loading_bar, error_layout;
+# the "Popular: <category>" list header has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: category_list
+    timeout: 30000
+- assertVisible:
+    id: singles_category_tab
+    text: "^${CATEGORY}$"
+- extendedWaitUntil:
+    visible:
+      text: "^Popular: ${CATEGORY} .*"
+    timeout: 30000
+- assertVisible:
+    id: singles_carousel_item
+- extendedWaitUntil:
+    notVisible:
+      id: loading_bar
+    timeout: 15000
+- assertNotVisible:
+    id: error_layout

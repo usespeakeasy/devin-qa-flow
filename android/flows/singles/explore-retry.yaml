@@ -1,0 +1,16 @@
+# Explore error > Retry (network back): the chips and the CATEGORY tab's content load, error gone.
+# Entry: Explore showing its error (explore-error.yaml), network restored. Exit: Explore loaded.
+# maestro test -e CATEGORY="전체" explore-retry.yaml
+# Selectors: button (inside error_layout); explore-loaded.yaml for the arrival.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: button
+    childOf:
+      id: error_layout
+- runFlow:
+    file: explore-loaded.yaml
+    env:
+      CATEGORY: ${CATEGORY}

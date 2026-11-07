@@ -1,0 +1,18 @@
+# Explore (from Profile): the toolbar back arrow closes it and Profile shows again.
+# Entry: Explore opened from Profile (open-explore.yaml). Exit: Profile tab.
+# Selectors: point 10%,8% (toolbar navigation button, no resource-id or content description),
+# singles_explore_screen, action_settings.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: action_history
+- tapOn:
+    point: "10%,8%"
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 15000
+- assertNotVisible:
+    id: singles_explore_screen

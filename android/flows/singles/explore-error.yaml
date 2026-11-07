@@ -1,0 +1,19 @@
+# Explore with no network: the load error shows with its Retry button, no chips, no spinner left.
+# Entry: Explore opened while offline. Exit: same.
+# Selectors: error_layout, button (inside error_layout), category_list, loading_bar.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: error_layout
+    timeout: 60000
+- assertVisible:
+    id: button
+    childOf:
+      id: error_layout
+- assertNotVisible:
+    id: category_list
+- assertNotVisible:
+    id: loading_bar

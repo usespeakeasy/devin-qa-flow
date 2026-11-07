@@ -1,0 +1,33 @@
+# Explore > Saved chip: LESSON's row shows (ROW=true) or the Saved tab is empty (ROW=false).
+# Entry: Explore. Exit: Explore on the Saved tab.
+# maestro test -e LESSON="집에서 넷플릭스 보기" -e ROW=true saved-tab.yaml
+# Selectors: singles_category_tab ("Saved" text), single_title, saved_empty_layout.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: singles_category_tab
+    text: "^Saved$"
+- runFlow:
+    when:
+      true: ${ROW == 'true'}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: single_title
+            text: ${LESSON}
+          timeout: 15000
+      - assertNotVisible:
+          id: saved_empty_layout
+- runFlow:
+    when:
+      true: ${ROW != 'true'}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: saved_empty_layout
+          timeout: 15000
+      - assertNotVisible:
+          id: single_title
+          text: ${LESSON}

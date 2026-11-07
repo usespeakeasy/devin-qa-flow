@@ -1,0 +1,16 @@
+# Explore (from Profile): system back closes it and Profile shows again.
+# Entry: Explore opened from Profile (open-explore.yaml). Exit: Profile tab.
+# Selectors: singles_explore_screen, action_settings.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: singles_explore_screen
+- back
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 15000
+- assertNotVisible:
+    id: singles_explore_screen
