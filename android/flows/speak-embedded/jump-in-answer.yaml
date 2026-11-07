@@ -1,0 +1,24 @@
+# Jump In: start the lesson if on the group page, pick ANSWER on the first exercise and tap "Check"; the
+# lesson grades it ("Correct!" or a correction) and shows "Continue".
+# Entry: a Jump In group or lesson page (jump-in-shown.yaml). Exit: on the graded first exercise.
+# Selectors: WebView content with no resource-ids, matched by text. ANSWER is an option of the first
+# exercise (default "Hola", the en-US > es Vocab intro lesson).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ANSWER: ${ANSWER || "Hola"}
+---
+- runFlow:
+    when:
+      visible: "Get started"
+    commands:
+      - tapOn: "Get started"
+- extendedWaitUntil:
+    visible: "Check"
+    timeout: 45000
+- tapOn: "^${ANSWER}$"
+- tapOn: "Check"
+- extendedWaitUntil:
+    visible: "Continue"
+    timeout: 20000
+- takeScreenshot: graded

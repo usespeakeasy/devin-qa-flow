@@ -1,0 +1,48 @@
+# Debug Menu > search "Embedded": Embedded Endpoint = Custom, Custom Embedded URL = URL (e.g. a local
+# `vite preview` of speak-embedded at http://10.0.2.2:4173; the develop flavor allows cleartext to 10.0.2.2).
+# Entry: any state, signed in. Exit: on the filtered Debug Menu; the next Speak Embedded page loads URL.
+# Selectors: no resource-ids. The search shows the whole Server Endpoints section, so the Embedded
+# Endpoint "Custom" radio is the second "Custom" (index 1); the field is found by its label.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  URL: ${URL}
+---
+- repeat:
+    times: 2
+    commands:
+      - runFlow:
+          when:
+            visible: "Debug Menu"
+          commands:
+            - back
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 30000
+- tapOn:
+    text: Search
+- waitForAnimationToEnd
+- inputText: Embedded
+- hideKeyboard
+- extendedWaitUntil:
+    visible: "Embedded Endpoint"
+    timeout: 15000
+- tapOn:
+    text: "Custom"
+    index: 1
+- extendedWaitUntil:
+    visible: "Custom Embedded URL"
+    timeout: 10000
+- tapOn: "Custom Embedded URL"
+# The tap can leave the cursor inside an earlier URL, and eraseText only deletes before the cursor.
+- repeat:
+    times: 40
+    commands:
+      - pressKey: Remote Dpad Right
+- eraseText: 80
+- inputText: ${URL}
+- hideKeyboard
+- assertVisible: "^${URL}$"
+- takeScreenshot: embedded_url

@@ -1,0 +1,13 @@
+# A Jump In page rendered by speak-embedded: the lesson group ("Get started") or, once the group was seen,
+# the lesson's first exercise ("Check").
+# Entry: Practice > a Jump In tile tapped (ai-data-consent/open-jump-in.yaml). Exit: on that page.
+# Selectors: WebView content with no resource-ids, so the page's one button is matched by text. A page that
+# fails to boot never shows it, so this flow fails on a blank or loading page.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible: "Get started|Check"
+    timeout: 45000
+- takeScreenshot: jump_in
