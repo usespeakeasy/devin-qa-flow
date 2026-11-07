@@ -1,0 +1,20 @@
+# Process death on Profile (tab or pushed): Home key, killApp (am kill), relaunch from recents restores
+# Profile with its content. Entry: Profile. Exit: Profile restored. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "process-death"}
+---
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: stat_sentences_title|stat_streak_title|title
+    timeout: 30000
+- takeScreenshot: ${SHOT}

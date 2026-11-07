@@ -1,0 +1,31 @@
+# Pushed Profile (`Destination.Profile(standalone)`) from a main tab's profile icon: Challenge
+# (`challenge_overview_profile_icon`), Free Talk (`profile_icon`) or Explore (`action_profile`).
+# SUBTAB taps a sub tab first (Challenge: `Challenges`). Entry: main tabs. Exit: pushed Profile with its back arrow. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TAB_ID: ${TAB_ID || "main_tab_challenges"}
+  ICON_ID: ${ICON_ID || "challenge_overview_profile_icon"}
+  SUBTAB: ${SUBTAB || ""}
+  SHOT: ${SHOT || "pushed"}
+---
+- tapOn:
+    id: ${TAB_ID}
+- runFlow:
+    when:
+      true: ${SUBTAB != ""}
+    commands:
+      - tapOn: ^${SUBTAB}$
+- extendedWaitUntil:
+    visible:
+      id: ${ICON_ID}
+    timeout: 30000
+- tapOn:
+    id: ${ICON_ID}
+- extendedWaitUntil:
+    visible:
+      id: stat_sentences_title|stat_streak_title
+    timeout: 30000
+- assertVisible:
+    id: action_settings
+- takeScreenshot: ${SHOT}

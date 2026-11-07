@@ -1,0 +1,22 @@
+# Rotate to landscape and back on Profile (tab or pushed): Profile still shows. Saves SHOT.png in landscape.
+# Entry/exit: Profile.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "rotate"}
+---
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 15000
+- takeScreenshot: ${SHOT}
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 15000

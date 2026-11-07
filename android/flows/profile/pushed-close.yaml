@@ -1,0 +1,14 @@
+# Pushed Profile: system Back closes it to the tab it was opened from (ICON_ID shows again).
+# Entry: pushed Profile. Exit: the opening tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ICON_ID: ${ICON_ID || "challenge_overview_profile_icon"}
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: ${ICON_ID}
+    timeout: 15000
+- assertNotVisible:
+    id: action_settings

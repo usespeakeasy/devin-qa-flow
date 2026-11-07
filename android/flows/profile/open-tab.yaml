@@ -1,0 +1,14 @@
+# Profile tab (`Destination.Profile` entry with the Navigation 3 kill switch SERVER, `ProfileController` with ON):
+# header, stats and the list show. Entry: main tabs, signed in. Exit: Profile tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_profile
+- extendedWaitUntil:
+    visible:
+      id: stat_sentences_title|stat_streak_title
+    timeout: 30000
+- assertVisible:
+    id: action_settings

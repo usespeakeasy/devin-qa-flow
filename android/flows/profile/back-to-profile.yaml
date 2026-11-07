@@ -1,0 +1,19 @@
+# System Back from a screen opened from Profile, until Profile shows again (up to 3 presses, for a
+# sheet over a screen). Entry: a destination opened from Profile. Exit: Profile (`action_settings`).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- repeat:
+    times: 3
+    while:
+      notVisible:
+        id: action_settings
+    commands:
+      - back
+      - waitForAnimationToEnd:
+          timeout: 3000
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 10000

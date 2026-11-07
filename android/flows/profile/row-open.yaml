@@ -1,0 +1,51 @@
+# Profile (tab or pushed): scroll to a row and tap it; waits for ARRIVAL_ID, else (up to 10 s) until the Profile toolbar is covered (the caller
+# dumps the arrival screen and compares it between builds). ROW_ID taps a resource id, else ROW taps text.
+# Entry: Profile shown. Exit: the row's destination. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ROW: ${ROW || ""}
+  ROW_ID: ${ROW_ID || ""}
+  ARRIVAL_ID: ${ARRIVAL_ID || ""}
+  SHOT: ${SHOT || "row"}
+---
+- runFlow:
+    when:
+      true: ${ROW_ID != ""}
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: ${ROW_ID}
+          direction: DOWN
+      - tapOn:
+          id: ${ROW_ID}
+- runFlow:
+    when:
+      true: ${ROW_ID == ""}
+    commands:
+      - scrollUntilVisible:
+          element:
+            text: ${ROW}
+          direction: DOWN
+      - tapOn:
+          text: ${ROW}
+- runFlow:
+    when:
+      true: ${ARRIVAL_ID != ""}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: ${ARRIVAL_ID}
+          timeout: 20000
+- runFlow:
+    when:
+      true: ${ARRIVAL_ID == ""}
+    commands:
+      - extendedWaitUntil:
+          notVisible:
+            id: action_settings
+          timeout: 10000
+          optional: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${SHOT}

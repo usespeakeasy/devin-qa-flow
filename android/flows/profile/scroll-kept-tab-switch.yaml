@@ -1,0 +1,33 @@
+# Profile tab: scroll down to "Your courses" (the toolbar name fades in), switch to Home and back:
+# the list is still scrolled (courses header shown, the stats are not). Entry: Profile tab at the top.
+# Saves SHOT-scrolled.png and SHOT-back.png. Exit: Profile tab, scrolled.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "profile"}
+---
+- scrollUntilVisible:
+    element:
+      text: Your courses
+    direction: DOWN
+    centerElement: true
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertNotVisible:
+    id: stat_sentences_title
+- takeScreenshot: ${SHOT}-scrolled
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- tapOn:
+    id: main_tab_profile
+- extendedWaitUntil:
+    visible:
+      text: Your courses
+    timeout: 15000
+- assertNotVisible:
+    id: stat_sentences_title
+- takeScreenshot: ${SHOT}-back

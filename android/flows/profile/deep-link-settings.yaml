@@ -1,0 +1,36 @@
+# speak-dev://me/settings: Profile tab opens Settings once; Back returns to Profile; Home and back to
+# Profile does not reopen Settings. Entry: main tabs (Home). Exit: Profile tab. Saves SHOT.png (Settings).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "deep-link-settings"}
+---
+- openLink: speak-dev://me/settings
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 15000
+- assertNotVisible:
+    id: settings_manage_account_option
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- tapOn:
+    id: main_tab_profile
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertNotVisible:
+    id: settings_manage_account_option

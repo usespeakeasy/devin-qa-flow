@@ -1,0 +1,43 @@
+# Profile course row > "Switch to this course?" > ANSWER (No or Yes). The caller checks which row
+# carries CURRENT afterwards. ROTATE=true rotates to landscape and back with the dialog up first.
+# Entry: Profile (tab or pushed). Exit: after the answer (pushed Profile may close on Yes).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  COURSE: ${COURSE}
+  ANSWER: ${ANSWER || "No"}
+  ROTATE: ${ROTATE || "false"}
+  SHOT: ${SHOT || "course-dialog"}
+---
+- scrollUntilVisible:
+    element:
+      text: ${COURSE}
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    text: ${COURSE}
+- extendedWaitUntil:
+    visible:
+      text: Switch to this course\?
+    timeout: 10000
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      true: ${ROTATE == "true"}
+    commands:
+      - setOrientation: LANDSCAPE_LEFT
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - setOrientation: PORTRAIT
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - extendedWaitUntil:
+          visible:
+            text: Switch to this course\?
+          timeout: 10000
+- tapOn:
+    text: ^${ANSWER}$
+- extendedWaitUntil:
+    notVisible:
+      text: Switch to this course\?
+    timeout: 10000
