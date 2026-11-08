@@ -1,0 +1,18 @@
+# After `qa_android.py bridge openLessonEnd components=STREAK,LEAGUES`: system back on the Streak saved step
+# leaves the lesson end flow for Home.
+# Entry: the bridge command returned ok. Exit: Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_streak_saved_root
+    timeout: 20000
+- pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: lesson_end_streak_saved_root

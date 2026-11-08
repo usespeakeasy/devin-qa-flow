@@ -1,0 +1,32 @@
+# After `qa_android.py bridge openLessonEnd components=STREAK,LEAGUES`: the fake Streak saved step, Next,
+# the Leagues step, Continue, and the flow ends on Home.
+# Entry: the bridge command returned ok. Exit: Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_streak_saved_root
+    timeout: 20000
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    notVisible:
+      id: lesson_end_streak_saved_root
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: rank
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: primary_button
+      enabled: true
+    timeout: 20000
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000

@@ -1,0 +1,79 @@
+# The retained navigation rows on Debug Menu > Demos, each opened and left: segment demo (append a key, back),
+# bar modes (dark bars entry, theme bars screen above it, back), flow with a controller step (entry, controller, entry, finish),
+# entry as the activity root (root screen, back to Main).
+# Entry: signed in (cold starts). Exit: Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: nav-open-row.yaml
+    env:
+      ROW: Navigation segment demo
+      ROOT_TEXT: "Segment demo, key depth .*"
+- tapOn: "^Append key .*"
+- extendedWaitUntil:
+    visible: "Segment demo, key depth [1-9].*"
+    timeout: 10000
+- repeat:
+    times: 4
+    while:
+      notVisible: "^Navigation segment demo$"
+    commands:
+      - pressKey: Back
+      - waitForAnimationToEnd
+- assertVisible: "^Navigation segment demo$"
+- scrollUntilVisible:
+    element:
+      text: "^Navigation bar modes demo$"
+    timeout: 60000
+- tapOn: "^Navigation bar modes demo$"
+- extendedWaitUntil:
+    visible: "Dark bars entry, key depth 1"
+    timeout: 10000
+- tapOn: "^Open theme bars screen .*"
+- extendedWaitUntil:
+    visible: "Segment demo, key depth 2"
+    timeout: 10000
+- repeat:
+    times: 4
+    while:
+      notVisible: "^Navigation bar modes demo$"
+    commands:
+      - pressKey: Back
+      - waitForAnimationToEnd
+- assertVisible: "^Navigation bar modes demo$"
+- scrollUntilVisible:
+    element:
+      text: "^Navigation flow with a controller step$"
+    timeout: 60000
+- tapOn: "^Navigation flow with a controller step$"
+- extendedWaitUntil:
+    visible: "Mixed flow step 1 of 3: an entry"
+    timeout: 10000
+- tapOn: "^Next: open the controller step$"
+- extendedWaitUntil:
+    visible: "Mixed flow step 2 of 3: a controller above the host"
+    timeout: 10000
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    visible: "Mixed flow step 3 of 3: an entry"
+    timeout: 10000
+- tapOn: "^Finish flow$"
+- extendedWaitUntil:
+    visible: "^Navigation flow with a controller step$"
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      text: "^Navigation entry as the activity root$"
+    timeout: 60000
+- tapOn: "^Navigation entry as the activity root$"
+- extendedWaitUntil:
+    visible: "Root entry, generation .*"
+    timeout: 10000
+- assertVisible: "Nothing is under this screen.*"
+- tapOn: "^Back to the app: set Main as the root.*"
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000

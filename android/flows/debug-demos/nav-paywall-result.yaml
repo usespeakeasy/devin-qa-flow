@@ -1,0 +1,36 @@
+# Navigation paywall callbacks: open the real paywall, leave it with system Back, and check the result text.
+# develop opens the demo on its END stage, so Back first walks down to the stage that shows the result.
+# Entry: the demo is open (nav-open-row.yaml). Exit: the demo screen showing "Paywall result: ${RESULT}".
+# The default AVD falls back to the native premium intro, which sends no result. For a result, set the QA-only
+# patch `adb shell setprop debug.qa.paywall_result cancelled|converted` (LaunchPaywall reports a dismissal or conversion).
+# maestro test -e RESULT=cancelled nav-paywall-result.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- repeat:
+    times: 4
+    while:
+      notVisible: "Paywall result: .*"
+    commands:
+      - pressKey: Back
+      - waitForAnimationToEnd
+- assertVisible: "Paywall result: .*"
+- tapOn: "^Open the real paywall$"
+- extendedWaitUntil:
+    notVisible: "Paywall result: .*"
+    timeout: 20000
+    optional: true
+# The default AVD has no Play billing: the native premium intro opens with an error dialog; OK closes it.
+- tapOn:
+    id: button1
+    text: OK
+    optional: true
+- repeat:
+    times: 4
+    while:
+      notVisible: "Paywall result: .*"
+    commands:
+      - pressKey: Back
+      - waitForAnimationToEnd
+- assertVisible: "Paywall result: ${RESULT}"

@@ -1,0 +1,23 @@
+# From a demo screen, leave with the in-app Back button (BACK=button) or system back (BACK=system) and land on the Demos list.
+# Entry: the demo screen (ROW is its Demos list title). Exit: the Demos list.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  BACK: ${BACK || "button"}
+---
+- runFlow:
+    when:
+      true: ${BACK == "button"}
+    commands:
+      - tapOn: "^Back$"
+- runFlow:
+    when:
+      true: ${BACK == "system"}
+    commands:
+      - pressKey: Back
+# The list keeps its scroll position on Back, but a deep link opens it at the top.
+- scrollUntilVisible:
+    element:
+      text: ^${ROW}$
+    timeout: 60000
+- assertNotVisible: "Paywall result: .*"

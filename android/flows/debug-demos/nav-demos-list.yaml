@@ -1,0 +1,20 @@
+# Debug Menu > Demos, scrolled to the navigation rows (the last one, "Navigation flow with a controller step", visible).
+# Entry: signed in (cold starts). Exit: the Demos list at its navigation rows.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: nav-open-row.yaml
+    env:
+      ROW: Navigation segment demo
+      ROOT_TEXT: "Segment demo, key depth .*"
+- pressKey: Back
+- extendedWaitUntil:
+    visible: "^Navigation segment demo$"
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      text: "^Navigation flow with a controller step$"
+    timeout: 60000
+- scroll

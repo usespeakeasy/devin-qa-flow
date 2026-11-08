@@ -1,0 +1,35 @@
+# Debug Menu > Demos > a row by its title, then waits for the demo's first screen.
+# Entry: signed in, any state (cold starts). Exit: the demo's first screen (ROOT_TEXT visible).
+# maestro test -e ROW="Navigation paywall callbacks" -e ROOT_TEXT="Paywall result: .*|Flow end .*" nav-open-row.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: "home_root_ready|course_streak_save_dialog_root"
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      visible:
+        id: course_streak_save_dialog_root
+    commands:
+      - pressKey: Back
+- openLink: speak-dev://debug-menu
+- scrollUntilVisible:
+    element:
+      id: debug_menu_demos
+- tapOn:
+    id: debug_menu_demos
+- scrollUntilVisible:
+    element:
+      text: ^${ROW}$
+    timeout: 60000
+- tapOn: ^${ROW}$
+- extendedWaitUntil:
+    visible: ${ROOT_TEXT}
+    timeout: 20000

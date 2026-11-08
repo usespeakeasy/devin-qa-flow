@@ -1,0 +1,24 @@
+# speak-dev://demos?id=DEMO_ID: opens the Demos list, then the demo when this build has it.
+# Entry: signed in (cold starts). Exit: the demo screen (ROOT_TEXT) or, for an id the build lacks, the list.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: "home_root_ready|course_streak_save_dialog_root"
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      visible:
+        id: course_streak_save_dialog_root
+    commands:
+      - pressKey: Back
+- openLink: speak-dev://demos?id=${DEMO_ID}
+- extendedWaitUntil:
+    visible: ${ROOT_TEXT}
+    timeout: 20000
