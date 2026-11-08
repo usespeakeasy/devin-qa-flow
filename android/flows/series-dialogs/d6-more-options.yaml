@@ -21,18 +21,28 @@ env:
 - tapOn:
     id: more_options
 - tapOn: "^Content error$"
+# release/4.73.0's report screen has no report_* ids (text fallback; hide the keyboard, then Back closes it).
 - extendedWaitUntil:
-    visible:
-      id: report_screen
+    visible: "Any additional details to share\\?"
     timeout: 15000
-- tapOn:
-    id: report_close_button
+- runFlow:
+    when:
+      visible:
+        id: report_close_button
+    commands:
+      - tapOn:
+          id: report_close_button
+- runFlow:
+    when:
+      visible: "Any additional details to share\\?"
+    commands:
+      - hideKeyboard
+      - back
 - extendedWaitUntil:
     visible:
       id: series_list
     timeout: 15000
-- assertNotVisible:
-    id: report_screen
+- assertNotVisible: "Any additional details to share\\?"
 - assertNotVisible: "^Content error$"
 - tapOn:
     id: more_options

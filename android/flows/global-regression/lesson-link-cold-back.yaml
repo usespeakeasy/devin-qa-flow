@@ -1,0 +1,35 @@
+# Cold start from a lesson link (speak-dev://lesson?id=LESSON_ID) with the app stopped: the drill lesson opens,
+# Back (close sheet > Quit) lands on Home, not a blank screen or the launcher. Entry: signed in. Exit: home_root_ready.
+# Selectors: the close sheet's Quit and the restore dialog have no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: ${LESSON_ID || "EN_FR_L1-rev_cava_SP_DL_IC"}
+---
+- stopApp
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "^Start over$"
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- takeScreenshot: cold-link-lesson
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      visible: "^Quit$"
+    commands:
+      - tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: drill_lesson_root
+- takeScreenshot: cold-link-home

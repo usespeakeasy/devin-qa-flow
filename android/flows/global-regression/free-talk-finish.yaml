@@ -51,6 +51,15 @@ env:
       - tapOn:
           text: "Maybe later"
           optional: true
+      # First lesson end on a fresh account: streak goal; release/4.73.0 has no goal_7days/primary_button ids.
+      - tapOn:
+          text: "^I'm committed$"
+          optional: true
+      - runFlow:
+          when:
+            visible: "Review them later in the Practice Tab!"
+          commands:
+            - tapOn: "^Continue$"
 - extendedWaitUntil:
     visible: "^Completed$"
     timeout: 20000

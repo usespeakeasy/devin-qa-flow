@@ -28,6 +28,10 @@ env:
       - tapOn:
           id: drill_lesson_skip
           optional: true
+      # The lesson end opens on the reskin summary step; its Continue moves to the next step.
+      - tapOn:
+          id: lesson_end_reskin_continue_button
+          optional: true
 - extendedWaitUntil:
     visible:
       id: unit_end_cta

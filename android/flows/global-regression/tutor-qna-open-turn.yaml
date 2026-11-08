@@ -29,13 +29,32 @@ env:
       visible: "^(Start|Review|Practice again|Redo)$"
     commands:
       - tapOn: "^(Start|Review|Practice again|Redo)$"
+# An account without the AI data agreement gets the consent alert (speak-android#8799) on lesson start.
 - extendedWaitUntil:
     visible:
-      id: ai-lesson-start-button
+      id: "(ai-lesson-start-button|ai-lesson-text-input|ai-lesson-text-input-mode-button|ai-lesson-recording-submit-button|ai_data_consent_alert)"
+    timeout: 15000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_allow
+# A first-time lesson can open straight on QUESTION 1 without the preview's Start.
+- extendedWaitUntil:
+    visible:
+      id: "(ai-lesson-start-button|ai-lesson-text-input|ai-lesson-text-input-mode-button|ai-lesson-recording-submit-button)"
     timeout: 60000
 - takeScreenshot: c44-01-tutor-preview
-- tapOn:
-    id: ai-lesson-start-button
+- runFlow:
+    when:
+      visible:
+        id: ai-lesson-start-button
+    commands:
+      - tapOn:
+          id: ai-lesson-start-button
 - waitForAnimationToEnd:
     timeout: 3000
 # ai_data_consent_mode (new in 4.74.0) asks once before the first AI request; allow so the lesson can start.

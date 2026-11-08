@@ -6,6 +6,7 @@ appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
   REASON: ${REASON || "content_error"}
+  REASON_TEXT: ${REASON_TEXT || "Content error"}
 ---
 - tapOn:
     id: drill_lesson_topbar_options
@@ -13,15 +14,24 @@ env:
     visible: "^Report a problem$"
     timeout: 10000
 - tapOn: "^Report a problem$"
+# release/4.73.0's reason sheet has no lesson_more_options_* ids: wait for its rows, tap REASON_TEXT there.
 - extendedWaitUntil:
-    visible:
-      id: lesson_more_options_list
+    visible: "^Speech recognition$"
     timeout: 10000
-- tapOn:
-    id: lesson_more_options_report_problem_${REASON}
+- runFlow:
+    when:
+      visible:
+        id: lesson_more_options_list
+    commands:
+      - tapOn:
+          id: lesson_more_options_report_problem_${REASON}
+- runFlow:
+    when:
+      visible: "^Speech recognition$"
+    commands:
+      - tapOn: ${REASON_TEXT}
+# release/4.73.0's report screen has no report_screen id (text fallback: its input placeholder).
 - extendedWaitUntil:
-    visible:
-      id: report_screen
+    visible: "Any additional details to share\\?"
     timeout: 15000
-- assertNotVisible:
-    id: lesson_more_options_list
+- assertNotVisible: "^Speech recognition$"

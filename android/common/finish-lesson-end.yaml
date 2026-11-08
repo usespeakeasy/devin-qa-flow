@@ -28,6 +28,12 @@ env:
       - tapOn:
           text: "Maybe later"
           optional: true
+      # Smart Review "New Concept" step: its Continue has no resource-id on release/4.73.0 (text fallback).
+      - runFlow:
+          when:
+            visible: "Review them later in the Practice Tab!"
+          commands:
+            - tapOn: "^Continue$"
 - extendedWaitUntil:
     visible:
       id: home_root_ready

@@ -30,7 +30,22 @@ env:
       notVisible:
         id: learning_path_lesson_start_${LESSON_ID}
     commands:
-      - tapOn: "^(Start|Review|Practice again|Redo)$"
+      - tapOn:
+          text: "^(Start|Review|Practice again|Redo)$"
+          optional: true
+# An account without the AI data agreement gets the consent alert (speak-android#8799) on lesson start.
+- extendedWaitUntil:
+    visible:
+      id: "(drill_lesson_root|ai_data_consent_alert)"
+    timeout: 15000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_allow
 - extendedWaitUntil:
     visible:
       id: drill_lesson_root

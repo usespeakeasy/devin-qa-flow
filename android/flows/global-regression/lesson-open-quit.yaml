@@ -1,0 +1,27 @@
+# Drill lesson by deep link, then Back (close sheet > Quit) to the main tabs. Repeat it and count SpeakActivity
+# records (`adb shell dumpsys activity activities`) to check that no lesson open leaves an extra Activity.
+# Entry: Home, signed in. Exit: the main tabs, no drill lesson.
+# Selectors: the close sheet's Quit has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: ${LESSON_ID || "EN_FR_L1-rev_cava_SP_DL_IC"}
+---
+- runFlow:
+    file: ../tutor-lesson/open-fresh.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      visible: "^Quit$"
+    commands:
+      - tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: main_navigation
+    timeout: 30000
+- assertNotVisible:
+    id: drill_lesson_root

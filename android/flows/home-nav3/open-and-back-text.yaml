@@ -1,0 +1,36 @@
+# Home destination open and Back where OPEN has no resource-id on release/4.73.0: tap OPEN_ID when shown, else
+# OPEN_TEXT (text fallback, base only); wait ARRIVAL (text regex), screenshot SHOT, Back, Home is back.
+# Entry: Home tab showing learning_path_ready. Exit: Home tab.
+# maestro test -e OPEN_ID=home_streak -e OPEN_TEXT="^[0-9]+$" -e ARRIVAL="Your Records" -e SHOT=streak open-and-back-text.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+# Text branch first: after the id tap the id is gone, so a later notVisible branch would also run.
+- runFlow:
+    when:
+      notVisible:
+        id: ${OPEN_ID}
+    commands:
+      - tapOn: ${OPEN_TEXT}
+- runFlow:
+    when:
+      visible:
+        id: ${OPEN_ID}
+    commands:
+      - tapOn:
+          id: ${OPEN_ID}
+- extendedWaitUntil:
+    visible: ${ARRIVAL}
+    timeout: 15000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 15000
+- assertNotVisible: ${ARRIVAL}

@@ -1,0 +1,28 @@
+# Practice > Smart Review > info opens "How Does Smart Review Work?"; Close returns to Smart Review (Start review).
+# Text/content-desc selectors only, so the same flow runs on release/4.73.0 (no smart_review_* ids) and develop.
+# Maestro text matching ignores case, so the info button ("How does Smart Review work?") also matches the details
+# title; arrival and close are checked on the details body ("1. Collect Concepts").
+# Entry: Home tab, account with at least one concept. Exit: Smart Review main.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "^Practice$"
+- extendedWaitUntil:
+    visible: "^Smart Review$"
+    timeout: 20000
+- tapOn: "^Smart Review$"
+- extendedWaitUntil:
+    visible: "^Start review$"
+    timeout: 20000
+- tapOn: "How does Smart Review work\\?"
+- extendedWaitUntil:
+    visible: "^1\\. Collect Concepts$"
+    timeout: 10000
+- takeScreenshot: details
+- tapOn: "^Close$"
+- extendedWaitUntil:
+    notVisible: "^1\\. Collect Concepts$"
+    timeout: 10000
+- assertVisible: "^Start review$"
+- takeScreenshot: details-closed

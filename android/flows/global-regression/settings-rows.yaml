@@ -11,13 +11,25 @@ env:
 # notifications-open.yaml asserts every topic toggle; topics are per-account server data, so only the screen is asserted here.
 - runFlow: ../../common/open-settings.yaml
 - tapOn: "^Notifications$"
+# The notifications_daily_reminder id is not in the release/4.73.0 tree, so the row is waited on by title
+# and tapped by id when present.
 - extendedWaitUntil:
-    visible:
-      id: notifications_daily_reminder
+    visible: "^Daily Reminders$"
     timeout: 15000
 - takeScreenshot: c46-01-notifications
-- tapOn:
-    id: notifications_daily_reminder
+- runFlow:
+    when:
+      visible:
+        id: notifications_daily_reminder
+    commands:
+      - tapOn:
+          id: notifications_daily_reminder
+- runFlow:
+    when:
+      notVisible:
+        id: notifications_daily_reminder
+    commands:
+      - tapOn: "^Daily Reminders$"
 - waitForAnimationToEnd:
     timeout: 3000
 - takeScreenshot: c46-02-reminders
