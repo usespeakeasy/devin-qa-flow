@@ -1,0 +1,36 @@
+# Debug Menu > Demos > Test Overlay (OverlayRoute.TestOverlay on the activity's overlay stack). VIA=menu goes
+# through the Debug Menu's Demos row, VIA=link through the speak-dev://demos deep link.
+# Entry: signed in, any state (cold starts to Home first). Exit: the Test Overlay card over the Demos list.
+# maestro test -e VIA=menu open-test-overlay.yaml
+# Selectors: the Demos list "Test Overlay" button and the overlay card have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  VIA: ${VIA || "menu"}
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow:
+    when:
+      true: ${VIA == "menu"}
+    commands:
+      - openLink: speak-dev://debug-menu
+      - scrollUntilVisible:
+          element:
+            id: debug_menu_demos
+          direction: DOWN
+          timeout: 30000
+          # Without centering the scroll can stop with the row clipped by the bottom edge, where the tap misses it.
+          centerElement: true
+      - tapOn:
+          id: debug_menu_demos
+- runFlow:
+    when:
+      true: ${VIA == "link"}
+    commands:
+      - openLink: speak-dev://demos
+- extendedWaitUntil:
+    visible: "^Test Overlay$"
+    timeout: 30000
+- assertNotVisible: "This overlay is rendered by the OverlayNavHost\\."
+- tapOn: "^Test Overlay$"
+- runFlow: test-overlay-shown.yaml

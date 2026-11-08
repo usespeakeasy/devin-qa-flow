@@ -1,0 +1,19 @@
+# Asserts the custom unit planning overlay (CustomUnitPlanningOverlayRoute) is up on its intro, after opening it
+# or after rotation or process death restored it.
+# Entry: planning overlay expected on screen. Exit: unchanged.
+# Selectors: the intro message has no resource-id (text fallback; `custom_unit_planning_intro_cta` is the CTA).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: custom_unit_planning_screen
+    timeout: 60000
+- extendedWaitUntil:
+    visible: "Hey there! Ready to build your custom course.*"
+    timeout: 30000
+- assertVisible:
+    id: custom_unit_planning_intro_cta
+- assertVisible:
+    id: custom_unit_planning_close_button

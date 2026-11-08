@@ -1,0 +1,19 @@
+# Rotates the Debug Demos Test Overlay to landscape and back; the overlay card survives both configuration changes.
+# Entry: Test Overlay on screen. Exit: Test Overlay in portrait. Saves SHOT.png in landscape.
+# maestro test -e SHOT=rotate test-overlay-rotate.yaml
+# Selectors: the overlay card has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "test-overlay-rotate"}
+---
+- runFlow: test-overlay-shown.yaml
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- runFlow: test-overlay-shown.yaml
+- takeScreenshot: ${SHOT}
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- runFlow: test-overlay-shown.yaml

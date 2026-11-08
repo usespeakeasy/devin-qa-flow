@@ -1,0 +1,11 @@
+# Asserts the Debug Demos Test Overlay card is up (after opening it, or after rotation or process death restored it).
+# Entry: Test Overlay expected on screen. Exit: unchanged.
+# Selectors: the overlay card has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible: "This overlay is rendered by the OverlayNavHost\\."
+    timeout: 60000
+- assertVisible: "^Dismiss$"

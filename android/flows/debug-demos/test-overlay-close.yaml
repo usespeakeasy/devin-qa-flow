@@ -1,0 +1,26 @@
+# Closes the Debug Demos Test Overlay with EXIT=dismiss (its Dismiss button) or EXIT=back (system back),
+# and checks the Demos list under it is back with no overlay left.
+# Entry: Test Overlay on screen. Exit: Demos list.
+# maestro test -e EXIT=back test-overlay-close.yaml
+# Selectors: the overlay card and the Demos list button have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  EXIT: ${EXIT || "dismiss"}
+---
+- runFlow: test-overlay-shown.yaml
+- runFlow:
+    when:
+      true: ${EXIT == "dismiss"}
+    commands:
+      - tapOn: "^Dismiss$"
+- runFlow:
+    when:
+      true: ${EXIT == "back"}
+    commands:
+      - back
+- extendedWaitUntil:
+    notVisible: "This overlay is rendered by the OverlayNavHost\\."
+    timeout: 10000
+- assertNotVisible: "^Dismiss$"
+- assertVisible: "^Test Overlay$"

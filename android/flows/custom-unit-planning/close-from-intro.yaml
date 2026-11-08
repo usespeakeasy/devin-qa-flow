@@ -1,0 +1,17 @@
+# Custom unit planning intro > close (X): the intro quits without the exit sheet and Home's learning path shows.
+# Entry: planning overlay on its intro. Exit: Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: intro-shown.yaml
+- tapOn:
+    id: custom_unit_planning_close_button
+- extendedWaitUntil:
+    notVisible:
+      id: custom_unit_planning_screen
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000

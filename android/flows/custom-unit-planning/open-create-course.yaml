@@ -6,12 +6,8 @@ appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
 ---
-- launchApp:
-    stopApp: true
-- extendedWaitUntil:
-    visible:
-      id: home_root_ready
-    timeout: 60000
+# launch-home closes the referral promo a signed-in cold start can show over Home.
+- runFlow: ../../common/launch-home.yaml
 - scrollUntilVisible:
     element:
       text: Create your own course
