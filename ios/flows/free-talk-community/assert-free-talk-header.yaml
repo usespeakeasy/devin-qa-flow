@@ -1,0 +1,19 @@
+# Free Talk tab: tap the tab, pass the first-visit "Get started" intro if it shows, and wait for
+# the Free Talk header (saved items button).
+# Entry: any signed-in tab (common/launch-home.yaml). Arrival: `saved-navigation-bar-icon`.
+# Fallbacks: text `Get started` (intro), text `saved-navigation-bar-icon` (the image name is its
+# label; it has no identifier).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: tab-bar.tab.aiTutor
+- runFlow:
+    when:
+      visible: "Get started"
+    commands:
+      - tapOn: "Get started"
+- extendedWaitUntil:
+    visible: "saved-navigation-bar-icon"
+    timeout: 15000

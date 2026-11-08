@@ -1,0 +1,31 @@
+# Saved items (Favorites, `FreeTalkFavoritesScreen`) > first saved lesson's preview sheet >
+# Edit > the saved lesson's edit screen (`FreeTalkCreateLessonFlowScreen` in `.edit` mode,
+# pushed by `FreeTalkTabHostingVC.editSavedLesson`). Stops there; nothing is saved.
+# Entry: Free Talk tab (../free-talk-community/assert-free-talk-header.yaml) or the Favorites
+# list. Precondition: at least one saved lesson (heart a card on Free Talk > Community, the
+# `Favorite` button; tap it again afterwards to unsave).
+# Arrival: `Describe the scenario and topic` (edit form).
+# Fallbacks: text `saved-navigation-bar-icon`, `Favorites`, `Edit`, the arrival text, and the
+# card's combined label `@<author>, <title>, <scenario>` (its `debug.<id>` badge does not open it).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow:
+    when:
+      notVisible: "Favorites"
+    commands:
+      - tapOn: "saved-navigation-bar-icon"
+- extendedWaitUntil:
+    visible: "@.+, .+"
+    timeout: 15000
+- tapOn:
+    text: "@.+, .+"
+    index: 0
+- extendedWaitUntil:
+    visible: "Edit"
+    timeout: 15000
+- tapOn: "Edit"
+- extendedWaitUntil:
+    visible: "Describe the scenario and topic"
+    timeout: 15000

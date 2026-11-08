@@ -1,0 +1,15 @@
+# Tap the leading back button of the Free Talk create flow (character selection, topic form or
+# the saved-lesson edit screen) at POINT. Default 22,84 on iPhone 18 Pro: inside the 44 pt
+# circle ({16,62,44,44}) but outside the old 19 pt chevron hit area ({28.67,66,19,36}),
+# speak-ios#10081. POINT=38,84 is the chevron centre. The caller asserts where it lands.
+# A point, because the button is unlabelled (`Back`, no identifier) and the case is about
+# where inside it the tap lands.
+# Entry: any create-flow screen (open-create-own.yaml, ../free-talk/open-favorites-edit.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  POINT: ${POINT || "22,84"}
+---
+- tapOn:
+    point: ${POINT}
+- waitForAnimationToEnd

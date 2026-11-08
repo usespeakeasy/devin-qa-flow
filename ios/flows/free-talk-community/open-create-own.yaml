@@ -1,0 +1,26 @@
+# Create your own Free Talk lesson: Topics > Create your own > character selection
+# (`FreeTalkCreateLessonFlowScreen`), and with STOP=form the default character's Continue >
+# topic form (`FreeTalkCreateTopicScreen`). Stops there; nothing is created.
+# Entry: Free Talk tab (assert-free-talk-header.yaml). Precondition: none on dev (a free
+# account with no chats left may paywall at Community > Create your own; Topics opens the flow).
+# Arrival: STOP=character `Continue`; STOP=form `Describe the scenario and topic`.
+# Fallbacks (no IDs on the tab, the button or either screen): text `Topics`, `Create your own`,
+# `Continue`, `Describe the scenario and topic`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  STOP: ${STOP || "character"}
+---
+- tapOn: "Topics"
+- tapOn: "Create your own"
+- extendedWaitUntil:
+    visible: "Continue"
+    timeout: 15000
+- runFlow:
+    when:
+      true: ${STOP == "form"}
+    commands:
+      - tapOn: "Continue"
+      - extendedWaitUntil:
+          visible: "Describe the scenario and topic"
+          timeout: 15000
