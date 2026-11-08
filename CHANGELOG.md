@@ -19,6 +19,15 @@ GROUP BY 1, 2 ORDER BY 1 DESC, 2
 
 Runs before 2026-11-01 have no `skill_version`.
 
+## 2026-11-08
+
+- **Instructions**: ID PRs on speak-android and speak-ios open as Devin
+  (`devin-ai-integration[bot]`), not under the QA'd PR's author or Sean. Runs no longer comment
+  `@codex review` on them. The PR only shows the bot as author when the org's "Open PRs as"
+  setting is Devin. The Linear ticket for a no-PR request is still assigned to the person
+  who asked, or Sean when a bot asked. Why: Sean asked for it ("could you post the PRs as you and
+  not me? IOS PRs are going under my name").
+
 ## 2026-11-06
 
 - **Instructions**: Linear tickets for ID PRs, and any other missing-ID ticket, go in the

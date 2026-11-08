@@ -212,17 +212,18 @@ When a flow needs a text or point fallback because the element has no ID:
    that repo's standard produces
    (feature-prefixed `snake_case` on Android, dotted namespace on iOS). A committed flow never
    relies on an ID from an open PR until it is on develop.
-3. Open it ready for review, not as a draft, under the QA'd PR's author's GitHub account
-   (`git_create_pr` with `author_user_id` set to that author's Devin user). When the request has
-   no PR (a commit, branch or release sweep, or a ticket with no PR), the author is the person who
-   asked; when a bot asked (seanbot2, Sean Kim Bot), it is Sean Kim. With no PR there is no
-   ticket either: create one in Linear for the ID PR (team EPD - Client Platform, project
+3. Open it ready for review, not as a draft, as Devin: `git_create_pr` with `author_user_id`
+   null on both speak-android and speak-ios, never a person's Devin user. The PR shows as
+   `devin-ai-integration[bot]` only when the org's "Open PRs as" setting
+   (https://app.devin.ai/settings/devin#open-prs-as) is Devin; otherwise it still opens under the
+   session owner. When the request has no PR (a commit, branch or release sweep, or a
+   ticket with no PR), there is no ticket either: create one in Linear for the ID PR (team EPD - Client Platform, project
    [Mobile automation IDs](https://linear.app/speak/project/mobile-automation-ids-f8f4cf404aff)
-   (`P-CLNT-887`), label `android` or `ios`, assigned to that author) and use it in the branch
-   and title. Any other Linear ticket for missing automation IDs goes in that project too.
-   "No PR" is never a reason to skip the ID PR. Then comment
-   `@codex review` on it as the ID PR's author, not as Devin's bot: Codex declines the bot's
-   request. Check the PR's and the comment's author; if either is the bot, say so in the report.
+   (`P-CLNT-887`), label `android` or `ios`, assigned to the person who asked, or to Sean Kim when
+   a bot asked (seanbot2, Sean Kim Bot)) and use it in the branch and title. Any other Linear
+   ticket for missing automation IDs goes in that project too. "No PR" is never a reason to skip
+   the ID PR. Don't comment `@codex review`: Codex declines Devin's bot, and Sean asks for it
+   himself. Check the PR's author; if it is a person, say so in the report.
    Request a review from the `qa-devin` team
    (`gh api -X POST repos/usespeakeasy/speak-<platform>/pulls/<n>/requested_reviewers -f 'team_reviewers[]=qa-devin'`).
    If it fails, say so in the report.

@@ -38,7 +38,7 @@ flowchart TD
     I --> K["Log the run in BigQuery<br/>(skill_version, flow_repo_sha, phase times)"]
     F --> L["Push new flows + INDEX row<br/>to main"]
     I --> M{"Missing or text-only<br/>selectors?"}
-    M -- yes --> N["Open an ID PR in speak-android / speak-ios<br/>authored by the QA'd PR's author"]
+    M -- yes --> N["Open an ID PR in speak-android / speak-ios<br/>opened as Devin"]
     N --> O["Post it in #devin-qa-flow"]
     N -. "merged IDs" .-> C
     I --> P{"Major failure?"}
