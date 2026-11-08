@@ -1,5 +1,5 @@
 # Video lesson: reopen the current one after leaving it (stopApp, launch, Home popups, same deep link), so the
-# next step sees the same saved card. Resume prompt answered Continue when shown.
+# next step sees the same card. A resume prompt is answered Start over, so it lands on card 1 again.
 # Entry: any. Exit: video lesson card with listening_header.
 appId: ${APP_ID}
 env:
