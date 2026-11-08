@@ -212,9 +212,11 @@ When a flow needs a text or point fallback because the element has no ID:
    that repo's standard produces
    (feature-prefixed `snake_case` on Android, dotted namespace on iOS). A committed flow never
    relies on an ID from an open PR until it is on develop.
-3. Open it ready for review, not as a draft, as Devin: `git_create_pr` without `author_user_id`,
-   so the PR author is `devin-ai-integration[bot]` on both speak-android and speak-ios, never a
-   person's GitHub account. When the request has no PR (a commit, branch or release sweep, or a
+3. Open it ready for review, not as a draft, as Devin: `git_create_pr` with `author_user_id`
+   null on both speak-android and speak-ios, never a person's Devin user. The PR shows as
+   `devin-ai-integration[bot]` only when the org's "Open PRs as" setting
+   (https://app.devin.ai/settings/devin#open-prs-as) is Devin; otherwise it still opens under the
+   session owner. When the request has no PR (a commit, branch or release sweep, or a
    ticket with no PR), there is no ticket either: create one in Linear for the ID PR (team EPD - Client Platform, project
    [Mobile automation IDs](https://linear.app/speak/project/mobile-automation-ids-f8f4cf404aff)
    (`P-CLNT-887`), label `android` or `ios`, assigned to the person who asked, or to Sean Kim when
