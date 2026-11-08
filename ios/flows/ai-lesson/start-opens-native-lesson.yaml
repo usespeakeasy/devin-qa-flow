@@ -1,0 +1,23 @@
+# Pre-lesson Start with no gate expected: the native lesson screen opens. Answers "Start over" when it shows
+# (use with microphone access already decided, e.g. revoked).
+# Entry: pre-lesson (ios/common/open-chat-pre-lesson.yaml). Exit: native lesson open.
+appId: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: "lesson.pre-ai.action.start"
+- extendedWaitUntil:
+    visible: "Start over"
+    timeout: 6000
+    optional: true
+- runFlow:
+    when:
+      visible: "Start over"
+    commands:
+      - tapOn: "Start over"
+- extendedWaitUntil:
+    notVisible:
+      id: "lesson.pre-ai.action.start"
+    timeout: 30000
+- assertNotVisible: ".*(Would Like to Access the Microphone|to access your microphone).*"
+- assertNotVisible: "We need microphone permissions!"
+- runFlow: native-lesson-opened.yaml

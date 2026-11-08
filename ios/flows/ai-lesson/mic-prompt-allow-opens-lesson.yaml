@@ -1,0 +1,11 @@
+# iOS microphone prompt > Allow, then the native lesson opens.
+# Entry: the iOS microphone prompt ("Allow ... to access your microphone?") over the pre-lesson. Exit: native lesson open.
+# While a system alert shows, Maestro's tree holds only the alert, so the pre-lesson underneath can't be asserted here:
+# check it from the screenshot and the log (no `AI Lesson Screen` / `SessionFlow screenAppeared` before Allow).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible: ".*(Would Like to Access the Microphone|to access your microphone).*"
+- tapOn: "Allow"
+- runFlow: native-lesson-opened.yaml

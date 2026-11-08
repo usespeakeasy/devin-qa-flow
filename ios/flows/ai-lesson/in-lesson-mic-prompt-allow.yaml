@@ -1,0 +1,7 @@
+# Microphone prompt raised from inside the native lesson (the pre-lesson is gone) > Allow, then the lesson
+# screen shows. Entry: the iOS microphone prompt over the native lesson. Exit: native lesson open.
+appId: com.selabs.speak-v2.dev
+---
+- assertVisible: ".*(Would Like to Access the Microphone|to access your microphone).*"
+- tapOn: "Allow"
+- runFlow: native-lesson-opened.yaml

@@ -1,0 +1,22 @@
+# Pre-lesson Start, then the alert whose text matches EXPECT shows (microphone prompt, denied alert or
+# AI data consent), answering "Start over" first when an earlier session is offered.
+# Entry: pre-lesson (ios/common/open-chat-pre-lesson.yaml). Inputs: EXPECT (regex of the alert text).
+# Exit: the EXPECT alert on screen, nothing answered.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: "lesson.pre-ai.action.start"
+- extendedWaitUntil:
+    visible: "${EXPECT}|Start over"
+    timeout: 20000
+- runFlow:
+    when:
+      visible: "Start over"
+    commands:
+      - tapOn: "Start over"
+      - extendedWaitUntil:
+          visible: ${EXPECT}
+          timeout: 20000
+- assertVisible: ${EXPECT}

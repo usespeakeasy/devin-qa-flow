@@ -1,0 +1,32 @@
+# Denied microphone alert (Settings / Cancel) > Cancel: pre-lesson stays with Start enabled; Start again
+# shows the denied alert again and no lesson opens.
+# Entry: the denied alert over the pre-lesson. Exit: the denied alert on screen again.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible: "We need microphone permissions!"
+- assertVisible: "Settings"
+- assertVisible: "Cancel"
+- tapOn: "Cancel"
+- extendedWaitUntil:
+    notVisible: "We need microphone permissions!"
+    timeout: 5000
+- assertVisible:
+    id: "lesson.pre-ai.action.start"
+    enabled: true
+- tapOn:
+    id: "lesson.pre-ai.action.start"
+- extendedWaitUntil:
+    visible: "We need microphone permissions!|Start over"
+    timeout: 15000
+- runFlow:
+    when:
+      visible: "Start over"
+    commands:
+      - tapOn: "Start over"
+- extendedWaitUntil:
+    visible: "We need microphone permissions!"
+    timeout: 15000
+- assertNotVisible:
+    id: "debug.ail.correct-response"

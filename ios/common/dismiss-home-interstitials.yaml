@@ -1,0 +1,22 @@
+appId: com.selabs.speak-v2.dev
+---
+- repeat:
+    times: 3
+    commands:
+      - runFlow:
+          when:
+            visible: "Welcome to your Speak Premium.*"
+          commands:
+            - tapOn: "OK"
+      - runFlow:
+          when:
+            visible: "Invite friends and get.*"
+          commands:
+            - tapOn: "Later"
+      - runFlow:
+          when:
+            visible: "Save your .*streak!"
+          commands:
+            - swipe:
+                direction: DOWN
+      - waitForAnimationToEnd

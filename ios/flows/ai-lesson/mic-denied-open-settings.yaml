@@ -1,0 +1,16 @@
+# Denied microphone alert > Settings: iOS Settings comes to the foreground. On the iOS 27 simulator it opens the
+# Settings root (status bar "Speak Dev" back link), not Speak's page; check com.apple.Preferences is foreground with
+# `simctl spawn <udid> launchctl list | grep UIKitApplication:com.apple.Preferences`.
+# Entry: the denied alert over the pre-lesson. Exit: iOS Settings.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible: "We need microphone permissions!"
+- tapOn: "Settings"
+- extendedWaitUntil:
+    notVisible: "We need microphone permissions!"
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "Settings|Microphone"
+    timeout: 15000

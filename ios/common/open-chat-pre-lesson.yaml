@@ -1,0 +1,32 @@
+# Free Talk > Topics > roleplay topic > Chat mode, stopping on the pre-lesson (Start not tapped).
+# Entry: app launched to Home by the caller (simctl launch, so the microphone permission state set by
+# simctl privacy is kept; launchApp would grant it). Precondition: signed in, split overrides
+# ai_lesson_native=default_chat&chat_mode_native=on.
+# Exit: pre-lesson with Chat mode selected and lesson.pre-ai.action.start visible.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  TOPIC: At a Bad Bunny Concert
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|ai-data-consent.action.agree"
+    timeout: 30000
+- runFlow: dismiss-ai-data-consent.yaml
+- tapOn:
+    id: "tab-bar.tab.aiTutor"
+- runFlow:
+    when:
+      visible: "Get started"
+    commands:
+      - tapOn: "Get started"
+- tapOn: "Topics"
+- tapOn: ${TOPIC}
+- extendedWaitUntil:
+    visible:
+      id: "lesson.pre-ai.action.start"
+    timeout: 15000
+- tapOn: "Chat mode"
+- assertVisible:
+    id: "lesson.pre-ai.action.start"
+    enabled: true

@@ -1,0 +1,19 @@
+# AI data consent alert > Don't Allow: no lesson and no microphone prompt; the pre-lesson stays.
+# Entry: the "Allow Speak to send your voice and text to AI?" alert over the pre-lesson.
+# Exit: pre-lesson with Start visible.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible: "Allow Speak to send your voice and text to AI\\?"
+- tapOn: "Don't Allow"
+- extendedWaitUntil:
+    notVisible: "Allow Speak to send your voice and text to AI\\?"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "lesson.pre-ai.action.start"
+    timeout: 10000
+- assertNotVisible: ".*(Would Like to Access the Microphone|to access your microphone).*"
+- assertNotVisible:
+    id: "debug.ail.correct-response"

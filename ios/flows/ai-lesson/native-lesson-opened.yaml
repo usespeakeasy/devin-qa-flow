@@ -1,0 +1,14 @@
+# Arrival check for the native AI lesson screen (CMLessonScreen): the pre-lesson is gone and the lesson's debug
+# answer buttons show (they mount once the realtime session is set up; on a simulator without an audio device
+# this needs the QA-only audio patch, see LEARNINGS.md).
+# Entry: right after Start / Allow. Exit: native lesson open.
+appId: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    notVisible:
+      id: "lesson.pre-ai.action.start"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "debug.ail.correct-response"
+    timeout: 45000
