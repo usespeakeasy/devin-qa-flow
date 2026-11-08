@@ -1,0 +1,57 @@
+# Free Talk > Topics > TOPIC > Immersive mode > Start, the native immersive roleplay (IRLessonScreen).
+# Entry: any state (cold-starts to Home first). Exit: the immersive lesson, debug overlay mounted,
+# first hint loaded, screenshot "immersive-arrival" taken.
+# Preconditions: signed in, Premium (common/set-subscription-premium.yaml), split override
+# ai_lesson_native=default_immersive, Show Debug Controls on (Debug default). On the no-audio macOS VM the
+# lesson needs the QA-only AudioIOController manual-rendering patch or CoreAudio aborts ~10 s in.
+# Params: TOPIC (topic card title on the Topics tab).
+# "Immersive mode" is tapped every run: the last picked mode persists over the flag's default.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  TOPIC: At a Bad Bunny Concert
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn:
+    id: tab-bar.tab.aiTutor
+- extendedWaitUntil:
+    visible: "Topics|Get started"
+    timeout: 15000
+- runFlow:
+    when:
+      visible: "Get started"
+    commands:
+      - tapOn: "Get started"
+- extendedWaitUntil:
+    visible: "Topics"
+    timeout: 15000
+- tapOn: "Topics"
+- tapOn: ${TOPIC}
+- extendedWaitUntil:
+    visible:
+      id: lesson.pre-ai.action.start
+    timeout: 15000
+- tapOn: "Immersive mode"
+- tapOn:
+    id: lesson.pre-ai.action.start
+- runFlow:
+    when:
+      visible:
+        id: ai-data-consent.alert.allow
+    commands:
+      - tapOn:
+          id: ai-data-consent.alert.allow
+- tapOn:
+    text: "Start over"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: debug.ail.correct-response
+    timeout: 40000
+- extendedWaitUntil:
+    visible: "What should I say\\?"
+    timeout: 40000
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: immersive-arrival
