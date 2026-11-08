@@ -1,0 +1,14 @@
+# Call screen: End call on a short call leaves to Practice main with the bottom bar.
+# Entry: phone_speak_call_screen. Exit: Practice main.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: phone_speak_call_end_call
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 30000
+- assertVisible:
+    id: main_tab_practice

@@ -1,0 +1,26 @@
+# Practice main: scroll to CARD, tap it, wait for ARRIVAL; the pushed screen hides the bottom bar.
+# Entry: Practice main. Exit: ARRIVAL.
+# maestro test -e CARD=practice_tab_card_saved_items -e ARRIVAL=practice_saved_items_list open-card.yaml
+# Cards: practice_tab_card_{saved_items,conjugation_coach,mistakes,interests,smart_review,jump_in_lesson_.*}
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: ${CARD}
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- tapOn:
+    id: ${CARD}
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- assertNotVisible:
+    id: main_tab_practice

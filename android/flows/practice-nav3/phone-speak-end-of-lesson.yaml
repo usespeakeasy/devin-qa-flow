@@ -1,0 +1,16 @@
+# Call screen > End call on a call the server reviews: the end of lesson flow opens (schedule CTA when no
+# weekly call is set, else level progress). Short QA calls need the QA-only `debug.qa.longcall=1` patch in
+# PhoneSpeakCallSession.finalizeCall, so a short call is not dismissed straight to Practice.
+# Entry: phone_speak_call_screen. Exit: first end of lesson step.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: phone_speak_call_end_call
+- extendedWaitUntil:
+    visible:
+      id: "phone_speak_schedule_cta_screen|lesson_end_level_progress_root"
+    timeout: 45000
+- assertNotVisible:
+    id: main_tab_practice

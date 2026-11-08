@@ -1,0 +1,17 @@
+# System Settings > About > Build number x7: turns on Developer options. `settings put global
+# development_settings_enabled 1` alone leaves the Developer options intent on DevelopmentSettingsDisabledActivity.
+# Entry: About opened with `adb shell am start -a android.settings.DEVICE_INFO_SETTINGS`. Exit: About,
+# "You are now a developer!" toast or already a developer.
+# Selectors: system Settings rows have no app resource-id (text fallback).
+appId: com.android.settings
+---
+- scrollUntilVisible:
+    element:
+      text: "Build number"
+    direction: DOWN
+    timeout: 60000
+- repeat:
+    times: 7
+    commands:
+      - tapOn:
+          text: "Build number"

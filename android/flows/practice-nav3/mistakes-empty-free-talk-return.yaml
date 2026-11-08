@@ -1,0 +1,30 @@
+# Mistakes empty state > Explore Free Talk switches to the Free Talk tab; tapping Practice brings back
+# Mistakes with the bottom bar hidden.
+# Entry: Mistakes empty state (mistakes_interests_empty, account with no mistakes). Exit: Mistakes.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: mistakes_interests_empty_cta
+- extendedWaitUntil:
+    visible:
+      id: "ai_tutor_title|ai_tutor_intro_dialog_get_started_button"
+    timeout: 30000
+- tapOn:
+    id: ai_tutor_intro_dialog_get_started_button
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000
+- assertVisible:
+    id: main_tab_practice
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: mistakes_interests_empty
+    timeout: 20000
+- assertNotVisible:
+    id: main_tab_practice

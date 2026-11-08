@@ -1,0 +1,21 @@
+# Practice main > first Quick lessons tile (jump-in lesson group): the group opens in the Speak Embedded
+# web view over the tabs. Entry: Practice main. Exit: the web view; the case script asserts it with harness
+# `wait "Speak Embedded"` (the web view has no resource-id, see ai-data-consent/open-jump-in.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: "practice_tab_card_jump_in_lesson_.*"
+    direction: UP
+    timeout: 10000
+- tapOn:
+    id: "practice_tab_card_jump_in_lesson_.*"
+    index: 0
+- extendedWaitUntil:
+    notVisible:
+      id: practice_tab_list
+    timeout: 20000
+- assertNotVisible:
+    id: main_tab_practice

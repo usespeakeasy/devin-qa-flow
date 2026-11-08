@@ -1,0 +1,16 @@
+# Expression Details sheet: Back returns to saved items, Back again to Practice main with the bottom bar.
+# Entry: tutor_expression_details_sheet over saved items. Exit: Practice main.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_expression_details_sheet
+    timeout: 10000
+- assertVisible:
+    id: practice_saved_items_list
+- assertNotVisible:
+    id: main_tab_practice
+- runFlow: back-to-practice.yaml

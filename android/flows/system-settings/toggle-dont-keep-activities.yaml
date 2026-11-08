@@ -1,0 +1,17 @@
+# System Settings > Developer options > Don't keep activities: tap the row once to flip it.
+# `adb shell settings put global always_finish_activities 1` alone does not reach the activity manager on
+# API 34 (activities stay alive), so the switch is flipped in Settings.
+# Entry: Developer options open (`adb shell settings put global development_settings_enabled 1`, then
+# `adb shell am start -a android.settings.APPLICATION_DEVELOPMENT_SETTINGS`). The caller checks the result
+# with `adb shell settings get global always_finish_activities`.
+# Selectors: system Settings rows have no app resource-id (text fallback).
+appId: com.android.settings
+---
+- scrollUntilVisible:
+    element:
+      text: "Don.t keep activities"
+    direction: DOWN
+    timeout: 150000
+    visibilityPercentage: 50
+- tapOn:
+    text: "Don.t keep activities"

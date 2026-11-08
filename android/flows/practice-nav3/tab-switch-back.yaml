@@ -1,0 +1,22 @@
+# Practice main > Home tab > Practice tab: Practice main shows again with the bottom bar.
+# Entry: Practice main. Exit: Practice main.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- assertNotVisible:
+    id: practice_tab_list
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 20000
+- assertVisible:
+    id: main_tab_practice

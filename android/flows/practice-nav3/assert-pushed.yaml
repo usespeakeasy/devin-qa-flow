@@ -1,0 +1,12 @@
+# After a relaunch (Don't keep activities, process death, rotation): ARRIVAL shows again with the bottom bar hidden.
+# Entry: app relaunched on the Practice tab. Exit: ARRIVAL.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- assertNotVisible:
+    id: main_tab_practice

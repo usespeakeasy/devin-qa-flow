@@ -1,0 +1,26 @@
+# Practice main > AI Tutor Call hero > intro (first time only, Continue) > call screen.
+# Entry: Practice main, Premium (a free account gets the paywall instead). Exit: phone_speak_call_screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: phone_speak_hero_card_call
+    direction: UP
+    timeout: 10000
+- tapOn:
+    id: phone_speak_hero_card_call
+- extendedWaitUntil:
+    visible:
+      id: "phone_speak_intro_screen|phone_speak_call_screen"
+    timeout: 30000
+- tapOn:
+    id: phone_speak_intro_continue
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call
+    timeout: 30000
+- assertNotVisible:
+    id: main_tab_practice

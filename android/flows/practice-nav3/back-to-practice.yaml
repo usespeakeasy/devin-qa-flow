@@ -1,0 +1,14 @@
+# System Back from a screen pushed on the Practice tab: Practice main with the bottom bar.
+# Entry: a pushed Practice screen (saved items, Conjugation Coach, Mistakes, Smart Review, quick lesson).
+# Exit: Practice main.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 20000
+- assertVisible:
+    id: main_tab_practice

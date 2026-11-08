@@ -1,0 +1,13 @@
+# Saved items: tap the first saved item, Expression Details sheet opens over the list.
+# Entry: saved items (practice_saved_items_list), at least one saved line. Exit: the sheet.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: practice_saved_items_item
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_sheet
+    timeout: 20000

@@ -1,0 +1,20 @@
+# Cold-start the app, close the Home popups, open the Practice tab (PracticeEntries entry, or
+# PracticeController with android_nav3_segment_kill_switch ON). Bottom bar shows.
+# Entry: signed in. Exit: Practice main (practice_tab_list) with main_tab_practice visible.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../home-announcement/launch-home.yaml
+- tapOn:
+    id: referral_welcome_dialog_later_button
+    optional: true
+- runFlow: ../home-announcement/dismiss-announcement.yaml
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 30000
+- assertVisible:
+    id: main_tab_practice
