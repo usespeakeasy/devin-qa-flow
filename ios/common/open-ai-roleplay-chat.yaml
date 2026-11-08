@@ -11,10 +11,10 @@ env:
 - runFlow: launch-home.yaml
 - tapOn:
     id: tab-bar.tab.aiTutor
+# First visit to Free Talk shows an intro card ("Get started") instead of the tabs.
 - extendedWaitUntil:
-    visible: "Topics"
+    visible: "Topics|Get started"
     timeout: 15000
-# First visit to Free Talk shows an intro card over the tab.
 - tapOn:
     text: "Get started"
     optional: true
