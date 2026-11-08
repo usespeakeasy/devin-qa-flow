@@ -1,0 +1,19 @@
+# Tutor (drill) lesson while Bloo narrates: the narration transcript line above the controls.
+# The caption shows only while Bloo speaks (tutor subtitle mode on, the default), mostly in the
+# first seconds, so the case script also takes a `simctl io screenshot` burst from the deep link
+# and picks the caption frames; this flow asserts the lesson screen and its debug controls.
+# Params: SHOT (screenshot name, required: a flow env default would override -e).
+# Entry: the lesson open. The case script opens it over Home with
+# speak-dev://lesson?id=EN_ES_A1-1_quetal_no_muchogusto_no_vamos_TL (Spanish A1 pool account,
+# Premium override). Drill lessons such as EN_ES_A1-1_quetal_SP_DL_IC have only instructions and
+# record items, so they never show the caption (it comes from playback items). Dev build (debug Skip/End controls). No audio device on the VM:
+# see LEARNINGS for the QA-only audio patch if the player blocks the main thread.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "End"
+    timeout: 30000
+- assertVisible: "Skip"
+- takeScreenshot: ${SHOT}

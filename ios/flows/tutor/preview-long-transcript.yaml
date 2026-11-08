@@ -1,0 +1,31 @@
+# Settings > Previews > "Transcript - Long Caption" (TutorLessonScreenLongTranscriptPreview,
+# section "Tutor Lesson Screen"): the tutor lesson screen with the agent speaking and a narration
+# caption long enough to hit the subtitle line limit. Screenshot it to compare the caption's
+# font, size and colour across builds. Back returns to the search results.
+# Params: SHOT (screenshot name, required: a flow env default would override -e). Entry: any state, signed-in dev build (relaunches to Home).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow: ../../common/open-previews.yaml
+- tapOn: "Search"
+- inputText: "Long Caption"
+- extendedWaitUntil:
+    visible:
+      id: "debug.previews.item.Tutor Lesson Screen_Transcript - Long Caption"
+    timeout: 10000
+- tapOn:
+    id: "debug.previews.item.Tutor Lesson Screen_Transcript - Long Caption"
+- extendedWaitUntil:
+    visible: "Now listen carefully.*"
+    timeout: 15000
+- assertVisible: "Buenos días"
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: "BackButton"
+- extendedWaitUntil:
+    visible:
+      id: "debug.previews.item.Tutor Lesson Screen_Transcript - Long Caption"
+    timeout: 10000
