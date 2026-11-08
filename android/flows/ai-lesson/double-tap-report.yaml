@@ -1,7 +1,7 @@
 # AI lesson: two fast taps on the transcript report icon open one report options sheet; the case script checks
 # that one back closes it and the lesson shows.
 # Entry: AI lesson in chat mode with a partner message (open-free-talk-scenario.yaml). Exit: the lesson, no sheet.
-# Selectors: QA-only patch tags `ai_lesson_transcript_expand` and `ai_lesson_transcript_report` (ID PR adds them);
+# Selectors: transcript test tags `ai_lesson_transcript_expand_toggle` and `ai_lesson_transcript_report`;
 # the options sheet has no resource-id (text fallback "Content error").
 appId: ${APP_ID}
 env:
@@ -9,7 +9,7 @@ env:
 ---
 - extendedWaitUntil:
     visible:
-      id: ai_lesson_transcript_expand
+      id: ai_lesson_transcript_expand_toggle
     timeout: 30000
 - runFlow:
     when:
@@ -17,7 +17,7 @@ env:
         id: ai_lesson_transcript_report
     commands:
       - tapOn:
-          id: ai_lesson_transcript_expand
+          id: ai_lesson_transcript_expand_toggle
 - tapOn:
     id: ai_lesson_transcript_report
     repeat: 2

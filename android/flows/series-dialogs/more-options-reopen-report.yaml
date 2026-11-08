@@ -1,0 +1,47 @@
+# More options, Back, More options again right away: it opens again; Content error opens the report screen and its
+# close returns to the lesson with no sheet. Entry: line card. Exit: series_list.
+# Selectors: report reason rows matched by text "Content error" (row IDs `lesson_more_options_*` exist on develop, flow not switched yet); the report screen is
+# matched by report_screen or its text on builds without the id.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: more_options
+- extendedWaitUntil:
+    visible: "^Content error$"
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    notVisible: "^Content error$"
+    timeout: 10000
+- tapOn:
+    id: more_options
+    waitToSettleTimeoutMs: 100
+- extendedWaitUntil:
+    visible: "^Content error$"
+    timeout: 15000
+- tapOn: "^Content error$"
+- extendedWaitUntil:
+    visible: "Any additional details to share\\?"
+    timeout: 15000
+- takeScreenshot: ${SHOT || "more-options-report"}
+- hideKeyboard
+- runFlow:
+    when:
+      visible:
+        id: report_close_button
+    commands:
+      - tapOn:
+          id: report_close_button
+- runFlow:
+    when:
+      visible: "Any additional details to share\\?"
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: series_list
+    timeout: 15000
+- assertNotVisible: "Any additional details to share\\?"
+- assertNotVisible: "^Content error$"

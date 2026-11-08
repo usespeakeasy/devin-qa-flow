@@ -1,0 +1,37 @@
+# More options sheet open > Home > process death (killApp) > relaunch: the lesson comes back; if the sheet is restored,
+# one Back leaves none. Entry: line card. Exit: series_list. The case script compares what shows after relaunch on both builds.
+# Selectors: report reason rows matched by text "Content error" (row IDs `lesson_more_options_*` exist on develop, flow not switched yet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: more_options
+- extendedWaitUntil:
+    visible: "^Content error$"
+    timeout: 15000
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: "series_list|more_options"
+    timeout: 60000
+    optional: true
+- extendedWaitUntil:
+    visible: "^Content error$"
+    timeout: 5000
+    optional: true
+- takeScreenshot: ${SHOT || "more-options-restored"}
+- runFlow:
+    when:
+      visible: "^Content error$"
+    commands:
+      - back
+      - extendedWaitUntil:
+          notVisible: "^Content error$"
+          timeout: 10000
+- assertNotVisible: "^Content error$"
+- assertVisible:
+    id: series_list

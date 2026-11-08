@@ -1,0 +1,21 @@
+# Overview (overview_tap_target) double-tapped: one Lesson Outline sheet, one Back leaves none. Entry: line card. Exit: series_list.
+# Selectors: sheet title matched by text "Lesson Outline" (`bottom_sheet_title` holds it).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- doubleTapOn:
+    id: overview_tap_target
+- extendedWaitUntil:
+    visible: "Lesson Outline"
+    timeout: 15000
+- takeScreenshot: ${SHOT || "double-tap-overview"}
+- back
+- extendedWaitUntil:
+    notVisible: "Lesson Outline"
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible: "Lesson Outline"
+- assertVisible:
+    id: series_list

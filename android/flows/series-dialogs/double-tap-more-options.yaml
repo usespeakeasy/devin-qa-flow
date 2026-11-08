@@ -1,0 +1,23 @@
+# More options (flag, more_options) double-tapped: one report options sheet, one Back leaves none (two sheets fail the
+# assertNotVisible; the case script presses Back again to clean up). Entry: line card. Exit: series_list.
+# Selectors: report reason rows matched by text "Content error" (row IDs `lesson_more_options_*` exist on develop, flow not switched yet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- doubleTapOn:
+    id: more_options
+- extendedWaitUntil:
+    visible: "^Content error$"
+    timeout: 15000
+- takeScreenshot: ${SHOT || "double-tap-more-options"}
+- back
+- extendedWaitUntil:
+    notVisible: "^Content error$"
+    timeout: 5000
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible: "^Content error$"
+- assertVisible:
+    id: series_list

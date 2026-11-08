@@ -1,0 +1,30 @@
+# More options sheet open, rotate to landscape and back: the one sheet stays, one Back leaves none. Entry: line card. Exit: series_list.
+# Selectors: report reason rows matched by text "Content error" (row IDs `lesson_more_options_*` exist on develop, flow not switched yet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: more_options
+- extendedWaitUntil:
+    visible: "^Content error$"
+    timeout: 15000
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "^Content error$"
+    timeout: 10000
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "^Content error$"
+    timeout: 10000
+- takeScreenshot: ${SHOT || "more-options-rotated"}
+- back
+- extendedWaitUntil:
+    notVisible: "^Content error$"
+    timeout: 10000
+- assertVisible:
+    id: series_list
