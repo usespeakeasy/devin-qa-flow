@@ -1,0 +1,14 @@
+# Topics list: scroll until ITEM_ID is centered, so a tap on it can't land on the bottom bar or the Create your own button.
+# Entry: Topics with ITEM_ID below the current position. Exit: ITEM_ID centered on screen.
+# maestro test -e ITEM_ID=ai_tutor_lesson_item_<lesson> center-item.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- scrollUntilVisible:
+    element:
+      id: ${ITEM_ID}
+    direction: DOWN
+    timeout: 60000
+    visibilityPercentage: 50
+    centerElement: true

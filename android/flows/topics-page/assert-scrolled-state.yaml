@@ -1,0 +1,26 @@
+# After a recreation or return: ITEM_ID is still on screen and TOP_ID (a row from the top of the list) is not, so the
+# scroll position was kept; then scrolling back up shows TAB_ID still selected.
+# Entry: Topics scrolled to ITEM_ID on TAB_ID. Exit: Topics scrolled to the top, TAB_ID selected.
+# maestro test -e TAB_ID=... -e ITEM_ID=... -e TOP_ID=ai_tutor_freemium_allowance assert-scrolled-state.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: ${ITEM_ID}
+    timeout: 20000
+- assertNotVisible:
+    id: ${TOP_ID}
+- takeScreenshot: restored
+- scrollUntilVisible:
+    element:
+      id: ${TAB_ID}
+    direction: UP
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: ${TAB_ID}
+      checked: true
+    timeout: 10000
+- takeScreenshot: tab_selected

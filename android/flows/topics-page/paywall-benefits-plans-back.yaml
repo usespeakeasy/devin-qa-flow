@@ -1,0 +1,39 @@
+# A Topics paywall CTA opens the native premium intro (benefits), Check out plans loads the plans, Back twice returns.
+# Entry: Topics with CTA_ID on screen, Free tier, plan offerings available (QA plans fixture on the emulator).
+# Exit: RETURN_ID visible again. Never taps Subscribe.
+# maestro test -e CTA_ID=free_premium_button -e RETURN_ID=free_premium_button paywall-benefits-plans-back.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: ${CTA_ID}
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_ready
+    timeout: 30000
+- assertNotVisible:
+    id: onboarding_premium_intro_error
+- assertVisible:
+    id: benefits_layout
+- takeScreenshot: benefits
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    visible:
+      id: premium_price
+    timeout: 30000
+- assertVisible:
+    id: premium_plus_price
+- takeScreenshot: plans
+- back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_ready
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible:
+      id: ${RETURN_ID}
+    timeout: 15000
+- takeScreenshot: returned

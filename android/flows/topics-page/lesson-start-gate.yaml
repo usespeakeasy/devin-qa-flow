@@ -1,0 +1,54 @@
+# A Topics lesson card opens the pre-lesson screen; Start on a locked lesson for a Free user opens the premium intro,
+# whose plans load; Back returns to the pre-lesson screen and its Back returns to Topics.
+# Entry: Topics with CARD_ID on screen, Free tier, plans fixture. Exit: RETURN_ID visible. Never taps Subscribe.
+# maestro test -e CARD_ID=ai_tutor_lesson_item_<lesson> -e RETURN_ID=ai_tutor_overview_list lesson-start-gate.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- scrollUntilVisible:
+    element:
+      id: ${CARD_ID}
+    direction: DOWN
+    timeout: 60000
+    visibilityPercentage: 50
+- tapOn:
+    id: ${CARD_ID}
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_start
+    timeout: 30000
+- takeScreenshot: prelesson
+- tapOn:
+    id: ai_lesson_pre_lesson_start
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_ready
+    timeout: 30000
+- assertNotVisible:
+    id: ai_lesson_screen
+- takeScreenshot: benefits
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    visible:
+      id: premium_price
+    timeout: 30000
+- takeScreenshot: plans
+- back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_ready
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_screen
+    timeout: 15000
+- tapOn:
+    id: ai_lesson_pre_lesson_back
+- extendedWaitUntil:
+    visible:
+      id: ${RETURN_ID}
+    timeout: 15000
+- takeScreenshot: returned

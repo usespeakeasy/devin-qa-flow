@@ -1,0 +1,27 @@
+# Legacy Topics: select TAB_ID (scrolling back up first, since the tab row collapses with the list) and scroll the list
+# down until ITEM_ID shows.
+# Entry: legacy Topics (scrolled anywhere). Exit: TAB_ID selected, ITEM_ID on screen, tab row collapsed.
+# maestro test -e TAB_ID=ai_tutor_overview_tab_<id> -e ITEM_ID=ai_tutor_lesson_item_<lesson> legacy-tab-scroll.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- scrollUntilVisible:
+    element:
+      id: ${TAB_ID}
+    direction: UP
+    timeout: 30000
+- tapOn:
+    id: ${TAB_ID}
+- extendedWaitUntil:
+    visible:
+      id: ${TAB_ID}
+      checked: true
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      id: ${ITEM_ID}
+    direction: DOWN
+    timeout: 60000
+    visibilityPercentage: 50
+- takeScreenshot: arrival

@@ -1,0 +1,33 @@
+# Free Talk tab > Topics after a cold launch, dismissing the free-tier premium intro and the first-run Free Talk intro.
+# Entry: cold launch, signed in (Subscription override Free shows the premium intro at launch). Exit: Topics with ROOT_ID visible.
+# maestro test -e ROOT_ID=ai_tutor_overview_list open-topics.yaml   (catalog mode: ROOT_ID=ai_tutor_catalog_feed)
+# Selectors: the Topics tab has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: (onboarding_premium_intro_ready|main_tab_free_talk)
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: onboarding_premium_intro_ready
+    commands:
+      - tapOn:
+          id: exit
+- tapOn:
+    id: main_tab_free_talk
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_intro_dialog_get_started_button
+    commands:
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
+- tapOn: "^Topics$"
+- extendedWaitUntil:
+    visible:
+      id: ${ROOT_ID}
+    timeout: 30000

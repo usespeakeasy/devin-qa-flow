@@ -1,0 +1,32 @@
+# Standalone Topics host (QA-only `speak-dev://qa-overview` route, toolbar inset below the status bar, bottom Profile
+# tab removed by the QA marker): the toolbar Profile button opens Profile and Back returns to the host.
+# Entry: signed in, any screen, QA patch build. Exit: standalone host with action_profile visible.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://qa-overview
+- extendedWaitUntil:
+    visible:
+      id: action_profile
+    timeout: 30000
+- assertVisible:
+    id: ai_tutor_overview_list
+- takeScreenshot: host
+- tapOn:
+    id: action_profile
+- extendedWaitUntil:
+    visible:
+      id: stat_streak_title
+    timeout: 20000
+- assertVisible:
+    id: action_settings
+- takeScreenshot: profile
+- back
+- extendedWaitUntil:
+    visible:
+      id: action_profile
+    timeout: 15000
+- assertNotVisible:
+    id: stat_streak_title
+- takeScreenshot: returned
