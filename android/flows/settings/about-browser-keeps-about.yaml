@@ -1,0 +1,30 @@
+# An About legal row (ROW, default Terms of Service) opens the external browser, and Back from the browser shows
+# the About sheet again (About stays underneath).
+# Entry: the About sheet is open, a browser (Chrome) installed. Exit: the About sheet.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ROW: ${ROW || "about_terms_of_service_option"}
+---
+- assertVisible:
+    id: about_sheet
+- tapOn:
+    id: ${ROW}
+- extendedWaitUntil:
+    notVisible:
+      id: about_sheet
+    timeout: 15000
+# Chrome's first-run screen may appear on a fresh image; Back leaves it like the page.
+- back
+- runFlow:
+    when:
+      notVisible:
+        id: about_sheet
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: about_sheet
+    timeout: 15000
+- assertVisible:
+    id: ${ROW}

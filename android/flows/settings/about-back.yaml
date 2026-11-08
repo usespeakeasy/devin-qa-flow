@@ -12,4 +12,9 @@ env:
     notVisible:
       id: about_sheet
     timeout: 10000
-- assertVisible: "^About$"
+# Rotation or a recreate can move the Settings scroll position, so scroll to the row instead of asserting in place.
+- scrollUntilVisible:
+    element:
+      text: "^About$"
+    direction: DOWN
+    timeout: 15000

@@ -1,0 +1,44 @@
+# Debug Menu > Dialog Bridges > About opens the About sheet (`about_sheet`) over Dialog Bridges.
+# Entry: signed in, dev, any state (the flow opens the Debug Menu by deep link). Exit: the About sheet over Dialog Bridges.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
+---
+- openLink: ${DEBUG_MENU_LINK}
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 30000
+# A tap that lands while the Debug Menu list is still settling is dropped, so retry it.
+- repeat:
+    times: 3
+    while:
+      notVisible:
+        id: debug_dialog_bridges_screen
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: debug_menu_dialog_bridges
+          direction: DOWN
+          timeout: 20000
+      - tapOn:
+          id: debug_menu_dialog_bridges
+          waitToSettleTimeoutMs: 3000
+- extendedWaitUntil:
+    visible:
+      id: debug_dialog_bridges_screen
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: debug_dialog_bridges_about
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: debug_dialog_bridges_about
+- extendedWaitUntil:
+    visible:
+      id: about_sheet
+    timeout: 15000
+- assertVisible:
+    id: about_terms_of_service_option

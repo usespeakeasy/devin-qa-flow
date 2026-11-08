@@ -10,26 +10,25 @@ env:
 - launchApp:
     stopApp: true
 - openLink: ${DEBUG_MENU_LINK}
-- tapOn: Feature flag override
 - tapOn:
-    text: Search
+    id: debug_menu_feature_flag_override
+- tapOn:
+    id: debug_feature_flag_search
 - inputText: ${FLAG}
 - hideKeyboard
-# The value chip cycles on tap.
+# The value chip cycles on tap. The source label under the key (`SERVER · off`, `LOCAL · on`) shows the override that took.
 - repeat:
     times: 3
     while:
       notVisible:
-        text: ${VALUE}
-        rightOf:
-          text: ${FLAG}
+        id: debug_feature_flag_source_${FLAG}
+        text: "${VALUE == 'SERVER' ? 'SERVER · .*' : 'LOCAL · ' + VALUE.toLowerCase()}"
+        index: 0
     commands:
       - tapOn:
-          text: "SERVER|ON|OFF"
-          rightOf:
-            text: ${FLAG}
+          id: debug_feature_flag_value_${FLAG}
           index: 0
 - assertVisible:
-    text: ${VALUE}
-    rightOf:
-      text: ${FLAG}
+    id: debug_feature_flag_source_${FLAG}
+    text: "${VALUE == 'SERVER' ? 'SERVER · .*' : 'LOCAL · ' + VALUE.toLowerCase()}"
+    index: 0

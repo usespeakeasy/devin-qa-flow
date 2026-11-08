@@ -1,0 +1,52 @@
+# An About row that opens a screen in the app (ROW, e.g. about_open_source_licenses_option, about_business_information_option,
+# or about_terms_of_service_option with no browser installed) shows SCREEN (open_source_licenses_screen,
+# business_information_screen, webview), and Back from it returns to the screen under About with no About sheet left.
+# TAPS=2 double-taps the row to check repeated taps open one screen.
+# Entry: the About sheet is open (about-open.yaml or about-open-debug-bridge.yaml).
+# Exit: the screen under About (RETURN_ID, default the Settings About row text), About closed.
+# maestro test -e ROW=about_open_source_licenses_option -e SCREEN=open_source_licenses_screen about-row-replaces.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TAPS: ${TAPS || "1"}
+  RETURN_ID: ${RETURN_ID || ""}
+---
+- assertVisible:
+    id: about_sheet
+- runFlow:
+    when:
+      true: ${TAPS == "2"}
+    commands:
+      - doubleTapOn:
+          id: ${ROW}
+- runFlow:
+    when:
+      true: ${TAPS != "2"}
+    commands:
+      - tapOn:
+          id: ${ROW}
+- extendedWaitUntil:
+    visible:
+      id: ${SCREEN}
+    timeout: 20000
+- assertNotVisible:
+    id: about_sheet
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: ${SCREEN}
+    timeout: 10000
+# A replaced About must not come back on Back, and a doubled tap must not leave a second SCREEN.
+- assertNotVisible:
+    id: about_sheet
+- runFlow:
+    when:
+      true: ${RETURN_ID != ""}
+    commands:
+      - assertVisible:
+          id: ${RETURN_ID}
+- runFlow:
+    when:
+      true: ${RETURN_ID == ""}
+    commands:
+      - assertVisible: "^About$"

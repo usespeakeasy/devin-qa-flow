@@ -1,0 +1,32 @@
+# The About sheet closes by HOW=outside (tap the scrim above the sheet) or HOW=swipe (drag the sheet down),
+# leaving the screen under it with no About sheet.
+# Entry: the About sheet is open over Settings. Exit: Settings, About closed.
+# Selectors: the scrim has no ID, so the outside tap is a point above the sheet, and the swipe starts at 78% of the screen
+# height, just below the top edge of the About sheet on a 1080x2400 phone.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  HOW: ${HOW || "outside"}
+---
+- assertVisible:
+    id: about_sheet
+- runFlow:
+    when:
+      true: ${HOW == "outside"}
+    commands:
+      - tapOn:
+          point: "50%,15%"
+- runFlow:
+    when:
+      true: ${HOW == "swipe"}
+    commands:
+      # Start just under the sheet's top edge so the drag covers more than half the sheet.
+      - swipe:
+          start: 50%, 78%
+          end: 50%, 99%
+          duration: 600
+- extendedWaitUntil:
+    notVisible:
+      id: about_sheet
+    timeout: 10000
+- assertVisible: "^About$"
