@@ -21,6 +21,13 @@ Runs before 2026-11-01 have no `skill_version`.
 
 ## 2026-11-08
 
+- **qa-request-mobile 2026.11.08.1**: Android runs use two emulators by default, base on
+  `emulator-5554` and branch on `emulator-5556`. Base records while the branch builds, and the
+  branch then runs at the same time as the rest of base. Timing, animation and shared-server-state
+  cases still run on one emulator at a time. Why: Sean asked how to make runs faster. Recording
+  was the largest phase (Android medians since 2026-10-28: setup 1, build 13, record 47 of
+  ~75 min) and setup was already cached in the snapshot. PR: #26
+
 - **Instructions**: ID PRs on speak-android and speak-ios open as Devin
   (`devin-ai-integration[bot]`), not under the QA'd PR's author or Sean. Runs no longer comment
   `@codex review` on them. The PR only shows the bot as author when the org's "Open PRs as"

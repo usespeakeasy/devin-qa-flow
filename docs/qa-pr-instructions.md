@@ -32,9 +32,9 @@ INDEX.md row are in [AGENTS.md](../AGENTS.md).
 Step 6 and the next two sections are for Android. iOS runs use the same steps, with the
 changes listed in iOS runs.
 
-Base and branch can run at the same time on two emulators: `maestro --device emulator-5554`
-and `--device emulator-5556`. Keep animation and timing cases sequential; two emulators
-share the CPU and recordings drop frames.
+Android runs use two emulators by default: base on `emulator-5554` and branch on
+`emulator-5556` (`maestro --device <serial>`), with both case scripts running at the same time.
+See Two emulators for the build order and for the cases that still run on one emulator at a time.
 
 ## Running a flow in the case script
 
@@ -72,22 +72,34 @@ and first-run prompts go there.
 
 ## Two emulators
 
-Base and branch can run at the same time, one build per emulator, with the same AVD config,
-account and flags.
+Base and branch run at the same time, one build per emulator, with the same AVD config,
+account and flags. Recording is most of a run (median 47 of 75 min on Android in late October
+and early November 2026), and base and branch one after the other doubles it.
 
-- Stop Gradle and the Kotlin daemon first (`./gradlew --stop` in each worktree, then check that
-  `pgrep -f GradleDaemon` prints nothing). Idle daemons hold about 13 GB; two emulators need
-  about 11 GB of the 31 GB VM.
-- Harness `emu` boots `emulator-5554` (`devin`). `emu --avd devin2 --port 5556` boots
-  `emulator-5556`, cloned from `devin` on first use. Install the base APK on one and the branch
-  APK on the other.
-- With two emulators up, every harness command needs `ANDROID_SERIAL`. Lease one pool account,
-  log both emulators in to it (same `QA_LEASE_FILE`), and release it once.
-- Run the two case scripts in parallel, each with its own `ANDROID_SERIAL` and output folder.
-- Run one build at a time when a case measures timing or animation (recordings lose 10 to 25%
-  of frames when two emulators share the CPU), or when a case changes server state that the
-  other build would see (lesson progress, counters, sign out of all sessions, account deletion,
-  purchases).
+Build order. Each build has its own `git worktree`, with `local.properties` and
+`keys.properties` copied in before the first Gradle call.
+
+1. Build base and install it on `emulator-5554` (harness `emu`).
+2. Start the branch build in the background, then lease and log in, and run the base case
+   script while the branch builds. Only one emulator runs while Gradle does.
+3. When the branch APK is ready, stop Gradle and the Kotlin daemon (`./gradlew --stop` in each
+   worktree, then check that `pgrep -f GradleDaemon` prints nothing). Idle daemons hold about
+   13 GB, and two emulators need about 11 GB of the 31 GB VM.
+4. `emu --avd devin2 --port 5556` boots `emulator-5556`, cloned from `devin` on first use.
+   Install the branch APK there, log it in to the same leased account (same `QA_LEASE_FILE`)
+   and run the branch case script while base finishes. Release the account once.
+
+- With two emulators up, every harness command needs `ANDROID_SERIAL`. Give each case script
+  its own `ANDROID_SERIAL` and output folder.
+- Phase marks stay the same: builds ready is when the branch APK is installed, so base cases
+  recorded during the branch build count in `build_min`. Compare runs by `total_min`.
+- Run a case on one emulator at a time, with no Gradle build running, when it measures timing or
+  animation (recordings lose 10 to 25% of frames when two emulators or a build share the CPU),
+  or when it changes server state that the other build would see (lesson progress, counters,
+  sign out of all sessions, account deletion, purchases). Run those cases at the end of the
+  base script, then on the branch after base is done.
+- When the VM can't hold two emulators (an emulator dies or `adb devices` drops one), finish on
+  one emulator: base first, then the branch.
 
 ## iOS runs
 
