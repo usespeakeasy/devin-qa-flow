@@ -1,0 +1,19 @@
+# Learning language step -> a "Join Waitlist" language (LANG, default de_de on dev) -> the waitlist page opens in the
+# browser (NavigateToJoinWaitlist; the app's WebView only when no browser can open it) and the language step leaves the
+# screen. The case script checks the browser activity and the https://app.usespeak.dev/... VIEW intent in logcat, then
+# presses Back to return to the language step.
+# The "Join Waitlist" badge has no resource ID; the case script checks it with harness `has` before the flow.
+# Entry: `onboarding_language_screen` (learning step), signed out.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LANG: ${LANG || "de_de"}
+---
+- assertVisible:
+    id: onboarding_language_option_${LANG}
+- tapOn:
+    id: onboarding_language_option_${LANG}
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding_language_screen
+    timeout: 15000

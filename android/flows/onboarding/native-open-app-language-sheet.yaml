@@ -1,0 +1,17 @@
+# Native language step -> NATIVE (a language other than the app's) -> "Would you like to use Speak in ...?" sheet.
+# Entry: native step on screen (open-native-language.yaml), signed out, app in English.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  NATIVE: ${NATIVE || "korean_english"}
+---
+- tapOn:
+    id: onboarding_language_option_${NATIVE}
+- extendedWaitUntil:
+    visible:
+      id: onboarding_app_language_sheet
+    timeout: 15000
+- assertVisible:
+    id: onboarding_app_language_switch_button
+- assertVisible:
+    id: onboarding_app_language_keep_button

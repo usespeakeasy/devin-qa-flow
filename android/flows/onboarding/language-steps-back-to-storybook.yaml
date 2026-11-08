@@ -1,0 +1,38 @@
+# Full-screen sign-up options after the language steps -> Back: native step, Back: learning step, Back: storybook,
+# Back: the app closes (the launcher shows).
+# Entry: `auth_options_screen` full screen, reached with native-sign-up-options.yaml (English, native NATIVE, Keep).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  NATIVE: ${NATIVE || "korean_english"}
+---
+- assertVisible:
+    id: auth_options_screen
+- back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_${NATIVE}
+    timeout: 15000
+- assertNotVisible:
+    id: auth_options_screen
+- assertNotVisible:
+    id: onboarding_app_language_sheet
+- back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_en_us
+    timeout: 15000
+- assertNotVisible:
+    id: onboarding_language_option_${NATIVE}
+- back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_get_started_button
+    timeout: 15000
+- assertNotVisible:
+    id: onboarding_language_screen
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding_storybook_screen
+    timeout: 15000

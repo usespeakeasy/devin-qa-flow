@@ -1,0 +1,29 @@
+# Signed-out welcome > Log in > "Don't have an account? Sign up" (onboarding in the sign-in sheet) > learning step >
+# English > native step. The sheet's language steps have no back arrow; system Back closes the whole sheet to the
+# welcome screen (develop behavior).
+# Entry: `onboarding_storybook_sign_in_button` (app data cleared or a cold start while signed out).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-sign-in-options.yaml
+- tapOn:
+    id: auth_options_secondary_text_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_en_us
+    timeout: 30000
+- assertVisible:
+    id: design_bottom_sheet
+- runFlow: ../onboarding/open-native-language.yaml
+- assertVisible:
+    id: design_bottom_sheet
+- back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_sign_in_button
+    timeout: 15000
+- assertNotVisible:
+    id: onboarding_language_screen
+- assertNotVisible:
+    id: auth_options_screen

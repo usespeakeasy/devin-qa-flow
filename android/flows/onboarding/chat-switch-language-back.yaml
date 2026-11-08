@@ -1,0 +1,31 @@
+# Onboarding chat (signed in) -> switch-language button -> learning step over the chat -> English -> native step,
+# Back: learning step, Back: the chat again.
+# Entry: `onboarding_magic_ready` right after sign-up with a language pair picked before sign-up, and
+# `onboarding_update_language_pair_post_signup` ON (Debug Menu > Feature flag override), which shows the button.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_action_switch_language
+    timeout: 60000
+- tapOn:
+    id: onboarding_magic_action_switch_language
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_en_us
+    timeout: 30000
+- runFlow: open-native-language.yaml
+- back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_en_us
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_action_switch_language
+    timeout: 30000
+- assertNotVisible:
+    id: onboarding_language_screen

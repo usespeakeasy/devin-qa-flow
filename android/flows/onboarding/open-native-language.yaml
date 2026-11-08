@@ -1,0 +1,27 @@
+# Learning language step -> English -> native language step ("What is your native language?"). Stops on the native
+# step without picking, so the caller can rotate, background or press Back there.
+# Entry: `onboarding_language_screen` (learning step, `onboarding_language_option_en_us` shown), signed out, app in
+# English. Works full screen and in the sign-in sheet's language flow.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_en_us
+    timeout: 30000
+- tapOn:
+    id: onboarding_language_option_en_us
+- runFlow:
+    when:
+      visible:
+        id: onboarding_language_continue_button
+    commands:
+      - tapOn:
+          id: onboarding_language_continue_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_korean_english
+    timeout: 30000
+- assertNotVisible:
+    id: onboarding_language_option_en_us
