@@ -1,0 +1,56 @@
+# Older Tutor chat (TutorChatVC via the Learning Path `.speakTutor` route, home.tutor.action.open):
+# type MESSAGE, send, wait for the tutor's reply (typing indicator gone), screenshot SHOT.
+# With split `speak_tutor_voice_mode_lite=on` and voice mode on (global default
+# `speakTutorVoiceModeToggleButtonEnabledKey` = YES in the app container plist), the reply's TTS
+# streams through AudioEngine.scheduleAndPlay; assert playback from the app log
+# (`Speak Tutor TTS Started`), not from this flow.
+# Entry: Home (home.root.ready) or the Tutor chat (tutor-chat.input.text-view). Exit: Tutor chat.
+# Preconditions: signed in, dev; Premium override (common/set-subscription-premium.yaml) so the
+# chat has no message limit.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  MESSAGE: Hi! How do I say good morning in Spanish?
+  SHOT: tutor-reply
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|tutor-chat.input.text-view"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: "home.root.ready"
+    commands:
+      - tapOn:
+          id: "home.tutor.action.open"
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.input.text-view"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: "ai-data-consent.action.agree"
+    commands:
+      - tapOn:
+          id: "ai-data-consent.action.agree"
+- extendedWaitUntil:
+    notVisible:
+      id: "tutor-chat.message.loading"
+    timeout: 30000
+- tapOn:
+    id: "tutor-chat.input.text-view"
+- inputText: ${MESSAGE}
+- tapOn:
+    id: "tutor-chat.input.action.send"
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.message.loading"
+    timeout: 10000
+    optional: true
+- extendedWaitUntil:
+    notVisible:
+      id: "tutor-chat.message.loading"
+    timeout: 60000
+- takeScreenshot: ${SHOT}

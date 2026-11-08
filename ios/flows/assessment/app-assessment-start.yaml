@@ -1,0 +1,40 @@
+# App Assessment intro (speak-dev://assessment, opens over the Profile tab) > Start, then the
+# first question or the start error. Screenshots: ${SHOT}-intro, ${SHOT}-started; on the start error
+# ("Oops!" / Retry) taps Retry once and screenshots ${SHOT}-retry, then Cancel.
+# Entry: Home. Exit: question screen, or Profile after the error.
+# Preconditions: signed in, dev; Premium override (common/set-subscription-premium.yaml) so the
+# intro shows Start instead of the unlock button.
+# Text fallbacks (no IDs on the App Assessment screens yet): "Start", "Retry", "Cancel", "Oops!".
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  SHOT: app-assessment
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready"
+    timeout: 30000
+- openLink: speak-dev://assessment
+- extendedWaitUntil:
+    visible: "Start"
+    timeout: 20000
+- takeScreenshot: ${SHOT}-intro
+- tapOn: "Start"
+- extendedWaitUntil:
+    visible: "Oops!|Answer for up to 60 seconds|Question 1.*|.*1 of 3.*"
+    timeout: 30000
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${SHOT}-started
+- runFlow:
+    when:
+      visible: "Oops!"
+    commands:
+      - tapOn: "Retry"
+      - extendedWaitUntil:
+          visible: "Oops!"
+          timeout: 30000
+          optional: true
+      - takeScreenshot: ${SHOT}-retry
+      - tapOn: "Cancel"
