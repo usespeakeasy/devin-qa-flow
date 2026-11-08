@@ -1,0 +1,38 @@
+# Opens the native QnA AI lesson by deep link, through the pre-lesson screen, to the lesson.
+# Entry: app launched to Home. Preconditions: signed in; split override ai_lesson_native_qna=on;
+# debug controls on (Debug-Dev default); pool accounts need Premium (common/set-subscription-premium.yaml).
+# Exit: QnA lesson screen (debug answer button visible).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  QNA_LESSON_ID: MX_EN_UC_L1_itschilly_QNA
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|ai-data-consent.action.agree"
+    timeout: 30000
+- runFlow: dismiss-ai-data-consent.yaml
+- openLink: "speak-dev://lesson?id=${QNA_LESSON_ID}"
+- runFlow: confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible:
+      id: "lesson.pre-ai.action.start|debug.ail.correct-response"
+    timeout: 30000
+- tapOn:
+    id: lesson.pre-ai.action.start
+    optional: true
+# Lesson-level AI data consent shows once per account.
+- runFlow:
+    when:
+      visible:
+        id: ai-data-consent.alert.allow
+    commands:
+      - tapOn:
+          id: ai-data-consent.alert.allow
+- tapOn:
+    text: "Start over"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: debug.ail.correct-response
+    timeout: 40000

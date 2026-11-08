@@ -1,0 +1,13 @@
+# Opens the AI lesson Settings sheet (header gear) and screenshots it at arrival.
+# Entry: native AI lesson open. Exit: Settings sheet open. Param: SHOT (screenshot name).
+# The sheet is a separate window that Maestro's hierarchy does not show: assert arrival and close it
+# (close-icon, top left) from the caller with `axe describe-ui --point` / `axe tap`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: "gearshape.fill"
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${SHOT || 'settings-sheet'}
