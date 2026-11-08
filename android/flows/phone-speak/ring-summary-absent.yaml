@@ -1,0 +1,17 @@
+# No ring call end of lesson over the screen: UNDER_ID is up with no survey sheet and no summary. Run it a few
+# seconds after the app comes to the front, since the summary shows once the root screen is up.
+# Entry: any. Exit: UNDER_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  UNDER_ID: ${UNDER_ID || "home_root_ready"}
+---
+- extendedWaitUntil:
+    visible:
+      id: ${UNDER_ID}
+    timeout: 20000
+- assertNotVisible: "How was your call\\?"
+- assertNotVisible:
+    id: phone_speak_summary
+- assertNotVisible:
+    id: phone_speak_schedule_cta_screen

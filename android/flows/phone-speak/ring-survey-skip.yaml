@@ -1,0 +1,11 @@
+appId: ${APP_ID}
+# Skip the "How was your call?" sheet the ring call screen shows once the call ends, before the end of lesson.
+# Entry: ring-summary-visible on the survey. Exit: the survey sheet is gone.
+# Selectors: PhoneSpeakSurveySheet has no resource-id (text fallbacks "Skip", "How was your call?").
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "^Skip$"
+- extendedWaitUntil:
+    notVisible: "How was your call\\?"
+    timeout: 10000

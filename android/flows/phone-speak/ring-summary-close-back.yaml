@@ -1,0 +1,23 @@
+# Close the ring call's end of lesson with system Back (survey sheet first, then each step) and check the screen
+# under it is back.
+# Entry: ring-summary-visible. Exit: UNDER_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  UNDER_ID: ${UNDER_ID || "home_root_ready"}
+---
+- repeat:
+    while:
+      notVisible:
+        id: ${UNDER_ID}
+    times: 8
+    commands:
+      - back
+      - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: ${UNDER_ID}
+    timeout: 15000
+- assertNotVisible: "How was your call\\?"
+- assertNotVisible:
+    id: phone_speak_summary

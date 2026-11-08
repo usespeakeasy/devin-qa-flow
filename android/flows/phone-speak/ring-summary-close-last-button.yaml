@@ -1,0 +1,36 @@
+# Walk the ring call's end of lesson with its buttons (survey Skip, summary Continue, schedule Skip, then the lesson
+# end steps) to its last button, and check the screen under it is back.
+# Entry: ring-summary-visible (the survey Skip is optional: it is not restored after process death). Exit: UNDER_ID (e.g. settings_manage_account_option or home_root_ready).
+# Selectors: the survey sheet's Skip has no resource-id (text fallback "^Skip$").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  UNDER_ID: ${UNDER_ID || "home_root_ready"}
+---
+- tapOn:
+    text: "^Skip$"
+    optional: true
+- repeat:
+    while:
+      notVisible:
+        id: ${UNDER_ID}
+    times: 10
+    commands:
+      - tapOn:
+          id: phone_speak_summary_continue
+          optional: true
+      - tapOn:
+          id: phone_speak_schedule_skip
+          optional: true
+      - tapOn:
+          id: lesson_end_streak_progress_continue_button
+          optional: true
+      - tapOn:
+          id: primary_button
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: ${UNDER_ID}
+    timeout: 15000
+- assertNotVisible:
+    id: phone_speak_summary

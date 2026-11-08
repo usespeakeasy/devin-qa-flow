@@ -1,0 +1,12 @@
+# The end of a Phone Speak ring call that ended out of sight shows when Speak opens: its first step is the
+# "How was your call?" survey sheet over the screen the user left. After process death the survey is not restored
+# and the end of lesson opens on the call summary ("Great call!", phone_speak_summary).
+# Entry: Speak brought to the front after a ring call hung up from the notification. Exit: the survey sheet or summary.
+# Selectors: PhoneSpeakSurveySheet and the summary title have no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible: "How was your call\\?|Great call!"
+    timeout: 30000

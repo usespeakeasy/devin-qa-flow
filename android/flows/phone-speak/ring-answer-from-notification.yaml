@@ -1,0 +1,15 @@
+# Answer a Phone Speak ring from its notification; Speak opens on the call screen.
+# Entry: the notification shade open on the ring notification (run
+# `adb shell cmd deviceidle tempwhitelist -d 60000 com.selabs.speak.dev` before the `phoneSpeakRing` DebugBridge
+# broadcast while the app is in the background, or the call service is refused with foregroundServiceRefused, then
+# `adb shell cmd statusbar expand-notifications`). Exit: `phone_speak_call_screen`.
+# Selectors: the notification action is drawn by System UI (text fallback "Answer").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "^Answer$"
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_screen
+    timeout: 30000

@@ -1,0 +1,10 @@
+appId: ${APP_ID}
+# The ring call's end of lesson summary ("Great call!"), which the summary on open pushes once the call screen leaves.
+# Entry: the survey skipped (or not restored after process death). Exit: phone_speak_summary.
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_summary
+    timeout: 30000

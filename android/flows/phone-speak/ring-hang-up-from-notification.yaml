@@ -1,0 +1,13 @@
+# Hang up a Phone Speak ring call from its ongoing-call notification while Speak is in the background.
+# Entry: the notification shade open on the "Ongoing call" notification (`adb shell cmd statusbar expand-notifications`).
+# Exit: the ongoing-call notification is gone; collapse the shade with `adb shell cmd statusbar collapse`.
+# Keep the call at 60 s or longer: the server ends a shorter call as shortCall, with no survey or end of lesson.
+# Selectors: the notification action is drawn by System UI (text fallback "Hang Up").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn: "^Hang Up$"
+- extendedWaitUntil:
+    notVisible: "^Ongoing call$"
+    timeout: 15000
