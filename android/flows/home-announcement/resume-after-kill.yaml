@@ -1,0 +1,15 @@
+# After the process was killed in the background, bring the app back without stopping it so the
+# saved state restores, and wait for Home or the custom courses announcement sheet over it.
+# Entry: app process killed after leaving Home with the launcher Home key. Exit: Home.
+# maestro test -e SHOT=case6-relaunch resume-after-kill.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready|custom_courses_announcement_sheet
+    timeout: 60000
+- takeScreenshot: ${SHOT}

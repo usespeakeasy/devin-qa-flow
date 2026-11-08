@@ -1,0 +1,12 @@
+# Cold-start the app normally (launcher) and wait for Home or the announcement over it.
+# Entry: signed in. Exit: Home tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: "learning_path_ready|custom_courses_announcement_sheet|referral_welcome_dialog_later_button"
+    timeout: 60000

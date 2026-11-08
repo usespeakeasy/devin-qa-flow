@@ -1,0 +1,30 @@
+# Closed app: open LINK (speak-dev://me, speak-dev://practice) and wait for ARRIVAL (resource-id
+# regex) on that tab. BACKGROUND=true then leaves with the launcher Home key and brings the app
+# back without stopping it (a foreground check), and waits for ARRIVAL again.
+# Entry: app force-stopped, signed in. Exit: the linked tab.
+# maestro test -e LINK=speak-dev://me -e ARRIVAL="stat_streak_title|stat_sentences_title" open-tab-cold.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  BACKGROUND: ${BACKGROUND || "false"}
+---
+- openLink: ${LINK}
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 60000
+- runFlow:
+    when:
+      true: ${BACKGROUND == "true"}
+    commands:
+      - pressKey: Home
+      - extendedWaitUntil:
+          notVisible:
+            id: ${ARRIVAL}
+          timeout: 10000
+      - launchApp:
+          stopApp: false
+      - extendedWaitUntil:
+          visible:
+            id: ${ARRIVAL}
+          timeout: 30000

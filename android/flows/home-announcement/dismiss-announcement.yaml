@@ -1,0 +1,20 @@
+# Close the custom courses announcement with Back if it shows; does nothing otherwise
+# (so Back never leaves Home). Entry/exit: Home tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    when:
+      visible:
+        id: custom_courses_announcement_sheet
+    commands:
+      - back
+      - extendedWaitUntil:
+          notVisible:
+            id: custom_courses_announcement_sheet
+          timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000

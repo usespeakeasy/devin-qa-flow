@@ -1,0 +1,15 @@
+# Wait up to WAIT ms for the custom courses announcement sheet (no failure if it never shows),
+# then take a screenshot. The caller checks the result with harness `has id:custom_courses_announcement_sheet`.
+# Entry/exit: any main tab.
+# maestro test -e WAIT=10000 -e SHOT=case1-home wait-announcement.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WAIT: ${WAIT || "10000"}
+---
+- extendedWaitUntil:
+    visible:
+      id: custom_courses_announcement_sheet
+    timeout: ${WAIT}
+    optional: true
+- takeScreenshot: ${SHOT}

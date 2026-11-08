@@ -1,0 +1,46 @@
+# Debug Menu > Preference Overrides: set "Custom courses announcement response" to RESPONSE
+# (default, null, generic, goal_based) and tap "Show custom courses announcement again".
+# Entry: signed in, any state (cold-starts the app). Exit: Preference Overrides; the caller
+# force-stops so the next cold start offers the announcement again.
+# maestro test -e RESPONSE=generic reset-announcement.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  RESPONSE: ${RESPONSE || "generic"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: "learning_path_ready|referral_welcome_dialog_later_button|custom_courses_announcement_sheet|home_root_ready"
+    timeout: 60000
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: debug_menu_preference_overrides
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: debug_menu_preference_overrides
+- extendedWaitUntil:
+    visible:
+      id: debug_preference_overrides_screen
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: debug_preference_overrides_announcement_override_${RESPONSE}
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: debug_preference_overrides_announcement_override_${RESPONSE}
+- scrollUntilVisible:
+    element:
+      id: debug_preference_overrides_reset_custom_courses_announcement
+    direction: UP
+    timeout: 20000
+- tapOn:
+    id: debug_preference_overrides_reset_custom_courses_announcement

@@ -1,0 +1,12 @@
+# Tap the Home bottom tab and wait for the learning path.
+# Entry: any main tab. Exit: Home tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: "learning_path_ready|custom_courses_announcement_sheet"
+    timeout: 30000
