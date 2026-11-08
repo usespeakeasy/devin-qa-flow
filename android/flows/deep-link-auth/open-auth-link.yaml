@@ -1,0 +1,22 @@
+# Opens a deep-link sign-in link (`speak-dev://login?provider=partner_custom_sso|multicampus&...`)
+# and waits for WAIT, a resource-id regex for where the link should land (e.g. `home_root_ready`
+# after sign-in or a same-user skip, `android:id/message` for the error dialog, `loading_bar` for
+# a delayed sign-in still running).
+# Entry: any. COLD=true force-stops the app first so the link cold-starts it; otherwise the app
+# must already be running (warm).
+# Preconditions: real tokens are not available on dev; QA builds route `qa-*` tokens to a stub.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  COLD: ${COLD || "false"}
+---
+- runFlow:
+    when:
+      true: ${COLD == "true"}
+    commands:
+      - stopApp
+- openLink: ${LINK}
+- extendedWaitUntil:
+    visible:
+      id: ${WAIT}
+    timeout: 60000

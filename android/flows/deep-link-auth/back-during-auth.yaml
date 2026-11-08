@@ -1,0 +1,11 @@
+# Back on the deep-link auth sheet while it is loading. The sheet is not cancelable while
+# loading, so it stays open with the loading bar.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: loading_bar
+- back
+- assertVisible:
+    id: loading_bar

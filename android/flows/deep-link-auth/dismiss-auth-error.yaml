@@ -1,0 +1,17 @@
+# Checks the deep-link sign-in error dialog shows MESSAGE (regex), taps OK, then waits for the
+# signed-out storybook that the error-dismiss logout opens.
+# Entry: the error dialog from open-auth-link.yaml (WAIT=android:id/message).
+# Selectors: GenericErrorDialog is an AlertDialog with framework ids only.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: android:id/message
+    text: ${MESSAGE}
+- tapOn:
+    id: android:id/button1
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_screen
+    timeout: 30000
