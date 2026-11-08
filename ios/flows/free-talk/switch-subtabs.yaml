@@ -1,0 +1,23 @@
+# Free Talk: switch Topics and Community five times, a full resolution shot after each switch (${SHOT}-1 to -5),
+# for a one button, single edge check on the "Create your own" bar (speak-ios#10068).
+# Entry: Free Talk tab open (open-subtab-scroll.yaml). Params (required): SHOT.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn: "Topics"
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-1-topics
+- tapOn: "Community"
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-2-community
+- tapOn: "Topics"
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-3-topics
+- tapOn: "Community"
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-4-community
+- tapOn: "Topics"
+- waitForAnimationToEnd
+- assertVisible: "Create your own"
+- takeScreenshot: ${SHOT}-5-topics

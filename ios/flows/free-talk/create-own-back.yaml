@@ -1,0 +1,16 @@
+# After a tap on "Create your own" (the caller's press and release): the create flow ("Create your own lesson")
+# is open; shot ${SHOT}-create, then Back to the Free Talk page with the button.
+# Entry: tap just released on the Free Talk Topics or Community "Create your own" button. Precondition: Plus/Premium.
+# Params (required): SHOT.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "Create your own lesson"
+    timeout: 15000
+- takeScreenshot: ${SHOT}-create
+- tapOn: "Back"
+- extendedWaitUntil:
+    visible: "Create your own"
+    timeout: 15000

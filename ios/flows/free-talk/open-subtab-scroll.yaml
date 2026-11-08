@@ -1,0 +1,32 @@
+# Free Talk > SUBTAB (Topics or Community), full resolution shots of the "Create your own" bar before and after
+# a short scroll, so the caller can compare the button crop with different cards behind it (speak-ios#10068 glass).
+# Entry: any state (cold-starts to Home first). Precondition: signed in, Speak-Dev; Plus or Premium so Create opens.
+# Params (required, no defaults): SUBTAB (Topics|Community), SHOT (screenshot name prefix).
+# Shots: ${SHOT}-top, ${SHOT}-scrolled. Ends on the scrolled page with the button visible.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn:
+    id: "tab-bar.tab.aiTutor"
+- runFlow:
+    when:
+      visible: "Get started"
+    commands:
+      - tapOn: "Get started"
+# Topics, Community and Create your own have no accessibility identifiers (text fallbacks).
+- tapOn: ${SUBTAB}
+- extendedWaitUntil:
+    visible: "Create your own"
+    timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-top
+# Drag the list up about 150 pt from above the button so other cards pass under it.
+- swipe:
+    start: 50%, 70%
+    end: 50%, 52%
+    duration: 1500
+- waitForAnimationToEnd
+- assertVisible: "Create your own"
+- takeScreenshot: ${SHOT}-scrolled
