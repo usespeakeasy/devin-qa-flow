@@ -1,0 +1,32 @@
+# Cases: Smart Review without listen mode with saved hands-free OFF (the runner reads lessonStarted
+# handsFreeModeEnabled / listenMode=off) > first line card > exit > reopen the same review: no resume dialog, fresh start.
+# Entry: Home, saved hands-free OFF. Exit: the reopened review's first card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- runFlow:
+    file: open-smart-review.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+# Smart Review shows the listen toggle, not the hands-free toggle; the runner reads lessonStarted handsFreeModeEnabled.
+- assertVisible:
+    id: listen_mode_toggle
+- assertNotVisible:
+    id: hands_free_mode_toggle
+- runFlow: ../series-session/first-line-card.yaml
+- runFlow: exit-to-home.yaml
+- runFlow:
+    file: open-smart-review.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: "tap_to_continue|speak_now_header"
+    timeout: 60000
+# Smart Review shows the listen toggle, not the hands-free toggle; the runner reads lessonStarted handsFreeModeEnabled.
+- assertVisible:
+    id: listen_mode_toggle
+- assertNotVisible:
+    id: hands_free_mode_toggle

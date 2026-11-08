@@ -1,0 +1,46 @@
+# Case: normal series lesson from Home with saved hands-free OFF > first line card > hands-free ON > exit >
+# reopen asks Continue where you left off? > Continue > the line card shows hands-free ON (saved preference) >
+# hands-free OFF again (restores the saved preference) > exit to Home.
+# Entry: Home, saved hands-free OFF. Exit: Home.
+# Selectors: the resume dialog has no app resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- runFlow:
+    file: ../series-session/open-series.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- runFlow: ../series-session/first-line-card.yaml
+- runFlow:
+    file: assert-hands-free.yaml
+    env:
+      STATE: "OFF"
+- tapOn:
+    id: hands_free_mode_toggle
+- runFlow:
+    file: assert-hands-free.yaml
+    env:
+      STATE: "ON"
+- runFlow: exit-to-home.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible: "Continue where you left off\\?"
+    timeout: 60000
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    visible:
+      id: series_list
+    timeout: 60000
+- runFlow:
+    file: assert-hands-free.yaml
+    env:
+      STATE: "ON"
+- tapOn:
+    id: hands_free_mode_toggle
+- runFlow:
+    file: assert-hands-free.yaml
+    env:
+      STATE: "OFF"
+- runFlow: exit-to-home.yaml

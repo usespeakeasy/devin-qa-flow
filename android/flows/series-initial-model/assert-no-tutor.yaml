@@ -1,0 +1,23 @@
+# Series lesson already opening (deep link or open-series.yaml) > first line card listens with no tutor button
+# (tutor_everywhere_series_lessons_enabled off). Exit: the line card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_allow
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "Start over"
+- runFlow: ../series-session/first-line-card.yaml
+- assertNotVisible:
+    id: "tutor_button_(line|restart)"
+- assertNotVisible:
+    id: tutor_everywhere_fab

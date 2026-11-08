@@ -1,0 +1,13 @@
+# Case: tutor_everywhere_series_lessons_enabled = tutor_button: series lesson line card > tutor button opens the Speak
+# Tutor sheet > Back returns to the same listening line card. Entry: Home, Premium. Exit: the line card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- runFlow:
+    file: ../series-session/open-series.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- runFlow: ../series-session/first-line-card.yaml
+- runFlow: ../tutor-everywhere/series-tutor-back-resumes.yaml

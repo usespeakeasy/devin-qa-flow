@@ -17,7 +17,29 @@ env:
     visible:
       id: home_root_ready
     timeout: 60000
-- runFlow: open-series.yaml
+# The lesson can ask for the microphone as soon as it opens (resumed straight onto a line card), and the system
+# prompt hides the lesson ids open-series.yaml waits on, so open it here and accept the prompt ids too.
+- openLink: speak-dev://lesson?id=${LESSON_ID}&qa-smart-review=${QA_SR}
+- extendedWaitUntil:
+    visible:
+      id: "permission_deny_button|permission_deny_and_dont_ask_again_button|tap_to_continue|speak_now_header|ai_data_consent_alert|button2|series_list"
+    timeout: 90000
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "Start over"
+      - extendedWaitUntil:
+          visible:
+            id: "permission_deny_button|permission_deny_and_dont_ask_again_button|tap_to_continue|speak_now_header|ai_data_consent_alert"
+          timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_allow
 - repeat:
     while:
       notVisible:

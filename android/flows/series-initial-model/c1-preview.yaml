@@ -1,0 +1,19 @@
+# Case: normal series lesson as a Free user (Subscription override Free): opens to the first line card, exit can open the
+# premium intro (preview upsell, not on every exit) > dismiss to Home. The runner reads isPreview from lessonStarted. Entry: Home. Exit: Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- runFlow:
+    file: ../series-session/open-series.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- runFlow: ../series-session/first-line-card.yaml
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_premium_intro_(ready|error)|home_root_ready"
+    timeout: 30000
+- runFlow: ../../common/dismiss-premium-intro.yaml

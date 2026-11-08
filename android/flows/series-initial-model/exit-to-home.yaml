@@ -1,0 +1,21 @@
+# SeriesLesson: top bar exit > Quit if the quit sheet shows > Home. Exit: `home_root_ready`.
+# Selectors: the quit sheet button has no resource-id here (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "^Quit$"
+    timeout: 4000
+    optional: true
+- runFlow:
+    when:
+      visible: "^Quit$"
+    commands:
+      - tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000

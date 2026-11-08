@@ -1,0 +1,13 @@
+# SeriesLesson top bar: the hands-free toggle shows STATE (ON or OFF). Entry/exit: a series card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  STATE: ${STATE || "OFF"}
+---
+- extendedWaitUntil:
+    visible:
+      id: toggle
+      text: ${STATE}
+      childOf:
+        id: hands_free_mode_toggle
+    timeout: 10000

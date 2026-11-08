@@ -1,0 +1,28 @@
+# Smart Review by deep link via the QA-only `qa-smart-review` / `qa-listen` link patch (the patch loads LESSON_ID's
+# content as the review, ALWAYS_RESTART) > optional AI data consent (allow). Asserts no resume dialog.
+# Entry: Home. Exit: the first Smart Review card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+  LISTEN: ${LISTEN || "false"}
+---
+- openLink: speak-dev://lesson?id=${LESSON_ID}&qa-smart-review=true&qa-listen=${LISTEN}
+- extendedWaitUntil:
+    visible:
+      id: "series_list|ai_data_consent_alert"
+    timeout: 90000
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_allow
+      - extendedWaitUntil:
+          visible:
+            id: series_list
+          timeout: 30000
+- assertNotVisible: "Continue where you left off\\?"
+- assertVisible:
+    id: series_list

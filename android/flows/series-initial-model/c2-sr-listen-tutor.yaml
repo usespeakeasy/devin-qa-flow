@@ -1,0 +1,44 @@
+# Case: Smart Review in listen mode with saved hands-free OFF: hands-free starts ON (lessonStarted handsFreeModeEnabled=true, read by the runner) > tutor button opens the Speak
+# Tutor sheet > Back returns to the Smart Review card in listen mode.
+# Entry: Home, saved hands-free OFF, tutor_everywhere_series_lessons_enabled = tutor_button, Premium. Exit: the card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- runFlow:
+    file: open-smart-review.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+      LISTEN: "true"
+- assertVisible:
+    id: listen_mode_toggle
+# Listen mode hides the hands-free toggle; the runner reads handsFreeModeEnabled from lessonStarted.
+- assertNotVisible:
+    id: hands_free_mode_toggle
+- repeat:
+    while:
+      notVisible:
+        id: "tutor_button_(line|restart)"
+    times: 6
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: tap_to_continue
+          commands:
+            - tapOn:
+                id: tap_to_continue
+      - extendedWaitUntil:
+          visible:
+            id: "tutor_button_(line|restart)"
+          timeout: 15000
+          optional: true
+- runFlow: ../tutor-everywhere/tap-series-tutor.yaml
+- runFlow: ../tutor-everywhere/close-tutor-back.yaml
+- assertNotVisible:
+    id: tutor_everywhere_sheet
+- assertVisible:
+    id: series_list
+- assertVisible:
+    id: listen_mode_toggle
