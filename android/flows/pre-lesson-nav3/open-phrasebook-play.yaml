@@ -1,0 +1,31 @@
+# Pre-lesson full phrasebook: play the first line's audio. Used before rotation, backgrounding and process death.
+# Entry: Home (`learning_path_ready`). Exit: phrasebook (`phrasebook_screen`) with audio playing.
+# Preconditions: same QA-only patch as steps-continue-back.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+  LINE_ID: ${LINE_ID || "ahwwk5xhpzgic6zywh337n0o"}
+---
+- runFlow:
+    file: ../../common/open-path-pre-lesson.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: skill_check_intro
+    timeout: 30000
+- tapOn:
+    id: skill_check_start
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_view_phrasebook
+    timeout: 20000
+- tapOn:
+    id: ai_lesson_pre_lesson_view_phrasebook
+- extendedWaitUntil:
+    visible:
+      id: phrasebook_row_${LINE_ID}
+    timeout: 20000
+- tapOn:
+    id: phrasebook_row_${LINE_ID}

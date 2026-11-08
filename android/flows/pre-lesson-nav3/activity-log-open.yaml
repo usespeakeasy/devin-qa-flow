@@ -1,0 +1,53 @@
+# Profile > See all activities > a lesson row opens its pre-lesson (`ActivityLogNavigator.lessonDestination` pushes
+# `Destination.PreLessonFlow`); Back on the first screen returns to the activity log.
+# Entry: Home tab, signed in, at least four activities (See all activities shows from four), one of them ROW_TEXT.
+# Preconditions: same QA-only patch as steps-continue-back.yaml, plus `ActivityLogNavigator.lessonDestination` uses
+# `hasPreLessonFlow != false`.
+# Selectors: the Profile tab, See all activities and the rows have no resource-id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ROW_TEXT: ${ROW_TEXT || "EN_ES_A1-1_quetal_SP.*"}
+---
+- tapOn: "Profile"
+- extendedWaitUntil:
+    visible:
+      id: stat_streak_title
+    timeout: 20000
+- scrollUntilVisible:
+    element: "See all activities"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "See all activities"
+- extendedWaitUntil:
+    visible:
+      id: activity_log_screen
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      text: ${ROW_TEXT}
+      childOf:
+        id: list
+    timeout: 20000
+- tapOn:
+    text: ${ROW_TEXT}
+    childOf:
+      id: list
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: skill_check_intro
+    timeout: 30000
+- back
+- extendedWaitUntil:
+    visible:
+      id: activity_log_screen
+    timeout: 20000
+- assertNotVisible:
+    id: skill_check_intro
+- back
+- tapOn: "Home"
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000

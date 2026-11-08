@@ -1,0 +1,56 @@
+# Learning path pre-lesson (Navigation 3 `Destination.PreLessonFlow` entry): walk both screens, Start opens the lesson,
+# Back from the lesson returns to Home without showing the pre-lesson again (Start replaces the pre-lesson).
+# Entry: Home (`learning_path_ready`), signed in. Exit: Home.
+# Preconditions: dev; QA-only patch (speak-android#9086 run): `Navigator.shouldLaunchPreLessonFlow` uses `hasPreLessonFlow != false` and
+# `PreLessonRepositoryImpl` falls back to a fixture (skill check intro, then the AI pre-lesson screen "QA step 2").
+# With the kill switch the same flow checks the entry without the deleted controller fallback.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+---
+- runFlow:
+    file: ../../common/open-path-pre-lesson.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: skill_check_intro
+    timeout: 30000
+- tapOn:
+    id: skill_check_review
+- extendedWaitUntil:
+    visible:
+      id: skill_check_phrasebook
+    timeout: 20000
+- assertVisible:
+    id: "skill_check_phrase_.*"
+    index: 0
+- tapOn:
+    id: skill_check_phrasebook_back_button
+- extendedWaitUntil:
+    visible:
+      id: skill_check_intro
+    timeout: 10000
+- tapOn:
+    id: skill_check_start
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_screen
+    timeout: 20000
+- assertVisible: "QA step 2"
+- tapOn:
+    id: ai_lesson_pre_lesson_start
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_root
+    timeout: 30000
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- assertNotVisible:
+    id: ai_lesson_pre_lesson_screen
+- assertNotVisible:
+    id: skill_check_intro

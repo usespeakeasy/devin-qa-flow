@@ -1,0 +1,29 @@
+# Pre-lesson that starts with an onboarding learning loop step: the loop opens over the pre-lesson (result request), and
+# Back on the loop closes the pre-lesson too, back to Home.
+# Entry: Home (`learning_path_ready`). Exit: Home.
+# Preconditions: same QA-only patch as steps-continue-back.yaml; its fixture puts an `OnboardingLearningLoop` step first for
+# lesson ids containing `_TL` (no dev lesson starts one).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_no_muchogusto_no_vamos_TL"}
+---
+- runFlow:
+    file: ../../common/open-path-pre-lesson.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: onboard_learning_loop_root
+    timeout: 30000
+- assertVisible:
+    id: onboard_learning_loop_primary_button
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- assertNotVisible:
+    id: onboard_learning_loop_root
+- assertNotVisible:
+    id: skill_check_intro

@@ -1,0 +1,46 @@
+# Pre-lesson Continue without curriculum access: the upgrade paywall replaces the pre-lesson (`PaywallSource.PRE_LESSON_GATE`),
+# and closing it shows Home with no pre-lesson behind it.
+# Entry: Home (`learning_path_ready`), Free account (Subscription override Real on a free pool account). Exit: Home.
+# Preconditions: same QA-only patch as steps-continue-back.yaml, plus `PreLessonViewModel.onContinueClick` shows the paywall
+# for lesson ids containing `QNA` even when dev returns no paywall flow. On the google_apis emulator Superwall fails
+# (`presentation_error`) and the native fallback (`onboarding_premium_intro_ready`) shows with a product load error dialog.
+# Selectors: the error dialog is a platform AlertDialog (`button1`).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_L1-LL_quickcatchup_QNA"}
+---
+- runFlow:
+    file: ../../common/open-path-pre-lesson.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: skill_check_intro
+    timeout: 30000
+- tapOn:
+    id: skill_check_start
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_premium_intro_ready|button1"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: button1
+    commands:
+      - tapOn:
+          id: button1
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_ready
+    timeout: 10000
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- assertNotVisible:
+    id: skill_check_intro
+- assertNotVisible:
+    id: ai_lesson_pre_lesson_screen

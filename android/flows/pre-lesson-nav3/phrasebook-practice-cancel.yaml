@@ -1,0 +1,71 @@
+# Pre-lesson full phrasebook: save a line, Practice shows the loading dialog, Back dismisses it and no review lesson opens;
+# the line is unsaved again before leaving so the account keeps no saved line.
+# Entry: Home (`learning_path_ready`). Exit: Home.
+# Selectors: the loading dialog has no resource-id (asserted through the phrasebook disappearing behind its window).
+# Preconditions: same QA-only patch as steps-continue-back.yaml, plus a 4 s delay in
+# `PreLessonViewModel.onFullPhrasebookPracticeClicked` before the review lesson loads, so the dialog stays long enough to dismiss.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+  LINE_ID: ${LINE_ID || "ahwwk5xhpzgic6zywh337n0o"}
+---
+- runFlow:
+    file: ../../common/open-path-pre-lesson.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: skill_check_intro
+    timeout: 30000
+- tapOn:
+    id: skill_check_start
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_view_phrasebook
+    timeout: 20000
+- tapOn:
+    id: ai_lesson_pre_lesson_view_phrasebook
+- extendedWaitUntil:
+    visible:
+      id: phrasebook_bookmark_${LINE_ID}
+    timeout: 20000
+- tapOn:
+    id: phrasebook_bookmark_${LINE_ID}
+- extendedWaitUntil:
+    visible:
+      id: phrasebook_practice
+      enabled: true
+    timeout: 10000
+- tapOn:
+    id: phrasebook_practice
+# The loading dialog (`SpeakProgressDialog`) has no resource-id or text: while it shows, the dump holds only the
+# dialog window, so the phrasebook is not visible behind it.
+- extendedWaitUntil:
+    notVisible:
+      id: phrasebook_screen
+    timeout: 3000
+- back
+- assertVisible:
+    id: phrasebook_screen
+- waitForAnimationToEnd:
+    timeout: 6000
+- assertVisible:
+    id: phrasebook_screen
+- assertNotVisible:
+    id: series_list
+- tapOn:
+    id: phrasebook_bookmark_${LINE_ID}
+- tapOn:
+    id: phrasebook_back
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_screen
+    timeout: 10000
+# Back on the second screen closes the whole pre-lesson.
+- tapOn:
+    id: ai_lesson_pre_lesson_back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000

@@ -1,0 +1,54 @@
+# Home: open a learning path lesson's pre-lesson flow (Navigation 3 `Destination.PreLessonFlow`) through the lesson popover.
+# Entry: Home (`learning_path_ready`). Exit: first pre-lesson screen (`skill_check_intro` with the QA fixture, `pre_lesson_.*`/`ai_lesson_pre_lesson_screen` otherwise).
+# Default: Spanish A1 pool account, loop "Make small talk", drill EN_ES_A1-1_quetal_SP_DL_IC. A lesson ahead of the
+# account's progress shows the "Skipping lessons?" sheet first; the flow accepts it.
+# The pre-lesson only opens when the lesson has `hasPreLessonFlow = true`; on dev that needs a QA-only patch (see pre-lesson-nav3 flows).
+# maestro test -e LOOP_TEXT="Make small talk" -e LESSON_ID=EN_ES_A1-1_quetal_SP_DL_IC open-path-pre-lesson.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LOOP_TEXT: ${LOOP_TEXT || "Make small talk"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+- runFlow:
+    when:
+      notVisible:
+        id: learning_path_lesson_item_${LESSON_ID}
+    commands:
+      - scrollUntilVisible:
+          element:
+            text: ${LOOP_TEXT}
+          direction: DOWN
+          timeout: 20000
+      - tapOn: ${LOOP_TEXT}
+- tapOn:
+    id: learning_path_lesson_item_${LESSON_ID}
+# A lesson ahead of progress can open the "Skipping lessons?" sheet straight from the item, with no popover.
+- extendedWaitUntil:
+    visible:
+      id: "learning_path_popover_preview_button|learning_path_jump_ahead_continue"
+    timeout: 10000
+- runFlow:
+    when:
+      visible:
+        id: learning_path_popover_preview_button
+    commands:
+      - tapOn:
+          id: learning_path_popover_preview_button
+# The sheet can take a few seconds to slide in.
+- extendedWaitUntil:
+    visible:
+      id: learning_path_jump_ahead_continue
+    timeout: 6000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: learning_path_jump_ahead_continue
+    commands:
+      - tapOn:
+          id: learning_path_jump_ahead_continue

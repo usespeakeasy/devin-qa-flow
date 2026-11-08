@@ -1,0 +1,22 @@
+# Learning path pre-lesson: system Back on the first pre-lesson screen closes the whole pre-lesson and shows Home.
+# Entry: Home (`learning_path_ready`). Exit: Home. Preconditions: same QA-only patch as steps-continue-back.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+---
+- runFlow:
+    file: ../../common/open-path-pre-lesson.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: skill_check_intro
+    timeout: 30000
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- assertNotVisible:
+    id: skill_check_intro
