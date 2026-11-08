@@ -1,0 +1,48 @@
+# Lesson card: tap Save line, then open Practice > Saved lines (SCHEME://saved) and record whether the card's line is listed.
+# The check uses the translation in `hint` (video line text sits in untagged children of `line`).
+# Run twice on the same card (PASS=1, then PASS=2 after reopening); PASS=2 asserts the line and the listing flipped.
+# Entry: lesson card with save_line. Exit: Practice saved lines.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SCHEME: ${SCHEME || "speak-dev"}
+  PASS: ${PASS || "1"}
+---
+- extendedWaitUntil:
+    visible:
+      id: save_line
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: hint
+      text: ".*\\S.*"
+    timeout: 60000
+- copyTextFrom:
+    id: hint
+- evalScript: ${output['line' + PASS] = maestro.copiedText.trim(); output['listed' + PASS] = false}
+- assertTrue: ${output['line' + PASS].length > 0}
+- tapOn:
+    id: save_line
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT || "saved-line"}-tap${PASS}
+- openLink: ${SCHEME}://saved
+- extendedWaitUntil:
+    visible:
+      text: "Saved lines"
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- runFlow:
+    when:
+      visible:
+        text: ${output['line' + PASS]}
+    commands:
+      - evalScript: ${output['listed' + PASS] = true}
+- takeScreenshot: ${SHOT || "saved-line"}-list${PASS}
+- runFlow:
+    when:
+      true: ${PASS == "2"}
+    commands:
+      - assertTrue: ${output.line1 == output.line2}
+      - assertTrue: ${output.listed1 != output.listed2}

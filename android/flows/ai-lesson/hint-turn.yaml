@@ -1,0 +1,13 @@
+# AI lesson (chat mode): reply with the partner's "What should I say?" hint, typed and sent.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible: "What should I say\\?|All tasks completed!"
+    timeout: 60000
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_tasks_completed
+    file: hint-reply.yaml

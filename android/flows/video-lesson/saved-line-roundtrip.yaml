@@ -1,0 +1,20 @@
+# Video lesson: Save line toggle round trip on one card, from either starting saved state.
+# Entry: Home. Exit: Practice saved lines. Asserts the listing in SCHEME://saved flips on each toggle.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_KR_L1-2_pharmacy_VL"}
+---
+- runFlow:
+    file: open-lesson.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- runFlow:
+    file: saved-line-toggle-check.yaml
+    env:
+      PASS: "1"
+- runFlow: reopen-lesson.yaml
+- runFlow:
+    file: saved-line-toggle-check.yaml
+    env:
+      PASS: "2"

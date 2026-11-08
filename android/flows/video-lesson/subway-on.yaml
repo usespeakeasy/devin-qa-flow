@@ -1,0 +1,28 @@
+# Video lesson: turn on "Can't speak now" (subway mode). The explanation dialog shows only once per install,
+# so dismiss it when present. Exit: toggle checked.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: cant_speak_now_toggle
+      checked: false
+    timeout: 90000
+- tapOn:
+    id: cant_speak_now_toggle
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      visible:
+        text: "Got it"
+    commands:
+      - takeScreenshot: subway-dialog
+      - tapOn:
+          text: "Got it"
+- extendedWaitUntil:
+    visible:
+      id: cant_speak_now_toggle
+      checked: true
+    timeout: 90000

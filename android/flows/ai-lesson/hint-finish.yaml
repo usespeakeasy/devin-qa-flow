@@ -1,0 +1,91 @@
+# AI lesson from Free Talk (any topic/language): answer with the hint until the partner ends the conversation,
+# then End lesson: the lesson end flow opens and the lesson screen is gone.
+# Entry: AI lesson in chat mode. Exit: lesson_end_reskin_root.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_tasks_completed
+    file: hint-turn.yaml
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_tasks_completed
+    file: hint-turn.yaml
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_tasks_completed
+    file: hint-turn.yaml
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_tasks_completed
+    file: hint-turn.yaml
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_tasks_completed
+    file: hint-turn.yaml
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_tasks_completed
+    file: hint-turn.yaml
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_tasks_completed
+    file: hint-turn.yaml
+# End lesson can sit under the keyboard; with the keyboard already down, hideKeyboard is a back press that opens
+# the quit sheet: keep learning. If the partner hasn't ended the conversation yet, say goodbye.
+- hideKeyboard
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_quit_sheet
+    commands:
+      - tapOn:
+          id: ai_lesson_quit_keep_learning
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_end_lesson
+    commands:
+      - runFlow:
+          when:
+            notVisible:
+              id: ai_lesson_keyboard_field
+          commands:
+            - tapOn:
+                id: ai_lesson_keyboard_toggle
+      - tapOn:
+          id: ai_lesson_keyboard_field
+      - inputText: "Thank you! I have to go now. Goodbye!"
+      - tapOn:
+          id: ai_lesson_keyboard_send
+      - waitForAnimationToEnd:
+          timeout: 15000
+      - hideKeyboard
+      - runFlow:
+          when:
+            visible:
+              id: ai_lesson_quit_sheet
+          commands:
+            - tapOn:
+                id: ai_lesson_quit_keep_learning
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_end_lesson
+    timeout: 90000
+- tapOn:
+    id: ai_lesson_end_lesson
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 60000
+- assertNotVisible:
+    id: ai_lesson_screen

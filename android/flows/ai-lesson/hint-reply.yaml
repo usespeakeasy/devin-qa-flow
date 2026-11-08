@@ -1,0 +1,23 @@
+# AI lesson (chat mode): type and send the partner's "What should I say?" hint.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- copyTextFrom:
+    text: "[A-Z¿¡][^\\n]{4,}[.?!]\\n?"
+    below: "What should I say\\?"
+- evalScript: ${output.hint = maestro.copiedText.trim().split('\n')[0]}
+- runFlow:
+    when:
+      notVisible:
+        id: ai_lesson_keyboard_field
+    commands:
+      - tapOn:
+          id: ai_lesson_keyboard_toggle
+- tapOn:
+    id: ai_lesson_keyboard_field
+- inputText: ${output.hint}
+- tapOn:
+    id: ai_lesson_keyboard_send
+- waitForAnimationToEnd:
+    timeout: 15000

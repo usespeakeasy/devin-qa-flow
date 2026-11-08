@@ -1,0 +1,22 @@
+# Video lesson: make sure "Can't speak now" is off before the controls checks (state persists per install).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: cant_speak_now_toggle
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: cant_speak_now_toggle
+        checked: true
+    commands:
+      - tapOn:
+          id: cant_speak_now_toggle
+      - waitForAnimationToEnd:
+          timeout: 3000
+- assertVisible:
+    id: cant_speak_now_toggle
+    checked: false

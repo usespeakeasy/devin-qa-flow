@@ -1,0 +1,42 @@
+# Video lesson: reopen the current one after leaving it (stopApp, launch, Home popups, same deep link), so the
+# next step sees the same saved card. Resume prompt answered Continue when shown.
+# Entry: any. Exit: video lesson card with listening_header.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "KR_EN_UC_L1_howstheweather_VL"}
+---
+- stopApp
+- launchApp
+- runFlow: ../../common/home-popups.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+# The first lesson on an install asks for AI data consent.
+- extendedWaitUntil:
+    visible:
+      id: "listening_header|ai_data_consent_alert"
+    timeout: 30000
+    optional: true
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+# Progress is saved on the account, so a lesson quit after its first group asks to resume; start over.
+- extendedWaitUntil:
+    visible: "Continue where you left off\\?"
+    timeout: 5000
+    optional: true
+- tapOn:
+    text: "^Start over$"
+    optional: true
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: listening_header
+    timeout: 60000
+- assertVisible:
+    id: card_count
+    text: "1 of \\d+"
+- assertVisible:
+    id: cant_speak_now_toggle
+    checked: false
