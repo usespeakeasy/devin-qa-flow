@@ -2,7 +2,7 @@
 name: qa-request-mobile
 description: Run a QA request on a Speak mobile PR (speak-android or speak-ios). Read the PR's "How to test?" section, build the base and the branch against dev or prod, record both runs, and write the Before | After result into the PR description. Use when someone asks for QA, a no-diff check, a before and after recording, or writes "qa-request-mobile <PR link>" in Slack, a PR comment or a Linear issue. Also use it for every @Devin request with a PR or ticket link in #devin-qa-request-mobile, whatever the wording ("test <link>", "check this").
 metadata:
-  version: 2026.11.06.1
+  version: 2026.11.08.1
 ---
 
 # qa-request-mobile
@@ -152,7 +152,7 @@ In `mode=review`, post the proposals in the thread and stop. Start the proposals
 1. Before is the PR's merge-base with its base branch. After is the PR head. Write down both full SHAs.
 2. Same build on both sides. With `env=dev`: on Android `developDebug` (package `com.selabs.speak.dev`), on iOS the `Speak-Dev` scheme. With `env=prod`: on Android `productionDebug` (package `com.selabs.speak`), on iOS the `Speak` scheme in the Debug configuration. Write the environment in the status line and the toggle.
 3. Same device or simulator, same account, same flags and experiment variants, same debug settings.
-4. Start the build in the background before you set up the emulator and the account, and block on it with `get_output` and a long timeout. Don't poll it with `sleep`.
+4. Start the build in the background before you set up the emulator and the account, and block on it with `get_output` and a long timeout. Don't poll it with `sleep`. On Android, build base first, then record base on `emulator-5554` while the branch builds, and run the branch on a second emulator (`emulator-5556`) at the same time as the rest of base. The order and the cases that still run one at a time are in devin-qa-flow `docs/qa-pr-instructions.md` "Two emulators".
 5. A QA-only patch (a repository method returning a fixed value, a forced error) is applied with `git apply` to both working trees and reverted after the run. It is never committed. Its diff goes in the packet toggle.
 
 ### 4. Record
@@ -321,7 +321,7 @@ Maestro is at `~/.maestro/bin/maestro`. If it's missing, install it with `curl -
 
 Emulator crashes, corrupt recordings and retry loops made up a third or more of the time on the most expensive Android runs. Set up once, check each file as it lands, and redo only what broke.
 
-- Start the emulator with an explicit GPU and keep it for both builds (or one per build, see devin-qa-flow `docs/qa-pr-instructions.md`): `qa_android.py emu` runs `emulator -avd devin -no-audio -no-boot-anim -no-snapshot -memory 4096 -gpu swangle_indirect` and waits until `sys.boot_completed` is `1`. The gfxstream default can die in long runs, and `swiftshader_indirect` crashes on the Free Talk tab.
+- Start each emulator with an explicit GPU, one per build by default (see devin-qa-flow `docs/qa-pr-instructions.md` "Two emulators"): `qa_android.py emu` runs `emulator -avd devin -no-audio -no-boot-anim -no-snapshot -memory 4096 -gpu swangle_indirect` and waits until `sys.boot_completed` is `1`. The gfxstream default can die in long runs, and `swiftshader_indirect` crashes on the Free Talk tab.
 - Stop `adb shell screenrecord` with `adb shell pkill -INT screenrecord` and wait for it to exit before pulling. Any other stop can leave an mp4 with no moov atom. It also stops by itself at 180 s, so keep one file per case.
 - Run `ffprobe` on each recording right after pulling it. Re-record only the case whose file fails.
 - `uiautomator dump` can return an empty or stale tree during a transition. Re-dump until the node you assert appears, with a timeout, and never tap from a stale dump.
