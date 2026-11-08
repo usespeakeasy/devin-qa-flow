@@ -1,0 +1,33 @@
+# Learning language English > native language step > Back > learning language step > Back > the storybook.
+# Entry: `onboarding_language_screen` opened from the storybook, app in English. Exit: the storybook.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: onboarding_language_option_en_us
+- runFlow:
+    when:
+      visible:
+        id: onboarding_language_continue_button
+    commands:
+      - tapOn:
+          id: onboarding_language_continue_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_korean_english
+    timeout: 30000
+- pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_en_us
+    timeout: 15000
+- assertNotVisible:
+    id: onboarding_language_option_korean_english
+- pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_get_started_button
+    timeout: 15000
+- assertNotVisible:
+    id: onboarding_language_screen

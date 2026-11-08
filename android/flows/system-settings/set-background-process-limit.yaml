@@ -1,0 +1,21 @@
+# System Settings > Developer options > Background process limit > LIMIT ("No background processes" or
+# "Standard limit"). Entry: Developer options open (`adb shell am start -a
+# android.settings.APPLICATION_DEVELOPMENT_SETTINGS`, after enable-developer-options.yaml).
+# Selectors: system Settings rows have no app resource-id (text fallback).
+appId: com.android.settings
+env:
+  LIMIT: ${LIMIT || "No background processes"}
+---
+- scrollUntilVisible:
+    element:
+      text: "Background process limit"
+    direction: DOWN
+    timeout: 150000
+    visibilityPercentage: 100
+    centerElement: true
+- tapOn:
+    text: "Background process limit"
+- tapOn:
+    text: ${LIMIT}
+- assertVisible:
+    text: ${LIMIT}

@@ -1,0 +1,15 @@
+# Learning language step opened from the storybook > system Back > the storybook shows again (one Back).
+# Entry: `onboarding_language_screen` opened by storybook-get-started.yaml. Exit: the storybook.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: onboarding_language_screen
+- pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_get_started_button
+    timeout: 15000
+- assertNotVisible:
+    id: onboarding_language_screen

@@ -1,0 +1,23 @@
+# Signed-out storybook > Log in > sign-in options sheet > system Back > the sheet closes, the storybook shows.
+# Entry: `onboarding_storybook_sign_in_button` on screen. Exit: the storybook.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_sign_in_button
+    timeout: 60000
+- tapOn:
+    id: onboarding_storybook_sign_in_button
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 30000
+- pressKey: Back
+- extendedWaitUntil:
+    notVisible:
+      id: auth_options_screen
+    timeout: 15000
+- assertVisible:
+    id: onboarding_storybook_get_started_button

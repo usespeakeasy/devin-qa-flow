@@ -1,0 +1,13 @@
+# Signed-out storybook > system Back > the app closes or goes to the background (launcher on screen).
+# Entry: `onboarding_storybook_screen`. Exit: launcher. The run script checks the resumed activity.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: onboarding_storybook_screen
+- pressKey: Back
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding_storybook_screen
+    timeout: 10000
