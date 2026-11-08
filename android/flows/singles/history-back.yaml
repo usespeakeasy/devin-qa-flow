@@ -1,0 +1,14 @@
+# Singles History: system back closes it and Explore (from Profile) shows again.
+# Entry: Singles History opened from Explore (open-history.yaml). Exit: Explore.
+# Selectors: action_history, single_timestamp, empty_text.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: action_history
+    timeout: 15000
+- assertNotVisible:
+    id: "single_timestamp|empty_text"

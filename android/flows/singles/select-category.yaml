@@ -38,4 +38,4 @@ env:
 - assertVisible:
     id: list
 - assertVisible:
-    id: action_history
+    id: "action_history|action_profile"

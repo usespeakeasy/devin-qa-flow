@@ -17,4 +17,4 @@ env:
     centerElement: true
     timeout: 30000
 - assertVisible:
-    id: action_history
+    id: "action_history|action_profile"

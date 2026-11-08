@@ -1,0 +1,15 @@
+# Explore tab > Profile icon (toolbar): Profile opens over the tabs, the bottom bar hidden.
+# Entry: Explore tab (open-explore-tab.yaml). Exit: Profile pushed over Main.
+# Selectors: action_profile, action_settings, main_tab_explore.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: action_profile
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 20000
+- assertNotVisible:
+    id: main_tab_explore

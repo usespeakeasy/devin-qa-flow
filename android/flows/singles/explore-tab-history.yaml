@@ -1,0 +1,19 @@
+# Explore tab > History (toolbar navigation icon on the tab): Singles History opens over the tabs,
+# the bottom bar hidden.
+# Entry: Explore tab (open-explore-tab.yaml). Exit: Singles History.
+# Selectors: point 10%,8% (toolbar navigation button, no resource-id or content description),
+# single_timestamp, empty_text, main_tab_explore.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: action_profile
+- tapOn:
+    point: "10%,8%"
+- extendedWaitUntil:
+    visible:
+      id: "single_timestamp|empty_text"
+    timeout: 30000
+- assertNotVisible:
+    id: main_tab_explore

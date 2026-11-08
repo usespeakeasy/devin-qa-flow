@@ -1,0 +1,25 @@
+# Explore: rotate to landscape, then back to portrait. Explore and its chips show after each turn.
+# Entry: Explore (profile or tab). Exit: Explore, portrait. Compare the list before and after with harness dump.
+# maestro test -e SHOT=rotate rotate-explore.yaml
+# Selectors: singles_explore_screen, category_list, list.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: rotate
+---
+- assertVisible:
+    id: singles_explore_screen
+- setOrientation: LANDSCAPE_LEFT
+- extendedWaitUntil:
+    visible:
+      id: category_list
+    timeout: 20000
+- takeScreenshot: ${SHOT}-landscape
+- setOrientation: PORTRAIT
+- extendedWaitUntil:
+    visible:
+      id: category_list
+    timeout: 20000
+- assertVisible:
+    id: list
+- takeScreenshot: ${SHOT}

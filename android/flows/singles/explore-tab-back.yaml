@@ -1,0 +1,17 @@
+# Explore tab: system back closes the screen opened over it (pack, history, Profile or the details
+# sheet) and the Explore tab shows again with the bottom bar.
+# Entry: a screen opened from the Explore tab. Exit: Explore tab.
+# Selectors: main_tab_explore, singles_explore_screen, category_list, action_profile.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: category_list
+    timeout: 15000
+- assertVisible:
+    id: action_profile
+- assertVisible:
+    id: main_tab_explore

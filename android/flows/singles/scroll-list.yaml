@@ -2,7 +2,7 @@
 # can sit at its own scroll position.
 # Entry: Explore on a category. Exit: same category, scrolled.
 # maestro test -e TIMES=3 scroll-list.yaml
-# Selectors: list, action_history. The drag is a point swipe (the list is the whole lower screen).
+# Selectors: list, action_history (Explore from Profile) or action_profile (Explore tab). The drag is a point swipe (the list is the whole lower screen).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
@@ -19,4 +19,4 @@ env:
 - assertVisible:
     id: list
 - assertVisible:
-    id: action_history
+    id: "action_history|action_profile"

@@ -1,0 +1,11 @@
+# The screen opened from the Explore tab covers the bottom bar.
+# Entry: a pack or Singles History opened from the Explore tab. Exit: same.
+# Selectors: main_tab_explore, category_list.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertNotVisible:
+    id: main_tab_explore
+- assertNotVisible:
+    id: category_list
