@@ -1,0 +1,15 @@
+# Drags the chat history down about 200 pt so earlier messages move up under the header, then waits for the
+# scroll to settle. For pixel checks of the top bar over scrolled content.
+# Entry and exit: native AI lesson chat with more history than fits on screen. Changes nothing on the account.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+# The history has no accessibility id; a point drag in its middle.
+- swipe:
+    start: 50%, 35%
+    end: 50%, 58%
+    duration: 1200
+- waitForAnimationToEnd
+- assertVisible:
+    id: debug.ail.correct-response

@@ -1,0 +1,48 @@
+# Opens a chat-mode roleplay (CML) from Free Talk > Topics > TOPIC > Chat mode > Start and waits for the tutor's
+# first turn and its hint. Entry: any state (cold-starts to Home). Exit: lesson open, green debug answer enabled.
+# Preconditions: signed in; split overrides ai_lesson_native=default_chat&chat_mode_native=on; Premium override
+# (common/set-subscription-premium.yaml); Show Debug Controls on (Debug-Dev default).
+# Params: TOPIC (topic card title on the Topics tab; the default is in the EN_JP pool catalog). Maestro 2.12.1 lets
+# this env block win over -e, so edit the default to change it.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  TOPIC: At a Burger Place
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn:
+    id: tab-bar.tab.aiTutor
+- extendedWaitUntil:
+    visible: "Topics|Get started"
+    timeout: 15000
+# First visit to Free Talk shows an intro card ("Get started") instead of the tabs.
+- tapOn:
+    text: "Get started"
+    optional: true
+- tapOn: "Topics"
+- tapOn:
+    text: ${TOPIC}
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: lesson.pre-ai.action.start
+    timeout: 15000
+- tapOn: "Chat mode"
+- tapOn:
+    id: lesson.pre-ai.action.start
+- runFlow:
+    when:
+      visible:
+        id: ai-data-consent.alert.allow
+    commands:
+      - tapOn:
+          id: ai-data-consent.alert.allow
+# A lesson left mid-way shows "Continue where you left off?"; start over so every run gets the same first turn.
+- tapOn:
+    text: "Start over"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: debug.ail.correct-response
+      enabled: true
+    timeout: 60000

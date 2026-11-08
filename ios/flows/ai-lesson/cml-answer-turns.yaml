@@ -1,0 +1,24 @@
+# Answers TURNS tutor turns with the green debug answer button (sends the hint as the reply), one tap per turn after
+# the hint arrives, to fill the chat history for scroll checks.
+# Entry: chat-mode or QnA lesson with the green button enabled (cml-open-first-turn.yaml). Exit: same, TURNS later.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  TURNS: 4
+---
+- repeat:
+    times: ${TURNS}
+    commands:
+      - tapOn:
+          id: debug.ail.correct-response
+      - extendedWaitUntil:
+          visible:
+            id: debug.ail.correct-response
+            enabled: false
+          timeout: 15000
+          optional: true
+      - extendedWaitUntil:
+          visible:
+            id: debug.ail.correct-response
+            enabled: true
+          timeout: 60000
