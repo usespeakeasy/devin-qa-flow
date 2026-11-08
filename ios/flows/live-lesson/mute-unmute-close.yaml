@@ -1,0 +1,25 @@
+# Live Lesson: mute, unmute, then Close. Exit: the close confirmation sheet ("Keep Learning" / "Quit").
+# The sheet renders in a separate window Maestro can't see, so the case script taps Quit with AXe
+# (`axe tap --label Quit`) and checks home.root.ready afterwards.
+# Entry: Live Lesson screen with the mic on (caller waited for "Microphone enabled (unmuted)").
+# The mic pill has no accessibility id; its label is the SF image name, so the flow matches that text.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "sdt-ui-microphone-fill"
+    timeout: 15000
+- takeScreenshot: ${SHOT}-unmuted-start
+- tapOn: "sdt-ui-microphone-fill"
+- extendedWaitUntil:
+    visible: "sdt-ui-microphone-slash-fill"
+    timeout: 15000
+- takeScreenshot: ${SHOT}-muted
+- tapOn: "sdt-ui-microphone-slash-fill"
+- extendedWaitUntil:
+    visible: "sdt-ui-microphone-fill"
+    timeout: 15000
+- takeScreenshot: ${SHOT}-unmuted
+- tapOn:
+    id: "tutor-lesson.close"

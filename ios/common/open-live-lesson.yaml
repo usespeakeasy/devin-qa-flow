@@ -1,0 +1,24 @@
+# Opens a Live Lesson (lesson type .live, LiveLessons module) by deep link.
+# Entry: Home. Precondition: signed in. LIVE_LESSON_ID must be a lesson whose lesson-info has lessonType "live".
+# Exit: Live Lesson screen (tutor-lesson.close visible); the LiveKit room and the mic may still be starting.
+# The caller waits for the "Microphone enabled (unmuted)" Voice Engine log line when it needs the mic on.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|ai-data-consent.action.agree"
+    timeout: 30000
+- runFlow: dismiss-ai-data-consent.yaml
+- openLink: "speak-dev://lesson?id=${LIVE_LESSON_ID}"
+- runFlow: confirm-open-in-app.yaml
+- runFlow:
+    when:
+      visible: "Allow Speak to send your voice and text to AI\\?"
+    commands:
+      - tapOn: "Allow"
+- extendedWaitUntil:
+    visible:
+      id: "tutor-lesson.close"
+    timeout: 30000
