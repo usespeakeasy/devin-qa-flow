@@ -9,6 +9,14 @@ env:
 ---
 - runFlow: ../../common/launch-home.yaml
 - tapOn: "Free Talk"
+# First visit on an account shows the Free Talk intro dialog over the tab.
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_intro_dialog_get_started_button
+    commands:
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
 - assertVisible:
     id: ai_tutor_title
 - tapOn: "Community"
