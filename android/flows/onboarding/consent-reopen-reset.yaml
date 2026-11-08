@@ -1,0 +1,34 @@
+# Consent screen: tick marketing, leave with the in-app back arrow, reopen with Continue with Email Code; the new
+# consent view starts with marketing unticked. Entry: consent screen reached through Continue with Email Code, marketing
+# unticked. Exit: the reopened consent screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: tick-consent-sheet-row.yaml
+    env:
+      OPTION: marketing
+- runFlow:
+    file: assert-consent-row.yaml
+    env:
+      OPTION: marketing
+- tapOn:
+    id: onboarding_auth_back_button
+- extendedWaitUntil:
+    visible:
+      id: auth_options_email_otp_button
+    timeout: 15000
+- assertNotVisible:
+    id: auth_consent_section
+- tapOn:
+    id: auth_options_email_otp_button
+- extendedWaitUntil:
+    visible:
+      id: auth_consent_section
+    timeout: 15000
+- runFlow:
+    file: assert-consent-row.yaml
+    env:
+      OPTION: marketing
+      CHECKED: "false"

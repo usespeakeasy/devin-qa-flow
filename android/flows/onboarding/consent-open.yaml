@@ -1,0 +1,61 @@
+# Signed out welcome > sign-up consent screen (`OnboardingConsentController`) through Continue with Email Code.
+# HOST=fullscreen: Get started > English > native NATIVE > keep English > full-screen sign-up options (OnboardingAuth).
+# HOST=sheet: Log in > Sign up in the auth sheet (OnboardingAuthDialog). The sheet's native language is the app locale:
+# set it with `adb shell cmd locale set-app-locales <pkg> --locales fr-FR` (GDPR) before launch. A French locale skips
+# the language step; LEARN is tapped when the step shows.
+# Entry: app data cleared, welcome screen. Exit: consent screen (`auth_consent_section`); the AI data row may still load.
+# maestro test -e HOST=fullscreen -e NATIVE=korean_english consent-open.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  HOST: ${HOST || "fullscreen"}
+  NATIVE: ${NATIVE || "korean_english"}
+  LEARN: ${LEARN || "en_us"}
+---
+- runFlow:
+    when:
+      true: ${HOST == "fullscreen"}
+    file: native-sign-up-options.yaml
+    env:
+      NATIVE: ${NATIVE}
+- runFlow:
+    when:
+      true: ${HOST == "sheet"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: onboarding_storybook_sign_in_button
+          timeout: 60000
+      - tapOn:
+          id: onboarding_storybook_sign_in_button
+      - extendedWaitUntil:
+          visible:
+            id: auth_options_secondary_text_button
+          timeout: 30000
+      - tapOn:
+          id: auth_options_secondary_text_button
+      - waitForAnimationToEnd
+      - runFlow:
+          when:
+            visible:
+              id: onboarding_language_option_${LEARN}
+          commands:
+            - tapOn:
+                id: onboarding_language_option_${LEARN}
+            - runFlow:
+                when:
+                  visible:
+                    id: onboarding_language_continue_button
+                commands:
+                  - tapOn:
+                      id: onboarding_language_continue_button
+      - extendedWaitUntil:
+          visible:
+            id: auth_options_email_otp_button
+          timeout: 30000
+- tapOn:
+    id: auth_options_email_otp_button
+- extendedWaitUntil:
+    visible:
+      id: auth_consent_section
+    timeout: 15000

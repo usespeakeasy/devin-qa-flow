@@ -1,0 +1,117 @@
+# Consent screen: the info button of row INFO (`auth_consent_info_<option>`) opens its page in Chrome, URL matching
+# URL_RE (the bar hides "https://www.", so the flow taps it and "Edit"); INFO2 and URL2_RE open a second one when set.
+# Back returns to the consent screen. Then Cancel and the in-app back arrow each return to the sign-up options, with
+# Continue with Email Code reopening the consent screen after each; last, system back leaves to BACK_TO (default the
+# sign-up options; the auth sheet closes whole on system back, so pass onboarding_storybook_sign_in_button there).
+# Entry: consent screen reached through Continue with Email Code; Chrome's first-run screen already dismissed.
+# Exit: BACK_TO.
+# Selectors: Chrome's "Edit" suggestion has only a content description (text fallback, Chrome's own UI).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  INFO: ${INFO || "terms"}
+  URL_RE: ${URL_RE || ".*"}
+  INFO2: ${INFO2 || ""}
+  URL2_RE: ${URL2_RE || ".*"}
+  SHOT: ${SHOT || "consent_link"}
+  BACK_TO: ${BACK_TO || "auth_options_email_otp_button"}
+---
+- scrollUntilVisible:
+    element:
+      id: auth_consent_info_${INFO}
+    direction: DOWN
+- tapOn:
+    id: auth_consent_info_${INFO}
+- extendedWaitUntil:
+    visible:
+      id: url_bar
+    timeout: 30000
+- tapOn:
+    id: url_bar
+- tapOn: Edit
+- extendedWaitUntil:
+    visible:
+      id: url_bar
+      text: ${URL_RE}
+    timeout: 10000
+- takeScreenshot: ${SHOT}_1
+- repeat:
+    while:
+      notVisible:
+        id: auth_consent_section
+    times: 4
+    commands:
+      - back
+- runFlow:
+    when:
+      true: ${INFO2 != ""}
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: auth_consent_info_${INFO2}
+          direction: DOWN
+      - tapOn:
+          id: auth_consent_info_${INFO2}
+      - extendedWaitUntil:
+          visible:
+            id: url_bar
+          timeout: 30000
+      - tapOn:
+          id: url_bar
+      - tapOn: Edit
+      - extendedWaitUntil:
+          visible:
+            id: url_bar
+            text: ${URL2_RE}
+          timeout: 10000
+      - takeScreenshot: ${SHOT}_2
+      - repeat:
+          while:
+            notVisible:
+              id: auth_consent_section
+          times: 4
+          commands:
+            - back
+- extendedWaitUntil:
+    visible:
+      id: auth_consent_section
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      id: onboarding_requirement_info_button
+    direction: DOWN
+- tapOn:
+    id: onboarding_requirement_info_button
+- extendedWaitUntil:
+    visible:
+      id: auth_options_email_otp_button
+    timeout: 15000
+- assertNotVisible:
+    id: auth_consent_section
+- tapOn:
+    id: auth_options_email_otp_button
+- extendedWaitUntil:
+    visible:
+      id: auth_consent_section
+    timeout: 15000
+- tapOn:
+    id: onboarding_auth_back_button
+- extendedWaitUntil:
+    visible:
+      id: auth_options_email_otp_button
+    timeout: 15000
+- assertNotVisible:
+    id: auth_consent_section
+- tapOn:
+    id: auth_options_email_otp_button
+- extendedWaitUntil:
+    visible:
+      id: auth_consent_section
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible:
+      id: ${BACK_TO}
+    timeout: 15000
+- assertNotVisible:
+    id: auth_consent_section

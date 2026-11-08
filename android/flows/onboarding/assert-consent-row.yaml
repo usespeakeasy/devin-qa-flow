@@ -1,0 +1,43 @@
+# Consent screen: row OPTION (`auth_consent_option_<option>`, or accept_all with OPTION=accept_all) is ticked when
+# CHECKED=true, unticked when CHECKED=false. Entry and exit: consent screen with that row.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CHECKED: ${CHECKED || "true"}
+---
+- runFlow:
+    when:
+      true: ${OPTION == "accept_all" && CHECKED == "true"}
+    commands:
+      - assertVisible:
+          id: auth_consent_accept_all
+          checked: true
+- runFlow:
+    when:
+      true: ${OPTION == "accept_all" && CHECKED != "true"}
+    commands:
+      - assertVisible:
+          id: auth_consent_accept_all
+          checked: false
+- runFlow:
+    when:
+      true: ${OPTION != "accept_all"}
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: auth_consent_option_${OPTION}
+          direction: DOWN
+- runFlow:
+    when:
+      true: ${OPTION != "accept_all" && CHECKED == "true"}
+    commands:
+      - assertVisible:
+          id: auth_consent_option_${OPTION}
+          checked: true
+- runFlow:
+    when:
+      true: ${OPTION != "accept_all" && CHECKED != "true"}
+    commands:
+      - assertVisible:
+          id: auth_consent_option_${OPTION}
+          checked: false

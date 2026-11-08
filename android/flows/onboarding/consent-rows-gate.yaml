@@ -1,0 +1,121 @@
+# Consent screen: Continue stays disabled until every required row is ticked; one row at a time, an optional row,
+# unticking a required row, then Accept all, revoke all (Accept all again) and Accept all. ROW=true waits for the AI
+# data row (`ai_data_consent_mode` row_only or row_and_alert) and ticks it; ROW=false checks Continue enables with no
+# AI row once the row read ends. PIPA's overseas transfer row is ticked when shown.
+# Entry: consent screen (consent-open.yaml). Exit: consent screen, everything accepted, Continue enabled.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ROW: ${ROW || "true"}
+---
+- runFlow:
+    when:
+      true: ${ROW == "true"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: auth_consent_option_ai_data
+          timeout: 30000
+- runFlow: assert-consent-continue-disabled.yaml
+- runFlow:
+    file: tick-consent-sheet-row.yaml
+    env:
+      OPTION: terms
+- runFlow:
+    file: assert-consent-row.yaml
+    env:
+      OPTION: terms
+- runFlow: assert-consent-continue-disabled.yaml
+- runFlow:
+    when:
+      visible:
+        id: auth_consent_option_overseas_transfer
+    file: tick-consent-sheet-row.yaml
+    env:
+      OPTION: overseas_transfer
+- runFlow:
+    file: tick-consent-sheet-row.yaml
+    env:
+      OPTION: age
+- runFlow:
+    when:
+      true: ${ROW == "true"}
+    commands:
+      - runFlow: assert-consent-continue-disabled.yaml
+      - runFlow:
+          file: tick-consent-sheet-row.yaml
+          env:
+            OPTION: ai_data
+- extendedWaitUntil:
+    visible:
+      id: onboarding_requirement_main_button
+      enabled: true
+    timeout: 30000
+- runFlow:
+    when:
+      true: ${ROW != "true"}
+    commands:
+      - assertNotVisible:
+          id: auth_consent_option_ai_data
+- runFlow:
+    file: tick-consent-sheet-row.yaml
+    env:
+      OPTION: marketing
+- runFlow:
+    file: assert-consent-row.yaml
+    env:
+      OPTION: marketing
+- runFlow:
+    file: tick-consent-sheet-row.yaml
+    env:
+      OPTION: marketing
+- runFlow:
+    file: assert-consent-row.yaml
+    env:
+      OPTION: marketing
+      CHECKED: "false"
+- runFlow: assert-consent-continue-enabled.yaml
+- runFlow:
+    file: tick-consent-sheet-row.yaml
+    env:
+      OPTION: terms
+- runFlow: assert-consent-continue-disabled.yaml
+- scrollUntilVisible:
+    element:
+      id: auth_consent_accept_all
+    direction: UP
+- tapOn:
+    id: auth_consent_accept_all
+- runFlow:
+    file: assert-consent-row.yaml
+    env:
+      OPTION: accept_all
+- runFlow:
+    file: assert-consent-row.yaml
+    env:
+      OPTION: marketing
+- runFlow: assert-consent-continue-enabled.yaml
+- scrollUntilVisible:
+    element:
+      id: auth_consent_accept_all
+    direction: UP
+- tapOn:
+    id: auth_consent_accept_all
+- runFlow:
+    file: assert-consent-row.yaml
+    env:
+      OPTION: terms
+      CHECKED: "false"
+- runFlow:
+    file: assert-consent-row.yaml
+    env:
+      OPTION: marketing
+      CHECKED: "false"
+- runFlow: assert-consent-continue-disabled.yaml
+- scrollUntilVisible:
+    element:
+      id: auth_consent_accept_all
+    direction: UP
+- tapOn:
+    id: auth_consent_accept_all
+- runFlow: assert-consent-continue-enabled.yaml

@@ -1,0 +1,54 @@
+# Consent screen while the AI data row is still loading (needs a slow row read, e.g. a QA patch delaying
+# `AiDataConsentService.signUpRow()`): tick marketing, Accept all, tap Continue; Continue stays disabled and the
+# screen stays. When the row arrives, the earlier ticks are kept and the new row is unticked; ticking it enables
+# Continue. Entry: consent screen just opened (consent-open.yaml), AI row not shown yet. Exit: consent screen, Continue enabled.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertNotVisible:
+    id: auth_consent_option_ai_data
+- runFlow:
+    file: tick-consent-sheet-row.yaml
+    env:
+      OPTION: marketing
+- scrollUntilVisible:
+    element:
+      id: auth_consent_accept_all
+    direction: UP
+- tapOn:
+    id: auth_consent_accept_all
+- runFlow:
+    file: assert-consent-row.yaml
+    env:
+      OPTION: terms
+- runFlow: assert-consent-continue-disabled.yaml
+- tapOn:
+    id: onboarding_requirement_main_button
+- assertVisible:
+    id: auth_consent_section
+- assertNotVisible:
+    id: auth_consent_option_ai_data
+- extendedWaitUntil:
+    visible:
+      id: auth_consent_option_ai_data
+    timeout: 30000
+- runFlow:
+    file: assert-consent-row.yaml
+    env:
+      OPTION: marketing
+- runFlow:
+    file: assert-consent-row.yaml
+    env:
+      OPTION: terms
+- runFlow:
+    file: assert-consent-row.yaml
+    env:
+      OPTION: ai_data
+      CHECKED: "false"
+- runFlow: assert-consent-continue-disabled.yaml
+- runFlow:
+    file: tick-consent-sheet-row.yaml
+    env:
+      OPTION: ai_data
+- runFlow: assert-consent-continue-enabled.yaml

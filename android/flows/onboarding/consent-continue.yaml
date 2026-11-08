@@ -1,0 +1,31 @@
+# Consent screen > Continue (DOUBLE=true double taps it) > email code entry (`otp_sign_in_entry_screen`); the consent
+# screen is gone. Entry: consent screen with Continue enabled, reached through Continue with Email Code.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DOUBLE: ${DOUBLE || "false"}
+---
+- scrollUntilVisible:
+    element:
+      id: onboarding_requirement_main_button
+    direction: DOWN
+- runFlow:
+    file: assert-consent-continue-enabled.yaml
+- runFlow:
+    when:
+      true: ${DOUBLE != "true"}
+    commands:
+      - tapOn:
+          id: onboarding_requirement_main_button
+- runFlow:
+    when:
+      true: ${DOUBLE == "true"}
+    commands:
+      - doubleTapOn:
+          id: onboarding_requirement_main_button
+- extendedWaitUntil:
+    visible:
+      id: otp_sign_in_entry_screen
+    timeout: 15000
+- assertNotVisible:
+    id: auth_consent_section

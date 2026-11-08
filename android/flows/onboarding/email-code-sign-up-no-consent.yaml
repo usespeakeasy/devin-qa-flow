@@ -1,0 +1,15 @@
+# Sign-up options for a market with no consent type (e.g. Japanese native) > Continue with Email Code > email code
+# entry (`otp_sign_in_entry_screen`) with no consent screen in between.
+# Entry: sign-up options (native-sign-up-options.yaml with NATIVE=japanese_english). Exit: email code entry.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: auth_options_email_otp_button
+- extendedWaitUntil:
+    visible:
+      id: otp_sign_in_entry_screen
+    timeout: 15000
+- assertNotVisible:
+    id: auth_consent_section
