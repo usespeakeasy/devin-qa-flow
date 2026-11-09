@@ -1,0 +1,17 @@
+# Signed-out welcome > Log in > "Continue with Email": the email sign-in step in the sign-in sheet
+# (`onboarding_sign_in_screen`, sheet back arrow shown). Stops there so the run script can press system Back,
+# swipe back, rotate or kill the app.
+# Entry: `onboarding_storybook_sign_in_button` (app data cleared or a cold start while signed out).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-sign-in-options.yaml
+- tapOn:
+    id: button_email
+- extendedWaitUntil:
+    visible:
+      id: onboarding_sign_in_screen
+    timeout: 15000
+- assertVisible:
+    id: onboarding_auth_back_button
