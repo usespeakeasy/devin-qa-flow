@@ -1,0 +1,36 @@
+# After a lesson deep link: walk the QA fixture pre-lesson (skill check intro > Start, AI pre-lesson > Start) when it shows,
+# and pick Start over on "Continue where you left off?". Builds without the speak-android#9086 QA pre-lesson patch skip it.
+# Entry: lesson link just opened. Exit: drill_lesson_root.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: "skill_check_intro|drill_lesson_root|ai_data_consent_alert"
+    timeout: 60000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: skill_check_intro
+    commands:
+      - tapOn:
+          id: skill_check_start
+      - extendedWaitUntil:
+          visible:
+            id: ai_lesson_pre_lesson_screen
+          timeout: 20000
+      - tapOn:
+          id: ai_lesson_pre_lesson_start
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- tapOn:
+    id: simple_dialog_negative_button
+    text: "^Start over$"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_root
+    timeout: 30000

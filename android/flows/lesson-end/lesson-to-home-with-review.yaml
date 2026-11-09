@@ -1,0 +1,52 @@
+# Drill lesson by deep link, skip every card, then every lesson end step to Home, including the review prompt
+# (ask_for_review_dialog > No). Entry: Home, signed in, Premium override. Exit: home_root_ready.
+# The dev server rarely sends the review step; QA runs add `Screen.AskForReview` after the first step in
+# `LessonEndFlowViewModel` (QA-only patch, both builds). The QA pre-lesson patch, when present, is walked first.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+  SHOT: ${SHOT || "lesson-end"}
+---
+- runFlow: ../../common/home-popups.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- runFlow: ../../common/pass-qa-pre-lesson.yaml
+- repeat:
+    while:
+      notVisible:
+        id: "lesson_end_.*|ask_for_review_.*dialog|parentPanel"
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*|ask_for_review_.*dialog|parentPanel"
+    timeout: 30000
+- takeScreenshot: ${SHOT}-first-step
+# The review prompt is matched by its text: with the kill switch on, a build that still has the legacy
+# AskForReview controller shows it as a plain AlertDialog without the ask_for_review_* ids.
+- repeat:
+    while:
+      notVisible: "Are you enjoying learning languages with Speak\\?"
+    times: 10
+    commands:
+      - tapOn:
+          id: lesson_end_reskin_continue_button
+          optional: true
+- extendedWaitUntil:
+    visible: "Are you enjoying learning languages with Speak\\?"
+    timeout: 30000
+- takeScreenshot: ${SHOT}-review-prompt
+- runFlow:
+    when:
+      notVisible:
+        id: ask_for_review_dialog
+    commands:
+      - tapOn: "^No$"
+      - tapOn:
+          text: "^(No|No thanks|Not now|Cancel)$"
+          optional: true
+- runFlow: review-dialog-to-home.yaml
+- takeScreenshot: ${SHOT}-home

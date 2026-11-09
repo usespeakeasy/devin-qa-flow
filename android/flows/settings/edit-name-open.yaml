@@ -1,0 +1,36 @@
+# Settings > Manage Account > Name: the single-field name editor (SingleFieldInput) opens with the input,
+# Back returns to Manage Account with the name unchanged.
+# Entry: Home tab (or Settings), signed in. Exit: Manage Account.
+# Selectors: settings_manage_account_option, manage_account_screen, edit_name, single_field_input_screen, input.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "edit-name"}
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn:
+    id: settings_manage_account_option
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 20000
+- tapOn:
+    id: edit_name
+- extendedWaitUntil:
+    visible:
+      id: single_field_input_screen
+    timeout: 15000
+- assertVisible:
+    id: input
+- takeScreenshot: ${SHOT}
+- back
+- runFlow:
+    when:
+      visible:
+        id: single_field_input_screen
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 10000

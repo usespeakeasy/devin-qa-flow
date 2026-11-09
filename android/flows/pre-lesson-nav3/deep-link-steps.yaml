@@ -1,0 +1,40 @@
+# Lesson deep link with the QA fixture pre-lesson (speak-android#9086 QA-only patch): the skill check intro shows,
+# Start opens the AI pre-lesson screen, Start opens the drill lesson. Use when the path popover is unreachable
+# (open-path-pre-lesson.yaml needs learning_path_popover_preview_button on the course path).
+# Entry: Home, signed in. Exit: drill_lesson_root.
+# Selectors: skill_check_intro, skill_check_start, ai_lesson_pre_lesson_screen, ai_lesson_pre_lesson_start.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+  SHOT: ${SHOT || "pre-lesson"}
+---
+- runFlow: ../../common/home-popups.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: skill_check_intro
+    timeout: 60000
+- takeScreenshot: ${SHOT}-skill-check
+- tapOn:
+    id: skill_check_start
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_screen
+    timeout: 20000
+- assertVisible:
+    id: ai_lesson_pre_lesson_start
+- takeScreenshot: ${SHOT}-ai-pre-lesson
+- tapOn:
+    id: ai_lesson_pre_lesson_start
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- tapOn:
+    id: simple_dialog_negative_button
+    text: "^Start over$"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_root
+    timeout: 30000

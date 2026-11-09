@@ -1,0 +1,23 @@
+# Profile > Settings > Manage Membership and stay there (for process death or rotation checks).
+# Entry: Home tab, signed in. Exit: Manage Membership (item_see_all_subscriptions).
+# Selectors: main_tab_profile, action_settings, settings_clear_cache_option, settings_manage_membership_option, item_see_all_subscriptions.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "manage-membership"}
+---
+- tapOn:
+    id: main_tab_profile
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible:
+      id: settings_clear_cache_option
+    timeout: 15000
+- tapOn:
+    id: settings_manage_membership_option
+- extendedWaitUntil:
+    visible:
+      id: item_see_all_subscriptions
+    timeout: 20000
+- takeScreenshot: ${SHOT}

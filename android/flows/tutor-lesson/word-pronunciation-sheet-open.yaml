@@ -1,0 +1,34 @@
+# Drill lesson > tap a word of the line: the word pronunciation sheet (PronunciationDialog: word, translation) opens,
+# Back closes it onto the same card. Entry: Home, signed in, pronunciation_coach_multilingual OFF (ON opens the
+# phoneme coach instead). Exit: the drill lesson, no sheet.
+# Selectors: lesson_line_word, word, translation (the sheet root is the Material design_bottom_sheet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+  SHOT: ${SHOT || "word-pronunciation-sheet"}
+---
+- runFlow: ../../common/home-popups.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- runFlow: ../../common/pass-qa-pre-lesson.yaml
+- extendedWaitUntil:
+    visible:
+      id: lesson_line_word
+    timeout: 30000
+- tapOn:
+    id: lesson_line_word
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: translation
+    timeout: 20000
+- assertVisible:
+    id: word
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: translation
+    timeout: 10000
+- assertVisible:
+    id: drill_lesson_root
