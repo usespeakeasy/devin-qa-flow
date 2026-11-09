@@ -1,0 +1,15 @@
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+# A second Speak notification (the microphone prompt) collapses the ongoing
+# call notification, which hides its Hang Up action. Swipe down on it to expand.
+- extendedWaitUntil:
+    visible: "^Ongoing call$"
+    timeout: 10000
+- swipe:
+    from: "^Ongoing call$"
+    direction: DOWN
+- extendedWaitUntil:
+    visible: "^Hang Up$"
+    timeout: 5000
