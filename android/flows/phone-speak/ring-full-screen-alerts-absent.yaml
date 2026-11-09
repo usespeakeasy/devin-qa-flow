@@ -1,0 +1,30 @@
+# Weekly Schedule > turn "Ring my phone" on: no full-screen alerts dialog and no full-screen alerts
+# notice on the ring card (full-screen alerts allowed, Android 13 and below, a release build, or a
+# build before speak-android#8712). Turns the ring back off at the end.
+# Entry: signed-in dev account with a saved weekly schedule and the ring off, microphone granted.
+# Pass SHOT and the copy for the app language with -e (no env defaults: they would win over -e):
+# English: RING_TITLE='Ring my phone' NOTICE_BUTTON='Turn on full-screen alerts'.
+# Selectors: the ring switch row and the notice's button have no resource-id on builds before
+# speak-android#8752, so both use text fallback.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://phone-speak?action=schedule
+- extendedWaitUntil:
+    visible: ${RING_TITLE}
+    timeout: 20000
+- assertNotVisible: ${NOTICE_BUTTON}
+- tapOn: ${RING_TITLE}
+# The dialog would show after the ring save returns; give it time to appear before asserting it doesn't.
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_ring_full_screen_alerts_dialog
+    timeout: 6000
+    optional: true
+- assertNotVisible:
+    id: phone_speak_schedule_ring_full_screen_alerts_dialog
+- assertNotVisible: ${NOTICE_BUTTON}
+- takeScreenshot: ${SHOT}_ring_on
+- tapOn: ${RING_TITLE}
+- assertNotVisible: ${NOTICE_BUTTON}

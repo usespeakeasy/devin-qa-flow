@@ -1,0 +1,44 @@
+# Weekly Schedule > ring on with full-screen alerts denied > Not now > the card's "Turn on full-screen
+# alerts" opens Android's full-screen alerts page for Speak; allowing it and going back hides the notice.
+# Turns the ring back off at the end.
+# Entry: signed-in dev account with a saved weekly schedule and the ring off, microphone granted, and
+# `appops set [--uid] com.selabs.speak.dev USE_FULL_SCREEN_INTENT deny` (Android 14+, debug build).
+# Leaves full-screen alerts allowed (UID mode): reset with appops after the run.
+# Pass SHOT and the copy with -e (no env defaults): RING_TITLE='Ring my phone'
+# NOTICE_BUTTON='Turn on full-screen alerts' SETTINGS_SWITCH='Allow full-screen notifications from this app'
+# (Android 16 settings text).
+# Selectors: ring row and notice button have no resource-id before speak-android#8752; the Android
+# settings page is the system app (text).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://phone-speak?action=schedule
+- extendedWaitUntil:
+    visible: ${RING_TITLE}
+    timeout: 20000
+- tapOn: ${RING_TITLE}
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_ring_full_screen_alerts_dialog
+    timeout: 10000
+- tapOn:
+    id: phone_speak_schedule_ring_full_screen_alerts_not_now
+- extendedWaitUntil:
+    visible: ${NOTICE_BUTTON}
+    timeout: 10000
+- tapOn: ${NOTICE_BUTTON}
+- extendedWaitUntil:
+    visible: ${SETTINGS_SWITCH}
+    timeout: 10000
+- takeScreenshot: ${SHOT}_settings
+- tapOn: ${SETTINGS_SWITCH}
+- back
+- extendedWaitUntil:
+    visible: ${RING_TITLE}
+    timeout: 10000
+- extendedWaitUntil:
+    notVisible: ${NOTICE_BUTTON}
+    timeout: 10000
+- takeScreenshot: ${SHOT}_back
+- tapOn: ${RING_TITLE}

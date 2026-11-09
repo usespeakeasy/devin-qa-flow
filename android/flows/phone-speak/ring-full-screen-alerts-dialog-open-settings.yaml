@@ -1,0 +1,34 @@
+# Weekly Schedule > ring on with full-screen alerts denied > the dialog's "Open settings" opens Android's
+# full-screen alerts page for Speak; allowing it and going back shows no dialog and no notice.
+# Turns the ring back off at the end.
+# Entry and parameters as ring-full-screen-alerts-card-settings.yaml (RING_TITLE, NOTICE_BUTTON,
+# SETTINGS_SWITCH, SHOT). Leaves full-screen alerts allowed (UID mode): reset with appops after the run.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://phone-speak?action=schedule
+- extendedWaitUntil:
+    visible: ${RING_TITLE}
+    timeout: 20000
+- tapOn: ${RING_TITLE}
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_ring_full_screen_alerts_dialog
+    timeout: 10000
+- tapOn:
+    id: phone_speak_schedule_ring_full_screen_alerts_open_settings
+- extendedWaitUntil:
+    visible: ${SETTINGS_SWITCH}
+    timeout: 10000
+- takeScreenshot: ${SHOT}_settings
+- tapOn: ${SETTINGS_SWITCH}
+- back
+- extendedWaitUntil:
+    visible: ${RING_TITLE}
+    timeout: 10000
+- assertNotVisible:
+    id: phone_speak_schedule_ring_full_screen_alerts_dialog
+- assertNotVisible: ${NOTICE_BUTTON}
+- takeScreenshot: ${SHOT}_back
+- tapOn: ${RING_TITLE}

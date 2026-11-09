@@ -1,0 +1,55 @@
+# Weekly Schedule with the microphone revoked: turn "Ring my phone" on, deny the system microphone
+# prompt: no full-screen alerts dialog, the card shows the microphone notice. "Turn on microphone" >
+# allow: the microphone notice goes away. FSA_NOTICE=shown asserts the full-screen alerts notice then
+# takes over (full-screen alerts denied, Android 14+, debug build with speak-android#8712);
+# FSA_NOTICE=absent asserts no full-screen alerts notice. Turns the ring back off at the end.
+# Entry: signed-in dev account with a saved weekly schedule and the ring off, and
+# `adb shell pm revoke com.selabs.speak.dev android.permission.RECORD_AUDIO` (never asked since).
+# Pass with -e: SHOT, FSA_NOTICE, RING_TITLE='Ring my phone', MIC_BUTTON='Turn on microphone',
+# NOTICE_BUTTON='Turn on full-screen alerts'.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://phone-speak?action=schedule
+- extendedWaitUntil:
+    visible: ${RING_TITLE}
+    timeout: 20000
+- tapOn: ${RING_TITLE}
+- extendedWaitUntil:
+    visible:
+      id: com.android.permissioncontroller:id/permission_deny_button
+    timeout: 10000
+- tapOn:
+    id: com.android.permissioncontroller:id/permission_deny_button
+- extendedWaitUntil:
+    visible: ${MIC_BUTTON}
+    timeout: 10000
+- assertNotVisible:
+    id: phone_speak_schedule_ring_full_screen_alerts_dialog
+- assertNotVisible: ${NOTICE_BUTTON}
+- takeScreenshot: ${SHOT}_mic_notice
+- tapOn: ${MIC_BUTTON}
+- extendedWaitUntil:
+    visible:
+      id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+    timeout: 10000
+- tapOn:
+    id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+- extendedWaitUntil:
+    notVisible: ${MIC_BUTTON}
+    timeout: 10000
+- runFlow:
+    when:
+      true: ${FSA_NOTICE == 'shown'}
+    commands:
+      - extendedWaitUntil:
+          visible: ${NOTICE_BUTTON}
+          timeout: 10000
+- runFlow:
+    when:
+      true: ${FSA_NOTICE == 'absent'}
+    commands:
+      - assertNotVisible: ${NOTICE_BUTTON}
+- takeScreenshot: ${SHOT}_mic_allowed
+- tapOn: ${RING_TITLE}

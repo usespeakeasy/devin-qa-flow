@@ -1,0 +1,23 @@
+# Entry: signed-in dev account with Phone speak access and no saved weekly slot.
+# Phone speak schedule CTA (no saved slot) > Schedule a weekly call > Save the default slot; reopening the
+# schedule deep link then shows the Weekly Schedule with the ring card.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://phone-speak?action=schedule
+- extendedWaitUntil:
+    visible: "Schedule a weekly call"
+    timeout: 20000
+- tapOn: "Schedule a weekly call"
+- extendedWaitUntil:
+    visible: "Choose a day"
+    timeout: 15000
+- tapOn: "^Save$"
+- extendedWaitUntil:
+    notVisible: "Choose a day"
+    timeout: 30000
+- openLink: speak-dev://phone-speak?action=schedule
+- extendedWaitUntil:
+    visible: "Ring my phone"
+    timeout: 20000
