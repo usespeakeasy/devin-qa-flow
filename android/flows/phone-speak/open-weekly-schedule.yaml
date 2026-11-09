@@ -1,0 +1,18 @@
+# Opens Weekly Schedule (PhoneSpeakScheduleRoute) and waits for the Ring my phone card, scrolling to it
+# when a large font pushes it below the fold.
+# Entry: signed-in dev account with a saved weekly slot (run save-weekly-slot.yaml first if the schedule
+# CTA shows) whose experiment arm gets the ring setting from the server.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://phone-speak?action=schedule
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_schedule_standalone_loading
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: phone_speak_schedule_ring_switch
+    direction: DOWN
+    timeout: 15000

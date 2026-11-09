@@ -1,0 +1,17 @@
+# Weekly Schedule: taps the Ring my phone switch row and waits until it is on.
+# It also checks that no full-screen alerts dialog took over.
+# Entry: Weekly Schedule open with the ring card on screen (open-weekly-schedule.yaml), microphone
+# granted and full-screen alerts allowed (`appops set --uid <pkg> USE_FULL_SCREEN_INTENT allow`).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: phone_speak_schedule_ring_switch
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_ring_switch
+      checked: true
+    timeout: 15000
+- assertNotVisible:
+    id: phone_speak_schedule_ring_full_screen_alerts_dialog
