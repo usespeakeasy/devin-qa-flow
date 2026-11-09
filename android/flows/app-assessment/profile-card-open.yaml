@@ -1,0 +1,23 @@
+# Profile: scroll to the App Assessment entry card (`app_assessment_entry_card`), tap it, and wait for the
+# standalone assessment (`SCREEN`: intro `app_assessment_intro` for a new learner, `app_assessment_result` with a report).
+# Entry: Profile tab with an assessment entry point. Exit: the assessment screen. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SCREEN: ${SCREEN || "app_assessment_intro"}
+  SHOT: ${SHOT || "profile-card-open"}
+---
+- scrollUntilVisible:
+    element:
+      id: app_assessment_entry_card
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: app_assessment_entry_card
+- extendedWaitUntil:
+    visible:
+      id: ${SCREEN}
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${SHOT}

@@ -1,0 +1,19 @@
+# Intro Start for a learner without the assessment entitlement, with the paywall closed: Profile shows
+# again and no assessment question opens. Entry: assessment intro opened from Profile, paywall that closes
+# without a purchase. Exit: Profile (`action_settings`). Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "start-paywall-close"}
+---
+- tapOn:
+    id: app_assessment_intro_start_button
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 30000
+- assertNotVisible:
+    id: app_assessment_intro
+- assertNotVisible:
+    id: app_assessment_question
+- takeScreenshot: ${SHOT}

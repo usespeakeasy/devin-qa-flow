@@ -1,0 +1,23 @@
+# Rotate to landscape and back with the standalone assessment open: the same screen (`SCREEN`) still shows.
+# Entry/exit: the assessment screen. Saves SHOT.png in landscape.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SCREEN: ${SCREEN || "app_assessment_intro"}
+  SHOT: ${SHOT || "assessment-rotate"}
+---
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ${SCREEN}
+    timeout: 15000
+- takeScreenshot: ${SHOT}
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ${SCREEN}
+    timeout: 15000

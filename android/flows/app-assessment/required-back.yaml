@@ -1,0 +1,15 @@
+# System Back on the required intro leaves the app (launcher shows, the intro is gone).
+# Entry: required intro on Main. Exit: launcher. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "required-back"}
+---
+- back
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: app_assessment_intro
+- assertNotVisible:
+    id: main_tab_home
+- takeScreenshot: ${SHOT}

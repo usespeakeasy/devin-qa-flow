@@ -1,0 +1,35 @@
+# Intro Start, purchase, then Back off the post-purchase screen (`COVER_ID`): the microphone prompt shows
+# once, and allowing it starts the assessment (self-level or first question). Entry: assessment intro, no
+# microphone permission, paywall that converts and pushes a post-purchase screen. Exit: assessment started. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  COVER_ID: ${COVER_ID || "settings_manage_account_option"}
+  SHOT: ${SHOT || "start-after-purchase"}
+---
+- tapOn:
+    id: app_assessment_intro_start_button
+- extendedWaitUntil:
+    visible:
+      id: ${COVER_ID}
+    timeout: 30000
+- assertNotVisible:
+    id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+- back
+- extendedWaitUntil:
+    visible:
+      id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+    timeout: 15000
+- tapOn:
+    id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+- extendedWaitUntil:
+    notVisible:
+      id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+    timeout: 10000
+- extendedWaitUntil:
+    notVisible:
+      id: app_assessment_intro_start_button
+    timeout: 30000
+- assertNotVisible:
+    id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+- takeScreenshot: ${SHOT}

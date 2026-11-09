@@ -1,0 +1,19 @@
+# Required intro Settings (`app_assessment_intro_settings_button`): Settings opens above it, and Back
+# returns to the required intro. Entry: required intro on Main. Exit: required intro. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "required-settings"}
+---
+- tapOn:
+    id: app_assessment_intro_settings_button
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: app_assessment_intro
+    timeout: 15000

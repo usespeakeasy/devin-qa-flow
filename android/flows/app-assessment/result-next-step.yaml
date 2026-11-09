@@ -1,0 +1,31 @@
+# Results next step (`app_assessment_result_next_step_button`), then Back: the results never show again.
+# `TARGET` is the id the next step lands on (recommended course on Main, or the course selector for
+# Browse all courses). Entry: assessment results. Exit: after Back from the target. Saves SHOT.png and SHOT-back.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TARGET: ${TARGET || "main_tab_home"}
+  SHOT: ${SHOT || "result-next-step"}
+---
+- scrollUntilVisible:
+    element:
+      id: app_assessment_result_next_step_button
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: app_assessment_result_next_step_button
+- extendedWaitUntil:
+    visible:
+      id: ${TARGET}
+    timeout: 30000
+- assertNotVisible:
+    id: app_assessment_result
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${SHOT}
+- back
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: app_assessment_result
+- takeScreenshot: ${SHOT}-back

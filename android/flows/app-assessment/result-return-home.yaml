@@ -1,0 +1,22 @@
+# Results Return home (`app_assessment_result_return_home_button`): Main shows with the Home tab selected
+# and the results gone. Entry: assessment results. Exit: Home tab. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "result-return-home"}
+---
+- scrollUntilVisible:
+    element:
+      id: app_assessment_result_return_home_button
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: app_assessment_result_return_home_button
+- extendedWaitUntil:
+    visible:
+      id: main_tab_home
+      selected: true
+    timeout: 30000
+- assertNotVisible:
+    id: app_assessment_result
+- takeScreenshot: ${SHOT}

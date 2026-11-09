@@ -1,0 +1,18 @@
+# Process death with the standalone assessment open: Home key, killApp, relaunch restores the assessment
+# (`SCREEN`), and Back shows Profile. Entry: assessment opened from Profile. Exit: Profile. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SCREEN: ${SCREEN || "app_assessment_intro"}
+  SHOT: ${SHOT || "assessment-process-death"}
+---
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: ${SCREEN}
+    timeout: 60000
+- takeScreenshot: ${SHOT}
+- runFlow: ../profile/back-to-profile.yaml

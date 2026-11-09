@@ -1,0 +1,16 @@
+# Required assessment on Main: a cold start shows the required intro in place of Main's content
+# (`app_assessment_intro`, no tab bar). Entry: signed in, the course requires the assessment. Exit: required intro. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "required-open"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: app_assessment_intro
+    timeout: 60000
+- assertNotVisible:
+    id: main_tab_profile
+- takeScreenshot: ${SHOT}
