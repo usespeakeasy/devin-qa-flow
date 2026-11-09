@@ -1,0 +1,14 @@
+# Survey summary: "Delete my answers" opens the delete answers dialog and leaves it open (close it with summary-close-dialog).
+# Entry: survey summary on screen. Precondition as summary-visible.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: unit_personalization_survey_summary
+- tapOn:
+    id: unit_personalization_footer_secondary_button
+- extendedWaitUntil:
+    visible:
+      id: unit_personalization_delete_answers_dialog
+    timeout: 10000

@@ -1,0 +1,12 @@
+# Survey summary: drags the summary text up inside the card (scrolls a long summary).
+# Entry: survey summary on screen. Precondition as summary-visible.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: unit_personalization_summary_card
+- swipe:
+    start: 50%, 65%
+    end: 50%, 35%
+    duration: 1500

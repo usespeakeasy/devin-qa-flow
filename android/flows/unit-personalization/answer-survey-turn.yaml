@@ -1,0 +1,19 @@
+# Survey chat: types ANSWER into the text reply field and sends it (switches from voice to text first if needed).
+# Entry: unit personalization survey chat on screen, waiting for a reply. Dev or prod.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ANSWER: ${ANSWER || "Yes"}
+---
+- runFlow:
+    when:
+      visible:
+        id: unit_personalization_survey_switch_to_text_button
+    commands:
+      - tapOn:
+          id: unit_personalization_survey_switch_to_text_button
+- tapOn:
+    id: unit_personalization_survey_text_input
+- inputText: ${ANSWER}
+- tapOn:
+    id: chatlite_send_button

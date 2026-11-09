@@ -1,0 +1,17 @@
+# Survey summary ("Let's create your personalized lessons!"): summary card and both footer buttons are on screen.
+# Entry: survey finished, summary on screen. Reach it with debug-menu/open-deeplink-lesson (TYPE=PLL \(uncreated\)), tap-start, then answer-survey-turn until the summary shows.
+# Precondition: a course with a unit survey objective (dev EN_ES_L1-LL has one; EN_ES_A1-1 has none).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: unit_personalization_survey_summary
+    timeout: 60000
+- assertVisible:
+    id: unit_personalization_summary_card
+- assertVisible:
+    id: unit_personalization_footer_primary_button
+- assertVisible:
+    id: unit_personalization_footer_secondary_button

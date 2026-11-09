@@ -1,0 +1,13 @@
+# Survey summary start over dialog: "Start over" erases the answers and reopens the survey chat at the first question.
+# Entry: start over dialog open (summary-start-over-dialog). Changes account state: survey answers are erased.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: unit_personalization_start_over_dialog
+- tapOn: "Start over"
+- extendedWaitUntil:
+    visible:
+      id: unit_personalization_survey_progress
+    timeout: 60000

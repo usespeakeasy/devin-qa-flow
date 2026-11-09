@@ -1,0 +1,14 @@
+# Survey summary: "Let's go!" generates the lessons and shows "Success! Your lessons are ready!".
+# Entry: survey summary on screen. Precondition as summary-visible. Generation can take over 2 min on dev.
+# Changes account state: lessons are created. Reset with "Delete my answers and lessons" on the generated screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: unit_personalization_survey_summary
+- tapOn:
+    id: unit_personalization_footer_primary_button
+- extendedWaitUntil:
+    visible: "Success! Your lessons are ready!"
+    timeout: 180000

@@ -1,0 +1,14 @@
+# Survey summary: tapping the summary card ("Tap to start over" row included) opens the start over dialog and leaves it open (close it with summary-close-dialog).
+# Entry: survey summary on screen. Precondition as summary-visible.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: unit_personalization_survey_summary
+- tapOn:
+    id: unit_personalization_summary_card
+- extendedWaitUntil:
+    visible:
+      id: unit_personalization_start_over_dialog
+    timeout: 10000

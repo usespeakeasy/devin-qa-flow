@@ -1,0 +1,11 @@
+# Survey summary: system back closes the open summary dialog and returns to the summary.
+# Entry: a survey summary dialog (start over or delete answers) on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- pressKey: back
+- extendedWaitUntil:
+    visible:
+      id: unit_personalization_summary_card
+    timeout: 10000
