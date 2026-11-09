@@ -1,0 +1,29 @@
+# Process death on a non-first tab: select TAB_ID, Home key, the system kills the app in the background
+# (killApp), reopen the task: TAB_ID is still selected with ARRIVAL_ID. Entry: any Main tab. Exit: TAB_ID. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "process-death-tab"}
+---
+- tapOn:
+    id: ${TAB_ID}
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: ${TAB_ID}
+      selected: true
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000
+- assertNotVisible:
+    id: onboarding_storybook_sign_in_button
+- takeScreenshot: ${SHOT}

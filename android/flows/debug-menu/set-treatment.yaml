@@ -1,10 +1,9 @@
 # Debug Menu > Feature flag override: pick one treatment of a multi-treatment flag (e.g. auth_session_mode
-# speak / firebase) or SERVER, from the treatment picker dialog. On/off flags use set-feature-flag.yaml.
+# speak / firebase) from the treatment picker dialog. SERVER: reset-treatment.yaml. On/off flags: set-feature-flag.yaml.
 # Entry: any state (the flow cold-starts the app first). Exit: on the override list; force-stop and
 # relaunch so the next cold start reads it. `qa_android.py fresh` (pm clear) drops overrides.
 # maestro test -e FLAG=auth_session_mode -e VALUE=firebase set-treatment.yaml
 # Non-dev package (e.g. stagingDebug): -e APP_ID=com.selabs.speak -e DEBUG_MENU_LINK=speak://debug-menu
-# Selectors: the flag row and the dialog options have no resource-id yet (text fallback).
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
@@ -13,31 +12,32 @@ env:
 - launchApp:
     stopApp: true
 - openLink: ${DEBUG_MENU_LINK}
-- tapOn: Feature flag override
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_feature_flag_override
+    timeout: 30000
 - tapOn:
-    text: Search
+    id: debug_menu_feature_flag_override
+- tapOn:
+    id: debug_feature_flag_search
 - inputText: ${FLAG}
 - hideKeyboard
-# The search field also holds the flag name, hence `below: Search`. The row's button shows SERVER or the overridden treatment (lower case), "Apply" sits in the same column above the flag lists (text match ignores case).
+# The row's value chip opens the treatment picker.
 - tapOn:
-    text: "^(SERVER|[a-z][a-z0-9_-]*)$"
-    rightOf:
-      text: ${FLAG}
-      below: Search
-    below: "(Recent|Experiments)"
+    id: debug_feature_flag_value_${FLAG}
     index: 0
 - extendedWaitUntil:
-    visible: "Custom.*"
+    visible:
+      id: debug_treatment_picker_dialog
     timeout: 10000
 - tapOn:
-    text: "^${VALUE}$"
-    below:
-      text: ${FLAG}
+    id: debug_treatment_picker_option_${VALUE}
 - extendedWaitUntil:
-    notVisible: "Custom.*"
+    notVisible:
+      id: debug_treatment_picker_dialog
     timeout: 10000
+# The source label under the key (`LOCAL · <treatment>`) shows the override that took; the chip's own text sits on a child.
 - assertVisible:
-    text: "^${VALUE}$"
-    rightOf:
-      text: ${FLAG}
-      below: Search
+    id: debug_feature_flag_source_${FLAG}
+    text: "LOCAL · ${VALUE}"
+    index: 0

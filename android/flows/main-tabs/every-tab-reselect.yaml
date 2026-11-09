@@ -1,0 +1,107 @@
+# Tap every bottom tab by ID, then tap it again (reselect): the tab stays selected and its content stays.
+# Entry: Home tab (home_root_ready). Exit: Home tab. Tabs the account doesn't have are skipped.
+# Arrival per tab: Home learning_path_ready, Free Talk ai_tutor_history_button (intro dialog dismissed), Practice practice_tab_screen,
+# Challenge challenge_tab_screen (Navigation 3) or challenge_tab_root (kill switch on), Profile stat_streak_title.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "every-tab-reselect"}
+---
+- extendedWaitUntil:
+    visible:
+      id: main_tab_home
+      selected: true
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: main_tab_free_talk
+    commands:
+      - tapOn:
+          id: main_tab_free_talk
+      - extendedWaitUntil:
+          visible:
+            id: ai_tutor_intro_dialog
+          timeout: 4000
+          optional: true
+      - runFlow:
+          when:
+            visible:
+              id: ai_tutor_intro_dialog
+          commands:
+            - tapOn:
+                id: ai_tutor_intro_dialog_get_started_button
+      - extendedWaitUntil:
+          visible:
+            id: ai_tutor_history_button
+          timeout: 30000
+      - tapOn:
+          id: main_tab_free_talk
+      - assertVisible:
+          id: main_tab_free_talk
+          selected: true
+      - assertVisible:
+          id: ai_tutor_history_button
+- runFlow:
+    when:
+      visible:
+        id: main_tab_practice
+    commands:
+      - tapOn:
+          id: main_tab_practice
+      - extendedWaitUntil:
+          visible:
+            id: practice_tab_screen
+          timeout: 30000
+      - tapOn:
+          id: main_tab_practice
+      - assertVisible:
+          id: main_tab_practice
+          selected: true
+      - assertVisible:
+          id: practice_tab_screen
+- runFlow:
+    when:
+      visible:
+        id: main_tab_challenges
+    commands:
+      - tapOn:
+          id: main_tab_challenges
+      - extendedWaitUntil:
+          visible:
+            id: "challenge_tab_screen|challenge_tab_root"
+          timeout: 30000
+      - tapOn:
+          id: main_tab_challenges
+      - assertVisible:
+          id: main_tab_challenges
+          selected: true
+      - assertVisible:
+          id: "challenge_tab_screen|challenge_tab_root"
+- tapOn:
+    id: main_tab_profile
+- extendedWaitUntil:
+    visible:
+      id: stat_streak_title
+    timeout: 30000
+- tapOn:
+    id: main_tab_profile
+- assertVisible:
+    id: main_tab_profile
+    selected: true
+- assertVisible:
+    id: stat_streak_title
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- tapOn:
+    id: main_tab_home
+- assertVisible:
+    id: main_tab_home
+    selected: true
+- assertVisible:
+    id: learning_path_ready

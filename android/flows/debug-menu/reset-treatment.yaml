@@ -1,6 +1,5 @@
 # Debug Menu > Feature flag override: put a flag with a picker (experiments) back to SERVER.
-# Entry: any state (the flow cold-starts the app first). Params: FLAG, CURRENT (the treatment its chip shows now). Force-stop and relaunch afterwards.
-# Selectors: the treatment picker has no resource-id (text fallback).
+# Entry: any state (the flow cold-starts the app first). Params: FLAG, CURRENT (the treatment overridden now, checked on the source label before the tap). Force-stop and relaunch afterwards.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
@@ -8,24 +7,32 @@ env:
 - launchApp:
     stopApp: true
 - openLink: speak-dev://debug-menu
-- tapOn: Feature flag override
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_feature_flag_override
+    timeout: 30000
 - tapOn:
-    text: Search
+    id: debug_menu_feature_flag_override
+- tapOn:
+    id: debug_feature_flag_search
 - inputText: ${FLAG}
 - hideKeyboard
-- tapOn:
-    text: ${CURRENT}
-    rightOf:
-      text: ${FLAG}
+- assertVisible:
+    id: debug_feature_flag_source_${FLAG}
+    text: "LOCAL · ${CURRENT}"
     index: 0
-- assertVisible: "Custom…"
 - tapOn:
-    text: SERVER
-    above: "Custom…"
+    id: debug_feature_flag_value_${FLAG}
     index: 0
 - extendedWaitUntil:
     visible:
+      id: debug_treatment_picker_dialog
+    timeout: 10000
+- tapOn:
+    id: debug_treatment_picker_server
+- extendedWaitUntil:
+    visible:
+      id: debug_feature_flag_source_${FLAG}
       text: "SERVER · .*"
-      below:
-        text: ${FLAG}
+      index: 0
     timeout: 5000

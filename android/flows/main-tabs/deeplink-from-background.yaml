@@ -1,0 +1,11 @@
+# Deep link sent while the app is in the background: Main comes back on TAB_ID.
+# Entry: any Main tab. Params: DEEPLINK_CMD is run by the case script between the two halves; here only the Home press.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- pressKey: Home
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: main_tab_home

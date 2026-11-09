@@ -10,6 +10,10 @@ env:
 - launchApp:
     stopApp: true
 - openLink: ${DEBUG_MENU_LINK}
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_feature_flag_override
+    timeout: 30000
 - tapOn:
     id: debug_menu_feature_flag_override
 - tapOn:

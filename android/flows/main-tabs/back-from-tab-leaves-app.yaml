@@ -1,0 +1,21 @@
+# System Back on a non-Home tab leaves the app (develop: Main does not go back to Home first): the launcher shows.
+# Entry: any Main tab. Params: TAB_ID, ARRIVAL_ID (id regex on that tab). Exit: launcher. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "back-from-tab-leaves-app"}
+---
+- tapOn:
+    id: ${TAB_ID}
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000
+- back
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: ${TAB_ID}
+- assertNotVisible:
+    id: main_tab_home
+- takeScreenshot: ${SHOT}

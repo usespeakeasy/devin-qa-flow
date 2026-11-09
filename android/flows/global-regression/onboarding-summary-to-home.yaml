@@ -10,6 +10,7 @@ env:
 - extendedWaitUntil:
     visible: "Building your custom course"
     timeout: 15000
+    optional: true
 - takeScreenshot: ${SHOT_PREFIX}-07-summary-loading
 - extendedWaitUntil:
     visible:

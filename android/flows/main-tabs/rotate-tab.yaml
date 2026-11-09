@@ -1,0 +1,34 @@
+# Rotate to landscape and back on a Main tab: the same tab stays selected (needs a large screen, phones are portrait-locked).
+# Entry: any Main tab. Params: TAB_ID, ARRIVAL_ID (id regex on that tab). Exit: that tab, portrait. Saves SHOT.png in landscape.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "rotate-tab"}
+---
+- tapOn:
+    id: ${TAB_ID}
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ${TAB_ID}
+      selected: true
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 15000
+- takeScreenshot: ${SHOT}
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ${TAB_ID}
+      selected: true
+    timeout: 15000

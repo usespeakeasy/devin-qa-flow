@@ -1,0 +1,17 @@
+# Main shows with TAB_ID selected and ARRIVAL_ID (id regex) on screen, e.g. after a deep link or a relaunch.
+# Entry: Main opening. Exit: same. Params: TAB_ID (main_tab_*), ARRIVAL_ID. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "tab-selected"}
+---
+- extendedWaitUntil:
+    visible:
+      id: ${TAB_ID}
+      selected: true
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000
+- takeScreenshot: ${SHOT}
