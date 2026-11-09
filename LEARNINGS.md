@@ -59,10 +59,21 @@ describes.
   "XCTPerformOnMainRunLoop work timed out after 60.0s"; the Maestro step then hangs. Rule: end the
   flow at the tap, check the destination from the app log (`AVAudioSessionCategoryPlayAndRecord`
   marks the lesson player) or a `gtimeout`-bounded hierarchy, and terminate the app to quit.
+  Hit again in [QA of speak-ios#10174](https://github.com/usespeakeasy/speak-ios/pull/10174)
+  (2026-11-09): lesson close and review dismiss could not be reached on either build, so plan
+  return-from-lesson cases as unverified up front.
   (3) Killing the shell that runs `simctl io recordVideo` (SIGKILL) leaves CoreSimulator in "Host
   recording is already in progress" until the simulator is shut down and booted again; stop
   recordings only with `kill -INT`. (4) The first lesson shows the system microphone alert, which
   also blocks the tree: run `simctl privacy <udid> grant microphone <bundle id>` after install.
+- Saved Items no-diff QA (iOS 27.0, [QA of speak-ios#10174](https://github.com/usespeakeasy/speak-ios/pull/10174), 2026-11-09)
+  took 216 min, about 2 h of it in base-build reruns. Causes: (1) a flow tapped close in a playing
+  lesson and hung (the JRNY-4712 rule above wasn't followed); (2) `pkill` of a hung Maestro left
+  the iOS driver broken, so every later case failed at home-ready; (3) each failure restarted the
+  whole case list, rerunning cases that had already passed, about eight times. Rule: after any
+  Maestro timeout or kill, terminate `com.apple.test.maestro-driver-iosUITests.xctrunner`, kill
+  leftover maestro/java processes, and run one home-ready flow before going on. Rerun only the
+  failed case, never the full pass.
 
 - The permission-off case (A4) did not get the "Allow notifications" alert, and about 15 min
   went to finding out why. Cause: Maestro `launchApp` `permissions: {notifications: deny}` has
