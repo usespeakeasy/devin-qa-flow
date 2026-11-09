@@ -6,10 +6,20 @@ appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
   DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
+  AUTOMOTIVE: ${AUTOMOTIVE || "false"}
 ---
-- launchApp:
-    stopApp: true
-- openLink: ${DEBUG_MENU_LINK}
+- runFlow:
+    when:
+      true: ${AUTOMOTIVE != "true"}
+    commands:
+      - launchApp:
+          stopApp: true
+      - openLink: ${DEBUG_MENU_LINK}
+# Automotive build (-e AUTOMOTIVE=true): no deep links, the Debug Menu opens from Settings.
+- runFlow:
+    when:
+      true: ${AUTOMOTIVE == "true"}
+    file: ../../common/open-debug-menu-automotive.yaml
 - extendedWaitUntil:
     visible:
       id: debug_menu_feature_flag_override

@@ -1,0 +1,15 @@
+# Automotive build: Home > Profile > Settings > Debug options. The automotive build has no
+# speak-dev:// deep links, so the Debug Menu opens from Settings.
+# Entry: any state (cold-starts through launch-home-automotive). Exit: Debug Menu (debug_menu_feature_flag_override).
+# Selectors: the Settings "Debug options" row has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: launch-home-automotive.yaml
+- runFlow: open-settings.yaml
+- tapOn: "^Debug options$"
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_feature_flag_override
+    timeout: 30000

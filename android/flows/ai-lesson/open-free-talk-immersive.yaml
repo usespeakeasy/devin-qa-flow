@@ -9,8 +9,17 @@ appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
   TOPIC: "At a Bad Bunny Concert"
+  AUTOMOTIVE: ${AUTOMOTIVE || "false"}
 ---
-- runFlow: ../../common/launch-home.yaml
+- runFlow:
+    when:
+      true: ${AUTOMOTIVE != "true"}
+    file: ../../common/launch-home.yaml
+# Automotive build (-e AUTOMOTIVE=true): cold start through the parked automotive home.
+- runFlow:
+    when:
+      true: ${AUTOMOTIVE == "true"}
+    file: ../../common/launch-home-automotive.yaml
 - tapOn: "Free Talk"
 - runFlow:
     when:
@@ -28,10 +37,16 @@ env:
 - tapOn: ${TOPIC}
 - extendedWaitUntil:
     visible:
-      id: ai_lesson_pre_lesson_start
+      id: mode_toggle_immersive
     timeout: 20000
 - tapOn:
     id: mode_toggle_immersive
+# On a landscape head unit the start button sits below the fold.
+- scrollUntilVisible:
+    element:
+      id: ai_lesson_pre_lesson_start
+    direction: DOWN
+    timeout: 10000
 - tapOn:
     id: ai_lesson_pre_lesson_start
 # An unfinished earlier run of the same scenario asks to continue; start over so every case starts the same.
