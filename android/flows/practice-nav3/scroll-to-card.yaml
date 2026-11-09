@@ -1,0 +1,24 @@
+# Practice main: scroll until CARD is centered and visible, without opening it.
+# Entry: Practice main. Exit: Practice main with CARD on screen.
+# maestro test -e CARD=practice_tab_card_mistakes scroll-to-card.yaml
+# Cards: practice_tab_card_{saved_items,conjugation_coach,mistakes,interests,smart_review,jump_in_lesson_.*}
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: ${CARD}
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: ${CARD}
+- assertVisible:
+    id: main_tab_practice
