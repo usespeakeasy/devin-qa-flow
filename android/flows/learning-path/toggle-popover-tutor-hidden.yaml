@@ -1,0 +1,40 @@
+# Home learning path, LOOP_ID's popover open and the tutor button hidden under it (after
+# popover-open-tutor-hidden.yaml): tap the open balloon, it collapses and the tutor entry comes back; tap it
+# again, it opens; collapse it and tap OTHER_LOOP_ID (the next loop, under the open popover at density 500),
+# its popover opens instead (speak-android#8983, JRNY-4949).
+# Before the fix the first tap does nothing, so the flow fails at the first tutor entry wait.
+# Entry: LOOP_ID's popover open, `learning_path_tutor_entry` absent. Exit: OTHER_LOOP_ID's popover open.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: learning_path_cant_speak_now_${LOOP_ID}
+- tapOn:
+    id: learning_path_loop_${LOOP_ID}
+- extendedWaitUntil:
+    visible:
+      id: learning_path_tutor_entry
+    timeout: 10000
+- assertNotVisible:
+    id: learning_path_popover_lesson_menu
+- tapOn:
+    id: learning_path_loop_${LOOP_ID}
+- extendedWaitUntil:
+    visible:
+      id: learning_path_cant_speak_now_${LOOP_ID}
+    timeout: 10000
+- tapOn:
+    id: learning_path_loop_${LOOP_ID}
+- extendedWaitUntil:
+    visible:
+      id: learning_path_tutor_entry
+    timeout: 10000
+- tapOn:
+    id: learning_path_loop_${OTHER_LOOP_ID}
+- extendedWaitUntil:
+    visible:
+      id: learning_path_popover_preview_button
+    timeout: 10000
+- assertNotVisible:
+    id: learning_path_cant_speak_now_${LOOP_ID}

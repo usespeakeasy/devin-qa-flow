@@ -1,0 +1,16 @@
+# Home learning path on a large display (`adb shell wm density 500`): the current loop's popover opens by
+# itself over the tutor button, so the tutor entry leaves the layout (speak-android#8983, JRNY-4949).
+# Entry: signed in, any screen (cold starts). Exit: Home with LOOP_ID's popover open.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/launch-home.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_popover_lesson_menu
+    timeout: 30000
+- assertVisible:
+    id: learning_path_loop_${LOOP_ID}
+- assertNotVisible:
+    id: learning_path_tutor_entry
