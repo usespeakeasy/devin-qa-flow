@@ -1,0 +1,15 @@
+# Intro screen: swipe up twice, as a user trying to reach Continue. The screen stays open.
+# Before speak-android#8854 the intro does not scroll and Continue is clipped out of the card
+# at large font sizes; the case script compares the title bounds and the Continue pixels
+# before and after (the clipped node still reports bounds, so assertVisible can't tell).
+# Entry: phone_speak_intro_screen. Exit: phone_speak_intro_screen, scrolled to the end if it scrolls.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: phone_speak_intro_screen
+- scroll
+- scroll
+- assertVisible:
+    id: phone_speak_intro_screen

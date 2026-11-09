@@ -1,0 +1,12 @@
+# Intro screen: Close (X) returns to Practice main.
+# Entry: phone_speak_intro_screen. Exit: Practice main (practice_tab_list).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: phone_speak_intro_close
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 30000

@@ -1,0 +1,20 @@
+# Practice main > AI Tutor Call hero > "Get ready for your first call" intro (PhoneSpeakIntro route).
+# Entry: Practice main (practice-nav3/open-practice.yaml), Premium dev account that has not
+# finished a call yet (the server sends the intro until then). Exit: phone_speak_intro_screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: phone_speak_hero_card_call
+    direction: UP
+    timeout: 10000
+- tapOn:
+    id: phone_speak_hero_card_call
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_intro_screen
+    timeout: 30000
+- assertVisible:
+    id: phone_speak_intro_close
