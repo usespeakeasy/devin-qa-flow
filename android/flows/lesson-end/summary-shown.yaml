@@ -2,18 +2,24 @@
 # step's primary button (Continue, or Keep Learning when the summary has the button stack).
 # Also the check after a rotation or a process death on the summary.
 # Entry: the summary step is showing (`android/common/open-summary.yaml`, QA-only summary patch, 25 XP).
+# CHECK_XP=false skips the XP counter for the fake `openLessonEnd` DebugBridge summary, which has no XP.
 # Selectors: the XP counter and the streak pill have no resource-id (text fallback `XP`, `.*Day Streak`).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
+  CHECK_XP: ${CHECK_XP || "true"}
 ---
 - extendedWaitUntil:
     visible:
       id: lesson_end_reskin_root
     timeout: 30000
-- extendedWaitUntil:
-    visible: "XP"
-    timeout: 15000
+- runFlow:
+    when:
+      true: ${CHECK_XP == "true"}
+    commands:
+      - extendedWaitUntil:
+          visible: "XP"
+          timeout: 15000
 - extendedWaitUntil:
     visible: ".*Day Streak"
     timeout: 15000

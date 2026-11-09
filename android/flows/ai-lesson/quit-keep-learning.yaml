@@ -1,0 +1,25 @@
+# AI lesson: X opens the quit sheet once; Keep learning closes it and the same lesson stays (no check-in, no quit).
+# Entry: AI lesson (open-free-talk-scenario.yaml). Exit: AI lesson (ai_lesson_screen), quit sheet closed.
+# Selectors: the X has no resource-id (point fallback 7%,8%, as in quit-x.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    point: "7%,8%"
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_quit_sheet
+    timeout: 10000
+- assertVisible:
+    id: ai_lesson_quit_confirm
+- tapOn:
+    id: ai_lesson_quit_keep_learning
+- extendedWaitUntil:
+    notVisible:
+      id: ai_lesson_quit_sheet
+    timeout: 10000
+- assertVisible:
+    id: ai_lesson_screen
+- assertNotVisible:
+    id: custom_units_difficulty_check_in_just_right

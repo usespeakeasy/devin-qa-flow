@@ -1,0 +1,24 @@
+# Decline a Phone Speak ring on the full-screen incoming call screen: the screen closes, no call starts and the ring
+# notification is gone. Entry: the incoming call screen (`phoneSpeakRing` DebugBridge broadcast with Speak in front).
+# Exit: off the incoming call screen (UNDER_ID, Home by default).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  UNDER_ID: ${UNDER_ID || "home_root_ready"}
+---
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_incoming_call_decline
+    timeout: 20000
+- tapOn:
+    id: phone_speak_incoming_call_decline
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_incoming_call_decline
+    timeout: 10000
+- assertNotVisible:
+    id: phone_speak_call_screen
+- extendedWaitUntil:
+    visible:
+      id: ${UNDER_ID}
+    timeout: 20000

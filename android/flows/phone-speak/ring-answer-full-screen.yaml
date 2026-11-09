@@ -1,0 +1,20 @@
+# Answer a Phone Speak ring on the full-screen incoming call screen: the screen gives way to the call screen once.
+# Entry: the incoming call screen (`phoneSpeakRing` DebugBridge broadcast with Speak in front). Exit: `phone_speak_call_screen`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_incoming_call_answer
+    timeout: 20000
+- assertVisible:
+    id: phone_speak_incoming_call_decline
+- tapOn:
+    id: phone_speak_incoming_call_answer
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_screen
+    timeout: 30000
+- assertNotVisible:
+    id: phone_speak_incoming_call_screen

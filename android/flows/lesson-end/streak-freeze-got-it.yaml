@@ -15,7 +15,7 @@ env:
     timeout: 30000
 - extendedWaitUntil:
     visible:
-      id: "lesson_end_.*"
+      id: "lesson_end_.*|ask_for_review_dialog"
     timeout: 30000
 - assertNotVisible:
     id: home_root_ready
