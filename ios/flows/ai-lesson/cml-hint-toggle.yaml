@@ -1,0 +1,18 @@
+# Chat-mode roleplay: tap "What should I say?" to expand the hint, tap its header to collapse, twice.
+# Entry: chat-mode lesson (open-ai-roleplay-chat.yaml), hint row shown. The lightbulb glyph names
+# (expanded/collapsed) are the state check; the hint has no accessibility identifier.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- repeat:
+    times: 2
+    commands:
+      - tapOn: "What should I say\\?"
+      - extendedWaitUntil:
+          visible: "cml-lightbulb-hint-expanded-icon"
+          timeout: 5000
+      - tapOn: "What should I say\\?"
+      - extendedWaitUntil:
+          visible: "cml-lightbulb-hint-collapsed-icon"
+          timeout: 5000

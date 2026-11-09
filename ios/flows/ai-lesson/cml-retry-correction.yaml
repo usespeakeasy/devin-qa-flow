@@ -1,0 +1,30 @@
+# Chat-mode roleplay: force a "didn't catch that" correction with the red debug answer, tap Retry.
+# Entry: tutor turn done, hint shown, Show Debug Controls on. Exit: a new recording is live; the caller
+# injects speech and runs cml-send-voice-reply.yaml.
+# SwiftUI list (ai_lesson_uikit_renderer=off): Retry goes straight to a live recording.
+# UIKit cells (sc_qna_chat): Retry replays the tutor turn and leaves the mic idle ("Tap to respond"),
+# so the mic is tapped once the replay ends.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: debug.ail.incorrect-response
+- extendedWaitUntil:
+    visible: "Retry"
+    timeout: 40000
+- tapOn: ".*Retry"
+- extendedWaitUntil:
+    visible: "sdt-ui-arrow-up|sdt-ui-microphone-fill"
+    timeout: 20000
+- runFlow:
+    when:
+      notVisible: "sdt-ui-arrow-up"
+    commands:
+      - extendedWaitUntil:
+          visible: "sdt-ui-microphone-fill"
+          timeout: 15000
+      - tapOn: "sdt-ui-microphone-fill"
+- extendedWaitUntil:
+    visible: "sdt-ui-arrow-up"
+    timeout: 15000

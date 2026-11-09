@@ -1,0 +1,14 @@
+# Structured Conversation: scroll the history down until an interactive block control
+# (option, tile, submit, skip or continue) is on screen. The SC list can sit at the top
+# after "Start over", leaving the active block below the fold and out of the AX tree.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- scrollUntilVisible:
+    element:
+      id: "structured-conversation\\..*"
+    direction: DOWN
+    timeout: 20000
+    speed: 60
+    visibilityPercentage: 50

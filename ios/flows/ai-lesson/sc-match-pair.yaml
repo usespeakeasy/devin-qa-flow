@@ -1,0 +1,15 @@
+# Structured Conversation matching pairs: tap the left card A, then the right card B (points).
+# The cards carry only debug.ai.matchingPairs.* labels in a corner that does not take taps, so the caller
+# reads each card's frame from those labels and passes its center.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    point: ${A}
+    retryTapIfNoChange: false
+    waitToSettleTimeoutMs: 1500
+- tapOn:
+    point: ${B}
+    retryTapIfNoChange: false
+    waitToSettleTimeoutMs: 1500

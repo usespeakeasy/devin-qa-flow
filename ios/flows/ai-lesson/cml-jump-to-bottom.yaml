@@ -1,0 +1,12 @@
+# Chat-mode roleplay: scroll the history up, then tap the jump-to-bottom button.
+# The button stays in the tree at opacity 0 when hidden, so the caller checks bubble positions and pixels.
+# Swipe points: the history has no identifier to swipe on.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- swipe:
+    start: 200,300
+    end: 200,700
+    duration: 600
+- tapOn: "ail-jump-to-bottom-arrow"

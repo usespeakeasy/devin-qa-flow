@@ -1,0 +1,17 @@
+# Chat-mode roleplay: toggle the translation on tutor bubble INDEX (0 = greeting) on and off.
+# The translate glyph name flips to translate-icon-off while the translation shows; no identifier.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  INDEX: "1"
+---
+- tapOn:
+    text: "translate-icon"
+    index: ${INDEX}
+- extendedWaitUntil:
+    visible: "translate-icon-off"
+    timeout: 5000
+- tapOn: "translate-icon-off"
+- extendedWaitUntil:
+    notVisible: "translate-icon-off"
+    timeout: 5000

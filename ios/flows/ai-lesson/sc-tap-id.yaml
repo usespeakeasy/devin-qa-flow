@@ -1,0 +1,10 @@
+# Structured Conversation: tap one block control by accessibility identifier (ID), e.g. an option,
+# a tile, structured-conversation.action.submit.<block> or structured-conversation.action.skip.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: ${ID}
+    retryTapIfNoChange: false
+    waitToSettleTimeoutMs: 1500

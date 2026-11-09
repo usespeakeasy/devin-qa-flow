@@ -1,0 +1,17 @@
+# Chat-mode roleplay: expand a feedback card (BADGE text), tap thumbs up, then thumbs down.
+# The thumbs are Rive views outside the accessibility tree, so UP and DOWN are points the caller reads
+# from the hierarchy (the two 48 pt frames under the card). The caller checks the
+# 'AI Lesson Correction Rated' rating in the app log.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  BADGE: Good response
+---
+- tapOn: ${BADGE}
+- extendedWaitUntil:
+    visible: ${BADGE}
+    timeout: 5000
+- tapOn:
+    point: ${UP}
+- tapOn:
+    point: ${DOWN}

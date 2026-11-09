@@ -1,0 +1,11 @@
+# Chat-mode roleplay: finish the live recording with the send arrow (glyph name, no identifier).
+# Entry: recording live ("I’m listening..."), speech injected with speak-ios Scripts/audio-pipe.py.
+# Exit: mic idle while the tutor answers. The caller checks the learner bubble text.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn: "sdt-ui-arrow-up"
+- extendedWaitUntil:
+    notVisible: "sdt-ui-arrow-up"
+    timeout: 10000
