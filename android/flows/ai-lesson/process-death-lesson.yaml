@@ -11,7 +11,18 @@ env:
     stopApp: false
 - extendedWaitUntil:
     visible:
-      id: ai_lesson_screen
+      id: ai_lesson_resume_sheet|ai_lesson_screen
     timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_resume_continue
+    commands:
+      - tapOn:
+          id: ai_lesson_resume_continue
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_screen
+    timeout: 30000
 - assertNotVisible:
     id: home_root_ready
