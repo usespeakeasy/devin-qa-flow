@@ -14,10 +14,10 @@ env:
       id: onboarding_language_option_en_us
     timeout: 30000
 - assertVisible:
-    id: design_bottom_sheet
+    id: onboarding_language_screen
 - runFlow: ../onboarding/open-native-language.yaml
 - assertVisible:
-    id: design_bottom_sheet
+    id: onboarding_language_screen
 - back
 - extendedWaitUntil:
     visible:
