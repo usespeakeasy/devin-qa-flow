@@ -1,0 +1,49 @@
+# The picked Top window stays after Free Talk's Topics tab and back (LABEL), and after the Home bottom tab and back
+# (LABEL_HOME, default LABEL) (speak-android#9132).
+# Entry: the Community page. Exit: the Community page.
+# Selectors: the Topics and Community tabs have no resource-id (text fallback).
+# maestro test -e "LABEL=Top this year" top-filter-tab-switch.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LABEL: ${LABEL || "Top"}
+  LABEL_HOME: ${LABEL_HOME || LABEL}
+---
+- tapOn: "^Topics$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_overview_root
+    timeout: 20000
+- tapOn: "^Community$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_tab_top
+    timeout: 20000
+- assertVisible:
+    id: ai_tutor_community_tab_top
+    text: ${LABEL}
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- tapOn:
+    id: main_tab_free_talk
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_tab_bar
+    timeout: 20000
+- runFlow:
+    when:
+      notVisible:
+        id: ai_tutor_community_tab_top
+    commands:
+      - tapOn: "^Community$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_tab_top
+    timeout: 20000
+- assertVisible:
+    id: ai_tutor_community_tab_top
+    text: ${LABEL_HOME}

@@ -1,0 +1,52 @@
+# Top filter sheet: pick OPTION (Day, Week, Month, Year); the sheet closes, the Top chip reads LABEL
+# ("Top today", "Top this week", "Top this month", "Top this year") and the Community list stays (speak-android#9132).
+# OPEN_SHEET=true opens the sheet from the Community page first (open-top-filter.yaml OPEN=none).
+# TAPS=double double-taps the option (rapid taps must deliver one choice; the case script counts the analytics events).
+# Entry: the sheet open, or the Community page with OPEN_SHEET=true. Exit: the Community page.
+# Selectors: ai_tutor_community_top_filter_option_<window>.
+# maestro test -e OPTION=Week -e "LABEL=Top this week" -e OPEN_SHEET=true select-top-filter.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  OPTION: ${OPTION || "Day"}
+  LABEL: ${LABEL || "Top today"}
+  OPEN_SHEET: ${OPEN_SHEET || "false"}
+  TAPS: ${TAPS || "single"}
+---
+- runFlow:
+    when:
+      true: ${OPEN_SHEET == "true"}
+    file: open-top-filter.yaml
+    env:
+      OPEN: none
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_top_filter_option_${OPTION.toLowerCase()}
+    timeout: 15000
+- runFlow:
+    when:
+      true: ${TAPS == "double"}
+    commands:
+      - doubleTapOn:
+          id: ai_tutor_community_top_filter_option_${OPTION.toLowerCase()}
+- runFlow:
+    when:
+      true: ${TAPS != "double"}
+    commands:
+      - tapOn:
+          id: ai_tutor_community_top_filter_option_${OPTION.toLowerCase()}
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_community_top_filter_sheet
+    timeout: 10000
+- assertNotVisible:
+    id: ai_tutor_community_details_sheet
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_tab_top
+      text: ${LABEL}
+    timeout: 10000
+- assertVisible:
+    id: ai_tutor_community_recycler_view
+- assertVisible:
+    id: ai_tutor_tab_bar

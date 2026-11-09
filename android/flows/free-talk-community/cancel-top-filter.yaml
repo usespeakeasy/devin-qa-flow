@@ -1,0 +1,54 @@
+# Top filter sheet: cancel with HOW=back (system Back), scrim (tap above the sheet) or swipe (drag the sheet down);
+# the sheet closes, nothing under the scrim opens and the Top chip still reads LABEL (speak-android#9132).
+# OPEN_SHEET=true opens the sheet from the Community page first.
+# Entry: the sheet open, or the Community page with OPEN_SHEET=true. Exit: the Community page.
+# Selectors: ai_tutor_community_top_filter_sheet; the scrim is a point at 50%,35% (over the list, below the chips);
+# the swipe drags from just under the sheet's top edge (71%) to the bottom.
+# maestro test -e HOW=swipe -e "LABEL=Top this week" -e OPEN_SHEET=true cancel-top-filter.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  HOW: ${HOW || "back"}
+  LABEL: ${LABEL || "Top"}
+  OPEN_SHEET: ${OPEN_SHEET || "false"}
+---
+- runFlow:
+    when:
+      true: ${OPEN_SHEET == "true"}
+    file: open-top-filter.yaml
+    env:
+      OPEN: none
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_top_filter_sheet
+    timeout: 15000
+- runFlow:
+    when:
+      true: ${HOW == "back"}
+    commands:
+      - pressKey: Back
+- runFlow:
+    when:
+      true: ${HOW == "scrim"}
+    commands:
+      - tapOn:
+          point: "50%,35%"
+- runFlow:
+    when:
+      true: ${HOW == "swipe"}
+    commands:
+      - swipe:
+          start: "50%,71%"
+          end: "50%,99%"
+          duration: 400
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_community_top_filter_sheet
+    timeout: 10000
+- assertNotVisible:
+    id: ai_tutor_community_details_sheet
+- assertVisible:
+    id: ai_tutor_community_tab_top
+    text: ${LABEL}
+- assertVisible:
+    id: ai_tutor_community_recycler_view

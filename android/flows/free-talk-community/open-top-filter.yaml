@@ -1,0 +1,49 @@
+# Free Talk > Community > Top chip opens the Top filter sheet with Day, Week, Month and Year (speak-android#9132).
+# OPEN=tab cold-starts, opens the Free Talk tab and its Community tab; OPEN=none starts on the Community page.
+# TAPS=double double-taps the Top chip; one sheet must open (the case script closes it with one Back).
+# Entry: signed in (OPEN=tab) or the Community page (OPEN=none). Exit: the sheet open.
+# Selectors: the Community tab has no resource-id (text fallback); the sheet is ai_tutor_community_top_filter_sheet.
+# maestro test -e OPEN=tab open-top-filter.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  OPEN: ${OPEN || "none"}
+  TAPS: ${TAPS || "single"}
+---
+- runFlow:
+    when:
+      true: ${OPEN == "tab"}
+    commands:
+      - runFlow:
+          file: assert-free-talk-header.yaml
+          env:
+            PAGE: any
+            OPEN: tab
+            INTRO: dismiss
+      - tapOn: "^Community$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_tab_top
+    timeout: 30000
+- runFlow:
+    when:
+      true: ${TAPS == "double"}
+    commands:
+      - doubleTapOn:
+          id: ai_tutor_community_tab_top
+- runFlow:
+    when:
+      true: ${TAPS != "double"}
+    commands:
+      - tapOn:
+          id: ai_tutor_community_tab_top
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_top_filter_sheet
+    timeout: 15000
+- assertVisible:
+    id: ai_tutor_community_top_filter_option_week
+- assertVisible:
+    id: ai_tutor_community_top_filter_option_month
+- assertVisible:
+    id: ai_tutor_community_top_filter_option_year

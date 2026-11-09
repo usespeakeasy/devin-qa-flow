@@ -1,0 +1,26 @@
+# After a Top pick, the first Community card opens its details sheet and Back returns to the Community page
+# with the Top chip still reading LABEL (speak-android#9132).
+# Entry: the Community page. Exit: the Community page.
+# maestro test -e "LABEL=Top this month" top-filter-details-back.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LABEL: ${LABEL || "Top"}
+---
+- tapOn:
+    id: "ai_tutor_community_item_.*"
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_details_start_chatting_button
+    timeout: 15000
+- pressKey: Back
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_community_details_start_chatting_button
+    timeout: 10000
+- assertVisible:
+    id: ai_tutor_community_tab_top
+    text: ${LABEL}
+- assertVisible:
+    id: ai_tutor_community_recycler_view

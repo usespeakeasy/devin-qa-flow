@@ -1,0 +1,40 @@
+# Top filter sheet open, then HOW=background (Home, relaunch) or HOW=kill (Home, process killed, relaunch from saved state).
+# EXPECT=sheet: the sheet is back over the Community page. EXPECT=topics: Free Talk comes back on its Topics page with
+# no sheet (develop after process death: AiTutorIntroController rebuilds its tabs). EXPECT=any waits for either one;
+# the case script then reads which with `qa_android.py has id:ai_tutor_community_top_filter_sheet` (speak-android#9132).
+# Entry: the sheet open. Exit: the sheet open, or the Topics page.
+# maestro test -e HOW=kill -e EXPECT=any restore-top-filter-sheet.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  HOW: ${HOW || "background"}
+  EXPECT: ${EXPECT || "sheet"}
+---
+- assertVisible:
+    id: ai_tutor_community_top_filter_sheet
+- pressKey: Home
+- runFlow:
+    when:
+      true: ${HOW == "kill"}
+    commands:
+      - killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: "ai_tutor_community_top_filter_sheet|ai_tutor_overview_root"
+    timeout: 60000
+- runFlow:
+    when:
+      true: ${EXPECT == "sheet"}
+    commands:
+      - assertVisible:
+          id: ai_tutor_community_top_filter_option_year
+- runFlow:
+    when:
+      true: ${EXPECT == "topics"}
+    commands:
+      - assertNotVisible:
+          id: ai_tutor_community_top_filter_sheet
+      - assertVisible:
+          id: ai_tutor_overview_root
