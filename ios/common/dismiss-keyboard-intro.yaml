@@ -1,0 +1,9 @@
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow:
+    when:
+      visible: "Speed up your typing.*"
+    commands:
+      - tapOn: "Continue"

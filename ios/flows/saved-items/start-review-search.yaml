@@ -1,0 +1,14 @@
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# Start review from search results for SEARCH (HIT shown). Arrival is checked by the case script from the console log ("Starting lesson with id: saved-items-review_..."); the series lesson stops answering the accessibility tree on this simulator.
+---
+- runFlow: ../saved-lines/open-saved-lines.yaml
+- tapOn: "Search"
+- runFlow: ../../common/dismiss-keyboard-intro.yaml
+- inputText: ${SEARCH}
+- extendedWaitUntil:
+    visible: ${HIT}
+    timeout: 10000
+- takeScreenshot: ${SHOT}_search
+- tapOn: "Start review"

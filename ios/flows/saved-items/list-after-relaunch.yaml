@@ -1,0 +1,17 @@
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# After the relaunch: Saved lines again, FIRST on top, Reviewed still empty.
+---
+- runFlow: ../../common/home-ready-launched.yaml
+- runFlow: ../saved-lines/open-saved-lines.yaml
+- assertVisible: ${FIRST}
+- takeScreenshot: ${SHOT}_list
+- tapOn: "Reviewed"
+- extendedWaitUntil:
+    visible: "Nothing reviewed yet"
+    timeout: 10000
+- tapOn: "All"
+- extendedWaitUntil:
+    visible: ${FIRST}
+    timeout: 10000

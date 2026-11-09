@@ -1,0 +1,20 @@
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# A3 part 1: play the first row, More > Play lesson opens the source lesson SRC. The script then ends the lesson
+# (terminate + relaunch): on this simulator the lesson stops answering taps once its card plays.
+---
+- runFlow: ../saved-lines/open-saved-lines.yaml
+- tapOn:
+    text: "sound-play"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 4000
+- assertVisible: "Recent"
+- tapOn:
+    text: "More"
+    index: 0
+- tapOn: "Play lesson"
+- extendedWaitUntil:
+    visible: ${SRC}
+    timeout: 30000

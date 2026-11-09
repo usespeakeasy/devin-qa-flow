@@ -1,0 +1,29 @@
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# Home > Courses > language: set native NATIVE_ID (e.g. en-US) and learning LEARNING (row text). Ends on Home.
+---
+- extendedWaitUntil:
+    visible:
+      id: home.root.ready
+    timeout: 30000
+- tapOn:
+    id: home.top-bar.action.course-select
+- tapOn:
+    id: course-select.toolbar.action.language
+- tapOn:
+    id: settings.language-course.row.native-language
+- tapOn:
+    id: settings.language-course.native.option.${NATIVE_ID}
+- extendedWaitUntil:
+    visible: "I am learning"
+    timeout: 10000
+- tapOn:
+    text: ${LEARNING}
+    below: "I am learning"
+- extendedWaitUntil:
+    visible:
+      id: home.root.ready
+    timeout: 30000
+- assertVisible:
+    id: ${COURSE_DEBUG_ID}

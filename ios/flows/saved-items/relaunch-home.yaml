@@ -1,0 +1,9 @@
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# Lifecycle: after the script terminated and relaunched the app on Saved lines.
+---
+- runFlow: ../../common/home-ready-launched.yaml
+- takeScreenshot: ${SHOT}_1_relaunched
+- runFlow: ../saved-lines/open-saved-lines.yaml
+- assertVisible: ${FIRST}

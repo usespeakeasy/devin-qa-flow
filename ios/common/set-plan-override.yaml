@@ -1,0 +1,25 @@
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# Developer Settings > Subscription > Plan override PLAN, wait for EXPECT.
+---
+- openLink: speak-dev://debug
+- runFlow: confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible:
+      id: debug.row.subscription
+    timeout: 15000
+- tapOn: "Search developer settings"
+- inputText: "Subscription"
+- tapOn:
+    id: debug.search.result.useDebugPremium
+- extendedWaitUntil:
+    visible: "Plan override"
+    timeout: 5000
+- tapOn:
+    text: ${PLAN}
+    below: "Plan override"
+    above: "Tier signals"
+- extendedWaitUntil:
+    visible: ${EXPECT}
+    timeout: 15000

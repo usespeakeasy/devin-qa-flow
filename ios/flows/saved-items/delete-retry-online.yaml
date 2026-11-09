@@ -1,0 +1,11 @@
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# B3 online part: Retry deletes ROW for real.
+---
+- tapOn: "Retry"
+- extendedWaitUntil:
+    notVisible: ${ROW}
+    timeout: 15000
+- assertVisible: "Recent"
+- takeScreenshot: ${SHOT}_3_deleted

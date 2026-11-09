@@ -1,0 +1,16 @@
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# Entry: app just launched by the case script (proxy env set). Ends on Home.
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|ai-data-consent.action.agree"
+    timeout: 40000
+- runFlow: dismiss-ai-data-consent.yaml
+- runFlow: dismiss-launch-paywall.yaml
+- runFlow: dismiss-home-interstitials.yaml
+- extendedWaitUntil:
+    visible:
+      id: home.root.ready
+    timeout: 20000

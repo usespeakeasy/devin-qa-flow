@@ -1,0 +1,25 @@
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# B3 offline part: More > Unsave on ROW while the proxy drops connections; error alert with Retry, Cancel keeps ROW.
+---
+- tapOn:
+    text: "More"
+    index: 0
+- tapOn: "Unsave"
+- extendedWaitUntil:
+    visible: "Retry"
+    timeout: 30000
+- takeScreenshot: ${SHOT}_1_error
+- tapOn: "Cancel"
+- extendedWaitUntil:
+    visible: ${ROW}
+    timeout: 10000
+- takeScreenshot: ${SHOT}_2_row_back
+- tapOn:
+    text: "More"
+    index: 0
+- tapOn: "Unsave"
+- extendedWaitUntil:
+    visible: "Retry"
+    timeout: 30000

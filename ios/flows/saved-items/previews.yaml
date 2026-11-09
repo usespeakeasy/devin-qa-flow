@@ -1,0 +1,36 @@
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# B4: Settings > Previews: Saved Items - Loaded, Romanized, Empty.
+---
+- runFlow: ../../common/open-previews.yaml
+- tapOn: "Search"
+- inputText: "Saved Items"
+- tapOn:
+    id: "debug.previews.item.Saved Items_Saved Items - Loaded"
+- extendedWaitUntil:
+    visible: "¿Me puedes traer la cuenta, por favor\\?"
+    timeout: 15000
+- takeScreenshot: ${SHOT}_1_loaded
+- tapOn:
+    id: BackButton
+- tapOn:
+    id: "debug.previews.item.Saved Items_Saved Items - Romanized"
+- extendedWaitUntil:
+    visible: "gyesanseo jom jusigesseoyo\\?"
+    timeout: 15000
+- takeScreenshot: ${SHOT}_2_romanized
+- tapOn:
+    id: BackButton
+- tapOn:
+    id: "debug.previews.item.Saved Items_Saved Items - Empty"
+- extendedWaitUntil:
+    visible: "Nothing saved yet"
+    timeout: 15000
+- takeScreenshot: ${SHOT}_3_empty
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: "debug.previews.item.Saved Items_Saved Items - Empty"
+    timeout: 10000

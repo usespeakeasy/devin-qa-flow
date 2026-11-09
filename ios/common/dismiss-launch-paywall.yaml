@@ -1,0 +1,14 @@
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+# Superwall paywall shown on launch with the Free plan override; its close X is web content outside the tree.
+- runFlow:
+    when:
+      visible: "Check out plans"
+    commands:
+      - tapOn:
+          point: "26,73"
+      - extendedWaitUntil:
+          notVisible: "Check out plans"
+          timeout: 10000

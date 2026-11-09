@@ -1,0 +1,69 @@
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# A1: Practice > Saved lines; search SEARCH (HIT shown, MISS hidden), Clear, close search, New / Reviewed / All filters,
+# scroll until LAST (second page), Back to Practice; then speak-dev://saved and swipe back.
+---
+- runFlow: ../saved-lines/open-saved-lines.yaml
+- assertVisible: ${MISS}
+- takeScreenshot: ${SHOT}_1_arrival
+- tapOn: "Search"
+- runFlow: ../../common/dismiss-keyboard-intro.yaml
+- inputText: ${SEARCH}
+- extendedWaitUntil:
+    visible: ${HIT}
+    timeout: 10000
+- extendedWaitUntil:
+    notVisible: ${MISS}
+    timeout: 10000
+- takeScreenshot: ${SHOT}_2_search
+- tapOn: "Clear"
+- extendedWaitUntil:
+    visible: ${MISS}
+    timeout: 10000
+- tapOn: "Close"
+- extendedWaitUntil:
+    visible: "Recent"
+    timeout: 10000
+- tapOn: "New"
+- extendedWaitUntil:
+    visible: ${MISS}
+    timeout: 10000
+- tapOn: "Reviewed"
+- extendedWaitUntil:
+    visible: "Nothing reviewed yet"
+    timeout: 10000
+- takeScreenshot: ${SHOT}_3_reviewed
+- tapOn: "All"
+- extendedWaitUntil:
+    visible: ${MISS}
+    timeout: 10000
+- repeat:
+    times: 10
+    commands:
+      # Point swipe: direction swipes do not move this SwiftUI ScrollView on the iOS 27 simulator.
+      - swipe:
+          start: 50%, 75%
+          end: 50%, 25%
+          duration: 400
+- extendedWaitUntil:
+    visible: ${LAST}
+    timeout: 15000
+- takeScreenshot: ${SHOT}_4_scrolled
+- tapOn: "Back"
+- extendedWaitUntil:
+    visible: "Saved lines, .*"
+    timeout: 10000
+- openLink: "speak-dev://saved"
+- runFlow: ../../common/confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible: "Recent"
+    timeout: 15000
+- takeScreenshot: ${SHOT}_5_deeplink
+- swipe:
+    start: 1%, 50%
+    end: 85%, 50%
+    duration: 400
+- extendedWaitUntil:
+    visible: "Saved lines, .*"
+    timeout: 10000
