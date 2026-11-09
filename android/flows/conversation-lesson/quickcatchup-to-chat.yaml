@@ -1,0 +1,58 @@
+# Structured conversation EN_ES_A1-1_quickcatchup_SC ("Quick Catch Up"): answers the warm-up
+# (match pairs), the listening question and the sentence builder, to the "Try it yourself" chat
+# with Lumi ("¡Hola! ¿Qué tal?"). Content-specific: the answers are this lesson's.
+# Entry: open-debug-sc-lesson.yaml with LESSON=EN_ES_A1-1_quickcatchup_SC. Exit: "Respond to Lumi" task.
+# Selectors: no resource-ids in the lesson body; the audio cards are matched by content-desc.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+# A resumable lesson asks "Continue where you left off?"; Start over keeps the run from the warm-up.
+- extendedWaitUntil:
+    visible: "Match the Spanish phrases with their meanings|Continue where you left off\\?"
+    timeout: 30000
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: Start over
+- extendedWaitUntil:
+    visible: Match the Spanish phrases with their meanings
+    timeout: 30000
+- tapOn: "¿Qué tal\\?"
+- tapOn: "How’s it going\\?"
+- tapOn: Más o menos
+- tapOn: I’m OK
+- tapOn: Todo bien
+- tapOn: Everything’s good
+- tapOn: La familia
+- tapOn: Family
+- tapOn: El trabajo
+- tapOn: Work
+- extendedWaitUntil:
+    visible: Everything is good
+    timeout: 60000
+- tapOn: Everything is good
+- extendedWaitUntil:
+    visible: Build what you heard
+    timeout: 60000
+- tapOn: El
+- tapOn: trabajo
+- tapOn: bien
+- tapOn: gracias
+# On a 1080x2340 / 480 dpi screen the mic button sits over the center of Submit and takes the
+# tap, so Submit is tapped near its left end (point, no ID).
+- waitForAnimationToEnd:
+    timeout: 5000
+- repeat:
+    while:
+      visible: Submit
+    times: 5
+    commands:
+      - tapOn:
+          point: "14%,87%"
+      - waitForAnimationToEnd:
+          timeout: 5000
+- extendedWaitUntil:
+    visible: Respond to Lumi and say how you’re doing.
+    timeout: 60000

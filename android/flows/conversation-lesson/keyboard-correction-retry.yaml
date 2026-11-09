@@ -1,0 +1,53 @@
+# Structured conversation, keyboard input: send WRONG (a blocking correction with Retry), tap Retry,
+# type RETRY and send; the retried answer must still be on screen right after sending (LSN-3204: the
+# list scrolled up and left only empty space above the keyboard).
+# Entry: quickcatchup-to-chat.yaml (the "Respond to Lumi" task). Exit: after the retried answer.
+# maestro test -e OUT=/path/prefix keyboard-correction-retry.yaml
+# Selectors: the keyboard button, X (cancel recording) and send have no ID or label: points for a
+# 1080x2340 / 480 dpi screen (keyboard/X button "20%,87%", send with the IME up "88%,55%").
+# A non-blocking correction (task still completed) has no Retry; WRONG is off-topic so it fails the task.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WRONG: ${WRONG || "Yo tener un perro"}
+  RETRY: ${RETRY || "Todo bien gracias"}
+  OUT: ${OUT || "keyboard-correction-retry"}
+---
+- extendedWaitUntil:
+    visible: Respond to Lumi and say how you’re doing.
+    timeout: 30000
+# Auto start recording opens the mic: the first tap cancels it, the next opens the keyboard.
+- repeat:
+    while:
+      notVisible: "Reply\\.\\.\\."
+    times: 4
+    commands:
+      - tapOn:
+          point: "20%,87%"
+      - waitForAnimationToEnd:
+          timeout: 3000
+- tapOn: "Reply\\.\\.\\."
+- inputText: ${WRONG}
+- tapOn:
+    point: "88%,55%"
+- extendedWaitUntil:
+    visible: Retry
+    timeout: 30000
+- takeScreenshot: ${OUT}-1-correction
+- tapOn: Retry
+- tapOn: "Reply\\.\\.\\."
+- inputText: ${RETRY}
+- takeScreenshot: ${OUT}-2-retry-typed
+- tapOn:
+    point: "88%,55%"
+# The bug leaves only empty space above the keyboard for ~1.5 s after the send, which the tap's own
+# settle wait hides from Maestro: chat-blank.sh measures it on the recording.
+- extendedWaitUntil:
+    visible: ${RETRY}
+    timeout: 3000
+    label: retried answer on screen after send
+- takeScreenshot: ${OUT}-3-just-sent
+- extendedWaitUntil:
+    visible: Good response
+    timeout: 15000
+- takeScreenshot: ${OUT}-4-after-send

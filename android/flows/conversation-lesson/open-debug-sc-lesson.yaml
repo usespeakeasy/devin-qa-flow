@@ -1,0 +1,36 @@
+# Debug Menu > Structured Conversations > Lesson ID = LESSON > Start: opens the structured
+# conversation lesson (`Destination.ConversationLesson`) straight from the debug menu.
+# Entry: signed in, any screen (the flow opens the debug menu by deep link). Exit: on the SC lesson.
+# maestro test -e LESSON=EN_ES_A1-1_quickcatchup_SC open-debug-sc-lesson.yaml
+# Selectors: the Structured Conversations row has no resource-id (text fallback: "Lesson ID", "Start").
+# Older builds (before the debug menu search) have no Search field, so the flow scrolls instead.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
+  LESSON: ${LESSON || "EN_ES_A1-1_quickcatchup_SC"}
+---
+- openLink: ${DEBUG_MENU_LINK}
+- extendedWaitUntil:
+    visible: Debug Menu
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      text: Lesson ID
+    direction: DOWN
+    timeout: 60000
+    centerElement: true
+# The field keeps the last lesson ID (debug defaults); eraseText only deletes before the cursor, so
+# the field is retyped only when it does not already hold LESSON.
+- runFlow:
+    when:
+      notVisible: ${LESSON}
+    commands:
+      - longPressOn: Lesson ID
+      - eraseText: 200
+      - inputText: ${LESSON}
+      - hideKeyboard
+- assertVisible: ${LESSON}
+- tapOn:
+    text: Start
+    rightOf: Lesson ID
