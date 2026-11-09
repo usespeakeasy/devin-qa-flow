@@ -1,0 +1,13 @@
+# Fresh sign-up to the end of the onboarding chat: storybook > Get started > Spanish > email sign-up >
+# answer every chat turn until "Generate my curriculum" shows (not tapped).
+# Entry: app data cleared (`qa_android.py fresh`), storybook on screen. Pass a throwaway account at run time
+# (never commit it): maestro test -e EMAIL=$(qa_android.py newuser) -e PASSWORD=... fresh-to-generate-curriculum.yaml
+# Exit: `onboarding_magic_action_generate_curriculum` visible.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: storybook-get-started.yaml
+- runFlow: pick-spanish-open-auth.yaml
+- runFlow: email-sign-up-to-chat.yaml
+- runFlow: chat-to-generate-curriculum.yaml

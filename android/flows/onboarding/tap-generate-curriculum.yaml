@@ -1,0 +1,11 @@
+# Onboarding chat: tap "Generate my curriculum" only. The run script waits for the
+# `CurriculumLoadingController attached` lifecycle line and presses Home, rotates or kills the process right then,
+# since the loading screen can hand off in about 5.5 s.
+# Entry: `onboarding_magic_action_generate_curriculum` visible (fresh-to-generate-curriculum.yaml).
+# Exit: the curriculum loading screen opening.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: onboarding_magic_action_generate_curriculum

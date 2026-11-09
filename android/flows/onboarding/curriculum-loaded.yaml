@@ -1,0 +1,16 @@
+# Curriculum presentation after the loading handoff: `onboarding_curriculum_ready` with Get started, and the
+# loading screen gone. TIMEOUT (ms) bounds the wait, e.g. a short one after a resume to show the handoff is not stuck.
+# Entry: curriculum loading screen, or the app just brought back to the front after it.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TIMEOUT: ${TIMEOUT || 30000}
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_curriculum_ready
+    timeout: ${TIMEOUT}
+- assertVisible:
+    id: onboarding_curriculum_action_get_started
+- assertNotVisible:
+    id: onboarding_curriculum_loading
