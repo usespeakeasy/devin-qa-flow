@@ -1,0 +1,22 @@
+# Custom unit planning intro > "Let's go!" with the tutor intake hand-off: the intro's button spins while init and the
+# lesson load, then the Phone Speak call opens over the intro (PhoneSpeakOverlayCallRoute). Allows the AI data alert if it shows.
+# Entry: the planning intro from open-create-course.yaml, `meet_the_tutor_enabled` ON, and init answering with
+# `meetTheTutor` (on dev before speak-api#11813 ships: QA-only patch `debug.qa.mtt=<lessonId>,<contextId>` in InitMappers).
+# Microphone granted. Exit: the call screen with End call.
+# Selectors: the intro has no resource-id (text fallback, via tap-lets-go.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: tap-lets-go.yaml
+- extendedWaitUntil:
+    visible:
+      id: "phone_speak_call_end_call|ai_data_consent_alert"
+    timeout: 45000
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call
+    timeout: 45000

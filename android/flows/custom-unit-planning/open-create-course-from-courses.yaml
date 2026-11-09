@@ -1,0 +1,21 @@
+# Home > Courses (course selector) > "Create a course" under Custom courses, opens custom unit planning on its intro
+# (`CustomUnitPlanningLaunchRequest.CreateCourseWithFirstUnit`). Works on accounts whose path has no next-course card.
+# Entry: signed in (the flow cold-starts the app first), Premium or Plus. Exit: the planning intro on screen.
+# Selectors: the intro has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+# launch-home closes the referral promo a signed-in cold start can show over Home.
+- runFlow: ../../common/launch-home.yaml
+- tapOn:
+    id: home_course_selector
+- extendedWaitUntil:
+    visible:
+      id: level_selector_create_custom_course
+    timeout: 30000
+- tapOn:
+    id: level_selector_create_custom_course
+- extendedWaitUntil:
+    visible: "Hey there! Ready to build your custom course.*"
+    timeout: 30000
