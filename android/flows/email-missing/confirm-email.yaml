@@ -1,0 +1,25 @@
+# Email-missing sheet: type EMAIL and confirm. The sheet closes and Main (Home) stays.
+# Entry: `onboarding_email_missing_screen`, field focused or not. Exit: Home with no announcement sheet. Use the signed-in account's own email so the
+# account does not change.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: onboarding_email_missing_email_field
+- inputText: ${EMAIL}
+- hideKeyboard
+- tapOn:
+    id: onboarding_email_missing_continue_button
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding_email_missing_screen
+    timeout: 30000
+# The popup chain can show the custom courses announcement next; close it.
+- extendedWaitUntil:
+    visible:
+      id: "home_root_ready|custom_courses_announcement_sheet"
+    timeout: 30000
+- runFlow: ../home-announcement/dismiss-announcement.yaml
+- assertVisible:
+    id: home_root_ready

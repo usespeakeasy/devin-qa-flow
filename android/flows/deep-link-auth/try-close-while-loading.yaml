@@ -1,0 +1,23 @@
+# Login link sheet while it signs in: Back, a swipe down and a tap outside all leave it open with the loader.
+# Entry: the sheet loading (open-auth-link.yaml with a slow sign-in, e.g. the QA-only `qa-slow*` token stub).
+# LOADING is the loader id: `loading_bar` (OnboardingDeepLinkAuthController) or `onboarding_auth_loading` (entry).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: ${LOADING}
+- back
+- assertVisible:
+    id: ${LOADING}
+- swipe:
+    from:
+      id: ${LOADING}
+    direction: DOWN
+- assertVisible:
+    id: ${LOADING}
+# Point: the scrim above the sheet has no node of its own.
+- tapOn:
+    point: 50%,12%
+- assertVisible:
+    id: ${LOADING}

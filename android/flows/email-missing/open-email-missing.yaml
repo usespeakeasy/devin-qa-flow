@@ -1,0 +1,18 @@
+# Main opens the email-missing sheet ("What is your email?", `OnboardingEmailMissing`: entry or
+# `OnboardingEmailMissingController`) on a cold start.
+# Entry: signed in. The run script sets the QA-only prop `adb shell setprop debug.qa.email_missing 1`
+# (QA patch on `ShouldShowEmailMissing`, dev has no account without an email) and clears it once the sheet shows.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: onboarding_email_missing_screen
+    timeout: 60000
+- assertVisible:
+    id: onboarding_email_missing_email_field
+- assertVisible:
+    id: onboarding_email_missing_continue_button

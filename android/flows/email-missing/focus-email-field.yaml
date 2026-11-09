@@ -1,0 +1,14 @@
+# Email-missing sheet: tap the email field. The keyboard opens and the Continue button stays visible above it.
+# Entry: `onboarding_email_missing_screen` (open-email-missing.yaml). Exit: field focused, keyboard up.
+# The run script measures the sheet bottom against the IME frame (`dumpsys window`).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: onboarding_email_missing_email_field
+- extendedWaitUntil:
+    visible:
+      id: onboarding_email_missing_continue_button
+    timeout: 10000
+- takeScreenshot: keyboard

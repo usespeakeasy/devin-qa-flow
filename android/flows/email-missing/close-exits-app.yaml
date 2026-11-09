@@ -1,0 +1,34 @@
+# Email-missing sheet: close it without an email (HOW = back, swipe or outside). The app closes.
+# Entry: `onboarding_email_missing_screen`. The run script checks that Speak is no longer the focused window
+# (`dumpsys window` mCurrentFocus).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    when:
+      true: ${HOW == "back"}
+    commands:
+      - back
+- runFlow:
+    when:
+      true: ${HOW == "swipe"}
+    commands:
+      # Points: drag from the sheet's top edge (handle row, ~8% on a 2400 px screen); a swipe from the
+      # sheet's center starts in its content and does not drag the sheet.
+      - swipe:
+          start: 50%,9%
+          end: 50%,97%
+          duration: 400
+- runFlow:
+    when:
+      true: ${HOW == "outside"}
+    commands:
+      # Point: the email sheet is full height. Its chrome starts right under the status bar (y 128 of 2400), so
+      # the only area outside it is the status-bar band; the scrim there has no node of its own. 2% is y 48.
+      - tapOn:
+          point: 50%,2%
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding_email_missing_screen
+    timeout: 15000
