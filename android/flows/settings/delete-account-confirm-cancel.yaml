@@ -1,0 +1,23 @@
+# Manage Account > Delete Account > "Confirm account deletion" > Cancel: the dialog closes, no password
+# dialog opens, Manage Account stays. Entry and exit: Manage Account (manage_account_screen).
+# Selectors: the confirm dialog's message and Cancel have no IDs (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "delete-confirm-cancel"}
+---
+- tapOn:
+    id: edit_delete_account
+- extendedWaitUntil:
+    visible: "Confirm account deletion"
+    timeout: 10000
+- takeScreenshot: ${SHOT}_confirm
+- tapOn: "Cancel"
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 10000
+- assertNotVisible: "Confirm account deletion"
+- assertNotVisible:
+    id: delete_account_password_dialog
+- takeScreenshot: ${SHOT}

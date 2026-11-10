@@ -1,0 +1,36 @@
+# Manage Account > Email row opens its editor; Back returns to Manage Account; the toolbar back
+# arrow (`toolbar`) then leaves Manage Account for Settings. Entry: Manage Account. Exit: Settings.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "edit-email-toolbar-back"}
+---
+- tapOn:
+    id: edit_email
+- extendedWaitUntil:
+    visible:
+      id: single_field_input_screen
+    timeout: 15000
+- assertVisible:
+    id: input
+- takeScreenshot: ${SHOT}_email
+- back
+- runFlow:
+    when:
+      visible:
+        id: single_field_input_screen
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 10000
+- tapOn:
+    id: toolbar
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 10000
+- assertNotVisible:
+    id: manage_account_screen
+- takeScreenshot: ${SHOT}

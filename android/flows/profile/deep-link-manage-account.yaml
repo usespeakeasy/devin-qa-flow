@@ -1,0 +1,36 @@
+# speak-dev://me/settings/manage-account with the app open: Profile tab, then Settings, then Manage
+# Account. Back returns to Settings, Back again to Profile. Entry: main tabs (Home).
+# Exit: Profile tab. `-e OPEN=false` skips the openLink when the case script sends the link with adb.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  OPEN: ${OPEN || "true"}
+  SHOT: ${SHOT || "deep-link-manage-account"}
+---
+- runFlow:
+    when:
+      true: ${OPEN != "false"}
+    commands:
+      - openLink: speak-dev://me/settings/manage-account
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 30000
+- assertVisible:
+    id: edit_name
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 15000
+- assertNotVisible:
+    id: manage_account_screen
+- takeScreenshot: ${SHOT}_settings
+- back
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 15000
+- assertNotVisible:
+    id: settings_manage_account_option

@@ -1,0 +1,29 @@
+# speak-dev://manageAccount?field=phoneNumber on a code (one-time code) account: Manage Account opens
+# over the home screen; Back returns to Home. Entry: Home tab (home_root_ready), signed in with a phone
+# or email code account, or a QA patch that makes `routeToPhoneNumberScreen` treat the account as one.
+# Exit: Home. `-e OPEN=false` skips the openLink when the case script sends the link with adb.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  OPEN: ${OPEN || "true"}
+  SHOT: ${SHOT || "deep-link-phone-number"}
+---
+- runFlow:
+    when:
+      true: ${OPEN != "false"}
+    commands:
+      - openLink: speak-dev://manageAccount?field=phoneNumber
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 30000
+- assertVisible:
+    id: edit_phone_number
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- assertNotVisible:
+    id: manage_account_screen

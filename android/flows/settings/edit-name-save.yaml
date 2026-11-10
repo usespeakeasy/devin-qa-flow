@@ -1,0 +1,59 @@
+# Profile > Settings > Manage Account: the six account rows load; Name > type NAME > Save returns to
+# Manage Account showing NAME; Back leaves Manage Account for Settings.
+# Entry: Home tab, signed in with email/password (the Password row shows only for email accounts).
+# Exit: Settings. Changes the account's name on the server: pass a NAME unique to the build and run.
+# maestro test -e NAME="QA Base 1" edit-name-save.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  NAME: ${NAME || "QA Name"}
+  SHOT: ${SHOT || "edit-name-save"}
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn:
+    id: settings_manage_account_option
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 20000
+- assertVisible:
+    id: edit_name
+- assertVisible:
+    id: edit_username
+- assertVisible:
+    id: edit_email
+- assertVisible:
+    id: edit_phone_number
+- assertVisible:
+    id: edit_password
+- assertVisible:
+    id: edit_delete_account
+- takeScreenshot: ${SHOT}_rows
+- tapOn:
+    id: edit_name
+- extendedWaitUntil:
+    visible:
+      id: single_field_input_screen
+    timeout: 15000
+- tapOn:
+    id: input
+- eraseText: 40
+- inputText: ${NAME}
+- tapOn:
+    id: settings_list_primary_button
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      text: ${NAME}
+    timeout: 15000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 15000
+- assertNotVisible:
+    id: manage_account_screen
