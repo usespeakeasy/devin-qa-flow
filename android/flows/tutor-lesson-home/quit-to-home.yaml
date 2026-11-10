@@ -1,0 +1,30 @@
+# Tutor lesson > close > Quit, then whatever follows the quit (difficulty check-in, abandon feedback) back to Home.
+# Entry: a drill lesson (QA-only patch: the close confirmation always shows). Exit: Home with the tab bar.
+# Selectors: the close confirmation and the abandon step have no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: ${SHOT || "quit"}
+---
+- runFlow: ../tutor-lesson/quit.yaml
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}-after-quit
+- repeat:
+    while:
+      notVisible:
+        id: home_root_ready
+    times: 4
+    commands:
+      - tapOn:
+          id: custom_units_difficulty_check_in_just_right
+          optional: true
+      - tapOn:
+          text: "^(Skip|Not now|Close|Done|Maybe later)$"
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertVisible:
+    id: main_tab_home

@@ -1,0 +1,95 @@
+# Restore progress (the dialog needs lessonProgressIndex >= 5): skip 6 cards, quit, reopen > Continue lands on the card you left; quit, reopen > Start over lands on card 1.
+# Entry: Home, signed in; the QA-only patch shows the close confirmation. Exit: card 1 of the drill lesson.
+# The card is told apart by its first two lesson_line_word texts (one on a one-word card) (lesson_line has no text of its own).
+# Selectors: the restore dialog is matched by text, so one step covers the Nav3 SimpleDialog and the kill switch ON dialog.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: ${SHOT || "restore"}
+---
+- runFlow: ../tutor-lesson/open-fresh.yaml
+- copyTextFrom:
+    id: lesson_line_word
+    index: 0
+- evalScript: ${output.first0 = maestro.copiedText}
+- evalScript: ${output.first = output.first0}
+- runFlow:
+    when:
+      visible:
+        id: lesson_line_word
+        index: 1
+    commands:
+      - copyTextFrom:
+          id: lesson_line_word
+          index: 1
+      - evalScript: ${output.first = output.first0 + ' ' + maestro.copiedText}
+- runFlow:
+    file: ../tutor-lesson/skip-cards.yaml
+    env:
+      N: 6
+- copyTextFrom:
+    id: lesson_line_word
+    index: 0
+- evalScript: ${output.third0 = maestro.copiedText}
+- evalScript: ${output.third = output.third0}
+- runFlow:
+    when:
+      visible:
+        id: lesson_line_word
+        index: 1
+    commands:
+      - copyTextFrom:
+          id: lesson_line_word
+          index: 1
+      - evalScript: ${output.third = output.third0 + ' ' + maestro.copiedText}
+- assertTrue: ${output.third != output.first}
+- runFlow:
+    file: quit-to-home.yaml
+    env:
+      SHOT: ${SHOT}-quit1
+- runFlow:
+    file: ../tutor-lesson/restore.yaml
+    env:
+      CHOICE: Continue
+- copyTextFrom:
+    id: lesson_line_word
+    index: 0
+- evalScript: ${output.cont0 = maestro.copiedText}
+- evalScript: ${output.cont = output.cont0}
+- runFlow:
+    when:
+      visible:
+        id: lesson_line_word
+        index: 1
+    commands:
+      - copyTextFrom:
+          id: lesson_line_word
+          index: 1
+      - evalScript: ${output.cont = output.cont0 + ' ' + maestro.copiedText}
+- assertTrue: ${output.cont == output.third}
+- takeScreenshot: ${SHOT}-continue
+- runFlow:
+    file: quit-to-home.yaml
+    env:
+      SHOT: ${SHOT}-quit2
+- runFlow:
+    file: ../tutor-lesson/restore.yaml
+    env:
+      CHOICE: Start over
+- copyTextFrom:
+    id: lesson_line_word
+    index: 0
+- evalScript: ${output.over0 = maestro.copiedText}
+- evalScript: ${output.over = output.over0}
+- runFlow:
+    when:
+      visible:
+        id: lesson_line_word
+        index: 1
+    commands:
+      - copyTextFrom:
+          id: lesson_line_word
+          index: 1
+      - evalScript: ${output.over = output.over0 + ' ' + maestro.copiedText}
+- assertTrue: ${output.over == output.first}
+- takeScreenshot: ${SHOT}-start-over

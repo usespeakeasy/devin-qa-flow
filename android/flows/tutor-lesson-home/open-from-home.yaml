@@ -1,0 +1,67 @@
+# Tutor (drill) lesson opened from its Home path item (Main tab bar host), not a deep link.
+# Jump Ahead opens the lesson directly with the QA-only patch (LearningPathLessonStartHandler: no jump-ahead sheet).
+# Entry: signed in. Exit: the lesson shows Next (`drill_lesson_skip`); CHOICE answers "Continue where you left off?" if it shows.
+# Selectors: the path popover Start of a done lesson has no resource-id (speak-android#9010); the restore dialog is matched by text.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  CHOICE: ${CHOICE || "Start over"}
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow:
+    file: ../global-regression/open-path-lesson.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+      LOOP_ID: ${LOOP_ID}
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      visible:
+        id: learning_path_lesson_start_${LESSON_ID}
+    commands:
+      - tapOn:
+          id: learning_path_lesson_start_${LESSON_ID}
+- runFlow:
+    when:
+      visible:
+        id: learning_path_popover_jump_ahead_button
+    commands:
+      - tapOn:
+          id: learning_path_popover_jump_ahead_button
+- runFlow:
+    when:
+      notVisible:
+        id: "(drill_lesson_root|ai_data_consent_alert)"
+    commands:
+      - tapOn:
+          text: "^(Start|Review|Practice again|Redo|Continue)$"
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "(drill_lesson_root|ai_data_consent_alert)"
+    timeout: 30000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_allow
+- extendedWaitUntil:
+    visible: "(Continue where you left off\\?|Next)"
+    timeout: 30000
+    optional: true
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "^${CHOICE}$"
+      - extendedWaitUntil:
+          notVisible: "Continue where you left off\\?"
+          timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000

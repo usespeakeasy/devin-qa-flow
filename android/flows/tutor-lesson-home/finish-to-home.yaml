@@ -1,0 +1,35 @@
+# Skip every card of an open drill lesson and walk the lesson end screens to Home with the tab bar.
+# Entry: a drill lesson. Exit: Home (`home_root_ready`, `main_tab_home`).
+# Selectors: the review dialog Back and the end steps follow common/finish-lesson-end.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: ${SHOT || "finish"}
+---
+- repeat:
+    while:
+      visible:
+        id: drill_lesson_skip
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "(lesson_end_.*|ask_for_review_.*dialog|home_root_ready)"
+    timeout: 60000
+- takeScreenshot: ${SHOT}-lesson-end
+- runFlow:
+    when:
+      visible:
+        id: ask_for_review_.*dialog
+    commands:
+      - back
+      - waitForAnimationToEnd:
+          timeout: 3000
+- runFlow: ../../common/finish-lesson-end.yaml
+- assertVisible:
+    id: main_tab_home
+- assertNotVisible:
+    id: drill_lesson_root

@@ -1,0 +1,24 @@
+# Fast double tap on a drill word: one pronunciation sheet opens, and one Back closes it back to the lesson.
+# Entry: a drill lesson card with words (`pronunciation_coach_multilingual` ON). Exit: the lesson, no sheet.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- doubleTapOn:
+    id: lesson_line_word
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: pronunciation_phoneme_coach_root
+    timeout: 20000
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: pronunciation_phoneme_coach_root
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: pronunciation_phoneme_coach_root
+- assertVisible:
+    id: drill_lesson_root

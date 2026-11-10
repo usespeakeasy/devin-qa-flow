@@ -28,6 +28,16 @@ env:
       - tapOn:
           text: "Maybe later"
           optional: true
+      # App rating prompt over the lesson end (it blocks primary_button on the Challenge tier step).
+      - tapOn:
+          id: ask_for_review_dialog_no
+          optional: true
+      - tapOn:
+          id: ask_for_review_negative_dialog_no
+          optional: true
+      - tapOn:
+          id: ask_for_review_positive_dialog_no
+          optional: true
       # Smart Review "New Concept" step: its Continue has no resource-id on release/4.73.0 (text fallback).
       - runFlow:
           when:

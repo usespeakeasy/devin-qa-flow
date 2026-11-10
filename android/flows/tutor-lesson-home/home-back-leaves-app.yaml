@@ -1,0 +1,26 @@
+# Home with the Main tab bar after a lesson: one Back leaves the app (no second Home or blank screen under it).
+# Entry: Home after a lesson closed. Exit: the launcher.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: ${SHOT || "home-back"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertVisible:
+    id: main_tab_home
+- assertNotVisible:
+    id: drill_lesson_root
+- takeScreenshot: ${SHOT}-home
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertNotVisible:
+    id: home_root_ready
+- assertNotVisible:
+    id: main_tab_home
+- assertNotVisible:
+    id: drill_lesson_root
+- takeScreenshot: ${SHOT}-after-back

@@ -1,0 +1,26 @@
+# Drill lesson: rotate to landscape and back, then background (Home key) and resume: the lesson stays on the same card.
+# Entry: a drill lesson card with words. Exit: the same card, portrait.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- copyTextFrom:
+    id: lesson_line_word
+    index: 0
+- evalScript: ${output.word0 = maestro.copiedText}
+- runFlow: ../tutor-lesson/rotate.yaml
+- assertVisible: ${output.word0}
+- pressKey: Home
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertNotVisible:
+    id: drill_lesson_root
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_root
+    timeout: 20000
+- assertVisible: ${output.word0}
+- assertVisible:
+    id: drill_lesson_skip
