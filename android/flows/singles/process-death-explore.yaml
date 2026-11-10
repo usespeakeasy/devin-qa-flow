@@ -1,0 +1,22 @@
+# Process death on Explore: Home key, killApp (am kill), relaunch from recents restores Explore on CATEGORY.
+# Entry: Explore on the CATEGORY tab. Exit: Explore restored on CATEGORY. Saves SHOT.png.
+# maestro test -e CATEGORY="일상" -e SHOT=process-death process-death-explore.yaml
+# Selectors: singles_explore_screen; explore-loaded.yaml for the arrival.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: process-death
+---
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: singles_explore_screen
+    timeout: 60000
+- runFlow:
+    file: explore-loaded.yaml
+    env:
+      CATEGORY: ${CATEGORY}
+- takeScreenshot: ${SHOT}

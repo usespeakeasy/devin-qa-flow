@@ -1,0 +1,20 @@
+# Explore category: tap the LESSON carousel card; the lesson details sheet opens over Explore.
+# Entry: Explore with LESSON's card on screen (category-tab.yaml). Exit: details sheet over Explore.
+# maestro test -e LESSON="마블 신작 개봉했어?" details-open-card.yaml
+# Selectors: singles_carousel_item, title (the card is picked by its title text; childOf resolves to the first carousel item only, so it is not used), singles_details_dialog.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: title
+    text: ${LESSON}
+- extendedWaitUntil:
+    visible:
+      id: singles_details_dialog
+    timeout: 15000
+- assertVisible:
+    id: title
+    text: ${LESSON}
+    childOf:
+      id: singles_details_dialog

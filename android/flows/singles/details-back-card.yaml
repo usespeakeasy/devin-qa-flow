@@ -1,0 +1,17 @@
+# Lesson details sheet opened from an Explore card: system back closes it and Explore stays on CATEGORY.
+# Entry: details sheet over Explore (details-open-card.yaml). Exit: Explore on the CATEGORY tab.
+# maestro test -e CATEGORY="일상" details-back-card.yaml
+# Selectors: singles_details_dialog; explore-loaded.yaml for the arrival.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: singles_details_dialog
+    timeout: 10000
+- runFlow:
+    file: explore-loaded.yaml
+    env:
+      CATEGORY: ${CATEGORY}
