@@ -1,0 +1,15 @@
+# Warm deep link speak-dev://me/settings from Home opens Settings over the Profile tab. Saves SHOT.png.
+# Entry: Home (`home_root_ready`), app running. Exit: Settings.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "settings-deep-link-open"}
+---
+- assertVisible:
+    id: home_root_ready
+- openLink: speak-dev://me/settings
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 30000
+- takeScreenshot: ${SHOT}

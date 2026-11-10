@@ -1,0 +1,18 @@
+# Settings > Log out: the "Are you sure you want to sign out?" confirmation shows. Saves SHOT.png.
+# Entry: Settings (`settings_manage_account_option`). Exit: the dialog open over Settings.
+# Selectors: the dialog message has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "log-out-dialog-open"}
+---
+- scrollUntilVisible:
+    element:
+      id: settings_log_out_option
+    direction: DOWN
+- tapOn:
+    id: settings_log_out_option
+- extendedWaitUntil:
+    visible: "Are you sure you want to sign out\\?"
+    timeout: 15000
+- takeScreenshot: ${SHOT}

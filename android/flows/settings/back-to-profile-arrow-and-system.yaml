@@ -1,0 +1,30 @@
+# Settings closes to Profile with the toolbar back arrow, then again with system Back.
+# The arrow (Toolbar navigation ImageButton in `toolbar`) has no resource id or content description,
+# so its tap is a point fallback on its center ([32,128][179,275] on a 1080x2400 portrait screen).
+# Entry: Home (`home_root_ready`). Exit: Profile tab (`action_settings`).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn:
+    point: "10%,8%"
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 15000
+- assertNotVisible:
+    id: settings_manage_account_option
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 15000
+- assertNotVisible:
+    id: settings_manage_account_option

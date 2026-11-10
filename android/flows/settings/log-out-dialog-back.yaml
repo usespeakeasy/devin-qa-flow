@@ -1,0 +1,19 @@
+# Log out confirmation closed with system Back: the dialog closes and Settings stays, still signed in.
+# Entry: the Log out dialog over Settings (log-out-dialog-open.yaml). Exit: Settings. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "log-out-dialog-back"}
+---
+- assertVisible: "Are you sure you want to sign out\\?"
+- back
+- extendedWaitUntil:
+    notVisible: "Are you sure you want to sign out\\?"
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      id: settings_log_out_option
+    direction: DOWN
+- assertNotVisible:
+    id: onboarding_storybook_screen
+- takeScreenshot: ${SHOT}

@@ -1,0 +1,51 @@
+# Profile > Settings icon: Settings shows every row from Debug options to Log out; Manage Account
+# opens and Back returns to Settings. Entry: Home (`home_root_ready`). Exit: Settings, scrolled down.
+# Rows without an automation ID are checked by their title text (copy check, not navigation).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/open-settings.yaml
+- assertVisible: "Debug options"
+- assertVisible:
+    id: settings_manage_membership_option
+- assertVisible: "Get Subscription History"
+- assertVisible:
+    id: settings_manage_account_option
+- assertVisible: "Notifications"
+- assertVisible: "Preferences"
+- assertVisible:
+    id: settings_clear_cache_option
+- assertVisible:
+    id: settings_support_center_option
+- assertVisible: "App Language"
+- scrollUntilVisible:
+    element: "Language Course"
+    direction: DOWN
+- scrollUntilVisible:
+    element: "About"
+    direction: DOWN
+- scrollUntilVisible:
+    element: "Improve Voice Recognition"
+    direction: DOWN
+- scrollUntilVisible:
+    element:
+      id: settings_log_out_option
+    direction: DOWN
+- scrollUntilVisible:
+    element:
+      id: settings_manage_account_option
+    direction: UP
+- tapOn:
+    id: settings_manage_account_option
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 15000
+- assertNotVisible:
+    id: manage_account_screen

@@ -1,0 +1,16 @@
+# Log out confirmation > Log out: signed out to the storybook welcome screen. Saves SHOT.png.
+# Entry: the Log out dialog over Settings (log-out-dialog-open.yaml). Exit: signed out.
+# SimpleDialog buttons are `simple_dialog_*` on Navigation 3 and `button1`/`button2` on a Conductor dialog.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "log-out-dialog-confirm"}
+---
+- assertVisible: "Are you sure you want to sign out\\?"
+- tapOn:
+    id: "simple_dialog_positive_button|button1"
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_screen
+    timeout: 30000
+- takeScreenshot: ${SHOT}

@@ -1,0 +1,16 @@
+# Process death with the Log out confirmation open: Home key, killApp, relaunch; Settings comes back
+# with the dialog over it. Entry: the Log out dialog over Settings. Exit: the restored dialog. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "process-death-log-out-dialog"}
+---
+- assertVisible: "Are you sure you want to sign out\\?"
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible: "Are you sure you want to sign out\\?"
+    timeout: 60000
+- takeScreenshot: ${SHOT}
