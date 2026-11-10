@@ -1,0 +1,27 @@
+# With a tutor reply showing a dictionary card, tap its Magic Dictionary button: Expression Details opens
+# over the sheet; Back returns to the sheet. Entry: the sheet with a reply that has a dictionary card
+# (ask-typed-reply.yaml with Q="What does <word> mean?"). Exit: the sheet.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: tutor_everywhere_dictionary_button
+    direction: DOWN
+    timeout: 10000
+    optional: true
+- tapOn:
+    id: tutor_everywhere_dictionary_button
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_sheet
+    timeout: 20000
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_expression_details_sheet
+    timeout: 10000
+- assertVisible:
+    id: tutor_everywhere_sheet

@@ -21,3 +21,6 @@ Speak Tutor sheet in lessons (QA of speak-android#8706). Debug Menu flags: `tuto
 | close-tutor-button.yaml | close button `tutor_everywhere_close_button` | none |
 | retry-card-from-tutor.yaml | ask to retry, "Try again in lesson" (`tutor_everywhere_action_button_retry_card`): sheet closes, card back to Speak now | none (the action comes from the tutor's answer to Q) |
 | series-tutor-back-resumes.yaml, series-tutor-retry-card.yaml, series-tutor-close-continues.yaml, series-tutor-rotate.yaml | case flows for speak-android#8808 (tutor Back before the answer, Retry card, Back + close button then continue, rotation) | as their parts |
+| ask-typed-reply.yaml | sheet > keyboard > type `Q` > send > reply done (`tutor_everywhere_thumbs_up_button`) | none |
+| open-dictionary-back.yaml | sheet reply > `tutor_everywhere_dictionary_button` > Expression Details > Back > sheet | none |
+| ../debug-demos/tutor-demo-compose.yaml | Debug Menu > Demos > Speak Tutor Everywhere Demo > Compose API > sheet (QA of speak-android#9186) | none |

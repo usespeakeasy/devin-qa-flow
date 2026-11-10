@@ -1,0 +1,30 @@
+# Debug Menu > Demos > Speak Tutor Everywhere Demo: the Compose API and Back to Debug Menu buttons show;
+# Compose API opens the Speak Tutor sheet. Whether "Controller API" shows is read by the case script
+# (harness `has text:^Controller API$`) because develop still has it. Entry: signed in, any state (cold starts).
+# Exit: the sheet over the demo screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- openLink: speak-dev://demos?id=speak-tutor-everywhere
+- extendedWaitUntil:
+    visible:
+      id: tutor_everywhere_demo_compose_api_button
+    timeout: 25000
+- assertVisible:
+    id: tutor_everywhere_demo_back_button
+- tapOn:
+    id: tutor_everywhere_demo_compose_api_button
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert_allow
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_allow
+- extendedWaitUntil:
+    visible:
+      id: tutor_everywhere_sheet
+    timeout: 20000

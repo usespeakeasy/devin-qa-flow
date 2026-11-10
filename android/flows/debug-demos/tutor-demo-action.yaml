@@ -11,7 +11,8 @@ env:
     stopApp: true
 - openLink: speak-dev://demos?id=speak-tutor-everywhere
 - extendedWaitUntil:
-    visible: "^Controller API$"
+    visible:
+      id: tutor_everywhere_demo_compose_api_button
     timeout: 25000
 - tapOn: ^${BUTTON}$
 - runFlow:
@@ -54,4 +55,5 @@ env:
     notVisible:
       id: tutor_everywhere_sheet
     timeout: 10000
-- assertVisible: "^Controller API$"
+- assertVisible:
+    id: tutor_everywhere_demo_compose_api_button

@@ -1,0 +1,29 @@
+# With the Speak Tutor sheet open, type question Q, send it and wait until the tutor's reply has finished
+# (its thumbs up button shows). Exit: the sheet with the reply. All selectors are resource-ids.
+# maestro test -e Q="What does concierto mean?" ask-typed-reply.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  Q: ${Q || "Give me one example sentence with this phrase"}
+---
+- extendedWaitUntil:
+    visible:
+      id: tutor_everywhere_sheet
+    timeout: 20000
+# The sheet opens in the last input mode, so the keyboard toggle is only there in voice mode.
+- runFlow:
+    when:
+      notVisible:
+        id: tutor_everywhere_input_field
+    commands:
+      - tapOn:
+          id: tutor_everywhere_keyboard_toggle_button
+- tapOn:
+    id: tutor_everywhere_input_field
+- inputText: ${Q}
+- tapOn:
+    id: tutor_everywhere_send_button
+- extendedWaitUntil:
+    visible:
+      id: tutor_everywhere_thumbs_up_button
+    timeout: 60000
