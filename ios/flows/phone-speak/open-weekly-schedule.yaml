@@ -1,0 +1,19 @@
+# Opens Weekly Schedule from the `speak-dev://phone-speak?action=schedule` link (Practice request) and waits
+# for the Ring my phone card, scrolling to it when a large font pushes it below the fold.
+# Entry: Home or Practice on a signed-in dev account with Phone Speak access and a saved weekly slot (the
+# card shows only next to a slot); the ring card is server-gated by `phone_speak_ringing_call`.
+# No automation ids on develop yet (ID PR speak-ios#10261): text fallbacks "Weekly Schedule" and "Ring my phone".
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- openLink: speak-dev://phone-speak?action=schedule
+- runFlow: ../../common/confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible: "Weekly Schedule"
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      text: "Ring my phone"
+    direction: DOWN
+    timeout: 15000

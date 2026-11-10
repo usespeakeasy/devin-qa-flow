@@ -1,0 +1,40 @@
+# Ends a Phone Speak call held past 60 s, skips the "How was your call?" survey, taps Continue on the
+# summary and then each later EOL screen's continue, until the screen the call was opened from (Practice)
+# or the post-call schedule prompt (Ring my phone card) shows.
+# Entry: call screen (call-start-in-app.yaml), call held 65 s or more by the caller.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: "phone-speak.call.action.end-call"
+- extendedWaitUntil:
+    visible:
+      id: "survey.action.skip"
+    timeout: 30000
+- tapOn:
+    id: "survey.action.skip"
+- extendedWaitUntil:
+    visible:
+      id: "phone-speak.summary.action.continue"
+    timeout: 60000
+- tapOn:
+    id: "phone-speak.summary.action.continue"
+- repeat:
+    while:
+      notVisible: "Ring my phone"
+    times: 6
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "lesson.end.(level-progress|new-concepts|streak-progress|streak-saved|streak-freeze).action.continue|lesson.end.widget-prompt.action.skip"
+          timeout: 8000
+          optional: true
+      - tapOn:
+          id: "lesson.end.(level-progress|new-concepts|streak-progress|streak-saved|streak-freeze).action.continue|lesson.end.widget-prompt.action.skip"
+          optional: true
+      - runFlow:
+          when:
+            visible: "Ready to make it a habit\\?"
+          commands:
+            - tapOn: "^Skip$"
