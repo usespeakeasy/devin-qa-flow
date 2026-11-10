@@ -1,0 +1,25 @@
+# Expression Details: play audio, copy, save, unsave. The icons have no state in the tree, so the runner checks the
+# `Magic Dictionary Modal Audio/Copy/Save/Unsave Tapped` Track lines in logcat, in that order.
+# Entry: tutor_expression_details_content, header row on screen. Exit: same sheet.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: tutor_expression_details_audio_button
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: tutor_expression_details_copy_button
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: tutor_expression_details_save_button
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: tutor_expression_details_save_button
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: tutor_expression_details_content

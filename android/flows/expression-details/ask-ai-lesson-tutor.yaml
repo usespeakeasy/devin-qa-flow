@@ -1,0 +1,33 @@
+# AI lesson (immersive) > tutor button > Speak Tutor sheet: ask what WORD means and wait for the reply's
+# magic dictionary button. Split from open-from-ai-lesson-tutor.yaml so a recording can start at the tap;
+# Maestro steps on the animated lesson screen are slow and the whole flow can take minutes.
+# Entry: AI lesson in immersive mode, mic idle. Exit: tutor_everywhere_dictionary_button.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WORD: ${WORD || "concierto"}
+---
+- tapOn:
+    id: ai_lesson_tutor_button
+- waitForAnimationToEnd:
+    timeout: 4000
+- runFlow:
+    when:
+      visible: "^Allow$"
+    commands:
+      - tapOn: "^Allow$"
+- extendedWaitUntil:
+    visible: "Ask me anything"
+    timeout: 20000
+- tapOn:
+    id: tutor_everywhere_keyboard_toggle_button
+    optional: true
+- tapOn:
+    id: tutor_everywhere_input_field
+- inputText: "What does ${WORD} mean?"
+- tapOn:
+    id: tutor_everywhere_send_button
+- extendedWaitUntil:
+    visible:
+      id: tutor_everywhere_dictionary_button
+    timeout: 90000

@@ -1,0 +1,29 @@
+# Expression Details > Report: the report sheet (report_screen) opens over the sheet, type TEXT, Submit closes it and
+# Expression Details is still up. The runner checks `Magic Dictionary Modal Report Feedback Submitted` in logcat.
+# Entry: tutor_expression_details_report_button on screen (scroll-to-report.yaml). Exit: tutor_expression_details_sheet.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TEXT: ${TEXT || "QA report test"}
+---
+- tapOn:
+    id: tutor_expression_details_report_button
+- extendedWaitUntil:
+    visible:
+      id: report_screen
+    timeout: 15000
+- takeScreenshot: report-open
+- tapOn:
+    id: report_input
+- inputText: ${TEXT}
+- hideKeyboard
+- tapOn:
+    id: report_submit_button
+- extendedWaitUntil:
+    notVisible:
+      id: report_screen
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_sheet
+    timeout: 10000

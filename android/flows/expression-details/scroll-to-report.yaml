@@ -1,0 +1,12 @@
+# Expression Details: scroll the sheet's list to the bottom so Report shows.
+# Entry: tutor_expression_details_content. Exit: same sheet, tutor_expression_details_report_button on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: tutor_expression_details_report_button
+    direction: DOWN
+    timeout: 20000
+    centerElement: false

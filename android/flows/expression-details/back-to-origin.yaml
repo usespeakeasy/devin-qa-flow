@@ -1,0 +1,21 @@
+# Expression Details: system Back closes the sheet and ORIGIN (the screen that opened it) shows.
+# Entry: tutor_expression_details_sheet, or ORIGIN when a drag already closed the sheet. Exit: ORIGIN.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ORIGIN: ${ORIGIN || "practice_saved_items_list"}
+---
+- runFlow:
+    when:
+      visible:
+        id: tutor_expression_details_sheet
+    commands:
+      - back
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_expression_details_sheet
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: ${ORIGIN}
+    timeout: 10000

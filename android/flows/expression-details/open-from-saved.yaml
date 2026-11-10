@@ -1,0 +1,34 @@
+# Practice tab > Saved lines > the first saved item: Expression Details (ExpressionDetails.FromSavedItemsList)
+# opens over the saved items list. Entry: signed in with at least one saved item, any state (cold starts).
+# Exit: tutor_expression_details_content.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- runFlow: ../../common/home-popups.yaml
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: practice_tab_card_saved_items
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: practice_tab_card_saved_items
+- extendedWaitUntil:
+    visible:
+      id: practice_saved_items_item
+    timeout: 20000
+- tapOn:
+    id: practice_saved_items_item
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_content
+    timeout: 20000

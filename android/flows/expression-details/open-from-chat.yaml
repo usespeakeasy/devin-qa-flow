@@ -1,0 +1,41 @@
+# Home > tutor entry > tutor chat: ask what WORD means, then tap the magic dictionary card in the reply:
+# Expression Details (ExpressionDetails.FromChat) opens over the chat.
+# Entry: signed in, any state (cold starts). Exit: tutor_expression_details_content.
+# The keyboard can capitalize WORD in the sent message, so only the reply's card is asserted.
+# Selectors: the card is `card` with its headword in `title` (shared ids, so WORD picks it).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WORD: ${WORD || "aprovechar"}
+---
+- launchApp:
+    stopApp: true
+- runFlow: ../../common/home-popups.yaml
+- tapOn:
+    id: learning_path_tutor_entry
+# A new thread, so an older card for WORD (same account on both builds) can't match.
+- tapOn:
+    id: new_thread_button
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: input_message
+      enabled: true
+    timeout: 20000
+- tapOn:
+    id: input_message
+- inputText: "What does ${WORD} mean"
+- tapOn:
+    id: send_button
+- extendedWaitUntil:
+    visible:
+      id: title
+      text: "(?i)${WORD}"
+    timeout: 90000
+- tapOn:
+    id: title
+    text: "(?i)${WORD}"
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_content
+    timeout: 20000

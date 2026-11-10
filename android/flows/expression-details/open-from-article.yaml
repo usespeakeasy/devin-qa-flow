@@ -1,0 +1,44 @@
+# Debug Menu > Demos > Article Lesson Demo > ES fixture: tap WORD, then the popover's dictionary icon (full meaning):
+# Expression Details (ExpressionDetails.FromArticle) opens over the reader.
+# Entry: signed in, any state (cold starts). Exit: tutor_expression_details_content.
+# Selectors: the fixture row and the article word have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WORD: ${WORD || "protestaron"}
+---
+- launchApp:
+    stopApp: true
+- openLink: speak-dev://demos?id=article-lesson
+- extendedWaitUntil:
+    visible: "^Pick a fixture$"
+    timeout: 25000
+- tapOn: "^EN → ES · Latin script · key-vocab \\+ gloss spans$"
+- extendedWaitUntil:
+    visible:
+      id: article_lesson_screen
+    timeout: 15000
+- tapOn: ${WORD}
+- extendedWaitUntil:
+    visible:
+      id: article-popover-dictionary-icon
+    timeout: 10000
+- tapOn:
+    id: article-popover-dictionary-icon
+# The first tap on the icon can land while the popover is still settling and do nothing; tap it once more.
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_content
+    timeout: 8000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: article-popover-dictionary-icon
+    commands:
+      - tapOn:
+          id: article-popover-dictionary-icon
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_content
+    timeout: 20000

@@ -1,0 +1,13 @@
+# Speak Tutor sheet: tap the first reply card's magic dictionary button; Expression Details opens.
+# Entry: tutor_everywhere_dictionary_button (ask-ai-lesson-tutor.yaml). Exit: tutor_expression_details_content.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: tutor_everywhere_dictionary_button
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_content
+    timeout: 20000

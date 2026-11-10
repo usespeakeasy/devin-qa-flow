@@ -1,0 +1,15 @@
+# Expression Details: with the list scrolled down, a short drag down scrolls the list and the sheet stays put;
+# the runner compares tutor_expression_details_sheet bounds before and after (harness `has`).
+# Entry: tutor_expression_details_report_button on screen (scroll-to-report.yaml). Exit: same sheet, list moved up.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- swipe:
+    start: 50%, 70%
+    end: 50%, 82%
+    duration: 600
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: tutor_expression_details_sheet

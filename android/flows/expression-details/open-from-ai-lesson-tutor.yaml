@@ -1,0 +1,12 @@
+# AI lesson (immersive, not chat mode) > tutor button > Speak Tutor sheet: ask what WORD means, then tap the
+# magic dictionary button on the reply's card: Expression Details (ExpressionDetails.FromPronunciationCoach,
+# alwaysDark = !chatMode) opens dark over the sheet, even with the phone in light mode.
+# Entry: AI lesson in immersive mode, mic idle (ai-lesson/open-free-talk-immersive.yaml). Precondition:
+# tutor_everywhere_ai_lessons_enabled ON. Exit: tutor_expression_details_content.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WORD: ${WORD || "concierto"}
+---
+- runFlow: ask-ai-lesson-tutor.yaml
+- runFlow: tap-tutor-dictionary-button.yaml

@@ -1,0 +1,10 @@
+# Expression Details: tap the header audio button once. The runner reads playback from `dumpsys audio`
+# (player event:started / event:stopped). Entry/exit: tutor_expression_details_audio_button on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: tutor_expression_details_audio_button
+- waitForAnimationToEnd:
+    timeout: 1500

@@ -1,0 +1,31 @@
+# Drill lesson > tap a word of the line > the pronunciation coach's magic dictionary button: Expression Details
+# (ExpressionDetails.FromPronunciationCoach) opens over the coach. pronunciation_coach_multilingual picks the coach:
+# the legacy word sheet (`magic_dictionary`) or the phoneme coach (`pronunciation_phoneme_coach_magic_dictionary_button`).
+# Entry: signed in, any state (cold starts). Exit: tutor_expression_details_content.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+---
+- launchApp:
+    stopApp: true
+- runFlow: ../../common/home-popups.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- runFlow: ../../common/pass-qa-pre-lesson.yaml
+- extendedWaitUntil:
+    visible:
+      id: lesson_line_word
+    timeout: 30000
+- tapOn:
+    id: lesson_line_word
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: "magic_dictionary|pronunciation_phoneme_coach_magic_dictionary_button"
+    timeout: 20000
+- tapOn:
+    id: "magic_dictionary|pronunciation_phoneme_coach_magic_dictionary_button"
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_content
+    timeout: 20000

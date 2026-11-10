@@ -1,0 +1,18 @@
+# Expression Details: the whole content is reachable, header (audio button) to the Report button at the end.
+# Used in landscape. Entry/exit: tutor_expression_details_content.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_audio_button
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: tutor_expression_details_report_button
+    direction: DOWN
+    timeout: 20000
+    centerElement: false
+- assertVisible:
+    id: tutor_expression_details_content

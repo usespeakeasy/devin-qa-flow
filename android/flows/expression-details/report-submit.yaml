@@ -1,0 +1,25 @@
+# Report sheet over Expression Details: type TEXT, Submit; the report sheet closes and Expression Details is
+# still up. Entry: report_screen open over the sheet. Exit: tutor_expression_details_sheet.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TEXT: ${TEXT || "QA report test"}
+---
+- extendedWaitUntil:
+    visible:
+      id: report_screen
+    timeout: 15000
+- tapOn:
+    id: report_input
+- inputText: ${TEXT}
+- hideKeyboard
+- tapOn:
+    id: report_submit_button
+- extendedWaitUntil:
+    notVisible:
+      id: report_screen
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_sheet
+    timeout: 10000

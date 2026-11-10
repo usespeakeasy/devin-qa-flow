@@ -1,0 +1,22 @@
+# Expression Details: scroll the list back to its top, then drag down on it: now the sheet itself moves down.
+# The runner compares tutor_expression_details_sheet bounds before and after (harness `has`/`wait`).
+# From half height the Navigation 3 sheet has no lower anchor, so this drag can close it.
+# Entry: tutor_expression_details_content. Exit: same sheet, lower on screen, or the sheet closed.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: tutor_expression_details_audio_button
+    direction: UP
+    timeout: 15000
+    centerElement: false
+# Start below the middle of the screen so the drag begins on the sheet at both opening heights
+# (half height on the Navigation 3 sheet, Material's peek on the controller); a drag that starts on the scrim closes it.
+- swipe:
+    start: 50%, 62%
+    end: 50%, 80%
+    duration: 800
+- waitForAnimationToEnd:
+    timeout: 2000

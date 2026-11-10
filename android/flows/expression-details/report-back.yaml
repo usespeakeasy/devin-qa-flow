@@ -1,0 +1,21 @@
+# Expression Details > Report, then system Back: only the report sheet closes, Expression Details stays.
+# Entry: tutor_expression_details_report_button on screen (scroll-to-report.yaml). Exit: tutor_expression_details_sheet.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: tutor_expression_details_report_button
+- extendedWaitUntil:
+    visible:
+      id: report_screen
+    timeout: 15000
+# The report screen focuses its text field; the first Back would only close the keyboard.
+- hideKeyboard
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: report_screen
+    timeout: 10000
+- assertVisible:
+    id: tutor_expression_details_sheet

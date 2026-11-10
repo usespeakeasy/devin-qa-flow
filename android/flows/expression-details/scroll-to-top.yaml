@@ -1,0 +1,12 @@
+# Expression Details: scroll the list back to its top so the header (audio button) shows.
+# Entry: tutor_expression_details_content. Exit: same sheet, tutor_expression_details_audio_button on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: tutor_expression_details_audio_button
+    direction: UP
+    timeout: 15000
+    centerElement: false
