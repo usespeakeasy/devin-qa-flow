@@ -1,0 +1,46 @@
+# Streak Save V1 as a Main popup on a Home cold start (streak_2_0 off, a streak to save): the sheet shows over Home;
+# its "Start lesson" button opens the next lesson (ARRIVAL id regex; home_root_ready when the next lesson is premium-gated);
+# Back returns to Home with the bar.
+# Entry: any; needs the popup due (QA build: `setprop debug.qa.popup streaksave`). Exit: Home tab. Saves SHOT-dialog.png and SHOT.png.
+# maestro test -e ARRIVAL="drill_lesson_root" -e SHOT=streak-save-popup streak-save-popup-start-lesson.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "streak-save-popup"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: course_streak_save_screen_confirm
+    timeout: 60000
+- takeScreenshot: ${SHOT}-dialog
+- tapOn:
+    id: course_streak_save_screen_confirm
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- assertNotVisible:
+    id: course_streak_save_screen_root
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      notVisible:
+        id: home_root_ready
+    commands:
+      - back
+      - runFlow:
+          when:
+            visible:
+              id: ".*quit.*|.*exit.*"
+          commands:
+            - tapOn:
+                id: ".*quit.*confirm.*|.*exit.*confirm.*|.*quit_button|.*exit_button"
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- assertVisible:
+    id: main_tab_home
+    selected: true

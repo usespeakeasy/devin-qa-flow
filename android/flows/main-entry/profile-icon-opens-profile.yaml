@@ -1,0 +1,36 @@
+# Challenges tab Profile icon on an account whose tab bar has no Profile tab: the icon shows, opens Profile, Back returns to Challenges.
+# Entry: Home ready, bar without a Profile tab (QA-only `debug.qa.noprofile=1` patch drops it).
+# Exit: Challenges tab. Saves SHOT.png on Profile.
+# maestro test -e SHOT=profile-icon profile-icon-opens-profile.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "profile-icon"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- assertNotVisible:
+    id: main_tab_profile
+- tapOn:
+    id: main_tab_challenges
+- extendedWaitUntil:
+    visible:
+      id: profile_icon
+    timeout: 20000
+- tapOn:
+    id: profile_icon
+- extendedWaitUntil:
+    visible:
+      id: stat_streak_title
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: challenge_tab_root
+    timeout: 20000
+- assertVisible:
+    id: main_tab_challenges
+    selected: true

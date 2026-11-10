@@ -1,0 +1,47 @@
+# Debug Menu > Dialog Bridges > "Streak Save": the V1 "Save your N-day streak!" sheet (`Destination.StreakSaveDialog`,
+# Navigation 3 entry, or the bridge controller with the kill switch ON) opens; its save button closes it back to Dialog Bridges.
+# Entry: signed in, any state (restarts the app). Exit: Dialog Bridges list. Saves SHOT.png (the open sheet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
+  SHOT: ${SHOT || "streak-save-bridge"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- openLink: ${DEBUG_MENU_LINK}
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: debug_menu_dialog_bridges
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: debug_menu_dialog_bridges
+- scrollUntilVisible:
+    element:
+      id: debug_dialog_bridges_streak_save
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: debug_dialog_bridges_streak_save
+- extendedWaitUntil:
+    visible:
+      id: course_streak_save_screen_root
+    timeout: 15000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: course_streak_save_screen_confirm
+- extendedWaitUntil:
+    notVisible:
+      id: course_streak_save_screen_root
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_streak_save

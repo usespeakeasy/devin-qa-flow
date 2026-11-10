@@ -1,0 +1,39 @@
+# Practice > Saved items: the bottom bar hides while saved items show; Back returns to Practice main with the bar.
+# Entry: any Main tab, signed in. Exit: Practice main. Saves SHOT.png (saved items, no bar).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "saved-items-hide-bar"}
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: practice_tab_card_saved_items
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_saved_items
+- extendedWaitUntil:
+    visible:
+      id: "practice_saved_items_list|practice_saved_items_empty.*|practice_saved_items.*"
+    timeout: 20000
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: main_tab_practice
+- assertNotVisible:
+    id: main_tab_home
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 20000
+- assertVisible:
+    id: main_tab_practice
+    selected: true

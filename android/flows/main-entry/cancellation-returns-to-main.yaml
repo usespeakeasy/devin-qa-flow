@@ -1,0 +1,68 @@
+# Profile > Settings > Manage Membership > Cancel Subscription > reason > Yes (> Cancel anyway on the offer): the Play
+# subscriptions page opens and the app goes back to Main. Back from the store returns to the app on Main.
+# Entry: Home ready. Precondition: a cancellable Play subscription (dev accounts: Debug Menu Subscription override Premium
+# plus the QA-only `debug.qa.sub=1` patch that forces the Cancel CTA).
+# Exit: Main, any tab (the caller records which tab is selected). Saves SHOT-reason.png and SHOT.png (back on Main).
+# Selectors: the confirm is the Navigation 3 SimpleDialog (`simple_dialog_positive_button`) or, with the kill switch ON, a platform AlertDialog (`button1`).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "cancellation-main"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- tapOn:
+    id: main_tab_profile
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible:
+      id: settings_clear_cache_option
+    timeout: 15000
+- tapOn:
+    id: settings_manage_membership_option
+- extendedWaitUntil:
+    visible:
+      id: item_subscription_change_cta
+    timeout: 20000
+- tapOn:
+    id: item_subscription_change_cta
+- extendedWaitUntil:
+    visible:
+      id: cancel_membership_screen
+    timeout: 15000
+- tapOn:
+    id: option_too_expensive
+- takeScreenshot: ${SHOT}-reason
+- tapOn:
+    id: continue_button
+- extendedWaitUntil:
+    visible:
+      id: "simple_dialog_positive_button|button1"
+    timeout: 15000
+- tapOn:
+    id: "simple_dialog_positive_button|button1"
+- runFlow:
+    when:
+      visible:
+        id: cancellation_offer_screen
+    commands:
+      - tapOn:
+          id: secondary_button
+- extendedWaitUntil:
+    notVisible:
+      id: cancel_membership_screen
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: main_tab_home
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: main_tab_home
+    timeout: 30000
+- takeScreenshot: ${SHOT}
