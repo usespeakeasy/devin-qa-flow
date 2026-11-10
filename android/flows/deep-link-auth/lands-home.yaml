@@ -1,0 +1,15 @@
+# After a deep-link sign-in: the auth sheet closes and Home shows (premium intro, premium alert and streak sheet dismissed).
+# Entry: deep-link auth sheet loading, or already past it.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding_auth_sheet_screen
+    timeout: 120000
+- runFlow: ../../common/dismiss-premium-intro.yaml
+- assertVisible:
+    id: home_root_ready
+- assertNotVisible:
+    id: onboarding_auth_sheet_screen

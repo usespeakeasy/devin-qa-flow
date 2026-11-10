@@ -1,0 +1,13 @@
+# A sign-in deep link (partner_custom_sso or multicampus) was just sent with
+# `adb shell "am start -a android.intent.action.VIEW -d '<link>'"`: the deep-link auth sheet shows its loader.
+# Entry: any screen, link already sent; the sign-in must be slow (QA-only delay patch or slow network) so the loader stays up.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: "(onboarding_auth_loading|loading_bar)"
+    timeout: 15000
+- assertVisible:
+    id: "(onboarding_auth_sheet_screen|design_bottom_sheet)"
