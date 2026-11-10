@@ -1,0 +1,27 @@
+# Plans screen > Restore purchases > "Your purchases were successfully restored." > OK opens the post conversion screen.
+# Needs a Play account with an active Speak subscription, or the QA patch `log.tag.QA_RESTORE_SUCCESS` (restore returns
+# a fixed annual subscription). Entry: AiTutorPurchase or AiTutorPurchasePremiumPlan.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: ${SHOT || 'restore-success'}
+---
+- scrollUntilVisible:
+    element:
+      id: restore_purchases
+    direction: DOWN
+- tapOn:
+    id: restore_purchases
+- extendedWaitUntil:
+    visible: Your purchases were successfully restored\.
+    timeout: 45000
+- takeScreenshot: ${SHOT}-dialog
+- tapOn:
+    id: (simple_dialog_positive_button|button1)
+- extendedWaitUntil:
+    visible:
+      id: post_conversion_screen
+    timeout: 30000
+- assertNotVisible:
+    id: restore_purchases
+- takeScreenshot: ${SHOT}-post-conversion

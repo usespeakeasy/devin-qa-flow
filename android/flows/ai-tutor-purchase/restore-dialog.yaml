@@ -1,0 +1,36 @@
+# Plans screen > Restore purchases > the restore result dialog with MESSAGE > OK; the screen SCREEN_ID stays, no dialog left.
+# MESSAGE defaults to the empty restore ("You do not have any previous purchases."). For the offline restore error pass
+# MESSAGE="There was an error while restoring.*". The success dialog is restore-success-post-conversion.yaml.
+# Saves a full resolution screenshot SHOT.png of the dialog in the working directory.
+# Entry: AiTutorPurchase, AiTutorPurchasePremiumPlan or Premium Plans. Develop's kill switch ON shows a Conductor
+# SimpleDialog (`button1`); Navigation 3 shows `simple_dialog`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  MESSAGE: ${MESSAGE || 'You do not have any previous purchases\\.'}
+  SCREEN_ID: ${SCREEN_ID || 'secondary_button'}
+  SHOT: ${SHOT || 'restore-dialog'}
+---
+- scrollUntilVisible:
+    element:
+      id: restore_purchases
+    direction: DOWN
+- tapOn:
+    id: restore_purchases
+- extendedWaitUntil:
+    visible: ${MESSAGE}
+    timeout: 45000
+- assertVisible:
+    id: (simple_dialog_positive_button|button1)
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: (simple_dialog_positive_button|button1)
+- extendedWaitUntil:
+    notVisible: ${MESSAGE}
+    timeout: 10000
+- assertNotVisible:
+    id: (simple_dialog|parentPanel)
+- assertVisible:
+    id: ${SCREEN_ID}
+- assertVisible:
+    id: restore_purchases

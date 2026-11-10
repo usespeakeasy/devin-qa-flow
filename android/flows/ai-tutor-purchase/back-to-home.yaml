@@ -1,0 +1,23 @@
+# Plans screen > system Back > premium intro > system Back > Home, nothing of the paywall left.
+# Entry: AiTutorPurchase or AiTutorPurchasePremiumPlan opened by open-plans.yaml on an account with no free trial
+# (no timeline in between).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_ready
+    timeout: 15000
+- assertNotVisible:
+    id: restore_purchases
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 15000
+- assertNotVisible:
+    id: onboarding_premium_intro_ready
+- assertNotVisible:
+    id: restore_purchases

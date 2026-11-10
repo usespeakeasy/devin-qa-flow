@@ -1,0 +1,35 @@
+# Asserts the native AI tutor plans screen with a card picked.
+# PLAN=standard: AiTutorPurchase (Premium and Premium Plus cards, View All Plans, no Annual/Monthly toggle).
+# PLAN=premium_plan: AiTutorPurchasePremiumPlan (annual and monthly cards).
+# Entry: the plans screen. Read-only. dev or prod.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  PLAN: ${PLAN || 'standard'}
+---
+- extendedWaitUntil:
+    visible:
+      id: "${PLAN == 'premium_plan' ? 'premium_layout_annual' : 'secondary_button'}"
+    timeout: 30000
+- runFlow:
+    when:
+      true: ${PLAN == 'standard'}
+    commands:
+      - assertVisible:
+          id: premium_layout
+      - assertVisible:
+          id: premium_check
+      - assertVisible:
+          id: secondary_button
+      - assertNotVisible:
+          id: annual_toggle
+- runFlow:
+    when:
+      true: ${PLAN == 'premium_plan'}
+    commands:
+      - assertVisible:
+          id: premium_layout_monthly
+      - assertVisible:
+          id: premium_check_(annual|monthly)
+- assertVisible:
+    id: primary_button

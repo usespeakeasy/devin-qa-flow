@@ -1,0 +1,50 @@
+# Home > Get Premium > premium intro main button (> free trial timeline button when it shows) > native plans screen.
+# PLAN=standard expects AiTutorPurchase, PLAN=premium_plan AiTutorPurchasePremiumPlan (Spanish (Mexico) to English (US),
+# or QA patch `log.tag.QA_MEXICO_US`). See assert-plans.yaml.
+# Entry: Home (learning_path_ready), signed in, free account.
+# Preconditions: paywall_superwall OFF (Debug Menu > Feature flag override; Superwall otherwise replaces the native screens),
+# google_apis_playstore image with a Google account (Play Billing). dev.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  PLAN: ${PLAN || 'standard'}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+# The next-up lesson popover can be open over Home after launch and swallows the Get Premium tap. A drag on the path
+# closes it (LearningPathScreen closes the popover on list drag); at the top of the path the swipe moves nothing.
+- runFlow:
+    when:
+      visible:
+        id: learning_path_popover_lesson_menu
+    commands:
+      - swipe:
+          direction: DOWN
+      - waitForAnimationToEnd
+- tapOn:
+    id: course_premium_upgrade_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_ready
+    timeout: 30000
+- assertVisible:
+    id: onboarding_premium_intro_ready
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    visible:
+      id: (timeline_layout|secondary_button|premium_layout_annual)
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: timeline_layout
+    commands:
+      - tapOn:
+          id: primary_button
+- runFlow:
+    file: assert-plans.yaml
+    env:
+      PLAN: ${PLAN}

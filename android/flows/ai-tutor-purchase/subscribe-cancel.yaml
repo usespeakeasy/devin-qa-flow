@@ -1,0 +1,53 @@
+# Plans screen > Subscribe > the Google Play purchase sheet > Back closes it; the plans screen stays.
+# EXPECT=none: no app dialog after the sheet closes (a cancel). EXPECT=error: "An unexpected error occurred." (OK closes it).
+# On dev the tester account gets Play's "The item you were attempting to purchase could not be found." sheet, which
+# returns an error, not a cancel; the QA patch `log.tag.QA_PLAY_CANCEL` maps that result to RevenueCat's cancel code.
+# The sheet is Play's UI (com.android.vending), so it is matched by text.
+# Entry: AiTutorPurchase or AiTutorPurchasePremiumPlan. Never completes a purchase.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  EXPECT: ${EXPECT || 'none'}
+  SHOT: ${SHOT || 'play-sheet'}
+---
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    visible: (Got it|Subscribe|Buy|.*could not be found.*)
+    timeout: 30000
+- assertNotVisible:
+    id: restore_purchases
+- takeScreenshot: ${SHOT}
+- back
+# An error dialog hides the plans screen from the hierarchy, so wait for either.
+- extendedWaitUntil:
+    visible:
+      id: (primary_button|button1|simple_dialog_positive_button)
+    timeout: 15000
+- runFlow:
+    when:
+      true: ${EXPECT == 'none'}
+    commands:
+      - extendedWaitUntil:
+          visible: An unexpected error occurred\.
+          timeout: 3000
+          optional: true
+      - assertNotVisible: An unexpected error occurred\.
+      - assertNotVisible:
+          id: (simple_dialog|parentPanel)
+      - assertVisible:
+          id: primary_button
+- runFlow:
+    when:
+      true: ${EXPECT == 'error'}
+    commands:
+      - extendedWaitUntil:
+          visible: An unexpected error occurred\.
+          timeout: 10000
+      - tapOn:
+          id: (simple_dialog_positive_button|button1)
+      - extendedWaitUntil:
+          notVisible: An unexpected error occurred\.
+          timeout: 10000
+      - assertVisible:
+          id: primary_button

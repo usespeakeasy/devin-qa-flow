@@ -1,0 +1,54 @@
+# Plans screen > View All Plans > "Premium Plans" with the Annual/Monthly toggle (> Restore purchases when RESTORE=true)
+# > system Back returns to the screen under it (BACK_ID) with no dialog.
+# Entry: AiTutorPurchase (BACK_ID=secondary_button) or AiTutorPurchasePremiumPlan (BACK_ID=premium_layout_annual).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  BACK_ID: ${BACK_ID || 'secondary_button'}
+  RESTORE: ${RESTORE || 'false'}
+  SHOT: ${SHOT || 'premium-plans-restore'}
+---
+- tapOn:
+    id: secondary_button
+- extendedWaitUntil:
+    visible:
+      id: annual_toggle
+    timeout: 15000
+- assertVisible:
+    id: title
+    text: Premium Plans
+- assertVisible:
+    id: monthly_toggle
+- assertVisible:
+    id: premium_check
+- assertNotVisible:
+    id: secondary_button
+- takeScreenshot: ${SHOT}-premium-plans
+- runFlow:
+    when:
+      true: ${RESTORE == 'true'}
+    file: restore-dialog.yaml
+    env:
+      SCREEN_ID: restore_purchases
+      SHOT: ${SHOT}
+- runFlow:
+    when:
+      true: ${RESTORE == 'true'}
+    commands:
+      # The restore button sits under the plans, so the toggle scrolled off; Premium Plans must still be the screen.
+      - scrollUntilVisible:
+          element:
+            id: annual_toggle
+          direction: UP
+      - assertVisible:
+          id: title
+          text: Premium Plans
+- back
+- extendedWaitUntil:
+    visible:
+      id: ${BACK_ID}
+    timeout: 15000
+- assertNotVisible:
+    id: annual_toggle
+- assertNotVisible:
+    id: (simple_dialog|parentPanel)
