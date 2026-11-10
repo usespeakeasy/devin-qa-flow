@@ -1,0 +1,24 @@
+# Phone Speak: start an in-app call (not a ring) and wait until the tutor is ready, which is
+# when the calling screen shows its Mute and CC toggles.
+# Entry: Home (launch-home.yaml). Preconditions: signed in on an account entitled to Phone Speak
+# on dev (Premium Plus), microphone granted (`simctl privacy grant microphone`), split overrides set
+# before launch (e.g. phone_speak_ui_revamp=agent-transcript). Exit: the call screen, call active.
+# The link takes the same Practice request as the Phone Speak card (`PracticeViewModel.requestPhoneSpeak`).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- openLink: speak-dev://phone-speak?action=call
+- runFlow: ../../common/confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible:
+      id: "phone-speak.call.action.end-call"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "phone-speak.call.action.mute"
+    timeout: 45000
+- extendedWaitUntil:
+    visible:
+      id: "phone-speak.call.action.captions"
+    timeout: 10000

@@ -1,0 +1,17 @@
+# Phone Speak calling screen: the app goes to the background and comes back during a call; the call
+# screen and its controls are still there.
+# Entry: call-start-in-app.yaml (call active). Exit: the same call.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- pressKey: home
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: "phone-speak.call.action.end-call"
+    timeout: 15000
+- assertVisible:
+    id: "phone-speak.call.action.mute"
+- takeScreenshot: ${SHOT}-after-background

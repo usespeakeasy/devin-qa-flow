@@ -1,0 +1,20 @@
+# Phone Speak: End call from the calling screen, then leave whatever follows (a short call ends
+# without a survey; a summary has Continue).
+# Entry: the call screen. Exit: the call screen is gone.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: "phone-speak.call.action.end-call"
+- extendedWaitUntil:
+    notVisible:
+      id: "phone-speak.call.action.end-call"
+    timeout: 20000
+- runFlow:
+    when:
+      visible:
+        id: "phone-speak.summary.action.continue"
+    commands:
+      - tapOn:
+          id: "phone-speak.summary.action.continue"

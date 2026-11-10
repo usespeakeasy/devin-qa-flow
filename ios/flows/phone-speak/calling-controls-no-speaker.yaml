@@ -1,0 +1,16 @@
+# Phone Speak calling screen with the Speaker button flag off (or a build without it): the
+# controls are End call, Mute and CC only, no loudspeaker control.
+# Entry: call-start-in-app.yaml (call active). Exit: the same call.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible:
+    id: "phone-speak.call.action.end-call"
+- assertVisible:
+    id: "phone-speak.call.action.mute"
+- assertVisible:
+    id: "phone-speak.call.action.captions"
+- assertNotVisible:
+    id: "phone-speak.call.action.loudspeaker"
+- takeScreenshot: ${SHOT}-controls
