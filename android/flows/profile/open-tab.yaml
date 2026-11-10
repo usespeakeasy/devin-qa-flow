@@ -8,6 +8,16 @@ env:
     id: main_tab_profile
 - extendedWaitUntil:
     visible:
+      id: action_settings
+    timeout: 30000
+# The tab keeps its scroll position (for example after a course switch lower in the list).
+- scrollUntilVisible:
+    element:
+      id: stat_sentences_title|stat_streak_title
+    direction: UP
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
       id: stat_sentences_title|stat_streak_title
     timeout: 30000
 - assertVisible:

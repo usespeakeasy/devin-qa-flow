@@ -1,0 +1,19 @@
+# Pushed Profile: the toolbar back arrow closes it to the tab it was opened from (ICON_ID shows again).
+# The arrow (a Toolbar navigation ImageButton) has no resource id or content description, so the
+# tap is a point fallback on its center ([32,128][179,275] on a 1080x2400 screen).
+# Entry: pushed Profile. Exit: the opening tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ICON_ID: ${ICON_ID || "profile_icon"}
+---
+- assertVisible:
+    id: action_settings
+- tapOn:
+    point: "10%,8%"
+- extendedWaitUntil:
+    visible:
+      id: ${ICON_ID}
+    timeout: 15000
+- assertNotVisible:
+    id: action_settings

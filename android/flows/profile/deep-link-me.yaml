@@ -1,0 +1,25 @@
+# speak-dev://me while the app is open: the Profile tab opens with the bottom bar (`main_tab_profile`).
+# Entry: main tabs (Home). Exit: Profile tab. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "deep-link-me"}
+---
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- openLink: speak-dev://me
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: stat_sentences_title|stat_streak_title
+    timeout: 30000
+- assertVisible:
+    id: main_tab_profile
+- takeScreenshot: ${SHOT}
