@@ -1,0 +1,51 @@
+# Smart Review concept row > ConceptDetails sheet > secondary action (Delete): the sheet closes and the Main list drops the row.
+# Entry: Home tab. Precondition: QA fixture (adb shell setprop debug.qa.srdata fixture) with its in-memory update (fixture rows qa-c2, qa-c3 and one more; delete qa-c2). The fixture forgets deletes when the process dies.
+# maestro test -e CONCEPT=qa-c2 -e KEEP=qa-c3 concept-delete.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_practice_tab
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: smart_review_concept_row_${CONCEPT}
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: smart_review_concept_row_${CONCEPT}
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_details_sheet
+    timeout: 10000
+- assertVisible:
+    id: smart_review_concept_details_secondary_action
+- takeScreenshot: concept-details-before-delete
+- tapOn:
+    id: smart_review_concept_details_secondary_action
+- extendedWaitUntil:
+    notVisible:
+      id: smart_review_concept_details_sheet
+    timeout: 15000
+- extendedWaitUntil:
+    notVisible:
+      id: smart_review_concept_row_${CONCEPT}
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: smart_review_concept_row_${KEEP}
+    direction: DOWN
+    timeout: 10000
+- assertVisible:
+    id: smart_review_start_button
+- takeScreenshot: concept-deleted
