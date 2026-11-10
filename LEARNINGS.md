@@ -64,6 +64,12 @@ describes.
   Hit again in [QA of speak-ios#10174](https://github.com/usespeakeasy/speak-ios/pull/10174)
   (2026-11-09): lesson close and review dismiss could not be reached on either build, so plan
   return-from-lesson cases as unverified up front.
+  Fixed in the [branch-only retry](https://github.com/usespeakeasy/speak-ios/pull/10174) (2026-11-10): after the
+  mic grant and a `coreaudiod` restart, an `axe tap` on the close X (38,84) about 1.5 s after
+  `Starting lesson with id:` closes the lesson; a review finishes with no recording by tapping the
+  dev skip down-arrow (376,819) per card. Under Plan override Free a review ends at Preview Finished
+  (Return home is the dismiss path); finishing needs a paid plan, then end-of-lesson screens each
+  take a bottom CTA tap (201,800) until `deinit: <Speak_V2.SeriesLessonVC`.
   (3) Killing the shell that runs `simctl io recordVideo` (SIGKILL) leaves CoreSimulator in "Host
   recording is already in progress" until the simulator is shut down and booted again; stop
   recordings only with `kill -INT`. (4) The first lesson shows the system microphone alert, which
