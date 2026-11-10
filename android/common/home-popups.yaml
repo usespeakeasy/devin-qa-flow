@@ -1,5 +1,6 @@
 # Home after a cold start or login: close the referral welcome dialog and the "Find your English level" sheet
-# (app_assessment_popup) and the "Save your N-day streak!" sheet (course_streak_save_dialog_root) when they show, and wait for Home.
+# (app_assessment_popup), the "Save your N-day streak!" sheet (course_streak_save_dialog_root) and the
+# "Made for you" custom course sheet (custom_courses_announcement_sheet) when they show, and wait for Home.
 # Entry: app starting on Home. Exit: Home (home_root_ready) with no popup.
 appId: ${APP_ID}
 env:
@@ -7,7 +8,7 @@ env:
 ---
 - extendedWaitUntil:
     visible:
-      id: "home_root_ready|app_assessment_popup|referral_welcome_dialog_root|course_streak_save_dialog_root"
+      id: "home_root_ready|app_assessment_popup|referral_welcome_dialog_root|course_streak_save_dialog_root|custom_courses_announcement_sheet"
     timeout: 60000
 - waitForAnimationToEnd:
     timeout: 3000
@@ -26,6 +27,12 @@ env:
         id: course_streak_save_dialog_root
     commands:
       - back
+- runFlow:
+    when:
+      visible:
+        id: custom_courses_announcement_sheet
+    commands:
+      - back
 - extendedWaitUntil:
     visible:
       id: home_root_ready
@@ -34,3 +41,5 @@ env:
     id: referral_welcome_dialog_root
 - assertNotVisible:
     id: course_streak_save_dialog_root
+- assertNotVisible:
+    id: custom_courses_announcement_sheet
