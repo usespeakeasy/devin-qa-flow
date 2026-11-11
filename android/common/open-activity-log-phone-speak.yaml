@@ -8,7 +8,7 @@
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
-  ROW_TEXT: "EN_ES_A1-1_quetal_SP.*"
+  ROW_TEXT: ${ROW_TEXT || "EN_ES_A1-1_quetal_SP.*"}
 ---
 - tapOn: "Profile"
 - extendedWaitUntil:

@@ -1,0 +1,16 @@
+# Open the lesson end with fixed demo steps through the debug deep link
+# `speak-dev://debug-lesson-end?lessonId=LESSON_ID&screens=SCREENS` (debug builds only; SCREENS is a
+# comma separated list of LessonEndDebugOverride.SUPPORTED_COMPONENTS, e.g. SUMMARY,TAKEAWAYS).
+# The first step shows directly, without the confetti.
+# Entry: Home, signed in. Exit: ARRIVAL_ID showing.
+# maestro test -e SCREENS=SUMMARY,TAKEAWAYS -e ARRIVAL_ID=lesson_end_reskin_root debug-lesson-end-open.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- openLink: speak-dev://debug-lesson-end?lessonId=${LESSON_ID}&screens=${SCREENS}
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000

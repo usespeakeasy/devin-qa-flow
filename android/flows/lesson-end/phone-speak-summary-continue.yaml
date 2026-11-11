@@ -1,0 +1,20 @@
+# Phone speak call summary in the lesson end: Continue moves the flow on (no corrections, so no
+# practice intro), and the summary is gone.
+# Entry: the summary is showing (run `android/common/open-phone-speak-summary.yaml` first; QA-only
+# fixed summary with no corrections, `debug.qa.le PHONE_SPEAK_SUMMARY_V2`).
+# Selectors: `phone_speak_summary_continue`; `Great call!` (copy check).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible: "Great call!"
+- tapOn:
+    id: phone_speak_summary_continue
+- extendedWaitUntil:
+    notVisible: "Great call!"
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*|home_root_ready|primary_button"
+    timeout: 30000
+- assertNotVisible: "Practice your frequent mistakes"

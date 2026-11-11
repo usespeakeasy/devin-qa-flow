@@ -1,0 +1,25 @@
+# Background the app on a lesson end or completion screen and come back from the launcher icon:
+# the same step shows again. With Developer options > Don't keep activities on, the activity is
+# destroyed on Home, so the step comes back from saved state.
+# Entry: the screen is showing with ARRIVAL_ID. The caller turns Don't keep activities on
+# (`system-settings/toggle-dont-keep-activities.yaml`) and checks the log for `view destroyed`.
+# maestro test -e ARRIVAL_ID=lesson_end_reskin_root background-return.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: ${ARRIVAL_ID}
+- pressKey: Home
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: ${ARRIVAL_ID}
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000
+- assertNotVisible:
+    id: home_root_ready
