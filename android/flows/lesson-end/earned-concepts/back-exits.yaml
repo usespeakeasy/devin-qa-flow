@@ -1,0 +1,13 @@
+# New Concepts step: system Back closes the whole lesson end flow (Home, not the loading screen or the lesson).
+# Entry: New Concepts step. Exit: Home.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- assertNotVisible:
+    id: smart_review_concept_summary_root

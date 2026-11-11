@@ -1,0 +1,20 @@
+# New Concepts step: a quick double tap on a concept opens one details sheet; one Back closes it and shows the step.
+# Entry: New Concepts step with CONCEPT. Exit: New Concepts step.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  CONCEPT: "^hasta luego$"
+---
+- doubleTapOn: ${CONCEPT}
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_details_sheet
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: smart_review_concept_details_sheet
+    timeout: 15000
+- assertVisible:
+    id: smart_review_concept_summary_root
+- assertVisible: ${CONCEPT}

@@ -1,0 +1,20 @@
+# New Concepts step: concept row > details sheet, close it with Back: the sheet closes and the list keeps the row.
+# Entry: New Concepts step with CONCEPT. Exit: New Concepts step, list unchanged.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  CONCEPT: "^hasta luego$"
+---
+- tapOn: ${CONCEPT}
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_details_sheet
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: smart_review_concept_details_sheet
+    timeout: 15000
+- assertVisible:
+    id: smart_review_concept_summary_root
+- assertVisible: ${CONCEPT}

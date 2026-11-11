@@ -1,0 +1,23 @@
+# New Concepts step: concept row > details sheet over the step > Don't Review closes the sheet and drops the row.
+# Entry: New Concepts step with CONCEPT and KEEP rows. Exit: New Concepts step without CONCEPT.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  CONCEPT: "^muy bien$"
+  KEEP: "^hasta luego$"
+---
+- tapOn: ${CONCEPT}
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_details_sheet
+    timeout: 15000
+- tapOn:
+    id: smart_review_concept_details_secondary_action
+- extendedWaitUntil:
+    notVisible:
+      id: smart_review_concept_details_sheet
+    timeout: 15000
+- assertVisible:
+    id: smart_review_concept_summary_root
+- assertNotVisible: ${CONCEPT}
+- assertVisible: ${KEEP}
