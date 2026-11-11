@@ -1,0 +1,20 @@
+# Challenge tab with Leagues on, organization account: the header also shows Leaderboard and the page loads
+# ORG_NAME. Entry: any Main tab. Precondition: Leagues on, account in an organization. Exit: Leaderboard page.
+# Saves SHOT.png. Selectors: the Leaderboard page has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ORG_NAME: ${ORG_NAME || "QA Org"}
+  SHOT: ${SHOT || "leaderboard-page"}
+---
+- tapOn: "Challenge"
+- extendedWaitUntil:
+    visible: "Leaderboard"
+    timeout: 20000
+- assertVisible: "Leagues"
+- assertVisible: "Challenges"
+- tapOn: "Leaderboard"
+- extendedWaitUntil:
+    visible: ".*${ORG_NAME}.*"
+    timeout: 20000
+- takeScreenshot: ${SHOT}

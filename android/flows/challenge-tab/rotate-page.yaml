@@ -1,0 +1,32 @@
+# Rotate the current Challenge tab page to landscape and back: the same page comes back (ARRIVAL_ID shown,
+# Leagues tier list not shown). Entry: Challenge tab on the Challenges list. Needs tablet emulation
+# (SpeakActivity is portrait-locked on phones). Exit: same page, portrait. Saves SHOT.png in landscape.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ARRIVAL_ID: ${ARRIVAL_ID || "challenges_active_button"}
+  SHOT: ${SHOT || "rotate-page"}
+---
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 20000
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 15000
+- assertNotVisible:
+    id: tier_list
+- takeScreenshot: ${SHOT}
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 15000
+- assertNotVisible:
+    id: tier_list

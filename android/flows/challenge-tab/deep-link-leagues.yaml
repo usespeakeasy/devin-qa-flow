@@ -1,0 +1,26 @@
+# speak-dev://challenges/leagues from Home: the Challenge tab opens on the Leagues page, even after the
+# Challenges page was the last one shown. Entry: Challenge tab, Leagues on. Exit: Leagues page. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "deep-link-leagues"}
+---
+- tapOn: "Challenges"
+- extendedWaitUntil:
+    visible:
+      id: challenges_active_button
+    timeout: 20000
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- openLink: speak-dev://challenges/leagues
+- extendedWaitUntil:
+    visible:
+      id: tier_list
+    timeout: 20000
+- assertNotVisible:
+    id: challenges_active_button
+- takeScreenshot: ${SHOT}

@@ -1,0 +1,43 @@
+# Challenge tab with Leagues on: the header shows Leagues and Challenges, Leagues loads its tier list and
+# Challenges loads Active / Upcoming / Completed. Entry: any Main tab. Precondition: Leagues on in Preferences.
+# Exit: Challenge tab on the Challenges page (Active). Saves SHOT.png (Challenges page).
+# A one-time tier result (tier_reached_continue_button) is dismissed if shown.
+# Selectors: the bottom tab and the header pages have no resource-id on the controller fallback (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "leagues-pages"}
+---
+- tapOn: "Challenge"
+- extendedWaitUntil:
+    visible: "Leagues"
+    timeout: 20000
+- tapOn: "Leagues"
+- runFlow:
+    when:
+      visible:
+        id: tier_reached_continue_button
+    commands:
+      - tapOn:
+          id: tier_reached_continue_button
+- extendedWaitUntil:
+    visible:
+      id: tier_list
+    timeout: 20000
+- tapOn: "Challenges"
+- extendedWaitUntil:
+    visible:
+      id: challenges_active_button
+    timeout: 20000
+- assertVisible:
+    id: challenges_upcoming_button
+- assertVisible:
+    id: challenges_completed_button
+- assertVisible: "Leagues"
+- tapOn:
+    id: challenges_active_button
+- extendedWaitUntil:
+    visible:
+      id: challenge_overview_list_screen
+    timeout: 20000
+- takeScreenshot: ${SHOT}

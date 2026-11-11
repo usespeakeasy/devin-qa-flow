@@ -1,0 +1,36 @@
+# Background and reopen on the current Challenge tab page (run it with "Don't keep activities" on, or after
+# `am kill` with KILL=true): the same page comes back (ARRIVAL_ID shown, Leagues tier list not shown).
+# Entry: Challenge tab on the Challenges list. Exit: same page. Saves SHOT.png after reopening.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ARRIVAL_ID: ${ARRIVAL_ID || "challenges_active_button"}
+  KILL: ${KILL || "false"}
+  SHOT: ${SHOT || "background-page"}
+---
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 20000
+- pressKey: Home
+- runFlow:
+    when:
+      true: ${KILL == "true"}
+    commands:
+      - killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: main_tab_challenges
+      selected: true
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000
+- assertNotVisible:
+    id: tier_list
+- assertNotVisible:
+    id: onboarding_storybook_sign_in_button
+- takeScreenshot: ${SHOT}

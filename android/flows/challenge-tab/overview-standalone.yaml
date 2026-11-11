@@ -1,0 +1,26 @@
+# Challenge tab with Leagues off: the Challenges screen alone (Active / Upcoming / Completed, no Leagues header).
+# Entry: any Main tab. Precondition: Leagues off in Preferences. Exit: Challenge tab, Active. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "overview-standalone"}
+---
+- tapOn: "Challenge"
+- extendedWaitUntil:
+    visible:
+      id: challenges_active_button
+    timeout: 20000
+- assertVisible:
+    id: challenges_upcoming_button
+- assertVisible:
+    id: challenges_completed_button
+- assertNotVisible: "Leagues"
+- assertNotVisible:
+    id: tier_list
+- tapOn:
+    id: challenges_active_button
+- extendedWaitUntil:
+    visible:
+      id: challenge_overview_list_screen
+    timeout: 20000
+- takeScreenshot: ${SHOT}

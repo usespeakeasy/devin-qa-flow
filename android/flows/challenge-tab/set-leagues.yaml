@@ -1,0 +1,67 @@
+# Profile > Settings > Preferences > Leagues switch: set it to ENABLED (true or false), then back to Profile.
+# Entry: Home tab. Precondition: signed-in dev account. Exit: Profile tab. Force-stop and relaunch so the
+# Challenge tab is rebuilt with the new setting. Saves SHOT.png (Preferences after the change).
+# Selectors: the Profile tab and the Preferences row have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ENABLED: ${ENABLED || "true"}
+  PROFILE_TAB: ${PROFILE_TAB || "Profile"}
+  ROW: ${ROW || "Preferences"}
+  SHOT: ${SHOT || "set-leagues"}
+---
+- tapOn: ${PROFILE_TAB}
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 15000
+- scrollUntilVisible:
+    element: ${ROW}
+    direction: DOWN
+    timeout: 20000
+- tapOn: ${ROW}
+- extendedWaitUntil:
+    visible:
+      id: user_preferences_leagues_switch
+    timeout: 20000
+- runFlow:
+    when:
+      true: ${ENABLED == "true"}
+      visible:
+        id: user_preferences_leagues_switch
+        checked: false
+    commands:
+      - tapOn:
+          id: user_preferences_leagues_switch
+- runFlow:
+    when:
+      true: ${ENABLED == "false"}
+      visible:
+        id: user_preferences_leagues_switch
+        checked: true
+    commands:
+      - tapOn:
+          id: user_preferences_leagues_switch
+- runFlow:
+    when:
+      true: ${ENABLED == "true"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: user_preferences_leagues_switch
+            checked: true
+          timeout: 15000
+- runFlow:
+    when:
+      true: ${ENABLED == "false"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: user_preferences_leagues_switch
+            checked: false
+          timeout: 15000
+- takeScreenshot: ${SHOT}
+- back
+- back

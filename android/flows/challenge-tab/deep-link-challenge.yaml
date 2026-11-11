@@ -1,0 +1,27 @@
+# speak-dev://challenges?id=ID from Home: that challenge's details open (TITLE shown); Back returns to the
+# Challenges list. Entry: Home tab. Exit: Challenges list. Saves SHOT.png (details).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "deep-link-challenge"}
+---
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- openLink: speak-dev://challenges?id=${ID}
+- extendedWaitUntil:
+    visible:
+      id: challenge_details_screen
+    timeout: 20000
+- assertVisible: ".*${TITLE}.*"
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: challenges_active_button
+    timeout: 15000
+- assertNotVisible:
+    id: challenge_details_screen

@@ -1,0 +1,29 @@
+# Active challenge: tap the first card, its details open; Back returns to the Active list.
+# Entry: Challenges list on Active. Precondition: account with an active challenge. Exit: Active list.
+# Saves SHOT.png (details).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "active-details"}
+---
+- extendedWaitUntil:
+    visible:
+      id: challenge_overview_card
+    timeout: 20000
+- tapOn:
+    id: challenge_overview_card
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: challenge_details_screen
+    timeout: 20000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: challenge_overview_card
+    timeout: 15000
+- assertNotVisible:
+    id: challenge_details_screen
+- assertVisible:
+    id: challenges_active_button
