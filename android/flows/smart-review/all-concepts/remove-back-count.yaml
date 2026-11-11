@@ -1,0 +1,34 @@
+# All concepts > stop reviewing a concept, then system Back: the mastery page and Smart Review main show the lower count and drop the row.
+# Entry: All concepts from the mastery page, All chip. Precondition: QA-only fixture (debug.qa.srdata=fixture) with 3 concepts, in-memory update.
+# Exit: Smart Review main. maestro test -e "CONCEPT=yo soy" remove-back-count.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    text: "^${CONCEPT}$"
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_details_sheet
+    timeout: 10000
+- tapOn:
+    id: smart_review_concept_details_secondary_action
+- extendedWaitUntil:
+    notVisible:
+      text: "^${CONCEPT}$"
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible:
+      id: smart_review_mastery_score_page
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "^2 concepts$"
+    timeout: 10000
+- assertNotVisible: "^3 concepts$"
+- takeScreenshot: mastery-count
+- back
+- extendedWaitUntil:
+    visible:
+      id: smart_review_practice_tab
+    timeout: 10000

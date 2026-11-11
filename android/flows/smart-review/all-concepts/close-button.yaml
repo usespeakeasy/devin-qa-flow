@@ -1,0 +1,14 @@
+# All concepts close button returns to the mastery score page.
+# Entry: All concepts opened from the mastery score page. Exit: mastery score page.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: smart_review_all_concepts_close_button
+- extendedWaitUntil:
+    visible:
+      id: smart_review_mastery_score_page
+    timeout: 10000
+- assertNotVisible:
+    id: smart_review_all_concepts_screen

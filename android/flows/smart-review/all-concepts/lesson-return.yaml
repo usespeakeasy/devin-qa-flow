@@ -1,0 +1,29 @@
+# All concepts > concept > details sheet > primary action starts the lesson; closing the lesson returns to All concepts.
+# Entry: All concepts. Precondition: QA-only fixture (debug.qa.srdata=fixture, fixed lesson EN_ES_L1-LL_habloingles_SP_DL_IC).
+# maestro test -e "CONCEPT=tu eres" lesson-return.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    text: "^${CONCEPT}$"
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_details_sheet
+    timeout: 10000
+- tapOn:
+    id: smart_review_concept_details_primary_action
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_root
+    timeout: 30000
+- takeScreenshot: lesson
+- tapOn:
+    id: lesson_top_bar_close
+- extendedWaitUntil:
+    visible:
+      id: smart_review_all_concepts_list
+    timeout: 15000
+- assertVisible:
+    text: "^${CONCEPT}$"
+- takeScreenshot: lesson-closed

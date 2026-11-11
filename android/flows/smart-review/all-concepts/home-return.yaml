@@ -1,0 +1,16 @@
+# Launcher Home with All concepts open, then back to the app without stopping it: All concepts and its rows still show.
+# Entry: All concepts with the app sent to the launcher (adb shell input keyevent KEYCODE_HOME). Exit: All concepts.
+# maestro test -e "CONCEPT=tu eres" home-return.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: smart_review_all_concepts_list
+    timeout: 20000
+- assertVisible:
+    text: "^${CONCEPT}$"
+- takeScreenshot: home-return

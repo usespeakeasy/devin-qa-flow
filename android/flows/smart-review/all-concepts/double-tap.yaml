@@ -1,0 +1,21 @@
+# All concepts > fast double tap on a concept row opens one details sheet: one Back closes it and All concepts shows.
+# Entry: All concepts. Precondition: a concept row (QA fixture debug.qa.srdata=fixture). Exit: All concepts.
+# maestro test -e "CONCEPT=tu eres" double-tap.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- doubleTapOn:
+    text: "^${CONCEPT}$"
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_details_sheet
+    timeout: 10000
+- takeScreenshot: double-tap-sheet
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: smart_review_concept_details_sheet
+    timeout: 10000
+- assertVisible:
+    id: smart_review_all_concepts_list

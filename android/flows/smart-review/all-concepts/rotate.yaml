@@ -1,0 +1,24 @@
+# Rotate to landscape and back on All concepts, optionally with the details sheet open: the same screen shows after each turn.
+# Entry/exit: All concepts (default TARGET) or its details sheet (TARGET=smart_review_concept_details_sheet). Saves SHOT.png in landscape.
+# maestro test -e TARGET=smart_review_concept_details_sheet -e SHOT=rotate-sheet rotate.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TARGET: ${TARGET || "smart_review_all_concepts_list"}
+  SHOT: ${SHOT || "rotate"}
+---
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ${TARGET}
+    timeout: 15000
+- takeScreenshot: ${SHOT}
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ${TARGET}
+    timeout: 15000

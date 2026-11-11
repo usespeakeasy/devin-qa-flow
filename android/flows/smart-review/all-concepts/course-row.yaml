@@ -1,0 +1,30 @@
+# Mastery score page > course row opens All concepts for that course only; system Back returns to the mastery page.
+# Entry: mastery score page. Precondition: QA-only fixture (debug.qa.srdata=fixture): course EN_ES_QA-2 holds only "tu eres", EN_ES_L1-LL holds "yo soy" and "hacer algo".
+# maestro test -e COURSE=EN_ES_QA-2 -e "IN=tu eres" -e "OUT=yo soy" course-row.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: smart_review_course_row_${COURSE}
+    direction: DOWN
+    timeout: 10000
+- tapOn:
+    id: smart_review_course_row_${COURSE}
+- extendedWaitUntil:
+    visible:
+      id: smart_review_all_concepts_list
+    timeout: 15000
+- assertVisible:
+    text: "^${IN}$"
+- assertNotVisible:
+    text: "^${OUT}$"
+- takeScreenshot: course-all-concepts
+- back
+- extendedWaitUntil:
+    visible:
+      id: smart_review_mastery_score_page
+    timeout: 10000
+- assertNotVisible:
+    id: smart_review_all_concepts_screen

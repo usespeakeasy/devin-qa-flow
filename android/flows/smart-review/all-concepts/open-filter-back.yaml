@@ -1,0 +1,45 @@
+# Smart Review mastery page > review status row opens All concepts; the filter chips filter the list; system Back returns to the mastery page.
+# Entry: Home tab. Precondition: QA-only Smart Review fixture (adb shell setprop debug.qa.srdata fixture): "hacer algo" new, "yo soy" learned, "tu eres" mastered.
+# Exit: mastery score page. All concepts rows and filter chips have no IDs yet (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-mastery.yaml
+- tapOn:
+    id: smart_review_review_status_row
+- extendedWaitUntil:
+    visible:
+      id: smart_review_all_concepts_list
+    timeout: 15000
+- assertVisible: "^yo soy$"
+- assertVisible: "^tu eres$"
+- assertVisible: "^hacer algo$"
+- takeScreenshot: all-concepts-all
+- tapOn: "^Learned$"
+- extendedWaitUntil:
+    notVisible: "^tu eres$"
+    timeout: 10000
+- assertVisible: "^yo soy$"
+- assertNotVisible: "^hacer algo$"
+- takeScreenshot: all-concepts-learned
+- tapOn: "^New$"
+- extendedWaitUntil:
+    notVisible: "^yo soy$"
+    timeout: 10000
+- assertVisible: "^hacer algo$"
+- assertNotVisible: "^tu eres$"
+- tapOn: "^All$"
+- extendedWaitUntil:
+    visible: "^tu eres$"
+    timeout: 10000
+- assertVisible: "^yo soy$"
+- assertVisible: "^hacer algo$"
+- back
+- extendedWaitUntil:
+    visible:
+      id: smart_review_mastery_score_page
+    timeout: 10000
+- assertNotVisible:
+    id: smart_review_all_concepts_screen
+- takeScreenshot: all-concepts-back

@@ -1,0 +1,13 @@
+# All concepts > concept row opens the details sheet.
+# Entry: All concepts. Exit: details sheet over All concepts.
+# maestro test -e "CONCEPT=tu eres" sheet-open.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    text: "^${CONCEPT}$"
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_details_sheet
+    timeout: 10000

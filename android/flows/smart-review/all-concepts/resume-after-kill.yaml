@@ -1,0 +1,21 @@
+# After the process was killed in the background on All concepts, bring the app back without stopping it:
+# All concepts restores, and system Back returns to Smart Review.
+# Entry: All concepts, then launcher Home and `adb shell am kill`. Exit: the Smart Review screen under All concepts.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: smart_review_all_concepts_list
+    timeout: 60000
+- takeScreenshot: restored-after-kill
+- back
+- extendedWaitUntil:
+    visible:
+      id: smart_review_mastery_score_page|smart_review_practice_tab
+    timeout: 15000
+- assertNotVisible:
+    id: smart_review_all_concepts_screen

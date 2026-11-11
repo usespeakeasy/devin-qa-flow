@@ -1,0 +1,69 @@
+# All concepts > concept > details sheet > secondary action (stop reviewing): the row leaves All and shows under Removed;
+# there, the secondary action (restore) brings it back to All.
+# Entry: All concepts, All chip. Precondition: QA-only fixture (debug.qa.srdata=fixture) with its in-memory update. Exit: All concepts, All chip.
+# maestro test -e "CONCEPT=yo soy" remove-restore.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    text: "^${CONCEPT}$"
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_details_sheet
+    timeout: 10000
+- takeScreenshot: sheet-remove
+- tapOn:
+    id: smart_review_concept_details_secondary_action
+- extendedWaitUntil:
+    notVisible:
+      id: smart_review_concept_details_sheet
+    timeout: 15000
+- extendedWaitUntil:
+    notVisible:
+      text: "^${CONCEPT}$"
+    timeout: 15000
+- assertVisible:
+    id: smart_review_all_concepts_list
+- takeScreenshot: removed-from-all
+# The chip row scrolls sideways on its own; point swipe on the chip row (y 20%) because it has no ID.
+- repeat:
+    times: 4
+    while:
+      notVisible: "^Removed$"
+    commands:
+      - swipe:
+          start: 85%, 20%
+          end: 15%, 20%
+- tapOn: "^Removed$"
+- extendedWaitUntil:
+    visible:
+      text: "^${CONCEPT}$"
+    timeout: 10000
+- tapOn:
+    text: "^${CONCEPT}$"
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_details_sheet
+    timeout: 10000
+- takeScreenshot: sheet-restore
+- tapOn:
+    id: smart_review_concept_details_secondary_action
+- extendedWaitUntil:
+    notVisible:
+      text: "^${CONCEPT}$"
+    timeout: 15000
+- repeat:
+    times: 4
+    while:
+      notVisible: "^All$"
+    commands:
+      - swipe:
+          start: 15%, 20%
+          end: 85%, 20%
+- tapOn: "^All$"
+- extendedWaitUntil:
+    visible:
+      text: "^${CONCEPT}$"
+    timeout: 10000
+- takeScreenshot: restored

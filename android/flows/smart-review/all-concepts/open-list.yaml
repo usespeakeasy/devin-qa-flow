@@ -1,0 +1,12 @@
+# Mastery score page > review status row: All concepts shows.
+# Entry: mastery score page (open-mastery.yaml). Exit: All concepts, All chip.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: smart_review_review_status_row
+- extendedWaitUntil:
+    visible:
+      id: smart_review_all_concepts_list
+    timeout: 15000

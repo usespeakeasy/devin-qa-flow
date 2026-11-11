@@ -1,0 +1,24 @@
+# Practice > Smart Review > mastery score card: the mastery score page shows.
+# Entry: Home tab. Precondition: an account or the QA-only fixture (debug.qa.srdata=fixture) with concepts. Exit: mastery score page.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_practice_tab
+    timeout: 20000
+- tapOn:
+    id: smart_review_mastery_score_card
+- extendedWaitUntil:
+    visible:
+      id: smart_review_review_status_row
+    timeout: 10000
