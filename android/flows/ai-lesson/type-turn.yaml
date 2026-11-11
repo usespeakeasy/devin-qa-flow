@@ -23,9 +23,11 @@ env:
 - tapOn:
     id: ai_lesson_keyboard_send
 # The sent turn shows as feedback, not as typed, so wait for the emptied field and the partner's answer.
+# Optional: when the turn ends the conversation, Lesson Completed replaces the reply field.
 - extendedWaitUntil:
     visible: "^Reply\\.\\.\\.$"
     timeout: 20000
+    optional: true
 - extendedWaitUntil:
     visible:
       id: ai_lesson_transcript_report

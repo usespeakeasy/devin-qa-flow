@@ -6,6 +6,9 @@ appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
+# Cold start first: an openLink while the Debug Menu's override list is open stays on that list.
+- launchApp:
+    stopApp: true
 - openLink: speak-dev://debug-menu
 - extendedWaitUntil:
     visible: "Subscription override"

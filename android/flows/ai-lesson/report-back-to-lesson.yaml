@@ -1,0 +1,18 @@
+# Report problem screen over an AI lesson > Back (keyboard), Back: the screen closes and the lesson shows again.
+# Entry: report-category.yaml exit (Report problem screen, keyboard up). Exit: the AI lesson, no report screen.
+# Selectors: the Report problem screen has no resource-id (text fallback "Report problem").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- hideKeyboard
+- runFlow:
+    when:
+      visible: "Report problem"
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_screen
+    timeout: 15000
+- assertNotVisible: "Report problem"

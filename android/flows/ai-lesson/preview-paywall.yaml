@@ -27,13 +27,17 @@ env:
     visible:
       id: "onboarding_premium_intro_(ready|error)"
     timeout: 60000
-- runFlow:
-    when:
+# Billing can fail more than once (a second "An unexpected error occurred." after the first OK): tap each.
+- repeat:
+    times: 3
+    while:
       visible:
         id: button1
     commands:
       - tapOn:
           id: button1
+      - waitForAnimationToEnd:
+          timeout: 3000
 - extendedWaitUntil:
     visible:
       id: onboarding_premium_intro_ready
