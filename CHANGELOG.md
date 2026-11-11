@@ -28,7 +28,7 @@ Runs before 2026-11-01 have no `skill_version`.
   after the report. `account_source` gains `test_user`. The generic steps live in the shared
   `speak-test-users` skill (usespeakeasy/skills), so any Devin session asked to QA the apps finds
   them. Why: state the pool lacks (a paid tier, another course, progress) no longer needs a question
-  to the requester or a `patch=`, and no run shares a password. Tickets: CLNT-1673, CLNT-2000.
+  to the requester or a `patch=`, and no run shares a password. Tickets: CLNT-1673, CLNT-2000. PR: #27
 
 ## 2026-11-08
 
