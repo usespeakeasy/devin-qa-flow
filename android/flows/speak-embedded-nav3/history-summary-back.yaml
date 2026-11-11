@@ -1,0 +1,25 @@
+# History summary page: system Back goes to the page first; if the page is still showing after it, Back again.
+# History shows at the end and the summary page is gone. Run output shows whether the second Back ran.
+# Entry: cold start (runs open-history-summary.yaml). Exit: History (history_screen).
+# Selectors: the web view has no resource-id in Maestro's tree, only the content description `Speak Embedded` (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-history-summary.yaml
+- takeScreenshot: history_summary_page
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    label: second Back (page handled the first)
+    when:
+      visible: "^Speak Embedded$"
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: history_screen
+    timeout: 15000
+- assertNotVisible: "^Speak Embedded$"
+- takeScreenshot: history_after_back

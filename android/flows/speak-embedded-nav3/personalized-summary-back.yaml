@@ -1,0 +1,44 @@
+# Home > Speak Tutor > Tutor menu > Personalized lessons > first lesson > "go to activity": the AI tutor summary page
+# opens (`Destination.AiTutor`). Back as in history-summary-back.yaml; Personalized lessons shows at the end.
+# Entry: cold start. Precondition: at least one personalized lesson, and a build where its details show the
+# go to activity button (QA patch: activity id fallback when the lesson has none). Exit: tutor_personalized_lessons_screen.
+# Selectors: the web view has no resource-id in Maestro's tree, only the content description `Speak Embedded` (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn:
+    id: learning_path_tutor_entry
+- tapOn:
+    id: tutor_text_arrow
+- tapOn:
+    id: tutor_more_options_personalized_lessons
+- extendedWaitUntil:
+    visible:
+      id: "tutor_personalized_lessons_item_.*"
+    timeout: 30000
+- tapOn:
+    id: "tutor_personalized_lessons_item_.*"
+    index: 0
+- tapOn:
+    id: tutor_personalized_lesson_details_go_to_activity_button
+- extendedWaitUntil:
+    visible: "^Speak Embedded$"
+    timeout: 30000
+- takeScreenshot: personalized_summary_page
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    label: second Back (page handled the first)
+    when:
+      visible: "^Speak Embedded$"
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: tutor_personalized_lessons_screen
+    timeout: 15000
+- assertNotVisible: "^Speak Embedded$"
+- takeScreenshot: personalized_after_back

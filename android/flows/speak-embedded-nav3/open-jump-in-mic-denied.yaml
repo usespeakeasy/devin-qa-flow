@@ -1,0 +1,32 @@
+# Practice > ITEM jump-in tile with the microphone permission denied: the page loads with no system microphone
+# prompt and no app alert up front.
+# Entry: signed in. Exit: Jump In page (Get started or Check), no permission dialog.
+# Selectors: the web view has no resource-id in Maestro's tree, only the content description `Speak Embedded` (text fallback); Practice tiles have no resource-id (text fallback); web content by text.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ITEM: ${ITEM || "Vocab"}
+---
+- launchApp:
+    stopApp: true
+    permissions:
+      microphone: deny
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+- runFlow: ../ai-data-consent/dismiss-home-popups.yaml
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible: "^${ITEM}$"
+    timeout: 20000
+- tapOn: "^${ITEM}$"
+- extendedWaitUntil:
+    visible: "Get started|Check"
+    timeout: 45000
+- assertNotVisible:
+    id: com.android.permissioncontroller:id/permission_deny_button
+- assertNotVisible:
+    id: android:id/alertTitle
+- takeScreenshot: jump_in_no_mic_prompt

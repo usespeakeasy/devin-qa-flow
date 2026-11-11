@@ -1,0 +1,27 @@
+# Lesson end AI summary page: double tap Continue. The flow moves on once: the readout (the next step) shows
+# and is still showing 5 s later (a second completion would skip past it).
+# Entry: the AI summary page as the first lesson end step. Exit: lesson end readout (lesson_end_reskin_root).
+# Selectors: Continue is web content (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible: "^Continue$"
+    timeout: 30000
+- takeScreenshot: lesson_end_summary_page
+- doubleTapOn: "^Continue$"
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_root
+    timeout: 15000
+- assertNotVisible: "^Speak Embedded$"
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_continue_button
+    timeout: 10000
+- assertVisible:
+    id: lesson_end_reskin_xp_counter
+- takeScreenshot: lesson_end_after_double_tap

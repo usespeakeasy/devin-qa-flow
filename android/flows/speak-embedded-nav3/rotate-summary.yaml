@@ -1,0 +1,34 @@
+# History summary page survives rotation: landscape, the page still shows (no History, no blank), portrait,
+# then Back returns to History.
+# Entry: cold start (runs open-history-summary.yaml). Exit: History (history_screen), portrait.
+# Selectors: the web view has no resource-id in Maestro's tree, only the content description `Speak Embedded` (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-history-summary.yaml
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "^Speak Embedded$"
+    timeout: 15000
+- assertNotVisible:
+    id: history_screen
+- takeScreenshot: summary_landscape
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "^Speak Embedded$"
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      visible: "^Speak Embedded$"
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: history_screen
+    timeout: 15000

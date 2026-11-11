@@ -1,0 +1,24 @@
+# Jump In page > system Back (again if the page handled the first): Practice shows and the page is gone.
+# Entry: cold start (open-jump-in-mic-denied.yaml). Exit: Practice tab (main_tab_practice selected).
+# Selectors: the web view has no resource-id in Maestro's tree, only the content description `Speak Embedded` (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ITEM: ${ITEM || "Vocab"}
+---
+- runFlow: open-jump-in-mic-denied.yaml
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    label: second Back (page handled the first)
+    when:
+      visible: "Get started|Check"
+    commands:
+      - back
+- extendedWaitUntil:
+    visible: "^${ITEM}$"
+    timeout: 15000
+- assertNotVisible: "Get started|Check"
+- assertVisible:
+    id: main_tab_practice

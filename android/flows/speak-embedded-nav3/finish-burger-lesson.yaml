@@ -1,0 +1,39 @@
+# Free Talk "At a Burger Place" (Japanese learner account): three typed romaji turns (Maestro types ASCII only) that cover the tasks and say goodbye,
+# then End lesson: the lesson end flow opens and the lesson screen is gone.
+# Precondition: QA build patch that shows the keyboard button (the app hides it in CJK lessons).
+# Entry: AI lesson in chat mode (open-burger-lesson.yaml).
+# Exit: first lesson end step (with the QA build patch, the AI summary page).
+# Selectors: IDs only, plus "Keep Learning" on the quit sheet (text fallback, as in finish-own-lesson.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: ../ai-lesson/type-turn.yaml
+    env:
+      TEXT: "Hajimete kimashita. Chiizubaagaa wo hitotsu kudasai."
+- runFlow:
+    file: ../ai-lesson/type-turn.yaml
+    env:
+      TEXT: "Poteto to koora mo onegaishimasu. Koko de tabemasu."
+- runFlow:
+    file: ../ai-lesson/type-turn.yaml
+    env:
+      TEXT: "Kaado de haraimasu. Arigatou, sayounara!"
+- hideKeyboard
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_quit_sheet
+    commands:
+      - tapOn: "^Keep Learning$"
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_end_lesson
+    timeout: 90000
+- tapOn:
+    id: ai_lesson_end_lesson
+- extendedWaitUntil:
+    notVisible:
+      id: ai_lesson_screen
+    timeout: 60000

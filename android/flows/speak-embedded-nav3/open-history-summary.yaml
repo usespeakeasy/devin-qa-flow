@@ -1,0 +1,39 @@
+# Free Talk tab > History > first past lesson: its AI tutor summary page opens (`Destination.AiTutor` entry; with
+# android_nav3_segment_kill_switch ON the `SpeakEmbeddedWebViewController`).
+# Entry: cold start, signed in, the account has at least one past Free Talk lesson. Exit: summary page
+# (`Speak Embedded` web view).
+# Selectors: the web view has no resource-id in Maestro's tree, only the content description `Speak Embedded` (text fallback); the Free Talk bottom tab is matched by id main_tab_free_talk; history rows by id prefix history_item_.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn:
+    id: main_tab_free_talk
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_intro_dialog_get_started_button
+    commands:
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_history_button
+    timeout: 30000
+- tapOn:
+    id: ai_tutor_history_button
+- extendedWaitUntil:
+    visible:
+      id: "history_item_.*"
+    timeout: 30000
+- tapOn:
+    id: "history_item_.*"
+    index: 0
+- extendedWaitUntil:
+    visible: "^Speak Embedded$"
+    timeout: 30000
+- extendedWaitUntil:
+    notVisible:
+      id: history_screen
+    timeout: 10000

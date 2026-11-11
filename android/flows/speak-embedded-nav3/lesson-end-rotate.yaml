@@ -1,0 +1,29 @@
+# Lesson end AI summary page (Speak Embedded step) survives rotation: landscape, the page and its Continue
+# button still show (no readout, no blank page), back to portrait, still on the page.
+# Entry and exit: the AI summary page as the first lesson end step (finish-burger-lesson.yaml on a QA build).
+# Selectors: the page's web content by text (Continue, the "Speak Embedded" content description); no resource-ids.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible: "^Continue$"
+    timeout: 30000
+- assertVisible: "^Speak Embedded$"
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "^Speak Embedded$"
+    timeout: 15000
+- assertNotVisible:
+    id: lesson_end_reskin_root
+- takeScreenshot: lesson_end_summary_landscape
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "^Continue$"
+    timeout: 15000
+- assertNotVisible:
+    id: lesson_end_reskin_root

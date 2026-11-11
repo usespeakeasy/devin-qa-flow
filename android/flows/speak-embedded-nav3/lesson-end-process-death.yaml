@@ -1,0 +1,24 @@
+# Lesson end AI summary page process death: Home key, killApp (am kill), relaunch from recents: the summary page
+# comes back (not the readout, Home or a blank page).
+# Entry and exit: the AI summary page as the first lesson end step.
+# Selectors: the page's web content by text (Continue, "Speak Embedded").
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible: "^Continue$"
+    timeout: 30000
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible: "^Continue$"
+    timeout: 60000
+- assertVisible: "^Speak Embedded$"
+- assertNotVisible:
+    id: lesson_end_reskin_root
+- assertNotVisible:
+    id: home_root_ready
+- takeScreenshot: lesson_end_summary_after_process_death

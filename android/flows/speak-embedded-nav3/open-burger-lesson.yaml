@@ -1,0 +1,73 @@
+# Free Talk tab > Topics > the "At a Burger Place" roleplay card (by id, EN_JP dev data) > Chat mode > Start lesson:
+# the AI lesson opens. Same steps as ../ai-lesson/open-free-talk-scenario.yaml, which matches the card by text.
+# Entry: cold start. Precondition: signed-in dev account learning Japanese, Subscription override Premium.
+# Exit: AI lesson in chat mode, mic not recording.
+# Selectors: the bottom tab, the Topics tab, the FTUX "Get started" and "Chat mode" have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD_ID: ${CARD_ID || "ai_tutor_lesson_item_EN_JP_AIT_RP_at_a_burger_place"}
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn: "Free Talk"
+- runFlow:
+    when:
+      visible: "^Get started$"
+    commands:
+      - tapOn: "^Get started$"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000
+- tapOn: "^Topics$"
+- extendedWaitUntil:
+    visible:
+      id: ${CARD_ID}
+    timeout: 20000
+- tapOn:
+    id: ${CARD_ID}
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_start
+    timeout: 20000
+- runFlow:
+    when:
+      visible: "^Chat mode$"
+    commands:
+      - tapOn: "^Chat mode$"
+# With ai_lesson_immersive_toggle on, the pre-lesson shows a Chat/Immersive toggle that keeps the last mode.
+- runFlow:
+    when:
+      visible:
+        id: mode_toggle_chat
+    commands:
+      - tapOn:
+          id: mode_toggle_chat
+- tapOn:
+    id: ai_lesson_pre_lesson_start
+# An unfinished earlier run of the same scenario asks to continue; start over so every case starts the same.
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_resume_start_over
+    commands:
+      - tapOn:
+          id: ai_lesson_resume_start_over
+- extendedWaitUntil:
+    visible:
+      id: "ai_lesson_primary_(send|record)"
+    timeout: 60000
+# The chat can start with the mic already recording; cancel it so taps reach the controls.
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_record_cancel
+    commands:
+      - tapOn:
+          id: ai_lesson_record_cancel
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_primary_record
+    timeout: 10000
+- assertVisible:
+    id: ai_lesson_screen

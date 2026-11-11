@@ -1,0 +1,31 @@
+# History summary page process death: Home key, killApp (am kill), relaunch: the summary page comes back,
+# and Back then returns to History.
+# Entry: cold start (runs open-history-summary.yaml). Exit: History (history_screen).
+# Selectors: the web view has no resource-id in Maestro's tree, only the content description `Speak Embedded` (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-history-summary.yaml
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible: "^Speak Embedded$"
+    timeout: 60000
+- assertNotVisible:
+    id: home_root_ready
+- takeScreenshot: summary_after_process_death
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      visible: "^Speak Embedded$"
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: history_screen
+    timeout: 15000

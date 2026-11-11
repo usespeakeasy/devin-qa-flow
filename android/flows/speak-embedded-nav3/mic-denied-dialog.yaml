@@ -1,0 +1,50 @@
+# Jump In page after the page asked for the microphone (the system prompt is up, microphone not yet granted):
+# Don't allow -> the app's rationale dialog over the page; Allow re-asks -> Don't allow again -> the
+# "Microphone permissions needed" dialog; OK closes it. Ends wherever OK lands (page or Practice); the run
+# output and the last screenshot show which.
+# Entry: open-jump-in-mic-denied.yaml, then a page getUserMedia request (QA helper over WebView DevTools).
+# The page is not in the tree while an app dialog is up (dialog window only), so it is checked after OK.
+# Selectors: system permission dialog and app dialog ids (permissioncontroller, simple_dialog_positive_button or android:id/button1).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: com.android.permissioncontroller:id/permission_deny_button
+    timeout: 15000
+- tapOn:
+    id: com.android.permissioncontroller:id/permission_deny_button
+- extendedWaitUntil:
+    visible: "To practice speaking and improve your pronunciation.*"
+    timeout: 10000
+- takeScreenshot: mic_rationale_dialog
+- tapOn:
+    id: "simple_dialog_positive_button|android:id/button1"
+- extendedWaitUntil:
+    visible:
+      id: com.android.permissioncontroller:id/permission_deny_and_dont_ask_again_button
+    timeout: 15000
+- tapOn:
+    id: com.android.permissioncontroller:id/permission_deny_and_dont_ask_again_button
+- extendedWaitUntil:
+    visible: "^Microphone permissions needed$"
+    timeout: 10000
+- takeScreenshot: mic_required_dialog
+- tapOn:
+    id: "simple_dialog_positive_button|android:id/button1"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertNotVisible: "^Microphone permissions needed$"
+- runFlow:
+    label: page still showing after OK
+    when:
+      visible: "^Speak Embedded$"
+    commands:
+      - takeScreenshot: mic_after_ok_page
+- runFlow:
+    label: page closed after OK
+    when:
+      notVisible: "^Speak Embedded$"
+    commands:
+      - takeScreenshot: mic_after_ok_closed
