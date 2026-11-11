@@ -39,8 +39,10 @@ See Two emulators for the build order and for the cases that still run on one em
 ## Running a flow in the case script
 
 - Run each flow with `maestro --device <serial> test [-e KEY=value] <flow>` inside the case
-  script, between harness `rec` and `stop`. Account lease and login stay in the harness.
-- Sign-in flows take the pool account as `-e EMAIL=... -e PASSWORD="$QA_POOL_PASSWORD"`.
+  script, between harness `rec` and `stop`. Account setup and sign-in stay in the harness
+  (`codelogin` for a test user, `lease` and `login` for a pool account).
+- Sign-in flows take a pool account as `-e EMAIL=... -e PASSWORD="$QA_POOL_PASSWORD"`. Test users
+  have no password, so a case that types credentials uses a pool account.
   Never write the values in a file.
 - Maestro logs typed text, passwords included. Pass `--debug-output /tmp/maestro-<serial>/<case>`,
   filter the password out of its console output, and delete the debug folder after the run.
@@ -67,8 +69,8 @@ and first-run prompts go there.
    `-e PASSWORD="$QA_POOL_PASSWORD"`. Use a new one per build and per run, so base and branch
    don't share server state. Never add a throwaway account to the pool, and never put its email
    in a file, the PR or the thread. Set `account_source` to `fresh_signup` in the run record.
-5. A signed-in case after a pre-auth flow needs `qa_android.py login` again, because `fresh`
-   signed the app out.
+5. A signed-in case after a pre-auth flow needs `qa_android.py codelogin` (with a new code from
+   `test_sign_in`) or `login` again, because `fresh` signed the app out.
 
 ## Two emulators
 
@@ -80,14 +82,16 @@ Build order. Each build has its own `git worktree`, with `local.properties` and
 `keys.properties` copied in before the first Gradle call.
 
 1. Build base and install it on `emulator-5554` (harness `emu`).
-2. Start the branch build in the background, then lease and log in, and run the base case
+2. Start the branch build in the background, then set up the account (create and sign in a test
+   user, or lease and log in), and run the base case
    script while the branch builds. Only one emulator runs while Gradle does.
 3. When the branch APK is ready, stop Gradle and the Kotlin daemon (`./gradlew --stop` in each
    worktree, then check that `pgrep -f GradleDaemon` prints nothing). Idle daemons hold about
    13 GB, and two emulators need about 11 GB of the 31 GB VM.
 4. `emu --avd devin2 --port 5556` boots `emulator-5556`, cloned from `devin` on first use.
-   Install the branch APK there, log it in to the same leased account (same `QA_LEASE_FILE`)
-   and run the branch case script while base finishes. Release the account once.
+   Install the branch APK there, sign it in to the same account (a second code from
+   `test_sign_in`, or the same `QA_LEASE_FILE`) and run the branch case script while base
+   finishes. Delete or release the account once.
 
 - With two emulators up, every harness command needs `ANDROID_SERIAL`. Give each case script
   its own `ANDROID_SERIAL` and output folder.
@@ -135,8 +139,10 @@ the child clones this repo and follows this file. The child prompt says so.
   before a flow that reads markers, and start that flow without `launchApp`.
 - Install each build with `xcrun simctl install`. Installing over the same bundle ID keeps the
   signed-in account.
-- Accounts: lease from the dev pool with the harness `lease` (it works on macOS; only `login`
-  is Android-only). Sign in with
+- Accounts: a test user from the `speak-test-users` skill, signed in with
+  `xcrun simctl openurl <UDID> 'speak-dev://code-login?code=<code>&userId=<userId>&skipNotificationPrompt=true'`.
+  Without the `test_*` tools, lease from the dev pool with the harness `lease` (it works on macOS;
+  only `login` is Android-only). Sign in with
   `xcrun simctl openurl <UDID> "speak-dev://email-login?email=<url-encoded>&password=<url-encoded>"`
   from a script that reads `QA_POOL_PASSWORD` (bind `secret:org:QA_POOL_PASSWORD` in the exec
   env; it is not in the shell by default). First launch shows the App Tracking Transparency

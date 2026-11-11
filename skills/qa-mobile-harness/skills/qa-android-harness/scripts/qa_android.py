@@ -6,6 +6,9 @@
   qa_android.py install <apk> [--pkg P]   adb install -r, force-stop
   qa_android.py lease --holder <URL>      claim a free pool account (BigQuery qa_account_pool), print email
   qa_android.py login                     bridge login as the leased account, launch, wait for Home
+  qa_android.py codelogin --user-id U --code C
+                                          sign in a Speak MCP test user (test_user_create / test_sign_in),
+                                          launch, wait for Home
   qa_android.py release                   free the leased account (run after the report is posted)
   qa_android.py bridge <cmd> [k=v ...]    DebugBridge command, prints the JSON, exit 1 on err
   qa_android.py launch                    force-stop and cold-start SpeakActivity
@@ -29,6 +32,8 @@ With two emulators, set ANDROID_SERIAL (e.g. emulator-5556) and QA_LEASE_FILE pe
 Env: QA_POOL_PASSWORD (shared pool password), QA_PKG (default com.selabs.speak.dev), ANDROID_HOME (default ~/android-sdk).
 """
 import glob
+import sqlite3
+import tempfile
 import json
 import os
 import re
@@ -254,6 +259,60 @@ def cmd_login(a):
     launch()
     dismiss_until("id:home_root_ready", 90)
     print(f"logged in as {email}; Home ready")
+
+
+def pull_debug_db(d):
+    db = os.path.join(d, "debug.db")
+    for suffix in ("", "-wal", "-shm"):
+        r = subprocess.run([ADB, "exec-out", f"run-as {PKG} cat databases/debug.db{suffix}"], capture_output=True)
+        if r.returncode == 0 and r.stdout and not r.stdout.startswith(b"cat:"):
+            open(db + suffix, "wb").write(r.stdout)
+    if not os.path.exists(db):
+        sys.exit("no debug.db on the device; launch the app once first")
+    return db
+
+
+def flag_override(flag):
+    with tempfile.TemporaryDirectory() as d:
+        con = sqlite3.connect(pull_debug_db(d))
+        row = con.execute("SELECT overrideValue FROM feature_flag_prefs WHERE featureFlagId = ?", (flag,)).fetchone()
+        con.close()
+    return row[0] if row else None
+
+
+def set_flag_override(flag, value):
+    """Writes a Debug Menu flag override into the app's debug.db, as speak-android-ai's tools/feature-flags.sh does."""
+    adb("shell", "am", "force-stop", PKG)
+    with tempfile.TemporaryDirectory() as d:
+        db = pull_debug_db(d)
+        con = sqlite3.connect(db)
+        con.execute("INSERT OR REPLACE INTO feature_flag (id, type, isDeletable) VALUES (?, 'EXPERIMENT', 1)", (flag,))
+        con.execute("INSERT OR REPLACE INTO feature_flag_prefs (featureFlagId, overrideValue, isFavorite, lastUsed) "
+                    "VALUES (?, ?, 0, ?)", (flag, value, int(time.time() * 1000)))
+        con.commit()
+        con.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+        con.close()
+        with open(db, "rb") as f:
+            subprocess.run([ADB, "shell", f"run-as {PKG} sh -c 'cat > databases/debug.db'"], stdin=f, check=True)
+        adb("shell", f"run-as {PKG} rm -f databases/debug.db-wal databases/debug.db-shm", check=False)
+
+
+def cmd_codelogin(a):
+    user_id = a[a.index("--user-id") + 1] if "--user-id" in a else sys.exit("codelogin needs --user-id <userId>")
+    code = a[a.index("--code") + 1] if "--code" in a else sys.exit("codelogin needs --code <authorizationCode>")
+    launch()
+    time.sleep(3)
+    # loginCode needs a Speak session on develop until speak-android#9009 (session swap at code-login) merges.
+    if flag_override("auth_session_mode") != "speak":
+        set_flag_override("auth_session_mode", "speak")
+        launch()
+        time.sleep(3)
+    ok, data = bridge("loginCode", [("userId", user_id), ("code", code)])
+    if not ok:
+        sys.exit(f"loginCode failed (codes are single-use: mint a new one with test_sign_in): {data}")
+    launch()
+    dismiss_until("id:home_root_ready", 90)
+    print(f"logged in as test user {user_id}; Home ready")
 
 
 DISMISS = r"^(Don.t allow|Not now|Set up later|Later|Maybe later|OK|Got it|Skip|Close|No thanks|Allow)$"
