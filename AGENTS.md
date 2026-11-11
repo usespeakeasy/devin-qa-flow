@@ -35,8 +35,8 @@ After merge, Devin saves the changed skill with `manage_plugin` and posts the PS
   No fixed sleeps over 2 s.
 - No credentials, emails or user IDs in any file. Flows that need them take `EMAIL` and
   `PASSWORD` as `-e` parameters at run time.
-- Signed-in flows: no sign-in, sign-up or onboarding steps. The harness leases and signs in a
-  pool account before they run.
+- Signed-in flows: no sign-in, sign-up or onboarding steps. The harness signs in the run's account
+  (a test user, or a pool account) before they run.
 - Pre-auth flows: welcome, sign-in, sign-up, onboarding and anything else a signed-out user
   sees. They live only in `<platform>/flows/auth/` and `<platform>/flows/onboarding/`, start
   from cleared app data (header `Entry: app data cleared`), and are the only flows that may
@@ -44,8 +44,9 @@ After merge, Devin saves the changed skill with `manage_plugin` and posts the PS
   case allows it, so it needs no account. A flow that signs up uses a throwaway email the run
   creates (see Pre-auth flows in [docs/qa-pr-instructions.md](docs/qa-pr-instructions.md)),
   never a pool account.
-- A signed-in flow must work on any pool account. If it needs seeded state (progress, saved items,
-  premium), the header says how to seed it, ideally with a common subflow.
+- A signed-in flow must work on any onboarded account, test user or pool. If it needs seeded state
+  (progress, saved items, premium), the header names it, and the run sets it with the `test_*`
+  tools (the `speak-test-users` skill) or, on a pool account, with a common subflow.
 - Run `maestro check-syntax <file>` before committing.
 
 ## INDEX.md

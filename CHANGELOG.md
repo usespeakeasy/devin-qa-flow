@@ -19,6 +19,17 @@ GROUP BY 1, 2 ORDER BY 1 DESC, 2
 
 Runs before 2026-11-01 have no `skill_version`.
 
+## 2026-11-11
+
+- **qa-request-mobile 2026.11.11.1, qa-android-harness 2026.11.11.1**: dev runs use a test user from
+  the Speak (dev) MCP when the session has its `test_*` tools, and a pool account otherwise. The run
+  creates the user with the course and tier the cases need, seeds progress, streak and saved lines,
+  signs it in with `qa_android.py codelogin` (Android) or the `code-login` link (iOS), and deletes it
+  after the report. `account_source` gains `test_user`. The generic steps live in the shared
+  `speak-test-users` skill (usespeakeasy/skills), so any Devin session asked to QA the apps finds
+  them. Why: state the pool lacks (a paid tier, another course, progress) no longer needs a question
+  to the requester or a `patch=`, and no run shares a password. Tickets: CLNT-1673, CLNT-2000. PR: #27
+
 ## 2026-11-08
 
 - **qa-request-mobile 2026.11.08.1**: Android runs use two emulators by default, base on
