@@ -1,0 +1,29 @@
+# AI lesson > Home key > warm reopen from the launcher (no kill): the lesson and its transcript stay.
+# Entry: AI lesson with a partner message (open-free-talk-scenario.yaml). Exit: the same AI lesson.
+# A resume sheet can show after the pause; Continue dismisses it.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- pressKey: Home
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_resume_sheet|ai_lesson_screen
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_resume_continue
+    commands:
+      - tapOn:
+          id: ai_lesson_resume_continue
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_screen
+    timeout: 15000
+- assertVisible:
+    id: ai_lesson_partner_message
+- assertNotVisible:
+    id: home_root_ready
