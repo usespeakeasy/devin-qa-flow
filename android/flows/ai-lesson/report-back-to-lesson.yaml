@@ -1,6 +1,6 @@
 # Report problem screen over an AI lesson > Back (keyboard), Back: the screen closes and the lesson shows again.
 # Entry: report-category.yaml exit (Report problem screen, keyboard up). Exit: the AI lesson, no report screen.
-# Selectors: the Report problem screen has no resource-id (text fallback "Report problem").
+# Selectors: text fallback "Report problem" for builds before `report_screen` (on develop since #8774).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev

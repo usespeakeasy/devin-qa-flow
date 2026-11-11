@@ -1,7 +1,7 @@
 # AI lesson transcript > report icon > report options sheet > CATEGORY: the Report problem screen opens.
 # Entry: AI lesson in chat mode with a partner message (open-free-talk-scenario.yaml). Exit: the Report problem screen (keyboard up; two backs return to the lesson).
 # Selectors: transcript test tags `ai_lesson_transcript_expand_toggle` and `ai_lesson_transcript_report`;
-# the options sheet and the Report problem screen have no resource-id (text fallback).
+# the options sheet and the Report problem screen use text fallbacks for builds before their ids (on develop: `lesson_more_options_report_problem_*`, `report_screen`).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
