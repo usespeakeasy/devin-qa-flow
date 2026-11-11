@@ -1,0 +1,62 @@
+# Storybook > Get started: the language check's loading shows (Navigation 3: the flow's blocking progress dialog,
+# id `indicator`; kill switch ON: the controller's own spinner, `loading_bar`), then ACTION on it, then the next
+# screen opens when the check ends.
+# ACTION: none (wait), back (Back, then Get started again right away: no second dialog), tap (tap TAP_ID, the dim),
+# stop (exit while it loads; the run script then presses Home, rotates or kills the process).
+# Entry: app data cleared (`qa_android.py fresh`), storybook. Needs a slow check: a QA-only delay or GPRS.
+# Exit: `onboarding_language_screen` (or the sign-up screen when NEXT_ID says so), or the loading still up for stop.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ACTION: ${ACTION || "none"}
+  LOADING: ${LOADING || "indicator"}
+  TAP_ID: ${TAP_ID || "indicator"}
+  NEXT_ID: ${NEXT_ID || "onboarding_language_screen|auth_options_screen"}
+  SHOT: ${SHOT || "case"}
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_get_started_button
+    timeout: 60000
+- tapOn:
+    id: onboarding_storybook_get_started_button
+- extendedWaitUntil:
+    visible:
+      id: ${LOADING}
+    timeout: 5000
+- takeScreenshot: ${SHOT}-loading
+- runFlow:
+    when:
+      true: ${ACTION == "back"}
+    commands:
+      - back
+      - assertNotVisible:
+          id: indicator
+      - assertVisible:
+          id: onboarding_storybook_get_started_button
+      - tapOn:
+          id: onboarding_storybook_get_started_button
+      - assertNotVisible:
+          id: indicator
+      - takeScreenshot: ${SHOT}-after-back
+- runFlow:
+    when:
+      true: ${ACTION == "tap"}
+    commands:
+      - tapOn:
+          id: ${TAP_ID}
+      - assertNotVisible:
+          id: indicator
+      - assertVisible:
+          id: onboarding_storybook_get_started_button
+      - takeScreenshot: ${SHOT}-after-tap
+- runFlow:
+    when:
+      true: ${ACTION != "stop"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: ${NEXT_ID}
+          timeout: 40000
+      - assertNotVisible:
+          id: indicator

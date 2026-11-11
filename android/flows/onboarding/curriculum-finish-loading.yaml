@@ -1,0 +1,38 @@
+# Curriculum presentation (course plan) > Get started: the course starts under the blocking progress dialog
+# (`indicator`), then onboarding closes and the post-onboarding screen opens (premium intro or Home).
+# ACTION: none (wait), back (Back closes the dialog; the post-onboarding screen still opens), stop (exit while it
+# shows; the run script toggles dark mode or presses Home, then runs loading-then-next.yaml).
+# Entry: `onboarding_curriculum_ready` (curriculum-loaded.yaml). Needs a slow course start: QA-only delay or GPRS.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ACTION: ${ACTION || "none"}
+  SHOT: ${SHOT || "case"}
+---
+- tapOn:
+    id: onboarding_curriculum_action_get_started
+- extendedWaitUntil:
+    visible:
+      id: indicator
+    timeout: 5000
+- takeScreenshot: ${SHOT}-loading
+- runFlow:
+    when:
+      true: ${ACTION == "back"}
+    commands:
+      - back
+      - assertNotVisible:
+          id: indicator
+      - takeScreenshot: ${SHOT}-after-back
+- runFlow:
+    when:
+      true: ${ACTION != "stop"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: (onboarding_premium_intro_(ready|error)|home_root_ready)
+          timeout: 60000
+      - assertNotVisible:
+          id: indicator
+      - assertNotVisible:
+          id: onboarding_curriculum_ready

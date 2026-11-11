@@ -1,0 +1,49 @@
+# After the run script interrupted a blocking loading (Home and reopen, rotation, dark mode, process death):
+# EXPECT_LOADING=true waits for the progress dialog (`indicator`) to show again, false asserts it is not up, any skips;
+# then the next screen NEXT_ID opens and no dialog is left. TAP_ID (optional) is tapped first, e.g. Get started
+# again after process death.
+# Entry: the app in front again after the interruption. Exit: NEXT_ID on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  EXPECT_LOADING: ${EXPECT_LOADING || "true"}
+  NEXT_ID: ${NEXT_ID || "onboarding_language_screen|auth_options_screen"}
+  WAIT_ID: ${WAIT_ID || ""}
+  TAP_ID: ${TAP_ID || ""}
+  SHOT: ${SHOT || "case"}
+---
+- runFlow:
+    when:
+      true: ${WAIT_ID != ""}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: ${WAIT_ID}
+          timeout: 30000
+- runFlow:
+    when:
+      true: ${EXPECT_LOADING == "true"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: indicator
+          timeout: 8000
+- runFlow:
+    when:
+      true: ${EXPECT_LOADING == "false"}
+    commands:
+      - assertNotVisible:
+          id: indicator
+- takeScreenshot: ${SHOT}-back-in-front
+- runFlow:
+    when:
+      true: ${TAP_ID != ""}
+    commands:
+      - tapOn:
+          id: ${TAP_ID}
+- extendedWaitUntil:
+    visible:
+      id: ${NEXT_ID}
+    timeout: 60000
+- assertNotVisible:
+    id: indicator
