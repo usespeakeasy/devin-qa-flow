@@ -1,0 +1,40 @@
+# Process death with the Streak Repair sheet open (Home key, killApp, relaunch): the sheet comes back once over Dialog
+# Bridges; "Start a Lesson" closes it and Back does not show it again.
+# Entry: the sheet open (`common/open-dialog-bridge.yaml` ROW=streak_repair). Exit: Debug Menu. Saves SHOT.png (restored sheet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "streak-repair-process-death"}
+---
+- extendedWaitUntil:
+    visible:
+      id: course_streak_repair_dialog_start_lesson
+    timeout: 15000
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: course_streak_repair_dialog_start_lesson
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: course_streak_repair_dialog_start_lesson
+- extendedWaitUntil:
+    notVisible:
+      id: course_streak_repair_dialog_root
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_streak_repair
+- back
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertNotVisible:
+    id: course_streak_repair_dialog_root

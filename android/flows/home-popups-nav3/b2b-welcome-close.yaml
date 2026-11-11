@@ -1,0 +1,28 @@
+# Debug Menu > Dialog Bridges > B2B Access Welcome row ROW (sponsored, no_sponsor, long_sponsor): the welcome sheet
+# (`Destination.B2bAccessWelcome`) shows; its start button ("Sounds good!" / "Start learning") closes it back to Dialog Bridges.
+# Entry: signed in, any state (restarts the app). Exit: Dialog Bridges. Saves SHOT.png (the open sheet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ROW: ${ROW || "b2b_access_welcome_sponsored"}
+  SHOT: ${SHOT || "b2b-welcome"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: ${ROW}
+- extendedWaitUntil:
+    visible:
+      id: b2b_access_welcome_start_button
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: b2b_access_welcome_start_button
+- extendedWaitUntil:
+    notVisible:
+      id: b2b_access_welcome_modal
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_${ROW}

@@ -1,0 +1,46 @@
+# Home "You have a new learning goal" popup (`Destination.OrganizationGoalAssignedPopup`): "View goal" replaces it with
+# Goal Tracking; Back returns to Home without the popup. After a cold start it shows again and its close button closes it.
+# Needs the QA-only patch on dev (`adb shell setprop log.tag.QA_GOAL DEBUG` shows it once per process).
+# Entry: signed in (restarts the app). Exit: Home tab. Saves SHOT.png (the popup) and SHOT-arrival.png.
+# Selectors: the popup, its CTA and close button have no resource-id (text and content description fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "goal-assigned"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "You have a new learning goal"
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}
+- tapOn: "^View goal$"
+- extendedWaitUntil:
+    visible:
+      id: goal_tracking_screen
+    timeout: 30000
+- assertNotVisible: "You have a new learning goal"
+- takeScreenshot: ${SHOT}-arrival
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- runFlow: ../home-nav3/assert-nothing-reopened.yaml
+- assertNotVisible: "You have a new learning goal"
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "You have a new learning goal"
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000
+# The close button's content description is the localized "Cancel".
+- tapOn: "^Cancel$"
+- extendedWaitUntil:
+    notVisible: "You have a new learning goal"
+    timeout: 10000
+- assertVisible:
+    id: learning_path_ready

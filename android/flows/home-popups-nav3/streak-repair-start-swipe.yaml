@@ -1,0 +1,58 @@
+# Debug Menu > Dialog Bridges > "Streak Repair" (`Destination.StreakRepairDialog`: Navigation 3 sheet, or the bridge
+# controller with the kill switch ON). "Start a Lesson" closes it back to Dialog Bridges; reopened, a swipe down closes it;
+# Back then leaves Dialog Bridges without showing the sheet again.
+# Entry: signed in, any state (restarts the app). Exit: Debug Menu. Saves SHOT.png (the open sheet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "streak-repair"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: streak_repair
+- extendedWaitUntil:
+    visible:
+      id: course_streak_repair_dialog_start_lesson
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: course_streak_repair_dialog_start_lesson
+- extendedWaitUntil:
+    notVisible:
+      id: course_streak_repair_dialog_root
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_streak_repair
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: streak_repair
+      RESTART: "false"
+- extendedWaitUntil:
+    visible:
+      id: course_streak_repair_dialog_start_lesson
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 3000
+- swipe:
+    start: 50%, 66%
+    end: 50%, 99%
+    duration: 400
+- extendedWaitUntil:
+    notVisible:
+      id: course_streak_repair_dialog_root
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_streak_repair
+- back
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertNotVisible:
+    id: course_streak_repair_dialog_root

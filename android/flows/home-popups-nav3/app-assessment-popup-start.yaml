@@ -1,0 +1,37 @@
+# Home App Assessment popup (`Destination.AppAssessmentPopup`): Start / Check your progress replaces it with the
+# assessment (ARRIVAL); Back returns to Home without the popup.
+# Needs the QA-only patch on dev: `adb shell setprop log.tag.QA_AA DEBUG` shows it on every Home check, so the case
+# script cold-starts, runs `../app-assessment/popup-open.yaml`, then clears the prop before this flow.
+# Entry: the popup open over Home. Exit: Home tab. Saves SHOT.png (the popup) and SHOT-arrival.png.
+# Selectors: the CTA has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ARRIVAL: ${ARRIVAL || "app_assessment_intro"}
+  SHOT: ${SHOT || "app-assessment-popup"}
+---
+- extendedWaitUntil:
+    visible:
+      id: app_assessment_popup
+    timeout: 15000
+- takeScreenshot: ${SHOT}
+# The CTA has no ID, and the lesson popover behind the sheet also says "Start", so match it inside the popup.
+- tapOn:
+    text: "^(Start|Check your progress)$"
+    childOf:
+      id: app_assessment_popup
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- assertNotVisible:
+    id: app_assessment_popup
+- takeScreenshot: ${SHOT}-arrival
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- runFlow: ../home-nav3/assert-nothing-reopened.yaml
+- assertNotVisible:
+    id: app_assessment_popup

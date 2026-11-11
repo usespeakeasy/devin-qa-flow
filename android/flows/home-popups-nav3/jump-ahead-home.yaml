@@ -1,0 +1,42 @@
+# Home: a lesson after the current one (loop LOOP_TEXT) > popover "Jump Ahead" > "Skipping lessons?" > "Let's go!" opens
+# the lesson or its pre-lesson (ARRIVAL); Back returns to Home and the sheet does not show again.
+# Default: english-french pool account with Premium subscription override, the level's "Skill check" loop (opens `skill_check_intro`).
+# Entry: signed in (restarts the app). Exit: Home tab. Saves SHOT-sheet.png and SHOT.png (the arrival).
+# Selectors: the loop is tapped by its title (text fallback; loop ids are per account).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LOOP_TEXT: ${LOOP_TEXT || "Skill check"}
+  ARRIVAL: ${ARRIVAL || "skill_check_intro"}
+  SHOT: ${SHOT || "jump-ahead-home"}
+---
+- runFlow: ../../common/launch-home.yaml
+# Home opens with the current lesson's popover, which covers the loop below it, so scrolling to 100% never ends.
+- extendedWaitUntil:
+    visible: ${LOOP_TEXT}
+    timeout: 20000
+- tapOn: ${LOOP_TEXT}
+- tapOn:
+    id: learning_path_popover_jump_ahead_button
+- extendedWaitUntil:
+    visible:
+      id: learning_path_jump_ahead_continue
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}-sheet
+- tapOn:
+    id: learning_path_jump_ahead_continue
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- assertNotVisible:
+    id: learning_path_jump_ahead_root
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- runFlow: ../home-nav3/assert-nothing-reopened.yaml

@@ -1,0 +1,53 @@
+# Debug Menu > Dialog Bridges > "Jump Ahead" (`Destination.JumpAheadDialog`, fake debug ids). "Let's go!" replaces the
+# "Skipping lessons?" sheet with unit personalization, which closes itself on the fake ids (logcat shows
+# `UnitPersonalization appearing`), back on Dialog Bridges with no sheet. Reopened, X closes it. Back leaves Dialog
+# Bridges without showing the sheet again.
+# Entry: signed in, any state (restarts the app). Exit: Debug Menu. Saves SHOT.png (the open sheet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "jump-ahead-bridge"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: jump_ahead
+- extendedWaitUntil:
+    visible:
+      id: learning_path_jump_ahead_continue
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: learning_path_jump_ahead_continue
+- extendedWaitUntil:
+    visible:
+      id: debug_dialog_bridges_screen
+    timeout: 20000
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertNotVisible:
+    id: learning_path_jump_ahead_root
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: jump_ahead
+      RESTART: "false"
+- tapOn:
+    id: learning_path_jump_ahead_close
+- extendedWaitUntil:
+    notVisible:
+      id: learning_path_jump_ahead_root
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_jump_ahead
+- back
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertNotVisible:
+    id: learning_path_jump_ahead_root

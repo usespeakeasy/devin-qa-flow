@@ -1,0 +1,51 @@
+# Debug Menu > Dialog Bridges > row ROW (`debug_dialog_bridges_<ROW>`), tapped once.
+# Entry: signed in, any state (restarts the app). Exit: whatever the row opens, over Dialog Bridges.
+# maestro test -e ROW=streak_repair open-dialog-bridge.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
+  RESTART: ${RESTART || "true"}
+---
+- runFlow:
+    when:
+      true: ${RESTART == "true"}
+    commands:
+      - launchApp:
+          stopApp: true
+      - extendedWaitUntil:
+          visible:
+            id: home_root_ready
+          timeout: 60000
+      - openLink: ${DEBUG_MENU_LINK}
+      - extendedWaitUntil:
+          visible:
+            id: debug_menu_screen
+          timeout: 15000
+      # A tap while the scroll is still settling is sometimes dropped or lands on the wrong row, so scroll and tap
+      # again until the list shows.
+      - retry:
+          maxRetries: 2
+          commands:
+            - scrollUntilVisible:
+                element:
+                  id: debug_menu_dialog_bridges
+                direction: DOWN
+                timeout: 20000
+                centerElement: true
+            - waitForAnimationToEnd:
+                timeout: 2000
+            - tapOn:
+                id: debug_menu_dialog_bridges
+            - extendedWaitUntil:
+                visible:
+                  id: debug_dialog_bridges_screen
+                timeout: 5000
+- scrollUntilVisible:
+    element:
+      id: debug_dialog_bridges_${ROW}
+    direction: DOWN
+    timeout: 30000
+    centerElement: true
+- tapOn:
+    id: debug_dialog_bridges_${ROW}

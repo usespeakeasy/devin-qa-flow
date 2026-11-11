@@ -1,0 +1,17 @@
+# Home key, then relaunch from the launcher with the process alive (e.g. with "Don't keep activities" on, the activity
+# is recreated): the popup (SELECTOR id) still shows. Entry/exit: the popup open. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "popup-relaunch"}
+---
+- pressKey: Home
+- waitForAnimationToEnd:
+    timeout: 3000
+- launchApp:
+    stopApp: false
+- runFlow:
+    file: assert-still-open.yaml
+    env:
+      SELECTOR: ${SELECTOR}
+      SHOT: ${SHOT}

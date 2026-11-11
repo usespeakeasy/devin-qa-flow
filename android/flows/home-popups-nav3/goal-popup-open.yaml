@@ -1,0 +1,13 @@
+# Cold start shows the "You have a new learning goal" popup over Home. Needs `adb shell setprop log.tag.QA_GOAL DEBUG`
+# (QA-only patch, once per process). Entry: signed in. Exit: the popup open.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "You have a new learning goal"
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000

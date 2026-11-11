@@ -1,0 +1,28 @@
+# B2B Access Welcome "— Other Language" sheet open, network off: "Start learning <language>" shows the error dialog and the
+# sheet stays open after it is dismissed. Entry: the sheet open (`common/open-dialog-bridge.yaml` ROW=b2b_access_welcome_other_language),
+# then wifi and data turned off by the case script. Exit: the sheet open. Saves SHOT.png (the error dialog).
+# Selectors: the error dialog is a MaterialAlertDialog (`android:id/button1`).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "b2b-other-language-offline"}
+---
+- extendedWaitUntil:
+    visible:
+      id: b2b_access_welcome_start_button
+    timeout: 15000
+- tapOn:
+    id: b2b_access_welcome_start_button
+- extendedWaitUntil:
+    visible:
+      id: android:id/button1
+    timeout: 60000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: android:id/button1
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: b2b_access_welcome_modal
+- assertVisible:
+    id: b2b_access_welcome_keep_learning_button

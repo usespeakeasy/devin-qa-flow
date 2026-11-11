@@ -1,0 +1,27 @@
+# After a rotation or a process restore: the popup is still showing (SELECTOR id, or TEXT when it has no id).
+# Entry/exit: the popup open. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SELECTOR: ${SELECTOR || "none"}
+  TEXT: ${TEXT || "none"}
+  SHOT: ${SHOT || "popup-still-open"}
+---
+- waitForAnimationToEnd:
+    timeout: 5000
+- runFlow:
+    when:
+      true: ${SELECTOR != "none"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: ${SELECTOR}
+          timeout: 20000
+- runFlow:
+    when:
+      true: ${TEXT != "none"}
+    commands:
+      - extendedWaitUntil:
+          visible: ${TEXT}
+          timeout: 20000
+- takeScreenshot: ${SHOT}

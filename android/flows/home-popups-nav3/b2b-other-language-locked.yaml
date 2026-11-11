@@ -1,0 +1,44 @@
+# Debug Menu > Dialog Bridges > "B2B Access Welcome — Other Language": "Start learning <language>" switches the
+# account's pair. While it switches, a swipe down, a tap above the sheet and Back leave it open; then it closes on Home.
+# Needs the QA-only slow-switch patch (`adb shell setprop log.tag.QA_B2B_SLOW DEBUG` holds the switch 8 s).
+# Changes the account's language pair: restore it after (`qa_android.py bridge switchCourse language_pair_id=<pair>`).
+# Entry: signed in (restarts the app). Exit: Dialog Bridges, the account on the new pair. Saves SHOT.png (sheet after the three attempts).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "b2b-other-language-locked"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: b2b_access_welcome_other_language
+- extendedWaitUntil:
+    visible:
+      id: b2b_access_welcome_keep_learning_button
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 3000
+- tapOn:
+    id: b2b_access_welcome_start_button
+- swipe:
+    start: 50%, 65%
+    end: 50%, 99%
+    duration: 400
+- assertVisible:
+    id: b2b_access_welcome_modal
+- tapOn:
+    point: 50%, 12%
+- assertVisible:
+    id: b2b_access_welcome_modal
+- back
+- assertVisible:
+    id: b2b_access_welcome_modal
+- takeScreenshot: ${SHOT}
+- extendedWaitUntil:
+    notVisible:
+      id: b2b_access_welcome_modal
+    timeout: 40000
+- extendedWaitUntil:
+    visible:
+      id: debug_dialog_bridges_screen
+    timeout: 40000
