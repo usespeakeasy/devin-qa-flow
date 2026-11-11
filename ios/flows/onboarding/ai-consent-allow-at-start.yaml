@@ -1,0 +1,42 @@
+# ACT-3815 case C: Start, then Allow on the consent alert; the survey's first agent turn shows.
+# Entry: right after sign-up-email.yaml (split ai_data_consent_mode=alert_only). Builds that ask on
+# chat open (before speak-ios#10370) show the alert before the welcome; Allow there, then Start.
+# The alert's identifiers (ai-data-consent.alert*) are not in the tree, so its texts are used.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "Start|Allow Speak to send your voice and text to AI\\?"
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: C-1-first-arrival
+- runFlow:
+    when:
+      visible: "Allow Speak to send your voice and text to AI\\?"
+    commands:
+      - tapOn: "Allow"
+      - extendedWaitUntil:
+          visible:
+            id: onboarding.action.start
+          timeout: 30000
+      - waitForAnimationToEnd
+      - takeScreenshot: C-1b-welcome-after-allow-at-open
+- tapOn:
+    id: onboarding.action.start
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      visible: "Allow Speak to send your voice and text to AI\\?"
+    commands:
+      - takeScreenshot: C-2-alert-at-start
+      - tapOn: "Allow"
+- extendedWaitUntil:
+    visible:
+      id: onboarding.progress
+    timeout: 30000
+- assertNotVisible:
+    id: onboarding.action.start
+- waitForAnimationToEnd
+- takeScreenshot: C-3-survey-first-turn

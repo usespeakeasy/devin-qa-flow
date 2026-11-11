@@ -1,0 +1,34 @@
+# iOS Settings > General > AutoFill & Passwords: turn AutoFill Passwords and Passkeys off.
+# Entry: any; launches Settings. With it on, the system "Use Strong Password?" sheet takes the
+# keyboard on a sign-up password field and drops typed characters; the sheet is not in the tree.
+# The switch is the "0"/"1" value right of its row title (a tap on the row id does nothing).
+appId: com.apple.Preferences
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: com.apple.settings.general
+    timeout: 10000
+- tapOn:
+    id: com.apple.settings.general
+- tapOn: "AutoFill & Passwords"
+- extendedWaitUntil:
+    visible:
+      id: AutoFillToggle
+    timeout: 10000
+- runFlow:
+    when:
+      visible:
+        text: "1"
+        rightOf: "AutoFill Passwords and Passkeys"
+    commands:
+      - tapOn:
+          text: "1"
+          rightOf: "AutoFill Passwords and Passkeys"
+- extendedWaitUntil:
+    visible:
+      text: "0"
+      rightOf: "AutoFill Passwords and Passkeys"
+    timeout: 5000
+- stopApp

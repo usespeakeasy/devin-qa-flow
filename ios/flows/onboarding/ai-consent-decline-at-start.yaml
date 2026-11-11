@@ -1,0 +1,63 @@
+# ACT-3815 case A: Don't Allow at the welcome's Start keeps the welcome; Start again + Allow
+# continues the survey. Entry: right after sign-up-email.yaml (new account, split
+# ai_data_consent_mode=alert_only). Builds that ask on chat open (before speak-ios#10370) show the
+# alert before the welcome; that branch taps Don't Allow and records where it lands.
+# The alert's identifiers (ai-data-consent.alert*) are not in the tree, so its texts are used.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "Start|Allow Speak to send your voice and text to AI\\?"
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: A-1-first-arrival
+- runFlow:
+    when:
+      visible: "Allow Speak to send your voice and text to AI\\?"
+    commands:
+      - tapOn: "Don.t Allow"
+      - extendedWaitUntil:
+          visible:
+            id: "onboarding.storybook.screen|onboarding.action.start"
+          timeout: 30000
+      - waitForAnimationToEnd
+      - takeScreenshot: A-2-after-dont-allow-at-open
+- runFlow:
+    when:
+      visible:
+        id: onboarding.action.start
+    commands:
+      - assertNotVisible: "Allow Speak to send your voice and text to AI\\?"
+      - tapOn:
+          id: onboarding.action.start
+      - extendedWaitUntil:
+          visible: "Allow Speak to send your voice and text to AI\\?"
+          timeout: 15000
+      - takeScreenshot: A-2-alert-at-start
+      - tapOn: "Don.t Allow"
+      - extendedWaitUntil:
+          visible:
+            id: onboarding.action.start
+          timeout: 15000
+      - assertNotVisible: "Allow Speak to send your voice and text to AI\\?"
+      - assertNotVisible:
+          id: onboarding.storybook.screen
+      - assertNotVisible:
+          id: onboarding.storybook.sign-in
+      - waitForAnimationToEnd
+      - takeScreenshot: A-3-welcome-after-dont-allow
+      - tapOn:
+          id: onboarding.action.start
+      - extendedWaitUntil:
+          visible: "Allow Speak to send your voice and text to AI\\?"
+          timeout: 15000
+      - tapOn: "Allow"
+      - extendedWaitUntil:
+          visible:
+            id: onboarding.progress
+          timeout: 30000
+      - assertNotVisible:
+          id: onboarding.action.start
+      - waitForAnimationToEnd
+      - takeScreenshot: A-4-survey-first-turn

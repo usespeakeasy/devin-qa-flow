@@ -1,0 +1,105 @@
+# Fresh install -> Storybook Get started -> learning language -> email sign-up -> Magic Onboarding chat.
+# Entry: app data cleared (uninstalled, simulator keychain reset, reinstalled, launched). Exit: the sign-up sheet is gone
+# (Magic Onboarding is loading; builds that ask for AI data consent on open show the alert first).
+# Preconditions: EMAIL is a new throwaway address and PASSWORD meets the sign-up rules; pass both
+# with -e, never in a file. LEARNING is the onboarding.language.option.<id> to pick.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  LEARNING: es-MX
+---
+# The ATT sheet and the "Open in Speak Dev?" sheet (from the split-override link) come in either order.
+- repeat:
+    while:
+      notVisible:
+        id: "onboarding_notification_primary_button|onboarding.storybook.screen"
+    times: 10
+    commands:
+      - runFlow: ../../common/confirm-open-in-app.yaml
+      - runFlow:
+          when:
+            visible: "Ask App Not to Track"
+          commands:
+            - tapOn: "Ask App Not to Track"
+      - waitForAnimationToEnd
+- runFlow:
+    when:
+      visible:
+        id: onboarding_notification_primary_button
+    commands:
+      - tapOn:
+          id: onboarding_notification_primary_button
+      - runFlow:
+          when:
+            visible: "Allow"
+          commands:
+            - tapOn: "Allow"
+- extendedWaitUntil:
+    visible:
+      id: onboarding.storybook.screen
+    timeout: 30000
+- repeat:
+    while:
+      notVisible:
+        id: onboarding.storybook.get-started
+    times: 6
+    commands:
+      - tapOn:
+          id: onboarding.storybook.continue
+- tapOn:
+    id: onboarding.storybook.get-started
+- extendedWaitUntil:
+    visible:
+      id: onboarding.language.option.${LEARNING}
+    timeout: 30000
+- tapOn:
+    id: onboarding.language.option.${LEARNING}
+- runFlow:
+    when:
+      visible:
+        id: onboarding.language.continue
+        enabled: true
+    commands:
+      - tapOn:
+          id: onboarding.language.continue
+- runFlow:
+    when:
+      visible:
+        id: onboarding.app-language.keep
+    commands:
+      - tapOn:
+          id: onboarding.app-language.keep
+- extendedWaitUntil:
+    visible:
+      id: auth.options.screen
+    timeout: 30000
+- tapOn:
+    id: auth.provider.email
+- extendedWaitUntil:
+    visible:
+      id: auth.sign-up.screen
+    timeout: 15000
+- tapOn:
+    id: auth.sign-up.email
+- inputText: ${EMAIL}
+- tapOn:
+    id: auth.sign-up.password
+- inputText: ${PASSWORD}
+- runFlow:
+    when:
+      visible:
+        id: auth.sign-up.consent.all
+    commands:
+      - tapOn:
+          id: auth.sign-up.consent.all
+- tapOn:
+    id: auth.sign-up.submit
+- extendedWaitUntil:
+    notVisible:
+      id: auth.sign-up.screen
+    timeout: 90000
+- runFlow:
+    when:
+      visible: "Not Now"
+    commands:
+      - tapOn: "Not Now"

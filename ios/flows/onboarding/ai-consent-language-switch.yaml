@@ -1,0 +1,70 @@
+# ACT-3815 case B: switch the learning language from the welcome before Start; the consent alert
+# shows, and Don't Allow shows the welcome again in the new language. Entry: right after
+# sign-up-email.yaml (split ai_data_consent_mode=alert_only). NEW_LEARNING is the
+# onboarding.language.option.<id> to switch to, NEW_NAME its English name.
+# Builds that ask on chat open (before speak-ios#10370) show the alert before the welcome; that
+# branch taps Don't Allow and records where it lands.
+# Fallbacks: the alert's identifiers are not in the tree, and the welcome's "Switch language" link
+# has no identifier (it is the end of the secondary CTA text, hence the point inside the element).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  NEW_LEARNING: fr-FR
+  NEW_NAME: French
+---
+- extendedWaitUntil:
+    visible: "Start|Allow Speak to send your voice and text to AI\\?"
+    timeout: 90000
+- waitForAnimationToEnd
+- takeScreenshot: B-1-first-arrival
+- runFlow:
+    when:
+      visible: "Allow Speak to send your voice and text to AI\\?"
+    commands:
+      - tapOn: "Don.t Allow"
+      - extendedWaitUntil:
+          visible:
+            id: "onboarding.storybook.screen|onboarding.action.start"
+          timeout: 30000
+      - waitForAnimationToEnd
+      - takeScreenshot: B-2-after-dont-allow-at-open
+- runFlow:
+    when:
+      visible:
+        id: onboarding.action.start
+    commands:
+      - assertNotVisible: "Allow Speak to send your voice and text to AI\\?"
+      - tapOn:
+          text: "Not learning .* Switch language"
+          point: "90%,50%"
+      - extendedWaitUntil:
+          visible:
+            id: onboarding.language.option.${NEW_LEARNING}
+          timeout: 15000
+      - tapOn:
+          id: onboarding.language.option.${NEW_LEARNING}
+      - runFlow:
+          when:
+            visible:
+              id: onboarding.language.continue
+              enabled: true
+          commands:
+            - tapOn:
+                id: onboarding.language.continue
+      - extendedWaitUntil:
+          visible: "Allow Speak to send your voice and text to AI\\?"
+          timeout: 30000
+      - takeScreenshot: B-2-alert-after-language-switch
+      - tapOn: "Don.t Allow"
+      - extendedWaitUntil:
+          visible:
+            id: onboarding.action.start
+          timeout: 15000
+      - assertVisible: "Not learning ${NEW_NAME}\\? Switch language"
+      - assertNotVisible: "Allow Speak to send your voice and text to AI\\?"
+      - assertNotVisible:
+          id: onboarding.storybook.screen
+      - assertNotVisible:
+          id: onboarding.storybook.sign-in
+      - waitForAnimationToEnd
+      - takeScreenshot: B-3-welcome-after-dont-allow
