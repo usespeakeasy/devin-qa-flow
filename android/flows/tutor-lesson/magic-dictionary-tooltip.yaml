@@ -1,0 +1,37 @@
+# Drill lesson > tap a word of the line: the word sheet (PronunciationDialog) opens and, on the first
+# open after a data clear, the Magic Dictionary tooltip appears under the dictionary icon after the
+# translation (2 s product delay). Entry: Home, signed in, app data cleared since the last tooltip,
+# pronunciation_coach_multilingual OFF (ON opens the phoneme coach instead). Exit: the word sheet with
+# the tooltip shown, so the caller can dump bounds and screenshot the arrow.
+# Selectors: lesson_line_word, word, translation, magic_dictionary, saved, magic_dictionary_tooltip.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+  SHOT: ${SHOT || "magic-dictionary-tooltip"}
+---
+- runFlow: ../../common/home-popups.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- runFlow: ../../common/pass-qa-pre-lesson.yaml
+- extendedWaitUntil:
+    visible:
+      id: lesson_line_word
+    timeout: 30000
+- tapOn:
+    id: lesson_line_word
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: translation
+    timeout: 20000
+- assertVisible:
+    id: word
+- extendedWaitUntil:
+    visible:
+      id: magic_dictionary_tooltip
+    timeout: 15000
+- assertVisible:
+    id: magic_dictionary
+- assertVisible:
+    id: saved
+- takeScreenshot: ${SHOT}
