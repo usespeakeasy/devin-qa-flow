@@ -1,0 +1,21 @@
+# Set ORIENTATION (PORTRAIT, LANDSCAPE_LEFT) and stay there: TAB_ID is still selected and ARRIVAL_ID shows.
+# Landscape shows the rail; phones are portrait-locked, so it needs a large screen (see rotate-tab.yaml).
+# Entry: any Main tab. Exit: that tab in ORIENTATION. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "orient-tab"}
+---
+- setOrientation: ${ORIENTATION}
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ${TAB_ID}
+      selected: true
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 15000
+- takeScreenshot: ${SHOT}

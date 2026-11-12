@@ -1,0 +1,22 @@
+# Tap the tab TAB_ID and wait for ARRIVAL_ID (id regex on that tab); the tab is selected.
+# Entry: any Main tab, bottom bar or rail. Exit: that tab. Saves SHOT.png.
+# Arrivals: main_tab_home learning_path_ready, main_tab_free_talk ai_tutor_history_button (intro dialog closed first,
+# e.g. by every-tab-reselect.yaml), main_tab_practice practice_tab_screen, main_tab_challenges
+# "challenge_tab_screen|challenge_tab_root", main_tab_profile stat_streak_title.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "open-tab"}
+---
+- tapOn:
+    id: ${TAB_ID}
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: ${TAB_ID}
+    selected: true
+- takeScreenshot: ${SHOT}
