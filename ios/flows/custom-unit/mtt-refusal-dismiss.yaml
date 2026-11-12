@@ -1,0 +1,21 @@
+# Taps OK on the Meet the Tutor refusal alert when it shows, then waits for Custom courses.
+# Entry: exit of mtt-retry-refused.yaml. Exit: course-select.toolbar.action.close, no Retry action left.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow:
+    when:
+      visible:
+        id: "custom-unit.generation.refusal-alert.action.ok"
+    commands:
+      - assertNotVisible:
+          id: "custom-unit.generation.failure-alert.action.retry"
+      - tapOn:
+          id: "custom-unit.generation.refusal-alert.action.ok"
+- extendedWaitUntil:
+    visible:
+      id: "course-select.toolbar.action.close"
+    timeout: 20000
+- assertNotVisible:
+    id: "custom-unit.generation.refusal-alert.action.ok|custom-unit.generation.failure-alert.action.retry"
