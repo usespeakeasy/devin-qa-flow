@@ -1,0 +1,24 @@
+# The screen after a purchase: EXPECT=post_conversion (post_conversion_screen, "Welcome to your Speak Membership!")
+# or EXPECT=confirm_trial (confirm_trial_screen, the Korea trial consent screen). Waits up to 30 s, then checks the
+# other screen and the plans screen are gone. Entry: right after subscribe-complete.yaml. Read-only.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak
+  EXPECT: ${EXPECT || 'post_conversion'}
+---
+- extendedWaitUntil:
+    visible:
+      id: (post_conversion_screen|confirm_trial_screen)
+    timeout: 30000
+- assertVisible:
+    id: ${EXPECT}_screen
+- assertNotVisible:
+    id: "${EXPECT == 'post_conversion' ? 'confirm_trial_screen' : 'post_conversion_screen'}"
+- assertNotVisible:
+    id: primary_label
+- runFlow:
+    when:
+      true: ${EXPECT == 'confirm_trial'}
+    commands:
+      - assertVisible:
+          id: confirm_trial_confirm_button

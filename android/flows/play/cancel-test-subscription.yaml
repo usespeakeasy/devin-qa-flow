@@ -1,0 +1,18 @@
+# Cancels the active Play test subscription of the signed-in license tester, so it ends at the
+# current test period (30 min for an annual plan) instead of renewing.
+appId: com.android.vending
+env:
+  PLAY_APP_NAME: '${PLAY_APP_NAME || "Speak: Language Learning"}'
+---
+- openLink: https://play.google.com/store/account/subscriptions
+- tapOn: "Test: ${PLAY_APP_NAME}"
+- tapOn: ^Cancel subscription$
+- scrollUntilVisible:
+    element: Keep subscription
+    optional: true
+- tapOn:
+    text: ^Cancel subscription$
+    index: 1
+- extendedWaitUntil:
+    visible: ^Canceled$
+    timeout: 15000

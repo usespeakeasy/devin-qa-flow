@@ -1,0 +1,43 @@
+# Plans screen > Subscribe > Google Play sheet > Subscribe completes a license-tester test purchase
+# ("Test card, always approves"), then closes Play's "Payment successful" sheet (No, thanks / OK) when it shows.
+# Exit: Play's sheet is closed; the caller asserts the post-purchase screen (assert-post-purchase.yaml).
+# Needs a Play license tester Google account on a Play Store AVD and a build with Play products (stagingDebug,
+# com.selabs.speak; dev has none). The tester can buy the same plan again once Play revokes the unacknowledged
+# staging purchase (about 7 to 8 min). The Play sheet is com.android.vending (obfuscated IDs), so it is matched by text.
+# Entry: AiTutorPurchase or AiTutorPurchasePremiumPlan.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak
+  SHOT: ${SHOT || 'play-subscribe'}
+---
+- tapOn:
+    id: primary_button
+# "You're already subscribed": Play has not revoked the last test purchase of this plan yet (about 7 to 8 min).
+- extendedWaitUntil:
+    visible: (Test card, always approves|You're already subscribed.*)
+    timeout: 30000
+- assertNotVisible: You're already subscribed.*
+- assertVisible: Test card, always approves
+- assertNotVisible:
+    id: primary_button
+- takeScreenshot: ${SHOT}-sheet
+- tapOn: ^Subscribe$
+- extendedWaitUntil:
+    notVisible: Test card, always approves
+    timeout: 30000
+# Play answers some buys with an "Error / Server error" sheet; the buy did not happen.
+- assertNotVisible: (Error|Server error)
+# Play shows "Payment successful" (with "Require authentication for purchases?" the first time) on some buys only.
+- runFlow:
+    when:
+      visible: Payment successful
+    commands:
+      - tapOn:
+          text: No, thanks
+          optional: true
+      - tapOn:
+          text: ^OK$
+          optional: true
+- extendedWaitUntil:
+    notVisible: Payment successful
+    timeout: 15000

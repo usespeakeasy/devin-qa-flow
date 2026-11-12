@@ -1,0 +1,16 @@
+# Home > upgrade > plans > Subscribe > Google Play test purchase, in one Maestro run (one JVM start per case).
+# Entry: app cold-starting on Home. Exit: Play's sheet closed; assert the next screen with assert-post-purchase.yaml.
+# Needs what subscribe-complete.yaml needs (Play license tester, stagingDebug) and a Free account (or the
+# Debug Menu subscription override set to Free, set-subscription-override.yaml) so Home shows the upgrade button.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak
+  SHOT: ${SHOT || 'purchase'}
+---
+- runFlow: ../../common/home-popups.yaml
+- runFlow: open-plans.yaml
+- takeScreenshot: ${SHOT}-plans
+- runFlow:
+    file: subscribe-complete.yaml
+    env:
+      SHOT: ${SHOT}

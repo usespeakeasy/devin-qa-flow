@@ -4,12 +4,13 @@
 # Selectors: the radio options have no resource-id (text fallback).
 appId: ${APP_ID}
 env:
-  APP_ID: com.selabs.speak.dev
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
 ---
 # Cold start first: an openLink while the Debug Menu's override list is open stays on that list.
 - launchApp:
     stopApp: true
-- openLink: speak-dev://debug-menu
+- openLink: ${DEBUG_MENU_LINK}
 - extendedWaitUntil:
     visible: "Subscription override"
     timeout: 30000
