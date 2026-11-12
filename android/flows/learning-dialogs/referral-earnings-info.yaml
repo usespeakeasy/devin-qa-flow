@@ -1,0 +1,31 @@
+# Profile > referral > Your earnings info: Referral Earnings Info shows; Back returns to the referral screen.
+# Entry: Home, referral on (QA-only referral patch on dev pool accounts). Exit: referral screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../referral/open-from-profile.yaml
+- scrollUntilVisible:
+    element:
+      id: button
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- tapOn:
+    id: button
+- extendedWaitUntil:
+    visible:
+      text: "Total Earned:.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: referral-earnings-info_open
+- back
+- extendedWaitUntil:
+    notVisible:
+      text: "Total Earned:.*"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "referral_screen"
+    timeout: 10000
+- takeScreenshot: referral-earnings-info_closed

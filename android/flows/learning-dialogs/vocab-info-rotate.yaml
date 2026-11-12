@@ -1,0 +1,45 @@
+# Dialog Bridges > vocab_info: rotate to landscape and back with it open; it stays up, and one Back closes it (no second copy).
+# Entry: signed in. Exit: Dialog Bridges, portrait.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: vocab_info
+      RESTART: "true"
+- extendedWaitUntil:
+    visible:
+      text: "Vocab and Expressions"
+    timeout: 10000
+- waitForAnimationToEnd
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      text: "Vocab and Expressions"
+    timeout: 10000
+- takeScreenshot: vocab-info-rotate_landscape
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      text: "Vocab and Expressions"
+    timeout: 10000
+- takeScreenshot: vocab-info-rotate_portrait
+- back
+- extendedWaitUntil:
+    notVisible:
+      text: "Vocab and Expressions"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "debug_dialog_bridges_screen"
+    timeout: 10000
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    notVisible:
+      text: "Vocab and Expressions"
+    timeout: 5000
+- takeScreenshot: vocab-info-rotate_closed

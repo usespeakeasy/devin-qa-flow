@@ -1,0 +1,59 @@
+# Profile > level row > Levels sheet > info: Levels Info shows; Back returns to the Levels sheet, Back again to Profile.
+# Entry: Home. Exit: Profile. Text fallback for the Levels Info dialog (no resource id).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/home-popups.yaml
+# Streak save V2 sheet has no root ID yet and can open after home_root_ready.
+- runFlow:
+    when:
+      visible:
+        text: "Save your .*streak!"
+    commands:
+      - back
+- tapOn:
+    id: main_tab_profile
+- extendedWaitUntil:
+    visible:
+      id: "action_settings"
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      id: requirements_compose
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- tapOn:
+    id: requirements_compose
+- extendedWaitUntil:
+    visible:
+      id: "levels_info"
+    timeout: 15000
+- tapOn:
+    id: levels_info
+- extendedWaitUntil:
+    visible:
+      text: "Levels represent.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: profile-levels-info_open
+- back
+- extendedWaitUntil:
+    notVisible:
+      text: "Levels represent.*"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "levels_sheet"
+    timeout: 10000
+- takeScreenshot: profile-levels-info_closed
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: "levels_sheet"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "action_settings"
+    timeout: 10000

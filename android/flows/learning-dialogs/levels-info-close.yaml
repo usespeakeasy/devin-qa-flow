@@ -1,0 +1,47 @@
+# Dialog Bridges > Levels Info: Back and an outside tap close it. Text fallback: the dialog has no resource id.
+# Entry: signed in. Exit: Dialog Bridges.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: levels_info
+      RESTART: "true"
+- extendedWaitUntil:
+    visible:
+      text: "Levels represent.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: levels-info-close_open
+- back
+- extendedWaitUntil:
+    notVisible:
+      text: "Levels represent.*"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "debug_dialog_bridges_screen"
+    timeout: 10000
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: levels_info
+      RESTART: "false"
+- extendedWaitUntil:
+    visible:
+      text: "Levels represent.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn:
+    point: "50%,10%"
+- extendedWaitUntil:
+    notVisible:
+      text: "Levels represent.*"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "debug_dialog_bridges_screen"
+    timeout: 10000
+- takeScreenshot: levels-info-close_after_outside

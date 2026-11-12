@@ -1,0 +1,30 @@
+# First Free Talk tab visit after clear data opens the intro dialog by itself; Get started closes it back to the tab.
+# Entry: signed in right after `qa_android.py fresh` + login, on Home. Exit: Free Talk tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_free_talk
+- extendedWaitUntil:
+    visible:
+      id: "ai_tutor_intro_dialog"
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot: free-talk-intro_open
+- tapOn:
+    id: "ai_tutor_intro_dialog_get_started_button"
+- extendedWaitUntil:
+    notVisible:
+      id: "ai_tutor_intro_dialog"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "main_tab_free_talk"
+    timeout: 10000
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    notVisible:
+      id: "ai_tutor_intro_dialog"
+    timeout: 5000
+- takeScreenshot: free-talk-intro_closed

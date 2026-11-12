@@ -1,0 +1,45 @@
+# Dialog Bridges > report_success: rotate to landscape and back with it open; it stays up, and one Back closes it (no second copy).
+# Entry: signed in. Exit: Dialog Bridges, portrait.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: report_success
+      RESTART: "true"
+- extendedWaitUntil:
+    visible:
+      id: "ai_tutor_community_report_confirmation"
+    timeout: 10000
+- waitForAnimationToEnd
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "ai_tutor_community_report_confirmation"
+    timeout: 10000
+- takeScreenshot: report-success-rotate_landscape
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "ai_tutor_community_report_confirmation"
+    timeout: 10000
+- takeScreenshot: report-success-rotate_portrait
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: "ai_tutor_community_report_confirmation"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "debug_dialog_bridges_screen"
+    timeout: 10000
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    notVisible:
+      id: "ai_tutor_community_report_confirmation"
+    timeout: 5000
+- takeScreenshot: report-success-rotate_closed

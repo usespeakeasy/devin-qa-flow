@@ -1,0 +1,85 @@
+# Dialog Bridges > Report Success: Okay, Back, outside tap close it; a double tap on Okay closes only the dialog.
+# Entry: signed in. Exit: Dialog Bridges.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: report_success
+      RESTART: "true"
+- extendedWaitUntil:
+    visible:
+      id: "ai_tutor_community_report_confirmation"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: report-success-close_open
+- tapOn:
+    id: "ai_tutor_community_report_confirmation_okay_button"
+- extendedWaitUntil:
+    notVisible:
+      id: "ai_tutor_community_report_confirmation"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "debug_dialog_bridges_screen"
+    timeout: 10000
+- takeScreenshot: report-success-close_after_button
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: report_success
+      RESTART: "false"
+- extendedWaitUntil:
+    visible:
+      id: "ai_tutor_community_report_confirmation"
+    timeout: 10000
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: "ai_tutor_community_report_confirmation"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "debug_dialog_bridges_screen"
+    timeout: 10000
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: report_success
+      RESTART: "false"
+- extendedWaitUntil:
+    visible:
+      id: "ai_tutor_community_report_confirmation"
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn:
+    point: "50%,10%"
+- extendedWaitUntil:
+    notVisible:
+      id: "ai_tutor_community_report_confirmation"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "debug_dialog_bridges_screen"
+    timeout: 10000
+- takeScreenshot: report-success-close_after_outside
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: report_success
+      RESTART: "false"
+- extendedWaitUntil:
+    visible:
+      id: "ai_tutor_community_report_confirmation"
+    timeout: 10000
+- waitForAnimationToEnd
+- doubleTapOn:
+    id: "ai_tutor_community_report_confirmation_okay_button"
+- extendedWaitUntil:
+    notVisible:
+      id: "ai_tutor_community_report_confirmation"
+    timeout: 5000
+- waitForAnimationToEnd
+- takeScreenshot: report-success-close_after_double_tap

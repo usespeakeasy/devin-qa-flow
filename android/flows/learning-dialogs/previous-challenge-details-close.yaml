@@ -1,0 +1,47 @@
+# Dialog Bridges > Previous Challenge Details: Back and an outside tap close it.
+# Entry: signed in. Exit: Dialog Bridges.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: previous_challenge_details
+      RESTART: "true"
+- extendedWaitUntil:
+    visible:
+      id: "challenge_previous_details_card"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: previous-challenge-details-close_open
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: "challenge_previous_details_card"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "debug_dialog_bridges_screen"
+    timeout: 10000
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: previous_challenge_details
+      RESTART: "false"
+- extendedWaitUntil:
+    visible:
+      id: "challenge_previous_details_card"
+    timeout: 10000
+- waitForAnimationToEnd
+- tapOn:
+    point: "50%,10%"
+- extendedWaitUntil:
+    notVisible:
+      id: "challenge_previous_details_card"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "debug_dialog_bridges_screen"
+    timeout: 10000
+- takeScreenshot: previous-challenge-details-close_after_outside

@@ -1,0 +1,27 @@
+# Dialog Bridges > Vocab Info, then Home, am kill and relaunch from recents: saves the restored screen (compared between builds).
+# Entry: signed in. Exit: the restored screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: vocab_info
+      RESTART: "true"
+- extendedWaitUntil:
+    visible:
+      text: "Vocab and Expressions"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: vocab-info-pd_before
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      text: "Got it"
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: vocab-info-pd_after

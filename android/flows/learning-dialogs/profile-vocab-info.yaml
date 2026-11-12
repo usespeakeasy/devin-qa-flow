@@ -1,0 +1,45 @@
+# Profile > vocab card info: Vocab Info sheet shows; Got it returns to Profile. Text fallback for the sheet (no resource ids).
+# Entry: Home. Exit: Profile.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/home-popups.yaml
+# Streak save V2 sheet has no root ID yet and can open after home_root_ready.
+- runFlow:
+    when:
+      visible:
+        text: "Save your .*streak!"
+    commands:
+      - back
+- tapOn:
+    id: main_tab_profile
+- extendedWaitUntil:
+    visible:
+      id: "action_settings"
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      id: icon_info
+    direction: DOWN
+    timeout: 30000
+    centerElement: true
+- tapOn:
+    id: icon_info
+- extendedWaitUntil:
+    visible:
+      text: "Got it"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: profile-vocab-info_open
+- tapOn:
+    text: "Got it"
+- extendedWaitUntil:
+    notVisible:
+      text: "Got it"
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "icon_info"
+    timeout: 10000
+- takeScreenshot: profile-vocab-info_closed
