@@ -1,5 +1,5 @@
 # Walk the rest of the lesson end flow to Home: the readout (lesson_end_reskin_root) Continue,
-# streak goal setting (pick 7 days), the home screen widget prompt (Maybe later), level progress
+# streak goal setting (pick 7 days), the earned Streak Freeze step (Got it), the home screen widget prompt (Maybe later), level progress
 # and any other step with a primary button. The steps after the readout depend on the server.
 # Entry: any lesson end step after the review dialog (the streak progress step is tapped through). Exit: home_root_ready.
 # Selectors: the widget prompt has no resource-id (text fallback "Maybe later").
@@ -18,6 +18,9 @@ env:
           optional: true
       - tapOn:
           id: lesson_end_streak_progress_continue_button
+          optional: true
+      - tapOn:
+          id: lesson_end_streak_freeze_got_it_button
           optional: true
       - tapOn:
           id: goal_7days
