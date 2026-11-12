@@ -1,0 +1,21 @@
+# Taps Start on the onboarding welcome of an account without AI data consent and stops on the alert.
+# Entry: the welcome (onboarding.action.start), e.g. right after sign-up-email.yaml with split
+# ai_data_consent_mode=alert_only. Exit: the alert on screen (read its texts with `maestro hierarchy`).
+# The alert's identifiers (ai-data-consent.alert*) are not in the tree, so the wait matches the title
+# text of either copy (v1 or v2) in English or Vietnamese. Required -e: SHOT (screenshot name).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding.action.start
+    timeout: 60000
+- assertNotVisible: "Allow .*AI.*\\?|Cho phép .*AI.*\\?"
+- tapOn:
+    id: onboarding.action.start
+- extendedWaitUntil:
+    visible: "Allow .*AI.*\\?|Cho phép .*AI.*\\?"
+    timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
