@@ -1,0 +1,39 @@
+# Rotate to landscape and back with the dialog open (OPEN: web_consent, confirmation, certificate): it stays up as one
+# copy, then ARRIVAL's close button closes it to the screen under it. Entry: as the OPEN flow. Exit: the screen under it.
+# Saves SHOT_landscape.png and SHOT_portrait.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  OPEN: ${OPEN || "confirmation"}
+  SHOT: ${SHOT || "rotate"}
+---
+- runFlow:
+    when:
+      true: ${OPEN == "web_consent"}
+    file: web-consent-open.yaml
+    env:
+      ACTION: none
+      SHOT: ${SHOT}_open
+- runFlow:
+    when:
+      true: ${OPEN == "confirmation"}
+    file: confirmation-close.yaml
+    env:
+      ACTION: none
+      SHOT: ${SHOT}_open
+- runFlow:
+    when:
+      true: ${OPEN == "certificate"}
+    file: certificate.yaml
+    env:
+      ACTION: none
+      SHOT: ${SHOT}_open
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd
+- runFlow: assert-open.yaml
+- takeScreenshot: ${SHOT}_landscape
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd
+- runFlow: assert-open.yaml
+- takeScreenshot: ${SHOT}_portrait
+- runFlow: close-one.yaml

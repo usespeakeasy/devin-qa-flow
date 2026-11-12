@@ -1,0 +1,43 @@
+# Dialog Bridges > Web Consent with no pending price-increase consent: the error dialog shows over Dialog Bridges with
+# the sheet gone; OK returns to Dialog Bridges, which stays open (the screen under the sheet doesn't close).
+# Entry: signed in, no consent data (no `files/qa_consent` QA marker). Exit: Dialog Bridges. Saves SHOT.png (the error).
+# TAP: tapOn or doubleTapOn for OK.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "web-consent-error"}
+  TAP: ${TAP || "tapOn"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: web_consent
+- extendedWaitUntil:
+    visible:
+      id: android:id/button1
+    timeout: 20000
+- assertNotVisible:
+    id: web_consent_screen
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      true: ${TAP == "doubleTapOn"}
+    commands:
+      - doubleTapOn:
+          id: android:id/button1
+- runFlow:
+    when:
+      true: ${TAP != "doubleTapOn"}
+    commands:
+      - tapOn:
+          id: android:id/button1
+- extendedWaitUntil:
+    notVisible:
+      id: android:id/button1
+    timeout: 5000
+- waitForAnimationToEnd
+- assertVisible:
+    id: debug_dialog_bridges_screen
+- assertNotVisible:
+    id: web_consent_screen

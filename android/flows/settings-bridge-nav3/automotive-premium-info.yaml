@@ -1,0 +1,39 @@
+# Automotive build (automotiveDevelopDebug, AAOS emulator): Debug Menu > Monetization entitlements > Component gallery >
+# "Get unlimited Free Talk" runs the real PaywallNavigator.showUpgradePaywall, which on the car opens the
+# "subscribe on mobile" dialog (AutomotivePremiumInfo) instead of a paywall. Got it (TAP=tapOn or doubleTapOn) closes
+# only the dialog: the entitlements screen stays. Works on a premium account.
+# Entry: signed in on the car (harness `bridge login`), parked. Exit: debug_entitlements_screen. Saves SHOT.png.
+# Selectors: the dialog has no resource-id (text fallback: "Get Speak Premium", "Got it").
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "automotive-premium-info"}
+  TAP: ${TAP || "tapOn"}
+---
+- runFlow:
+    file: ../paywall/debug-upgrade-paywall.yaml
+    env:
+      AUTOMOTIVE: "true"
+- extendedWaitUntil:
+    visible: "^Got it$"
+    timeout: 20000
+- assertVisible: "^Get Speak Premium$"
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      true: ${TAP == "doubleTapOn"}
+    commands:
+      - doubleTapOn: "^Got it$"
+- runFlow:
+    when:
+      true: ${TAP != "doubleTapOn"}
+    commands:
+      - tapOn: "^Got it$"
+- extendedWaitUntil:
+    notVisible: "^Got it$"
+    timeout: 5000
+- waitForAnimationToEnd
+- assertVisible:
+    id: debug_entitlements_screen
+- takeScreenshot: ${SHOT}_after

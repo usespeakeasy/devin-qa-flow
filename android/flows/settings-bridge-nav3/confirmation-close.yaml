@@ -1,0 +1,61 @@
+# Dialog Bridges > Confirmation: the sheet opens; ACTION closes it to Dialog Bridges: done, close, done_double,
+# close_double (double tap), swipe (drag down), back (system Back), none (stay open).
+# Entry: signed in, any state. Exit: Dialog Bridges, or the open sheet for none. Saves SHOT.png (the open sheet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "confirmation"}
+  ACTION: ${ACTION || "done"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: confirmation
+- extendedWaitUntil:
+    visible:
+      id: consent_confirmation_done_button
+    timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      true: ${ACTION == "done" || ACTION == "close"}
+    commands:
+      - tapOn:
+          id: consent_confirmation_${ACTION}_button
+- runFlow:
+    when:
+      true: ${ACTION == "done_double"}
+    commands:
+      - doubleTapOn:
+          id: consent_confirmation_done_button
+- runFlow:
+    when:
+      true: ${ACTION == "close_double"}
+    commands:
+      - doubleTapOn:
+          id: consent_confirmation_close_button
+- runFlow:
+    when:
+      true: ${ACTION == "swipe"}
+    commands:
+      - swipe:
+          start: 50%, 12%
+          end: 50%, 99%
+          duration: 400
+- runFlow:
+    when:
+      true: ${ACTION == "back"}
+    commands:
+      - back
+- runFlow:
+    when:
+      true: ${ACTION != "none"}
+    commands:
+      - extendedWaitUntil:
+          notVisible:
+            id: consent_confirmation_screen
+          timeout: 5000
+      - waitForAnimationToEnd
+      - assertVisible:
+          id: debug_dialog_bridges_screen

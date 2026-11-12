@@ -1,0 +1,41 @@
+# Close the OPEN dialog once with its own button and check the screen under it (Dialog Bridges or Manage membership).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    when:
+      true: ${OPEN == "web_consent"}
+    commands:
+      - tapOn:
+          id: web_consent_ask_later_button
+      - extendedWaitUntil:
+          notVisible:
+            id: web_consent_screen
+          timeout: 5000
+      - assertVisible:
+          id: debug_dialog_bridges_screen
+- runFlow:
+    when:
+      true: ${OPEN == "confirmation"}
+    commands:
+      - tapOn:
+          id: consent_confirmation_done_button
+      - extendedWaitUntil:
+          notVisible:
+            id: consent_confirmation_screen
+          timeout: 5000
+      - assertVisible:
+          id: debug_dialog_bridges_screen
+- runFlow:
+    when:
+      true: ${OPEN == "certificate"}
+    commands:
+      - tapOn:
+          id: request_certificate_cancel_button
+      - extendedWaitUntil:
+          notVisible:
+            id: request_certificate_dialog
+          timeout: 5000
+      - assertVisible:
+          id: item_see_all_subscriptions

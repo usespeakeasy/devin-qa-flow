@@ -1,19 +1,53 @@
 # Upgrade paywall from Debug Menu > Monetization entitlements > component gallery "Get unlimited Free Talk"
 # (the real `PaywallNavigator.showUpgradePaywall` for FREE_TALK). Works on a premium pool account, which has
 # no locked lessons. Entry: signed in, any screen. Exit: the CTA was tapped; the caller asserts the paywall.
+# -e AUTOMOTIVE=true (automotiveDevelopDebug on AAOS) opens the Debug Menu from Settings, since the car has no deep links.
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  AUTOMOTIVE: ${AUTOMOTIVE || "false"}
 ---
-- openLink: speak-dev://debug-menu
+- runFlow:
+    when:
+      true: ${AUTOMOTIVE != "true"}
+    commands:
+      - openLink: speak-dev://debug-menu
+- runFlow:
+    when:
+      true: ${AUTOMOTIVE == "true"}
+    file: ../../common/open-debug-menu-automotive.yaml
 - extendedWaitUntil:
     visible:
       id: debug_menu_screen
     timeout: 20000
-- scrollUntilVisible:
-    element:
-      id: debug_menu_monetization_entitlements
-    direction: DOWN
+- runFlow:
+    when:
+      true: ${AUTOMOTIVE != "true"}
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: debug_menu_monetization_entitlements
+          direction: DOWN
+# On the car, a swipe from near the bottom bar opens the climate panel, so scroll from mid-screen.
+- runFlow:
+    when:
+      true: ${AUTOMOTIVE == "true"}
+    commands:
+      - repeat:
+          while:
+            notVisible:
+              id: debug_menu_monetization_entitlements
+          times: 20
+          commands:
+            - swipe:
+                start: 50%, 60%
+                end: 50%, 30%
+                duration: 600
+      # The row first shows just above the climate bar, where a tap opens the climate panel; lift it to mid-screen.
+      - swipe:
+          start: 50%, 60%
+          end: 50%, 30%
+          duration: 600
 - tapOn:
     id: debug_menu_monetization_entitlements
 # The gallery header and its CTA have no resource-id (text fallback).

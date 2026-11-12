@@ -1,0 +1,50 @@
+# Dialog Bridges > Web Consent with consent data > Confirm: the Confirmation sheet replaces the consent sheet; CLOSE
+# (done, close) closes it to Dialog Bridges with no consent sheet left behind. TAP: tapOn or doubleTapOn for CLOSE.
+# Entry: signed in, `files/qa_consent` = ok (QA-only hard-code). Exit: Dialog Bridges. Saves SHOT.png (Confirmation).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "web-consent-confirmation"}
+  CLOSE: ${CLOSE || "done"}
+  TAP: ${TAP || "tapOn"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: web_consent
+- extendedWaitUntil:
+    visible:
+      id: web_consent_confirm_button
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: web_consent_confirm_button
+- extendedWaitUntil:
+    visible:
+      id: consent_confirmation_screen
+    timeout: 15000
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: web_consent_screen
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      true: ${TAP == "doubleTapOn"}
+    commands:
+      - doubleTapOn:
+          id: consent_confirmation_${CLOSE}_button
+- runFlow:
+    when:
+      true: ${TAP != "doubleTapOn"}
+    commands:
+      - tapOn:
+          id: consent_confirmation_${CLOSE}_button
+- extendedWaitUntil:
+    notVisible:
+      id: consent_confirmation_screen
+    timeout: 5000
+- waitForAnimationToEnd
+- assertVisible:
+    id: debug_dialog_bridges_screen
+- assertNotVisible:
+    id: web_consent_screen
