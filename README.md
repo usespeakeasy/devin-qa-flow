@@ -30,7 +30,7 @@ flowchart TD
     D -- yes --> E["Reuse the Maestro YAML<br/>(script ready during the build)"]
     D -- no --> F["Find the taps on the emulator<br/>and write new flows"]
     B --> G["Build base + branch"]
-    G --> H["Lease a pool account<br/>(no sign-up, no onboarding)"]
+    G --> H["Test user from Speak (dev) MCP<br/>(pool account as fallback)"]
     E --> I["Record Before and After"]
     F --> I
     H --> I
@@ -69,7 +69,8 @@ maestro --device emulator-5554 test android/flows/main-tabs/tab-tour.yaml
 maestro --device emulator-5554 test -e APP_ID=com.selabs.speak.dev android/flows/<area>/<case>.yaml
 ```
 
-Most flows start signed in: the harness leases a pool account and logs in before they run.
+Most flows start signed in: the run signs in a test user (the `speak-test-users` skill), or leases
+a pool account when the session lacks the `test_*` tools.
 Pre-auth flows (`android/flows/auth/`, `android/flows/onboarding/`) start signed out instead;
 their header says `Entry: app data cleared` and the harness `fresh` command gets the app there.
 Account lease, login, screen recording and the Before | After packet come from the
