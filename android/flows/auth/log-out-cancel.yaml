@@ -1,0 +1,27 @@
+# Settings -> Log out -> Cancel on the "Are you sure you want to sign out?" dialog: the dialog closes,
+# Settings stays and the account stays signed in. Entry: `home_root_ready`.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/open-settings.yaml
+- scrollUntilVisible:
+    element:
+      id: settings_log_out_option
+    direction: DOWN
+- tapOn:
+    id: settings_log_out_option
+- extendedWaitUntil:
+    visible:
+      id: simple_dialog
+    timeout: 10000
+- tapOn:
+    id: simple_dialog_negative_button
+- extendedWaitUntil:
+    notVisible:
+      id: simple_dialog
+    timeout: 10000
+- assertVisible:
+    id: settings_log_out_option
+- assertNotVisible:
+    id: onboarding_storybook_screen
