@@ -1,0 +1,17 @@
+# Debug Menu > Logout -> signed-out storybook. Entry: signed in, any screen.
+# Opens the Debug Menu by deep link (shaking the device opens the same screen).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://debug-menu
+- scrollUntilVisible:
+    element:
+      id: debug_menu_logout
+    direction: DOWN
+- tapOn:
+    id: debug_menu_logout
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_screen
+    timeout: 30000
