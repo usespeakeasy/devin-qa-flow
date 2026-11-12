@@ -1,0 +1,15 @@
+# Expression Details: from full height, drag down from 30% to 62% of the screen (past about a third): the sheet settles at a lower anchor (the opening height when it has one).
+# Maestro needs literal swipe points (env in start/end fails to parse), so each drag is its own flow.
+# The runner reads tutor_expression_details_sheet bounds after (harness `dump`), or checks the sheet closed.
+# Start below the sheet's top edge: a drag that starts on the scrim closes the sheet (LEARNINGS).
+# Entry: tutor_expression_details_sheet at full height, list at its top. Exit: the sheet at its opening height, or closed if it has no lower anchor.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- swipe:
+    start: 50%, 30%
+    end: 50%, 62%
+    duration: 800
+- waitForAnimationToEnd:
+    timeout: 3000

@@ -1,0 +1,17 @@
+# Expression Details: drag up slowly from 70% to 40% of the screen, from the list's top: the sheet expands to full height.
+# Short and slow so little of the drag scrolls the list once the sheet is full height (a longer drag leaves the list
+# scrolled, and the next drag down only scrolls it back).
+# Maestro needs literal swipe points (env in start/end fails to parse), so each drag is its own flow.
+# The runner reads tutor_expression_details_sheet bounds after (harness `dump`), or checks the sheet closed.
+# Start below the sheet's top edge: a drag that starts on the scrim closes the sheet (LEARNINGS).
+# Entry: tutor_expression_details_sheet at its opening height, list at its top. Exit: the sheet at full height.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- swipe:
+    start: 50%, 70%
+    end: 50%, 40%
+    duration: 1500
+- waitForAnimationToEnd:
+    timeout: 3000
