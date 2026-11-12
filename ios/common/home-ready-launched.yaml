@@ -5,7 +5,7 @@ env:
 ---
 - extendedWaitUntil:
     visible:
-      id: "home.root.ready|ai-data-consent.action.agree"
+      id: "home.root.ready|ai-data-consent.action.agree|custom-courses.announcement.action.primary|onboarding.premium-intro.action.close"
     timeout: 40000
 - runFlow: dismiss-ai-data-consent.yaml
 - runFlow: dismiss-launch-paywall.yaml

@@ -1,0 +1,13 @@
+# Weekly Schedule: the ring is on and the card shows no microphone warning (microphone granted).
+# Entry: Weekly Schedule with the Ring my phone card visible.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      text: "1"
+      rightOf: "Ring my phone"
+    timeout: 10000
+- assertNotVisible: "Turn on microphone"
+- assertNotVisible: "Turn on the microphone so calls can ring.*"
