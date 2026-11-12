@@ -1,0 +1,22 @@
+# Cold start to Home, then Challenge tab > Challenges page (Leagues on or off). Entry: signed in. Exit: Challenges list.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- tapOn:
+    id: main_tab_challenges
+- runFlow:
+    when:
+      visible: "Leagues"
+    commands:
+      - tapOn: "Challenges"
+- extendedWaitUntil:
+    visible:
+      id: challenges_completed_button
+    timeout: 20000

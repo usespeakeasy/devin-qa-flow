@@ -1,0 +1,43 @@
+# Completed > a previous challenge open, Home, killApp, reopen: the details card is restored over the Challenge tab,
+# and Back closes it to the Completed list. Entry: Challenges list. Precondition: account with a completed challenge.
+# Exit: Completed list. Saves SHOT.png after reopening. Check the pid changed (`am kill` can leave it alive).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "previous-details-process-death"}
+---
+- tapOn:
+    id: challenges_completed_button
+- extendedWaitUntil:
+    visible:
+      id: challenge_previous_card
+    timeout: 20000
+- tapOn:
+    id: challenge_previous_card
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: challenge_previous_details_card
+    timeout: 15000
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: challenge_previous_details_card
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: challenge_previous_details_card
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: main_tab_challenges
+      selected: true
+    timeout: 15000
+- assertVisible:
+    id: challenge_previous_card
