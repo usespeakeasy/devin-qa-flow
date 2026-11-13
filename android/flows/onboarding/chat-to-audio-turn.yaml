@@ -1,0 +1,60 @@
+# Onboarding chat: answer text and option turns until the first spoken turn (`chatlite_record_button`), not tapped.
+# Entry: chat intro (Start is tapped) or any turn. Exit: `chatlite_record_button` (or Generate my curriculum if no spoken turn comes).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "case"}
+  TEXT: ${TEXT || "Sam"}
+---
+- runFlow:
+    when:
+      visible:
+        id: onboarding_magic_action_start
+    commands:
+      - tapOn:
+          id: onboarding_magic_action_start
+- repeat:
+    times: 40
+    while:
+      notVisible:
+        id: "chatlite_record_button|onboarding_magic_action_generate_curriculum"
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "onboarding_magic_(user_turn_ready|action_continue|action_generate_curriculum)"
+          timeout: 60000
+      - runFlow:
+          when:
+            visible:
+              id: "onboarding_magic_option_.*"
+          commands:
+            - tapOn:
+                id: "onboarding_magic_option_.*"
+                index: 0
+      - runFlow:
+          when:
+            visible:
+              id: "onboarding_magic_(freeform_)?text_input"
+          commands:
+            - tapOn:
+                id: "onboarding_magic_(freeform_)?text_input"
+            - inputText: ${TEXT}
+            - hideKeyboard
+      - runFlow:
+          when:
+            visible:
+              id: onboarding_magic_action_send_text
+          commands:
+            - tapOn:
+                id: onboarding_magic_action_send_text
+      - runFlow:
+          when:
+            visible:
+              id: onboarding_magic_action_continue
+              enabled: true
+          commands:
+            - tapOn:
+                id: onboarding_magic_action_continue
+                retryTapIfNoChange: false
+- assertVisible:
+    id: chatlite_record_button

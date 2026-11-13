@@ -1,0 +1,15 @@
+# Onboarding chat intro (Start shown) > system Back: onboarding leaves, the app closes (launcher on screen).
+# Entry: `onboarding_magic_action_start`. Exit: launcher; the run script checks the resumed activity, then
+# reopens SpeakActivity and waits for `onboarding_magic_action_start` again.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "case"}
+---
+- assertVisible:
+    id: onboarding_magic_action_start
+- pressKey: Back
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding_magic_ready
+    timeout: 10000

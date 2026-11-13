@@ -1,0 +1,30 @@
+# Onboarding chat intro > Start > first turn (name) typed and Continue: the next turn opens.
+# Entry: `onboarding_magic_action_start`. Exit: second turn, `onboarding_magic_user_turn_ready`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "case"}
+  NAME: ${NAME || "Sam"}
+---
+- tapOn:
+    id: onboarding_magic_action_start
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_text_input
+    timeout: 60000
+- tapOn:
+    id: onboarding_magic_text_input
+- inputText: ${NAME}
+- hideKeyboard
+- tapOn:
+    id: onboarding_magic_action_continue
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding_magic_text_input
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_magic_option_.*|chatlite_record_button|onboarding_magic_freeform_text_input|onboarding_magic_action_continue"
+    timeout: 60000
+- assertVisible:
+    id: onboarding_magic_user_turn_ready

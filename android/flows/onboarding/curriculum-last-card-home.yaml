@@ -1,0 +1,29 @@
+# Curriculum (course plan): swipe to the last card, tap its button (Get started / I'm committed): onboarding
+# closes, the premium intro (dismissed) then Home.
+# Entry: `onboarding_curriculum_ready` (curriculum-loaded.yaml). Exit: `learning_path_ready`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "case"}
+---
+- repeat:
+    times: 6
+    commands:
+      - swipe:
+          direction: LEFT
+          from:
+            id: "onboarding_curriculum_course_.*"
+- takeScreenshot: ${SHOT}-last-card
+- tapOn:
+    id: onboarding_curriculum_action_get_started
+- extendedWaitUntil:
+    visible:
+      id: (onboarding_premium_intro_(ready|error)|home_root_ready)
+    timeout: 60000
+- runFlow: ../../common/dismiss-premium-intro.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+- assertNotVisible:
+    id: onboarding_curriculum_ready

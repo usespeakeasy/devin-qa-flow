@@ -1,0 +1,56 @@
+# Onboarding chat spoken turn, microphone not granted: record > system prompt > Don't allow > app rationale
+# (`simple_dialog`, Allow) > system prompt again > Don't allow > "Microphone permissions needed" (OK) > the turn
+# is still there; "I can't speak now", type TEXT, send: the chat goes on to the next turn.
+# Entry: `chatlite_record_button` (chat-to-audio-turn.yaml), app data cleared with `qa_android.py fresh --no-grant`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "case"}
+  TEXT: ${TEXT || "To travel"}
+---
+- tapOn:
+    id: chatlite_record_button
+- extendedWaitUntil:
+    visible:
+      id: permission_deny_button
+    timeout: 10000
+- takeScreenshot: ${SHOT}-1-system
+- tapOn:
+    id: permission_deny_button
+- extendedWaitUntil:
+    visible:
+      id: simple_dialog
+    timeout: 10000
+- assertVisible: ".*Speak needs access to your microphone.*"
+- takeScreenshot: ${SHOT}-2-rationale
+- tapOn:
+    id: simple_dialog_positive_button
+- extendedWaitUntil:
+    visible:
+      id: permission_deny_and_dont_ask_again_button
+    timeout: 10000
+- takeScreenshot: ${SHOT}-3-system-again
+- tapOn:
+    id: permission_deny_and_dont_ask_again_button
+- extendedWaitUntil:
+    visible: "Microphone permissions needed"
+    timeout: 10000
+- takeScreenshot: ${SHOT}-4-required
+- tapOn:
+    id: simple_dialog_positive_button
+- extendedWaitUntil:
+    visible:
+      id: chatlite_record_button
+    timeout: 10000
+- tapOn:
+    id: onboarding_magic_action_switch_to_text
+- tapOn:
+    id: onboarding_magic_freeform_text_input
+- inputText: ${TEXT}
+- tapOn:
+    id: onboarding_magic_action_send_text
+- assertNotVisible: "Microphone permissions needed"
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_magic_(user_turn_ready|action_continue|action_generate_curriculum)"
+    timeout: 60000
