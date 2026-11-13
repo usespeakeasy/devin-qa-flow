@@ -1,0 +1,21 @@
+# Free tier: series lesson preview > debug Skip lesson > the preview end: Preview Finished (Learn more > paywall >
+# close > Return home) or the paywall straight away (close: Home or the lesson). Entry: Free override, line card,
+# Debug features enabled. Exit: home_root_ready, or the paywall/lesson for the runner to check.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: debug_skip_lesson
+- extendedWaitUntil:
+    visible:
+      id: "preview_finished_screen|onboarding_premium_intro_(ready|error)|lesson_end_reskin_root"
+    timeout: 60000
+- takeScreenshot: preview-end
+- runFlow:
+    when:
+      visible:
+        id: preview_finished_screen
+    file: ../../common/preview-finished-learn-more-home.yaml
+    env:
+      SHOT: preview-finished

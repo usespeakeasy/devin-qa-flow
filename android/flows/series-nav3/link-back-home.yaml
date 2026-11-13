@@ -1,0 +1,26 @@
+# Back from the series lesson (close sheet > Quit when it shows): Home, no lesson. Entry: series card. Exit: home_root_ready.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      visible: "^Quit$"
+    commands:
+      - tapOn: "^Quit$"
+- runFlow:
+    when:
+      visible:
+        id: custom_units_difficulty_check_in_just_right
+    commands:
+      - tapOn:
+          id: custom_units_difficulty_check_in_just_right
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: series_list

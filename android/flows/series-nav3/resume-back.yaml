@@ -1,0 +1,21 @@
+# Cold link with saved progress: "Continue where you left off?" opens; Back twice. develop e2386fa097 and the
+# Nav3 entry both keep the modal open (Back ignored). Entry: lesson LESSON_ID has saved progress (run resume-seed.yaml, then leave the lesson). Exit: resume modal.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- stopApp
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible: "Continue where you left off\\?"
+    timeout: 30000
+- takeScreenshot: resume-dialog
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: resume-after-back
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: resume-after-back2

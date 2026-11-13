@@ -1,0 +1,27 @@
+# Series or Smart Review lesson: debug Skip lesson > the lesson end opens; Back there never shows the lesson again;
+# the rest of the lesson end walks to Home. Entry: a series line card, Debug features enabled. Exit: home_root_ready.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "lesson-end"}
+---
+- tapOn:
+    id: debug_skip_lesson
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_reskin_root|lesson_end_.*"
+    timeout: 60000
+- assertNotVisible:
+    id: series_list
+- takeScreenshot: ${SHOT}
+- back
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertNotVisible:
+    id: series_list
+- takeScreenshot: ${SHOT}-after-back
+- runFlow: ../../common/finish-lesson-end.yaml
+- assertVisible:
+    id: home_root_ready
+- assertNotVisible:
+    id: series_list

@@ -1,0 +1,20 @@
+# Title (overview_tap_target) > Lesson Outline > the second series row: the outline closes and the lesson jumps to
+# it. Entry: line card of the default LESSON_ID, Premium. Exit: speak_now_header of the picked series.
+# Selectors: outline rows have no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: overview_tap_target
+- extendedWaitUntil:
+    visible: "Lesson Outline"
+    timeout: 15000
+- takeScreenshot: outline
+- tapOn: "^___, bien\\.$"
+- extendedWaitUntil:
+    notVisible: "Lesson Outline"
+    timeout: 10000
+- runFlow: ../series-session/first-line-card.yaml
+- assertVisible:
+    id: series_list

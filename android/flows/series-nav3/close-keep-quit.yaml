@@ -1,0 +1,35 @@
+# Close (X) > "Are you sure you want to quit this lesson?" > Keep Learning: the lesson stays; X again > Quit: the
+# difficulty check-in opens (QA-only gate patch), then Just right lands on Home.
+# Entry: an answered or later series card (the close sheet shows once a speaking card started). Exit: home_root_ready.
+# Selectors: the close sheet has no app resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- takeScreenshot: close-sheet
+- tapOn: "^Keep Learning$"
+- extendedWaitUntil:
+    notVisible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- assertVisible:
+    id: series_list
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: custom_units_difficulty_check_in_just_right
+    timeout: 30000
+- takeScreenshot: check-in
+- runFlow:
+    file: ../difficulty-check-in/check-in-answer-to-home.yaml
+    env:
+      ANSWER: custom_units_difficulty_check_in_just_right

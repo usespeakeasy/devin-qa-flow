@@ -1,0 +1,11 @@
+# After the runner answers the listening line card (DebugBridge mockRecognition): the card shows its result,
+# then Tap to continue reaches the next listening line card. Entry: answered line card. Exit: speak_now_header.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: "completed_header|failure_header"
+    timeout: 20000
+- runFlow: ../series-session/first-line-card.yaml

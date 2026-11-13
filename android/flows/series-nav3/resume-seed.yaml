@@ -1,0 +1,24 @@
+# Cold link speak-dev://lesson?id=LESSON_ID lands on a playable line card (Continue on the resume modal if it shows).
+# Entry: signed in. Exit: speak_now_header or tap_to_continue.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- stopApp
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: series_list
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 3000
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "^Continue$"
+- extendedWaitUntil:
+    visible:
+      id: speak_now_header|tap_to_continue
+    timeout: 30000
