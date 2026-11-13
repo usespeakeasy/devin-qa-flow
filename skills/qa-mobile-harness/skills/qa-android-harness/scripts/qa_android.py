@@ -302,7 +302,7 @@ def cmd_codelogin(a):
     code = a[a.index("--code") + 1] if "--code" in a else sys.exit("codelogin needs --code <authorizationCode>")
     launch()
     time.sleep(3)
-    # loginCode needs a Speak session on develop until speak-android#9009 (session swap at code-login) merges.
+    # Builds before speak-android#9009 (merged 2026-11-12) need a Speak session for loginCode.
     if flag_override("auth_session_mode") != "speak":
         set_flag_override("auth_session_mode", "speak")
         launch()

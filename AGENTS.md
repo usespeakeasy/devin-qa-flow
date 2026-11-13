@@ -46,7 +46,7 @@ After merge, Devin saves the changed skill with `manage_plugin` and posts the PS
   never a pool account.
 - A signed-in flow must work on any onboarded account, test user or pool. If it needs seeded state
   (progress, saved items, premium), the header names it, and the run sets it with the `test_*`
-  tools (the `speak-test-users` skill) or, on a pool account, with a common subflow.
+  tools or, on a pool account, with a common subflow.
 - Run `maestro check-syntax <file>` before committing.
 
 ## INDEX.md
