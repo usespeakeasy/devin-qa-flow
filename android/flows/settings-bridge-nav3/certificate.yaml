@@ -1,8 +1,10 @@
 # Profile > Settings > Manage membership > Get Subscription History (`item_request_certificate`): the certificate
 # dialog. Back and a tap outside leave it open. ACTION: cancel (Cancel closes it), cancel_double, request (Request,
-# the result shows in the same dialog, OK closes it), request_double (double tap Request, then double tap OK), none.
+# the result shows in the same dialog, OK closes it), request_double (double tap Request, then double tap OK), ok_double
+# (tap Request once, then double tap OK), ok_fast (tap Request once, then two taps on OK with no added delay, faster than
+# doubleTapOn), open_result (tap Request once and leave the result open), none.
 # Manage membership must still show afterwards. Entry: signed in (restarts the app) as a paid (not trial) premium account.
-# Exit: Manage membership, or the open dialog for none. Saves SHOT.png (dialog) and SHOT_result.png (request).
+# Exit: Manage membership, or the open dialog for none and open_result. Saves SHOT.png (dialog) and SHOT_result.png (request).
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
@@ -52,11 +54,11 @@ env:
           id: request_certificate_cancel_button
 - runFlow:
     when:
-      true: ${ACTION == "request" || ACTION == "request_double"}
+      true: ${ACTION == "request" || ACTION == "request_double" || ACTION == "ok_double" || ACTION == "ok_fast" || ACTION == "open_result"}
     commands:
       - runFlow:
           when:
-            true: ${ACTION == "request"}
+            true: ${ACTION == "request" || ACTION == "ok_double" || ACTION == "ok_fast" || ACTION == "open_result"}
           commands:
             - tapOn:
                 id: request_certificate_submit_button
@@ -85,13 +87,23 @@ env:
                 id: request_certificate_result_ok_button
       - runFlow:
           when:
-            true: ${ACTION == "request_double"}
+            true: ${ACTION == "request_double" || ACTION == "ok_double"}
           commands:
             - doubleTapOn:
                 id: request_certificate_result_ok_button
+      - runFlow:
+          when:
+            true: ${ACTION == "ok_fast"}
+          commands:
+            - tapOn:
+                id: request_certificate_result_ok_button
+                repeat: 2
+                delay: 1
+                waitToSettleTimeoutMs: 0
+                retryTapIfNoChange: false
 - runFlow:
     when:
-      true: ${ACTION != "none"}
+      true: ${ACTION != "none" && ACTION != "open_result"}
     commands:
       - extendedWaitUntil:
           notVisible:

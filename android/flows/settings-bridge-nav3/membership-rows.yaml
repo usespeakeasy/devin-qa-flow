@@ -1,0 +1,154 @@
+# Profile > Settings > Manage membership: tap ROW once, check what opens, come back, tap the same row again and check it
+# opens again. ROW: certificate (Get Subscription History opens the certificate dialog, Cancel closes it), subscriptions
+# (See All Subscriptions opens the status page in the browser, Back returns), cancel (Cancel Subscription opens Cancel
+# membership, Back returns), resub (Resubscribe; nothing opens without a Play purchase, the caller counts the
+# resubscribeMembershipTapped events), after_dialog (open the certificate dialog, tap Cancel and tap the same spot again
+# 500 ms later: the second tap lands on Cancel Subscription behind it and opens Cancel membership). Entry: signed in (restarts the app) as a paid (not trial) premium account; cancel
+# and resub need the CTA (dev: QA-only patch, `debug.qa.sub=cancel|resub`). Exit: Manage membership.
+# The second tap goes as soon as the row is back (settle capped at 200 ms). Saves SHOT.png (first open) and
+# SHOT_again.png (second open).
+# Selectors: the browser is matched by Chrome's `location_bar`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "rows"}
+  ROW: ${ROW || "certificate"}
+---
+- launchApp:
+    stopApp: true
+- runFlow: ../launch/home-ready-after-launch.yaml
+- runFlow:
+    file: ../settings/open-manage-membership.yaml
+    env:
+      SHOT: ${SHOT}_membership
+- runFlow:
+    when:
+      true: ${ROW == "certificate"}
+    commands:
+      - tapOn:
+          id: item_request_certificate
+      - extendedWaitUntil:
+          visible:
+            id: request_certificate_submit_button
+          timeout: 15000
+      - waitForAnimationToEnd
+      - takeScreenshot: ${SHOT}
+      - tapOn:
+          id: request_certificate_cancel_button
+          waitToSettleTimeoutMs: 200
+      - extendedWaitUntil:
+          notVisible:
+            id: request_certificate_dialog
+          timeout: 5000
+      - tapOn:
+          id: item_request_certificate
+          waitToSettleTimeoutMs: 200
+      - extendedWaitUntil:
+          visible:
+            id: request_certificate_submit_button
+          timeout: 15000
+      - waitForAnimationToEnd
+      - takeScreenshot: ${SHOT}_again
+      - tapOn:
+          id: request_certificate_cancel_button
+      - extendedWaitUntil:
+          notVisible:
+            id: request_certificate_dialog
+          timeout: 5000
+- runFlow:
+    when:
+      true: ${ROW == "subscriptions"}
+    commands:
+      - tapOn:
+          id: item_see_all_subscriptions
+      - extendedWaitUntil:
+          visible:
+            id: .*location_bar
+          timeout: 30000
+      - takeScreenshot: ${SHOT}
+      - back
+      - extendedWaitUntil:
+          visible:
+            id: item_see_all_subscriptions
+          timeout: 15000
+      - tapOn:
+          id: item_see_all_subscriptions
+          waitToSettleTimeoutMs: 200
+      - extendedWaitUntil:
+          visible:
+            id: .*location_bar
+          timeout: 30000
+      - takeScreenshot: ${SHOT}_again
+      - back
+- runFlow:
+    when:
+      true: ${ROW == "cancel"}
+    commands:
+      - tapOn:
+          id: item_subscription_change_cta
+      - extendedWaitUntil:
+          visible:
+            id: cancel_membership_screen
+          timeout: 15000
+      - waitForAnimationToEnd
+      - takeScreenshot: ${SHOT}
+      - back
+      - extendedWaitUntil:
+          visible:
+            id: item_subscription_change_cta
+          timeout: 15000
+      - tapOn:
+          id: item_subscription_change_cta
+          waitToSettleTimeoutMs: 200
+      - extendedWaitUntil:
+          visible:
+            id: cancel_membership_screen
+          timeout: 15000
+      - waitForAnimationToEnd
+      - takeScreenshot: ${SHOT}_again
+      - back
+- runFlow:
+    when:
+      true: ${ROW == "resub"}
+    commands:
+      - assertVisible:
+          id: item_subscription_change_cta
+      - tapOn:
+          id: item_subscription_change_cta
+      - waitForAnimationToEnd
+      - takeScreenshot: ${SHOT}
+      - tapOn:
+          id: item_subscription_change_cta
+      - waitForAnimationToEnd
+      - takeScreenshot: ${SHOT}_again
+- runFlow:
+    when:
+      true: ${ROW == "after_dialog"}
+    commands:
+      - assertVisible:
+          id: item_subscription_change_cta
+      - tapOn:
+          id: item_request_certificate
+      - extendedWaitUntil:
+          visible:
+            id: request_certificate_submit_button
+          timeout: 15000
+      - waitForAnimationToEnd
+      - tapOn:
+          id: request_certificate_cancel_button
+          repeat: 2
+          delay: 500
+          waitToSettleTimeoutMs: 200
+      - extendedWaitUntil:
+          visible:
+            id: cancel_membership_screen
+          timeout: 15000
+      - waitForAnimationToEnd
+      - takeScreenshot: ${SHOT}
+      - back
+- extendedWaitUntil:
+    visible:
+      id: item_see_all_subscriptions
+    timeout: 15000
+- assertVisible:
+    id: member_card
