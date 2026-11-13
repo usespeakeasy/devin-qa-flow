@@ -1,0 +1,43 @@
+# Takeaways step: Continue (and Save for later on the "Time to practice" generated lesson card when it shows)
+# moves the lesson end flow off Takeaways. With NEXT_ID set, that id must show next (e.g. `lesson_end_reskin_root`
+# for the summary, `home_root_ready` when Takeaways is the last step).
+# Entry: the takeaways step is showing.
+# Selectors: TakeawaysTestTags ids.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  NEXT_ID: ${NEXT_ID || ""}
+---
+- assertVisible:
+    id: lesson_end_takeaways_root
+- repeat:
+    while:
+      notVisible:
+        text: "Continue"
+        childOf:
+          id: lesson_end_takeaways_primary_button
+    times: 6
+    commands:
+      - tapOn:
+          id: lesson_end_takeaways_primary_button
+- tapOn:
+    id: lesson_end_takeaways_primary_button
+- extendedWaitUntil:
+    notVisible:
+      id: lesson_end_takeaways_root
+    timeout: 15000
+- tapOn:
+    id: lesson_end_takeaways_generated_lesson_save_for_later_button
+    optional: true
+- extendedWaitUntil:
+    notVisible:
+      id: "lesson_end_takeaways_root|lesson_end_takeaways_generated_lesson_root"
+    timeout: 20000
+- runFlow:
+    when:
+      true: ${NEXT_ID != ""}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: ${NEXT_ID}
+          timeout: 20000

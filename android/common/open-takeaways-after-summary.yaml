@@ -1,0 +1,41 @@
+# Open a drill lesson, skip every card, then Continue on the lesson end summary until the takeaways step shows.
+# Same as `open-takeaways.yaml`, for builds where Takeaways comes after the summary (the order of the
+# CLNT-1986 report: summary, then Takeaways). Exit: `lesson_end_takeaways_root` showing.
+# Entry: Home, signed in. Preconditions: the QA-only patch puts `Screen.Takeaways` second in the server steps
+# of `LessonEndFlowViewModel.updateScreens` (after the summary) and makes `TakeawaysRepositoryFactory` /
+# `TakeawayVotingRepositoryFactory` return their demo repositories.
+# Selectors: `drill_lesson_skip`, `lesson_end_reskin_continue_button`, TakeawaysTestTags ids.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
+---
+- tapOn:
+    id: referral_welcome_dialog_later_button
+    optional: true
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      visible:
+        id: drill_lesson_skip
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_reskin_continue_button
+    timeout: 60000
+- tapOn:
+    id: lesson_end_reskin_continue_button
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_takeaways_root
+    timeout: 30000
+- assertVisible:
+    id: lesson_end_takeaways_primary_button
