@@ -1,0 +1,8 @@
+# Turn airplane mode off. The network takes a few seconds to come back: wait for it in the case
+# script (`adb shell ping -c1 -W2 8.8.8.8`) before a step that needs it.
+# Entry: any. Exit: same screen, network coming back.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- setAirplaneMode: disabled

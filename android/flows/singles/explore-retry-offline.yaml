@@ -1,0 +1,13 @@
+# Explore error > Retry while still offline: the error with its Retry button comes back, no chips.
+# Entry: Explore load error (explore-error.yaml), still offline. Exit: Explore load error.
+# Selectors: error_layout, button (inside error_layout), category_list, loading_bar.
+# A retry after a load earlier in the app session can show the cached chips for a moment before the error.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: button
+    childOf:
+      id: error_layout
+- runFlow: explore-error.yaml

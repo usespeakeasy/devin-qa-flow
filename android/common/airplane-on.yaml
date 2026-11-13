@@ -1,0 +1,7 @@
+# Turn airplane mode on (Wi-Fi and mobile data go down with it on the emulator).
+# Entry: any. Exit: same screen, offline.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- setAirplaneMode: enabled
