@@ -1,0 +1,36 @@
+# Debug Menu > Deeplink Lesson > Lesson ID: type LESSON_ID and Launch; waits for ARRIVAL_ID (default the article reader).
+# Entry: signed in (the flow cold-starts the app first). Exit: on the opened lesson screen.
+# maestro test -e LESSON_ID=a3bolo8jdwn3x4isyp1czuo7 -e ARRIVAL_ID=article_lesson_screen open-lesson-by-id.yaml
+# Selectors: the Search field and the Deeplink Lesson row have no resource-id (text fallback, as open-deeplink-lesson.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
+  ARRIVAL_ID: ${ARRIVAL_ID || "article_lesson_screen"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- openLink: ${DEBUG_MENU_LINK}
+- tapOn:
+    text: Search
+- inputText: Deeplink
+- hideKeyboard
+- tapOn: Deeplink Lesson
+- extendedWaitUntil:
+    visible:
+      id: debug_lesson_deeplink_lesson_id_input
+    timeout: 10000
+- tapOn:
+    id: debug_lesson_deeplink_lesson_id_input
+- inputText: ${LESSON_ID}
+- hideKeyboard
+- tapOn:
+    id: debug_lesson_deeplink_launch
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000

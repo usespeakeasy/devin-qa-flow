@@ -1,0 +1,40 @@
+# Open the OPEN dialog, Home, am kill, relaunch from recents: saves SHOT_after.png of the restored screen and reports
+# whether the dialog came back (compared between builds, not asserted). Entry: as the OPEN flow.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  OPEN: ${OPEN || "confirmation"}
+  SHOT: ${SHOT || "pd"}
+---
+- runFlow:
+    when:
+      true: ${OPEN == "web_consent"}
+    file: web-consent-open.yaml
+    env:
+      ACTION: none
+      SHOT: ${SHOT}_before
+- runFlow:
+    when:
+      true: ${OPEN == "confirmation"}
+    file: confirmation-close.yaml
+    env:
+      ACTION: none
+      SHOT: ${SHOT}_before
+- runFlow:
+    when:
+      true: ${OPEN == "certificate"}
+    file: certificate.yaml
+    env:
+      ACTION: none
+      SHOT: ${SHOT}_before
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: debug_dialog_bridges_screen|item_see_all_subscriptions|web_consent_screen|consent_confirmation_screen|request_certificate_dialog|home_root_ready
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}_after
+- runFlow: report-screen.yaml

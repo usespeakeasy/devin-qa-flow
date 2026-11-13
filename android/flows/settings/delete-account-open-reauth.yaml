@@ -15,10 +15,12 @@ env:
 - tapOn:
     id: edit_delete_account
 - extendedWaitUntil:
-    visible: "Confirm account deletion"
+    visible:
+      id: simple_dialog
     timeout: 10000
 - tapOn:
-    text: "Delete Account"
-    rightOf:
-      text: "Cancel"
-- assertNotVisible: "Confirm account deletion"
+    id: simple_dialog_positive_button
+- extendedWaitUntil:
+    notVisible:
+      id: simple_dialog
+    timeout: 10000

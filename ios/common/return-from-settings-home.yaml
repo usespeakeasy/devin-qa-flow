@@ -1,0 +1,10 @@
+# iOS Settings: tap the status bar "Return to Speak Dev" breadcrumb and wait for Home. When a
+# permission change in Settings ended Speak, this is the cold relaunch a learner gets.
+# Entry: iOS Settings opened from Speak (breadcrumb shown).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: breadcrumb
+- runFlow: home-ready-launched.yaml

@@ -1,0 +1,48 @@
+# Reports which screen is showing: each `Run flow when id: <id> is visible` line reads COMPLETED for the
+# screen on top and SKIPPED for the rest. Used after process death and the failed consent confirm.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    when:
+      visible:
+        id: web_consent_screen
+    commands:
+      - assertVisible:
+          id: web_consent_screen
+- runFlow:
+    when:
+      visible:
+        id: consent_confirmation_screen
+    commands:
+      - assertVisible:
+          id: consent_confirmation_screen
+- runFlow:
+    when:
+      visible:
+        id: request_certificate_dialog
+    commands:
+      - assertVisible:
+          id: request_certificate_dialog
+- runFlow:
+    when:
+      visible:
+        id: debug_dialog_bridges_screen
+    commands:
+      - assertVisible:
+          id: debug_dialog_bridges_screen
+- runFlow:
+    when:
+      visible:
+        id: item_see_all_subscriptions
+    commands:
+      - assertVisible:
+          id: item_see_all_subscriptions
+- runFlow:
+    when:
+      visible:
+        id: home_root_ready
+    commands:
+      - assertVisible:
+          id: home_root_ready

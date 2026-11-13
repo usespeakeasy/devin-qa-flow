@@ -1,0 +1,11 @@
+# Weekly Schedule: Back to the screen that opened it (Practice tab from the schedule link).
+# Entry: Weekly Schedule.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    notVisible: "Weekly Schedule"
+    timeout: 10000

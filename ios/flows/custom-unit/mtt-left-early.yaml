@@ -1,0 +1,29 @@
+# Meet the Tutor: leave the intake call before the tutor says goodbye.
+# Entry: Home. Precondition: as ios/common/open-meet-the-tutor.yaml, mic allowed on the simulator.
+# Exit: Custom courses (course-select.toolbar.action.close) with no refusal or failure alert.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/open-meet-the-tutor.yaml
+- extendedWaitUntil:
+    visible:
+      id: "phone-speak.call.action.end-call"
+    timeout: 60000
+# Let the call go live (the tutor's first turn) so the outcome is leftEarly, not neverLive.
+- extendedWaitUntil:
+    visible:
+      id: "phone-speak.call.action.mute"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "phone-speak.call.never-shown"
+    timeout: 8000
+    optional: true
+- runFlow: ../phone-speak/call-end.yaml
+- extendedWaitUntil:
+    visible:
+      id: "course-select.toolbar.action.close"
+    timeout: 30000
+- assertNotVisible:
+    id: "custom-unit.generation.refusal-alert.action.ok|custom-unit.generation.failure-alert.action.retry"

@@ -1,0 +1,23 @@
+# Meet the Tutor: plan generation fails three times, the third Retry is refused (HTTP 409).
+# Entry: Home. Precondition: as ios/common/open-meet-the-tutor.yaml, call already finished (or skipped), and approvals
+# 1 to 3 fail with a generic generation error and approval 4 is refused with 409 (QA-only patch or proxy mock).
+# Exit: the refusal alert (custom-unit.generation.refusal-alert.action.ok) or Custom courses (course-select.toolbar.action.close).
+# The caller screenshots this point, then runs mtt-refusal-dismiss.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/open-meet-the-tutor.yaml
+- repeat:
+    times: 3
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "custom-unit.generation.failure-alert.action.retry"
+          timeout: 60000
+      - tapOn:
+          id: "custom-unit.generation.failure-alert.action.retry"
+- extendedWaitUntil:
+    visible:
+      id: "custom-unit.generation.refusal-alert.action.ok|course-select.toolbar.action.close"
+    timeout: 60000

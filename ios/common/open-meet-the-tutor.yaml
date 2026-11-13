@@ -1,0 +1,35 @@
+# Home > Courses > Create a course > Let's go!, which starts a Meet the Tutor run.
+# Entry: Home (home.root.ready). Precondition: signed in, personal (non-B2B) account, English to Spanish,
+# split overrides tutor_experience, meet_the_tutor_enabled, ait_phone_speak_decisions_gate, ait_phone_speak_cascade on,
+# backend that hands off the intake call (speak-api#11813 preview).
+# Exit: Let's go! tapped; the intake call or the plan approval follows.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready"
+    timeout: 30000
+- tapOn:
+    id: "home.top-bar.action.course-select"
+- extendedWaitUntil:
+    visible:
+      id: "course-select.toolbar.action.close"
+    timeout: 20000
+# TEMPORARY TEXT FALLBACK: the Create a course button (SUICreateCustomCourseButton) has no accessibility id.
+- scrollUntilVisible:
+    element:
+      text: "Create a course"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Create a course"
+- extendedWaitUntil:
+    visible:
+      id: "custom-unit.planning.action.cancel"
+    timeout: 20000
+# TEMPORARY TEXT FALLBACK: the intro Let's go! CTA (ChatLiteCTAInfo) has no accessibility id.
+- extendedWaitUntil:
+    visible: "Let's go!"
+    timeout: 20000
+- tapOn: "Let's go!"

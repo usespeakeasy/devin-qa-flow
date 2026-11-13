@@ -1,0 +1,35 @@
+# Dialog Bridges > Web Consent with consent data > Confirm when recording the consent fails: the error dialog shows,
+# OK closes it; saves what is left (the sheet or Dialog Bridges) for the base vs branch comparison.
+# Entry: signed in, `files/qa_consent` = fail (QA-only hard-code). Exit: the consent sheet or Dialog Bridges. Saves SHOT.png (the error)
+# and SHOT_after.png (after OK).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "web-consent-confirm-fail"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: web_consent
+- extendedWaitUntil:
+    visible:
+      id: web_consent_confirm_button
+    timeout: 20000
+- waitForAnimationToEnd
+- tapOn:
+    id: web_consent_confirm_button
+- extendedWaitUntil:
+    visible:
+      id: android:id/button1
+    timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: android:id/button1
+- extendedWaitUntil:
+    notVisible:
+      id: android:id/button1
+    timeout: 5000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}_after
+- runFlow: report-screen.yaml

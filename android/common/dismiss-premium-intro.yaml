@@ -41,12 +41,18 @@ env:
     commands:
       - tapOn:
           id: exit
-# Accounts whose streak was frozen get a "We saved your N-day streak!" sheet over Home on sign-in.
-# It hides `home_root_ready`, so wait for either and close the sheet with Back.
+# Accounts whose streak was frozen get a "We saved your N-day streak!" sheet over Home on sign-in, and some get the
+# "Made for you" custom course sheet. Both hide `home_root_ready`, so wait for any and close the sheet with Back.
 - extendedWaitUntil:
     visible:
-      id: (home_root_ready|design_bottom_sheet)
+      id: (home_root_ready|design_bottom_sheet|custom_courses_announcement_sheet)
     timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: custom_courses_announcement_sheet
+    commands:
+      - back
 - runFlow:
     when:
       visible: "We saved your .*streak!"

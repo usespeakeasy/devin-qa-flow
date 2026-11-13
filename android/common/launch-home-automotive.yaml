@@ -1,4 +1,4 @@
-# Automotive build (automotiveDevelopDebug on an AAOS emulator): cold-start, open the parked phone UI, wait for Home.
+# Automotive build (automotiveDevelopDebug on an AAOS emulator): cold-start, open the parked phone UI, dismiss Home popups, wait for Home.
 # Precondition: signed in (harness `qa_android.py bridge login`; `login` can't launch the unexported SpeakActivity),
 # car parked (the AAOS emulator starts in gear P).
 # Selectors: the automotive home's open-app button and the system notification dialog have no
@@ -8,12 +8,20 @@ env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
   APP_LABEL: ${APP_LABEL || "Speak - Dev"}
 ---
+# Home closes a climate panel a stray swipe may have left open.
+- pressKey: Home
 - launchApp:
     stopApp: true
 - extendedWaitUntil:
     visible: "^${APP_LABEL}$"
     timeout: 30000
 - tapOn: "^${APP_LABEL}$"
+# The custom courses announcement can open over Home before anything else shows.
+- extendedWaitUntil:
+    visible: "Close sheet"
+    timeout: 15000
+    optional: true
+- runFlow: ../flows/ai-data-consent/dismiss-home-popups.yaml
 - extendedWaitUntil:
     visible:
       id: "learning_path_ready|referral_welcome_dialog_later_button|onboarding_notification_permission_skip_button"
@@ -40,6 +48,7 @@ env:
     commands:
       - tapOn:
           id: referral_welcome_dialog_later_button
+- runFlow: ../flows/ai-data-consent/dismiss-home-popups.yaml
 - extendedWaitUntil:
     visible:
       id: learning_path_ready

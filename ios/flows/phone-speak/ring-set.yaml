@@ -1,0 +1,29 @@
+# Weekly Schedule: set the Ring my phone switch to RING ("1" on, "0" off), whatever its start.
+# Entry: Weekly Schedule with the Ring my phone card visible (open-weekly-schedule.yaml).
+# Params: RING ("1" or "0"). The ring is server state, so it survives a reinstall and a new login.
+# The switch has no ID: the outer Toggle is labelled "Ring my phone, NEW, ..." and only the inner
+# switch toggles; it is the "0"/"1" value right of the "Ring my phone" title.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      text: "[01]"
+      rightOf: "Ring my phone"
+    timeout: 10000
+- copyTextFrom:
+    text: "[01]"
+    rightOf: "Ring my phone"
+- runFlow:
+    when:
+      true: ${maestro.copiedText != RING}
+    commands:
+      - tapOn:
+          text: "[01]"
+          rightOf: "Ring my phone"
+- extendedWaitUntil:
+    visible:
+      text: ${RING}
+      rightOf: "Ring my phone"
+    timeout: 10000

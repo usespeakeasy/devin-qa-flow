@@ -1,0 +1,29 @@
+# The OPEN dialog (web_consent, confirmation, certificate) is showing. Used by rotate.yaml and process-death.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    when:
+      true: ${OPEN == "web_consent"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: web_consent_ask_later_button
+          timeout: 30000
+- runFlow:
+    when:
+      true: ${OPEN == "confirmation"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: consent_confirmation_done_button
+          timeout: 30000
+- runFlow:
+    when:
+      true: ${OPEN == "certificate"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: request_certificate_submit_button
+          timeout: 30000

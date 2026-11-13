@@ -1,0 +1,16 @@
+# Taps Don't Allow on the AI data consent alert shown from the welcome's Start; the welcome stays.
+# Entry: the alert (consent-alert-at-start.yaml). Exit: the welcome, account still without consent.
+# Fallback: button text (identifiers are not in the tree). Required -e: DONT_ALLOW (label in the
+# app language, e.g. "Don.t Allow" or "Không cho phép").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn: ${DONT_ALLOW}
+- extendedWaitUntil:
+    visible:
+      id: onboarding.action.start
+    timeout: 15000
+- assertNotVisible: "Allow .*AI.*\\?|Cho phép .*AI.*\\?"
+- assertNotVisible:
+    id: onboarding.progress

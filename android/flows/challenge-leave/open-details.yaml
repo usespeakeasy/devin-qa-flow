@@ -1,0 +1,28 @@
+# Challenges list > Active > card INDEX (default 0, the joined challenge): its details open with Leave Challenge.
+# Entry: Challenges list (common/open-challenges-page.yaml). Precondition: the account joined that challenge.
+# Exit: Challenge Details, Leave Challenge on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  INDEX: ${INDEX || "0"}
+---
+- tapOn:
+    id: challenges_active_button
+- extendedWaitUntil:
+    visible:
+      id: challenge_overview_card
+    timeout: 20000
+- tapOn:
+    id: challenge_overview_card
+    index: ${INDEX}
+- extendedWaitUntil:
+    visible:
+      id: challenge_details_screen
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: leave_button
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- waitForAnimationToEnd

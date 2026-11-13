@@ -1,0 +1,18 @@
+# Weekly Schedule: the ring is on and the card shows the microphone warning and Turn on microphone.
+# Entry: Weekly Schedule, ring on (ring-set.yaml RING=1), microphone denied
+# (`xcrun simctl privacy <udid> revoke microphone <bundle id>` before the app launches).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      text: "1"
+      rightOf: "Ring my phone"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "Turn on the microphone so calls can ring.*"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: "Turn on microphone"
+    timeout: 5000

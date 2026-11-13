@@ -1,0 +1,24 @@
+# Scroll Home's learning path down TIMES swipes (later loops come into view), then screenshot.
+# Entry: Home (learning_path_ready). Exit: Home, scrolled. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "scroll-home"}
+  TIMES: ${TIMES || 6}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- repeat:
+    times: ${TIMES}
+    commands:
+      - scroll
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible:
+    id: learning_path_ready
+- assertVisible:
+    id: main_tab_home
+    selected: true
+- takeScreenshot: ${SHOT}

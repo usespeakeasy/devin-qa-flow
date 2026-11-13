@@ -1,0 +1,50 @@
+# Dialog Bridges > Web Consent with consent data: the full-height consent sheet, then ACTION closes it back to
+# Dialog Bridges: ask_later (tap "Ask later"), ask_later_double (double tap it), back (system Back), none (stay open).
+# Entry: signed in, `files/qa_consent` = ok (QA-only hard-code). Exit: Dialog Bridges, or the open sheet for none.
+# Saves SHOT.png (the open sheet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "web-consent-sheet"}
+  ACTION: ${ACTION || "ask_later"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: web_consent
+- extendedWaitUntil:
+    visible:
+      id: web_consent_ask_later_button
+    timeout: 20000
+- assertVisible:
+    id: web_consent_confirm_button
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      true: ${ACTION == "ask_later"}
+    commands:
+      - tapOn:
+          id: web_consent_ask_later_button
+- runFlow:
+    when:
+      true: ${ACTION == "ask_later_double"}
+    commands:
+      - doubleTapOn:
+          id: web_consent_ask_later_button
+- runFlow:
+    when:
+      true: ${ACTION == "back"}
+    commands:
+      - back
+- runFlow:
+    when:
+      true: ${ACTION != "none"}
+    commands:
+      - extendedWaitUntil:
+          notVisible:
+            id: web_consent_screen
+          timeout: 5000
+      - waitForAnimationToEnd
+      - assertVisible:
+          id: debug_dialog_bridges_screen

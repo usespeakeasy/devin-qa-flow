@@ -1,0 +1,16 @@
+# Weekly Schedule with the ring on and the microphone denied: the card shows the microphone warning;
+# tap Turn on microphone and wait for iOS Settings ("Return to Speak Dev" breadcrumb).
+# Entry: Weekly Schedule, ring on (ring-set.yaml RING=1), microphone denied
+# (`xcrun simctl privacy <udid> revoke microphone <bundle id>` before the app launches).
+# On the iOS 27 simulator Settings opens on its root, not on Speak Dev's page, so the caller grants
+# the microphone with `simctl privacy grant` (iOS ends Speak) and returns with the breadcrumb.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ring-microphone-warning.yaml
+- tapOn: "Turn on microphone"
+- extendedWaitUntil:
+    visible:
+      id: breadcrumb
+    timeout: 15000

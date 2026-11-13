@@ -12,7 +12,7 @@ env:
 - repeat:
     while:
       notVisible:
-        id: "onboarding_notification_primary_button|onboarding.storybook.screen"
+        id: "onboarding_notification_primary_button|onboarding.storybook.screen|onboarding.storybook.continue|onboarding.storybook.get-started"
     times: 10
     commands:
       - runFlow: ../../common/confirm-open-in-app.yaml
@@ -36,7 +36,7 @@ env:
             - tapOn: "Allow"
 - extendedWaitUntil:
     visible:
-      id: onboarding.storybook.screen
+      id: "onboarding.storybook.screen|onboarding.storybook.continue|onboarding.storybook.get-started"
     timeout: 30000
 - repeat:
     while:

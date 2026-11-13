@@ -1,0 +1,25 @@
+# Manage Account > Delete Account > password > Confirm deletes the account and signs out to the signed-out
+# storybook. Stops there, so no email is typed on screen; check the deletion outside the recording.
+# Deletes the account: pass a throwaway sign-up account only (qa_android.py newuser), never a pool account.
+# Entry: `home_root_ready`, signed in with email. Params (run time only): PASSWORD.
+# Selectors: IDs only.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: delete-account-open-reauth.yaml
+- extendedWaitUntil:
+    visible:
+      id: delete_account_password_dialog
+    timeout: 10000
+- tapOn:
+    id: delete_account_password_input
+- inputText: ${PASSWORD}
+- tapOn:
+    id: delete_account_password_confirm_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_sign_in_button
+    timeout: 30000
+- assertNotVisible:
+    id: home_root_ready
