@@ -1,0 +1,39 @@
+# Leave confirmation sheet closed with HOW=cancel (Cancel button), back (system Back) or outside (tap above the
+# sheet): it closes, the details stay with Leave Challenge, so the user is still in the challenge.
+# Entry: sheet open (open-sheet.yaml). Exit: Challenge Details. Saves SHOT.png.
+# The outside tap is a point: the sheet's scrim has no node.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  HOW: ${HOW || "cancel"}
+  SHOT: ${SHOT || "leave-sheet-closed"}
+---
+- runFlow:
+    when:
+      true: ${HOW == "cancel"}
+    commands:
+      - tapOn:
+          id: challenge_leave_confirm_cancel_button
+- runFlow:
+    when:
+      true: ${HOW == "back"}
+    commands:
+      - back
+- runFlow:
+    when:
+      true: ${HOW == "outside"}
+    commands:
+      - tapOn:
+          point: "50%,15%"
+- extendedWaitUntil:
+    notVisible:
+      id: challenge_leave_confirm_sheet
+    timeout: 10000
+- waitForAnimationToEnd
+- assertVisible:
+    id: challenge_details_screen
+- assertVisible:
+    id: leave_button
+- assertNotVisible:
+    id: join
+- takeScreenshot: ${SHOT}

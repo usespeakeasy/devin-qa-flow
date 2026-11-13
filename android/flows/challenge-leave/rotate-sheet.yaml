@@ -1,0 +1,23 @@
+# Leave sheet open, rotate to landscape and back: the sheet stays open with its question after each turn.
+# Entry: sheet open. Exit: sheet open, portrait. Saves SHOT-landscape.png and SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "leave-sheet-rotate"}
+---
+- setOrientation: LANDSCAPE_LEFT
+- extendedWaitUntil:
+    visible:
+      id: challenge_leave_confirm_sheet
+    timeout: 10000
+- waitForAnimationToEnd
+- assertVisible: "Are you sure you want to leave this challenge\\?"
+- takeScreenshot: ${SHOT}-landscape
+- setOrientation: PORTRAIT
+- extendedWaitUntil:
+    visible:
+      id: challenge_leave_confirm_sheet
+    timeout: 10000
+- waitForAnimationToEnd
+- assertVisible: "Are you sure you want to leave this challenge\\?"
+- takeScreenshot: ${SHOT}

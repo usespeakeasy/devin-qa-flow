@@ -1,0 +1,24 @@
+# speak-dev://challenges?id=ID from Home: the joined challenge's details open with Leave Challenge.
+# Entry: Home tab. Exit: Challenge Details, leave_button on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- openLink: speak-dev://challenges?id=${ID}
+- extendedWaitUntil:
+    visible:
+      id: challenge_details_screen
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: leave_button
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- waitForAnimationToEnd

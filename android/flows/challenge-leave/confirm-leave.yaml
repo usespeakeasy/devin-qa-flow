@@ -1,0 +1,35 @@
+# Leave confirmation sheet > Leave Challenge: the sheet closes and the user leaves (Join replaces Leave Challenge).
+# REJOIN=true then taps Join so the account is back in the challenge for the next run.
+# Entry: sheet open (open-sheet.yaml). Exit: Challenge Details. Saves SHOT.png after leaving.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  REJOIN: ${REJOIN || "true"}
+  SHOT: ${SHOT || "leave-confirmed"}
+---
+- tapOn:
+    id: challenge_leave_confirm_leave_button
+- extendedWaitUntil:
+    notVisible:
+      id: challenge_leave_confirm_sheet
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: join
+    timeout: 20000
+- assertVisible:
+    id: challenge_details_screen
+- assertNotVisible:
+    id: leave_button
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      true: ${REJOIN == "true"}
+    commands:
+      - tapOn:
+          id: join
+      - extendedWaitUntil:
+          notVisible:
+            id: join
+          timeout: 20000

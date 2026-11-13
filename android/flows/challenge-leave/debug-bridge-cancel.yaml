@@ -1,0 +1,26 @@
+# Debug Menu > Dialog Bridges > Challenge Leave Confirm: the leave sheet opens; Cancel closes it back to the list.
+# Entry: signed in, any state (restarts the app). Exit: Dialog Bridges. Saves SHOT.png with the sheet open.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "leave-debug-bridge"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: challenge_leave_confirm
+- extendedWaitUntil:
+    visible:
+      id: challenge_leave_confirm_sheet
+    timeout: 10000
+- waitForAnimationToEnd
+- assertVisible: "Are you sure you want to leave this challenge\\?"
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: challenge_leave_confirm_cancel_button
+- extendedWaitUntil:
+    notVisible:
+      id: challenge_leave_confirm_sheet
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_challenge_leave_confirm

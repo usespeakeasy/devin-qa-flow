@@ -1,0 +1,29 @@
+# Leave sheet open, Home, killApp, reopen: the sheet is restored over the details; Cancel closes it and the details
+# keep Leave Challenge. Entry: sheet open. Exit: Challenge Details. Saves SHOT.png after reopening.
+# Check the pid changed (`am kill` can leave it alive).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "leave-sheet-process-death"}
+---
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: challenge_leave_confirm_sheet
+    timeout: 60000
+- waitForAnimationToEnd
+- assertVisible: "Are you sure you want to leave this challenge\\?"
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: challenge_leave_confirm_cancel_button
+- extendedWaitUntil:
+    notVisible:
+      id: challenge_leave_confirm_sheet
+    timeout: 10000
+- assertVisible:
+    id: challenge_details_screen
+- assertVisible:
+    id: leave_button

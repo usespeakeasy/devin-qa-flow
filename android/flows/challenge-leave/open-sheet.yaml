@@ -1,0 +1,20 @@
+# Challenge Details > Leave Challenge: the confirmation sheet opens over the details with its question.
+# Entry: Challenge Details with leave_button on screen (open-details.yaml). Exit: sheet open. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "leave-sheet-open"}
+---
+- tapOn:
+    id: leave_button
+- extendedWaitUntil:
+    visible:
+      id: challenge_leave_confirm_sheet
+    timeout: 10000
+- waitForAnimationToEnd
+- assertVisible: "Are you sure you want to leave this challenge\\?"
+- assertVisible:
+    id: challenge_leave_confirm_leave_button
+- assertVisible:
+    id: challenge_leave_confirm_cancel_button
+- takeScreenshot: ${SHOT}
