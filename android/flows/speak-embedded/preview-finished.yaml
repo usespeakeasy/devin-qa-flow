@@ -1,0 +1,26 @@
+# Speak Embedded page asks for Preview Finished (SpeakEmbeddedEntries ShowPreviewFinished): Preview Finished opens over the
+# page; Learn more opens the paywall over it; Return home closes it (common/preview-finished-learn-more-home.yaml).
+# Entry: over quota sheet (free-talk/details-over-quota.yaml) with `adb shell setprop debug.qa.embedded_preview 1`
+# (QA-only patch in SpeakEmbeddedWebViewViewModel: asks for Preview Finished 5 s after the page binds).
+# Exit: Preview Finished closed.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "embedded-preview-finished"}
+---
+- tapOn:
+    id: learn_more_button
+# Maestro drops the WebView's resource-id (LEARNINGS); logcat has the page's controller or entry.
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_over_quota_screen
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: preview_finished_screen
+    timeout: 30000
+- runFlow:
+    file: ../../common/preview-finished-learn-more-home.yaml
+    env:
+      SHOT: ${SHOT}
+      CHECK_HOME: "false"

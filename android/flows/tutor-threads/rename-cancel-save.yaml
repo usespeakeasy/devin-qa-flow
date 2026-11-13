@@ -1,0 +1,71 @@
+# Chat History > first thread's options > Rename: "Thread name" opens with TITLE (ThreadRenameDialog); Cancel keeps
+# TITLE; Rename again, replace it with NEW_NAME and Save: the list shows NEW_NAME.
+# Entry: open-history.yaml, TITLE = the first row's title. Exit: Chat History showing NEW_NAME.
+# Selectors: the dialog's title, field and buttons have no resource-id (text fallback). The field opens
+# focused with the keyboard up, and the list behind it leaves the hierarchy, so TITLE matches the field only.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TITLE: ${TITLE}
+  NEW_NAME: ${NEW_NAME || "QA renamed thread"}
+---
+- tapOn:
+    id: "tutor_threads_options_button_.*"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 3000
+# A tap while the list is still settling can be lost; tap once more if the options sheet didn't open.
+- runFlow:
+    when:
+      notVisible:
+        id: tutor_thread_options_rename
+    commands:
+      - tapOn:
+          id: "tutor_threads_options_button_.*"
+          index: 0
+- extendedWaitUntil:
+    visible:
+      id: tutor_thread_options_rename
+    timeout: 10000
+- tapOn:
+    id: tutor_thread_options_rename
+- extendedWaitUntil:
+    visible: "^Thread name$"
+    timeout: 10000
+- assertVisible: ${TITLE}
+- takeScreenshot: rename-dialog
+- tapOn: "^Cancel$"
+- extendedWaitUntil:
+    notVisible: "^Thread name$"
+    timeout: 10000
+- assertVisible: ${TITLE}
+- tapOn:
+    id: "tutor_threads_options_button_.*"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 3000
+# A tap while the list is still settling can be lost; tap once more if the options sheet didn't open.
+- runFlow:
+    when:
+      notVisible:
+        id: tutor_thread_options_rename
+    commands:
+      - tapOn:
+          id: "tutor_threads_options_button_.*"
+          index: 0
+- tapOn:
+    id: tutor_thread_options_rename
+- extendedWaitUntil:
+    visible: "^Thread name$"
+    timeout: 10000
+- eraseText: 80
+- inputText: ${NEW_NAME}
+- tapOn: "^Save$"
+- extendedWaitUntil:
+    notVisible: "^Thread name$"
+    timeout: 10000
+- extendedWaitUntil:
+    visible: ${NEW_NAME}
+    timeout: 15000
+- assertVisible:
+    id: tutor_threads_history_screen

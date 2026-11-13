@@ -1,0 +1,21 @@
+# Over quota sheet > Learn more: the usage page (Speak Embedded) opens over Favorites and the sheet closes.
+# Entry: over quota sheet (details-over-quota.yaml). Exit: the usage page.
+# Maestro drops a WebView's resource-id (LEARNINGS), so `speak_embedded_web_view` is checked in the harness dump or
+# logcat (SpeakEmbeddedWebViewController / SpeakEmbedded entry), not here.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: ai_tutor_over_quota_screen
+- tapOn:
+    id: learn_more_button
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_over_quota_screen
+    timeout: 10000
+- extendedWaitUntil:
+    notVisible:
+      id: "ai_tutor_favorites_screen|ai_tutor_community_details_start_chatting_button"
+    timeout: 15000
+- takeScreenshot: ${SHOT || "usage-page"}

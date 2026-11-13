@@ -1,0 +1,27 @@
+# Free tutor (drill) lesson preview: Next past the preview cut-off (card 5) opens Preview Finished; Learn more opens the
+# paywall over it and Return home lands on Home (common/preview-finished-learn-more-home.yaml).
+# Entry: Free (debug-menu/set-subscription-override.yaml TIER=Free), Home. Exit: Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+  SHOT: ${SHOT || "tutor-preview-finished"}
+---
+- runFlow:
+    file: open-fresh.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- repeat:
+    times: 8
+    while:
+      notVisible:
+        id: preview_finished_screen
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+      - waitForAnimationToEnd:
+          timeout: 3000
+- runFlow:
+    file: ../../common/preview-finished-learn-more-home.yaml
+    env:
+      SHOT: ${SHOT}

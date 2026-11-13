@@ -1,0 +1,25 @@
+# Home > tutor entry > History (threads_button): Chat History with at least one thread row.
+# Entry: signed in, any state (cold starts). Exit: tutor_threads_history_screen with a thread options button.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- runFlow: ../../common/home-popups.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_tutor_entry
+    timeout: 30000
+- tapOn:
+    id: learning_path_tutor_entry
+- tapOn:
+    id: threads_button
+- extendedWaitUntil:
+    visible:
+      id: tutor_threads_history_screen
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: "tutor_threads_options_button_.*"
+    timeout: 20000

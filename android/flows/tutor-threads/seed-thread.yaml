@@ -1,0 +1,36 @@
+# Home > tutor entry > new thread: send MESSAGE and wait for the reply, so Chat History has one more thread.
+# Entry: signed in, any state (cold starts). Exit: tutor chat with the reply shown.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  MESSAGE: ${MESSAGE || "Hola, how do I say good morning"}
+---
+- launchApp:
+    stopApp: true
+- runFlow: ../../common/home-popups.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_tutor_entry
+    timeout: 30000
+- tapOn:
+    id: learning_path_tutor_entry
+- tapOn:
+    id: new_thread_button
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: input_message
+      enabled: true
+    timeout: 20000
+- tapOn:
+    id: input_message
+- inputText: ${MESSAGE}
+- tapOn:
+    id: send_button
+- extendedWaitUntil:
+    visible:
+      id: input_message
+      enabled: true
+    timeout: 90000
+- waitForAnimationToEnd:
+    timeout: 5000

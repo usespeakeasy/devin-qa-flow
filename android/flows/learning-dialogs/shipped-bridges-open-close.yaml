@@ -1,0 +1,82 @@
+# Debug Menu > Dialog Bridges: AI Tutor Over Quota, Community Report and Delete Thread each open and close with Back;
+# Preview Finished (not cancelable) opens and closes with Return home.
+# Entry: signed in. Exit: Home (after Preview Finished > Return home).
+# Preview Finished sits above the other rows, so it reopens Dialog Bridges from the top (RESTART).
+# Selectors: the Delete Thread dialog has no resource-ids (text fallback "Are you sure?").
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "bridges"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: ai_tutor_over_quota
+      RESTART: "true"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_over_quota_screen
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-over-quota
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_over_quota_screen
+    timeout: 5000
+- assertVisible:
+    id: debug_dialog_bridges_screen
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: community_report
+      RESTART: "false"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_report_sheet
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-community-report
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_community_report_sheet
+    timeout: 5000
+- assertVisible:
+    id: debug_dialog_bridges_screen
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: delete_thread
+      RESTART: "false"
+- extendedWaitUntil:
+    visible: "Are you sure\\?"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-delete-thread
+- back
+- extendedWaitUntil:
+    notVisible: "Are you sure\\?"
+    timeout: 5000
+- assertVisible:
+    id: debug_dialog_bridges_screen
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: preview_finished
+      RESTART: "true"
+- extendedWaitUntil:
+    visible:
+      id: preview_finished_screen
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-preview-finished
+- back
+- assertVisible:
+    id: preview_finished_screen
+- tapOn:
+    id: preview_finished_return_home_button
+- extendedWaitUntil:
+    notVisible:
+      id: preview_finished_screen
+    timeout: 5000

@@ -1,0 +1,58 @@
+# Preview Finished (`preview_finished_screen`, any caller): Learn more opens the paywall over it; closing the
+# paywall comes back to Preview Finished; Return home leaves the lesson for Home.
+# Entry: Preview Finished showing. Exit: no Preview Finished; the main tabs (`main_tab_home`, whichever tab was
+# last selected, e.g. Free Talk) unless CHECK_HOME=false.
+# On the google_apis AVD Superwall can't present (no Play Billing): the native premium screen opens as
+# `onboarding_premium_intro_(ready|error)` with an "An unexpected error occurred." dialog (`button1` OK).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "preview-finished"}
+  CHECK_HOME: ${CHECK_HOME || "true"}
+---
+- extendedWaitUntil:
+    visible:
+      id: preview_finished_screen
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: preview_finished_learn_more_button
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_premium_intro_(ready|error)"
+    timeout: 30000
+- takeScreenshot: ${SHOT}-paywall
+- repeat:
+    times: 3
+    while:
+      visible:
+        id: button1
+    commands:
+      - tapOn:
+          id: button1
+      - waitForAnimationToEnd:
+          timeout: 3000
+- runFlow:
+    when:
+      visible:
+        id: onboarding_premium_intro_ready
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: preview_finished_screen
+    timeout: 15000
+- tapOn:
+    id: preview_finished_return_home_button
+- extendedWaitUntil:
+    notVisible:
+      id: preview_finished_screen
+    timeout: 15000
+- runFlow:
+    when:
+      true: ${CHECK_HOME == "true"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: main_tab_home
+          timeout: 30000

@@ -1,0 +1,30 @@
+# Video lesson: turn "Can't speak now" on (closing its first-time explanation dialog) so cards advance without speech.
+# Leaves it on when it already is. Entry: video lesson. Exit: video lesson, toggle on.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: cant_speak_now_toggle
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: cant_speak_now_toggle
+        checked: false
+    commands:
+      - tapOn:
+          id: cant_speak_now_toggle
+- extendedWaitUntil:
+    visible:
+      id: subway_mode_dialog
+    timeout: 5000
+    optional: true
+- tapOn:
+    id: subway_mode_dialog_button
+    optional: true
+- extendedWaitUntil:
+    notVisible:
+      id: subway_mode_dialog
+    timeout: 10000

@@ -1,0 +1,27 @@
+# Community details sheet > Report: the report sheet opens; Back closes it with no report (no Report Confirmation)
+# and the details sheet is still up.
+# Entry: a community topic's details sheet (open-favorites-topic.yaml). Exit: the details sheet.
+# Selectors: the Report link is inside `ai_tutor_community_details_report_text` (point fallback, as report-spam.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: ai_tutor_community_details_report_text
+- tapOn:
+    point: "69%,71%"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_report_sheet
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT || "report-sheet"}
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_community_report_sheet
+    timeout: 5000
+- assertNotVisible:
+    id: ai_tutor_community_report_confirmation
+- assertVisible:
+    id: ai_tutor_community_details_start_chatting_button

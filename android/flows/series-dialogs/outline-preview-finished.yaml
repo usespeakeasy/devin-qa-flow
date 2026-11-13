@@ -1,0 +1,33 @@
+# Free series lesson > Overview (overview_tap_target) > Lesson Outline > a locked series: Preview Finished opens
+# (SeriesLessonController caller). With RETURN=true, Learn more opens the paywall over it and Return home lands on Home
+# (common/preview-finished-learn-more-home.yaml); with RETURN=false it stays open (the case script rotates / kills it).
+# Entry: Free (debug-menu/set-subscription-override.yaml TIER=Free), Home. Exit: Home, or Preview Finished.
+# Selectors: outline rows have no resource-ids (text fallback: the locked second series of the default LESSON_ID).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+  RETURN: ${RETURN || "true"}
+  SHOT: ${SHOT || "series-preview-finished"}
+---
+- runFlow:
+    file: line-card.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+- tapOn:
+    id: overview_tap_target
+- extendedWaitUntil:
+    visible: "Lesson Outline"
+    timeout: 15000
+- tapOn: "^___, bien\\.$"
+- extendedWaitUntil:
+    visible:
+      id: preview_finished_screen
+    timeout: 20000
+- assertNotVisible: "Lesson Outline"
+- runFlow:
+    when:
+      true: ${RETURN == "true"}
+    file: ../../common/preview-finished-learn-more-home.yaml
+    env:
+      SHOT: ${SHOT}

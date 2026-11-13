@@ -1,0 +1,68 @@
+# Chat History > first thread's options > Delete: "Are you sure?" opens (DeleteThreadDialog); Cancel closes it and
+# the thread stays; Delete again and confirm: the thread row (`tutor_threads_item_<ITEM>`) leaves the list.
+# Entry: open-history.yaml, ITEM = the first row's thread id (titles repeat). Exit: Chat History without that row.
+# Selectors: the dialog's title and buttons have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ITEM: ${ITEM}
+---
+- tapOn:
+    id: "tutor_threads_options_button_.*"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 3000
+# A tap while the list is still settling can be lost; tap once more if the options sheet didn't open.
+- runFlow:
+    when:
+      notVisible:
+        id: tutor_thread_options_delete
+    commands:
+      - tapOn:
+          id: "tutor_threads_options_button_.*"
+          index: 0
+- extendedWaitUntil:
+    visible:
+      id: tutor_thread_options_delete
+    timeout: 10000
+- tapOn:
+    id: tutor_thread_options_delete
+- extendedWaitUntil:
+    visible: "^Are you sure\\?$"
+    timeout: 10000
+- takeScreenshot: delete-dialog
+- tapOn: "^Cancel$"
+- extendedWaitUntil:
+    notVisible: "^Are you sure\\?$"
+    timeout: 10000
+- assertVisible:
+    id: tutor_threads_item_${ITEM}
+- tapOn:
+    id: "tutor_threads_options_button_.*"
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 3000
+# A tap while the list is still settling can be lost; tap once more if the options sheet didn't open.
+- runFlow:
+    when:
+      notVisible:
+        id: tutor_thread_options_delete
+    commands:
+      - tapOn:
+          id: "tutor_threads_options_button_.*"
+          index: 0
+- tapOn:
+    id: tutor_thread_options_delete
+- extendedWaitUntil:
+    visible: "^Are you sure\\?$"
+    timeout: 10000
+- tapOn: "^Delete$"
+- extendedWaitUntil:
+    notVisible: "^Are you sure\\?$"
+    timeout: 10000
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_threads_item_${ITEM}
+    timeout: 15000
+- assertVisible:
+    id: tutor_threads_history_screen
