@@ -1,0 +1,13 @@
+# Goal assigned popup: system Back dismisses it to Home.
+# Entry: the goal popup open over Home. Exit: Home (learning_path_ready) with no popup.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible: "You have a new learning goal"
+- back
+- extendedWaitUntil:
+    notVisible: "You have a new learning goal"
+    timeout: 10000
+- assertVisible:
+    id: learning_path_ready

@@ -1,0 +1,23 @@
+# Rotate to landscape and back with a Home popup open: the popup (SELECTOR id, or TEXT when it has no id) still shows
+# in landscape and after the return to portrait. Entry/exit: the popup open. Saves SHOT.png in landscape.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SELECTOR: ${SELECTOR || "none"}
+  TEXT: ${TEXT || "none"}
+  SHOT: ${SHOT || "popup-rotate"}
+---
+- setOrientation: LANDSCAPE_LEFT
+- runFlow:
+    file: assert-still-open.yaml
+    env:
+      SELECTOR: ${SELECTOR}
+      TEXT: ${TEXT}
+      SHOT: ${SHOT}
+- setOrientation: PORTRAIT
+- runFlow:
+    file: assert-still-open.yaml
+    env:
+      SELECTOR: ${SELECTOR}
+      TEXT: ${TEXT}
+      SHOT: ${SHOT}-portrait

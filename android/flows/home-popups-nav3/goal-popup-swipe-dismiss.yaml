@@ -1,0 +1,17 @@
+# Goal assigned popup: a slow drag from the sheet's upper body to the bottom edge dismisses it to Home.
+# Entry: the goal popup open over Home. Exit: Home (learning_path_ready) with no popup.
+# Selectors: the sheet has no resource-id or drag-handle ID; the drag starts on its upper body.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible: "You have a new learning goal"
+- swipe:
+    start: 50%, 60%
+    end: 50%, 99%
+    duration: 3000
+- extendedWaitUntil:
+    notVisible: "You have a new learning goal"
+    timeout: 10000
+- assertVisible:
+    id: learning_path_ready

@@ -1,0 +1,22 @@
+# Process death with a Home popup open: Home key, kill the process, relaunch from the launcher; the popup
+# (SELECTOR id, or TEXT when it has no id) is restored. Entry/exit: the popup open. Saves SHOT.png.
+# The caller checks the pid changed (or "instance state restored" in the lifecycle log): a kill right after Home can no-op.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SELECTOR: ${SELECTOR || "none"}
+  TEXT: ${TEXT || "none"}
+  SHOT: ${SHOT || "popup-process-death"}
+---
+- pressKey: Home
+- waitForAnimationToEnd:
+    timeout: 5000
+- killApp
+- launchApp:
+    stopApp: false
+- runFlow:
+    file: assert-still-open.yaml
+    env:
+      SELECTOR: ${SELECTOR}
+      TEXT: ${TEXT}
+      SHOT: ${SHOT}

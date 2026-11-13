@@ -1,0 +1,14 @@
+# Goal assigned popup: its X (content description "Cancel") closes it to Home.
+# Entry: the goal popup open over Home. Exit: Home (learning_path_ready) with no popup.
+# Selectors: the popup and its close button have no resource-id (text and content description fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible: "You have a new learning goal"
+- tapOn: "^Cancel$"
+- extendedWaitUntil:
+    notVisible: "You have a new learning goal"
+    timeout: 10000
+- assertVisible:
+    id: learning_path_ready

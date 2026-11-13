@@ -1,0 +1,20 @@
+# One slow drag from the assessment popup's body to the bottom edge dismisses it to Home (no drag back up first).
+# Entry: assessment popup open over Home. Exit: Home (home_root_ready) with no popup.
+# The sheet has no drag-handle ID and its top is about 54% of the screen, so the drag starts at 65% (on the sheet,
+# not the scrim: a start above the sheet is an outside tap).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: app_assessment_popup
+- swipe:
+    start: 50%, 65%
+    end: 50%, 99%
+    duration: 3000
+- extendedWaitUntil:
+    notVisible:
+      id: app_assessment_popup
+    timeout: 10000
+- assertVisible:
+    id: home_root_ready
