@@ -1,0 +1,47 @@
+# Home Start on the current lesson: tap the open popover's Start (opening the current loop when its popover is closed), the lesson
+# (ARRIVAL) opens, Back > Quit (the quit sheet a video lesson shows), the premium intro is dismissed, Home shows on the Home tab
+# and nothing re-opens.
+# Entry: Home tab showing learning_path_ready. Exit: Home tab.
+# maestro test -e ARRIVAL=card_count -e SHOT=start start-current-lesson-quit.yaml
+# Selectors: the quit sheet has no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: "learning_path_lesson_start_.*"
+    commands:
+      - tapOn:
+          id: "learning_path_loop_.*"
+          index: 0
+- tapOn:
+    id: "learning_path_lesson_start_.*"
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 5000
+    optional: true
+- runFlow:
+    when:
+      visible: "Are you sure you want to quit this lesson\\?"
+    commands:
+      - tapOn: "^Quit$"
+# Quitting a lesson opens the premium intro (dev paywall error on the emulator).
+- runFlow: ../../common/dismiss-premium-intro.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- takeScreenshot: ${SHOT}-back
+- runFlow: assert-nothing-reopened.yaml

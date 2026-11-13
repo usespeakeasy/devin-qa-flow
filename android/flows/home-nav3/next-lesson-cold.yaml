@@ -19,12 +19,27 @@ env:
     timeout: 45000
 - takeScreenshot: ${SHOT}
 - back
+# A video lesson answers Back with the quit sheet, and quitting opens the premium intro (dev paywall error on the emulator).
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 5000
+    optional: true
+- runFlow:
+    when:
+      visible: "Are you sure you want to quit this lesson\\?"
+    commands:
+      - tapOn: "^Quit$"
+      - runFlow: ../../common/dismiss-premium-intro.yaml
 - extendedWaitUntil:
     visible:
       id: learning_path_ready
     timeout: 20000
 - takeScreenshot: ${SHOT}-back
+# A duplicate link run re-opened the lesson 0.6 to 2 s after Back (speak-android#9358); hold Home for 6 s.
 - runFlow: assert-nothing-reopened.yaml
+- runFlow: assert-nothing-reopened.yaml
+- assertNotVisible:
+    id: ${ARRIVAL}
 - tapOn:
     id: main_tab_practice
 - tapOn:
