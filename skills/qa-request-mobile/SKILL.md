@@ -249,7 +249,7 @@ On iOS the dev build is the `Speak-Dev` scheme, run on one simulator for both bu
 
 Use a test user for every dev run when the session has the Speak (dev) MCP's `test_*` tools, and a pool account otherwise. Base and branch use the same account either way, so their server state matches.
 
-Test user (the `speak-test-users` skill has the details):
+Test user:
 
 1. Before building, `test_user_create` with the `courseId` and `subscription` the cases need (Spanish A1 `EN_ES_A1-1` and `{ "tier": "plus" }` when nothing says otherwise, like the pool), seed progress, streak and saved lines, and confirm with `test_user_state`.
 2. On Android, `qa_android.py codelogin --user-id <userId> --code <authorizationCode>` signs it in and waits for Home. On iOS, open `speak-dev://code-login?code=...&userId=...&skipNotificationPrompt=true`. Codes are single-use: `test_sign_in` mints one per emulator, simulator or reinstall.

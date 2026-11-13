@@ -11,6 +11,6 @@ metadata:
 
 Find the scripts with `ls /opt/.devin/plugins/cache/*/*/skills/qa-android-harness/scripts/`. `qa_android.py emu --avd devin2 --port 5556` boots a second emulator (the AVD is cloned from `devin` on first use). Set `ANDROID_SERIAL` for every command when more than one emulator is running; `logcat`/`logstop` keep one background logcat per serial. The `qa-request-mobile` skill says when to use each command.
 
-`qa_android.py codelogin --user-id <userId> --code <authorizationCode>` signs in a test user from the Speak (dev) MCP's `test_user_create` or `test_sign_in` (the `speak-test-users` skill) and waits for Home. It first sets the `auth_session_mode` Debug Menu override to `speak` and restarts the app when the override isn't already `speak`. Base builds from before speak-android#9009 (merged 2026-11-12) need that for `loginCode`; newer builds don't.
+`qa_android.py codelogin --user-id <userId> --code <authorizationCode>` signs in a test user from the Speak (dev) MCP's `test_user_create` or `test_sign_in` and waits for Home. It first sets the `auth_session_mode` Debug Menu override to `speak` and restarts the app when the override isn't already `speak`. Base builds from before speak-android#9009 (merged 2026-11-12) need that for `loginCode`; newer builds don't.
 
 For pre-auth cases, `qa_android.py fresh [--no-grant]` clears app data and cold-starts the app on the welcome screen, and `qa_android.py newuser` prints a throwaway sign-up email (`devin+qa-new-<time>-<random>@usespeak.com`) that never joins the pool.

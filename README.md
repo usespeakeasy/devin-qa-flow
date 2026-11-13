@@ -69,7 +69,7 @@ maestro --device emulator-5554 test android/flows/main-tabs/tab-tour.yaml
 maestro --device emulator-5554 test -e APP_ID=com.selabs.speak.dev android/flows/<area>/<case>.yaml
 ```
 
-Most flows start signed in: the run signs in a test user (the `speak-test-users` skill), or leases
+Most flows start signed in: the run signs in a test user from the Speak (dev) MCP, or leases
 a pool account when the session lacks the `test_*` tools.
 Pre-auth flows (`android/flows/auth/`, `android/flows/onboarding/`) start signed out instead;
 their header says `Entry: app data cleared` and the harness `fresh` command gets the app there.

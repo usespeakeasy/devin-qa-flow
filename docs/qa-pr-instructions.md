@@ -139,7 +139,7 @@ the child clones this repo and follows this file. The child prompt says so.
   before a flow that reads markers, and start that flow without `launchApp`.
 - Install each build with `xcrun simctl install`. Installing over the same bundle ID keeps the
   signed-in account.
-- Accounts: a test user from the `speak-test-users` skill, signed in with
+- Accounts: a test user from the Speak (dev) MCP's `test_*` tools, signed in with
   `xcrun simctl openurl <UDID> 'speak-dev://code-login?code=<code>&userId=<userId>&skipNotificationPrompt=true'`.
   Without the `test_*` tools, lease from the dev pool with the harness `lease` (it works on macOS;
   only `login` is Android-only). Sign in with

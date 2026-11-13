@@ -27,7 +27,9 @@ Runs before 2026-11-01 have no `skill_version`.
   speak-android#9009 (merged 2026-11-12) need the `auth_session_mode` override for `codelogin`.
   `qa-request-mobile` no longer lists a smart review due as state the tools can't give
   (`test_progress_set` with `paceDays` ≥ 3 on a paid tier seeds one) and lists Leagues enrolled or
-  returning instead. Why: the docs still described the pool-first flow and the pre-#9009 sign-in.
+  returning instead. The docs no longer point at the retired `speak-test-users` skill
+  (usespeakeasy/skills#353); the Speak (dev) MCP's tool descriptions carry its steps. Why: the docs still described the
+  pool-first flow and the pre-#9009 sign-in.
   Ticket: CLNT-2051. PR: #28
 
 - **qa-request-mobile 2026.11.11.1, qa-android-harness 2026.11.11.1**: dev runs use a test user from
