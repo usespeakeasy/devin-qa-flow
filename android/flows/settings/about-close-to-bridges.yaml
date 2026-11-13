@@ -1,0 +1,15 @@
+# System Back closes the About sheet opened from Debug Menu > Dialog Bridges, back to the Dialog Bridges list.
+# Entry: the About sheet over Dialog Bridges (about-open-debug-bridge.yaml). Exit: Dialog Bridges list.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: about_sheet
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: about_sheet
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_screen

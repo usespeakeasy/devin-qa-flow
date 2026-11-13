@@ -1,0 +1,22 @@
+# Settings > About sheet survives process death (Home, killApp, relaunch): the sheet comes back with its rows.
+# Entry: the About sheet is open over Settings (about-open.yaml). Exit: the About sheet (close with about-back.yaml).
+# Saves SHOT.png (the restored sheet) under ~/.maestro/tests/<run>/<flow>/takeScreenshot/.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: about_sheet
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: about_sheet
+    timeout: 60000
+- takeScreenshot: ${SHOT || "restored-about"}
+- assertVisible:
+    id: about_terms_of_service_option
+- assertVisible:
+    id: about_open_source_licenses_option

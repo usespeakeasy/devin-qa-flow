@@ -1,0 +1,42 @@
+# Video lesson: the first "Can't speak now" toggle opens the explanation dialog; it survives process death
+# (Home, killApp, relaunch) over the lesson, and "Got it" after the restore still turns can't speak now on.
+# Entry: video lesson, toggle off, explanation never shown on this install (`qa_android.py fresh` + login,
+# then flows/debug-menu/open-deeplink-lesson.yaml with TYPE='^Video$'). Exit: video lesson, toggle on.
+# Saves SHOT.png (the restored dialog) under ~/.maestro/tests/<run>/<flow>/takeScreenshot/.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: cant_speak_now_toggle
+    timeout: 30000
+- assertVisible:
+    id: cant_speak_now_toggle
+    checked: false
+- tapOn:
+    id: cant_speak_now_toggle
+- extendedWaitUntil:
+    visible:
+      id: subway_mode_dialog
+    timeout: 15000
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: subway_mode_dialog
+    timeout: 60000
+- takeScreenshot: ${SHOT || "restored-cant-speak-dialog"}
+- tapOn:
+    id: subway_mode_dialog_button
+- extendedWaitUntil:
+    notVisible:
+      id: subway_mode_dialog
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: cant_speak_now_toggle
+      checked: true
+    timeout: 90000

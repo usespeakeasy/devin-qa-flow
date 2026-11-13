@@ -1,5 +1,5 @@
 # Debug Menu > Dialog Bridges > "Subway Mode": the "Can't speak now" explanation dialog
-# (`Destination.SubwayModeDialog`, Nav 3 entry or `ComposeDialogBridgeController` with the kill switch ON).
+# (`Destination.SubwayModeDialog` Nav 3 entry; before speak-android#9355 the kill switch ON showed `ComposeDialogBridgeController`).
 # Entry: any signed-in state (restarts the app, opens speak-dev://debug-menu). Exit: the dialog shows.
 # Saves SHOT.png (the open dialog) under ~/.maestro/tests/<run>/<flow>/takeScreenshot/.
 # Note: showing it sets the "explanation displayed" pref, so run first-toggle cases before this one.
@@ -16,20 +16,27 @@ env:
     timeout: 60000
 - openLink: ${DEBUG_MENU_LINK}
 - extendedWaitUntil:
-    visible: "Debug Menu"
+    visible:
+      id: debug_menu_screen
     timeout: 15000
 - scrollUntilVisible:
     element:
-      text: "Dialog Bridges"
+      id: debug_menu_dialog_bridges
     direction: DOWN
     timeout: 20000
-- tapOn: "Dialog Bridges"
+- tapOn:
+    id: debug_menu_dialog_bridges
+- extendedWaitUntil:
+    visible:
+      id: debug_dialog_bridges_screen
+    timeout: 15000
 - scrollUntilVisible:
     element:
-      text: "Subway Mode"
+      id: debug_dialog_bridges_subway_mode
     direction: DOWN
     timeout: 30000
-- tapOn: "Subway Mode"
+- tapOn:
+    id: debug_dialog_bridges_subway_mode
 - extendedWaitUntil:
     visible:
       id: subway_mode_dialog
