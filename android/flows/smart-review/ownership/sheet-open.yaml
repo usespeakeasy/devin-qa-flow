@@ -1,0 +1,27 @@
+# Practice > Smart Review > concept row qa-c1 opens the details sheet (stays open for the next step).
+# Entry: Home tab. Precondition: QA-only fixture (debug.qa.srdata=fixture). Exit: details sheet over Smart Review.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_practice_tab
+    timeout: 20000
+- assertNotVisible:
+    id: smart_review_concept_row_qa-c4
+- tapOn:
+    id: smart_review_concept_row_qa-c1
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_details_sheet
+    timeout: 10000
+- takeScreenshot: sheet-open

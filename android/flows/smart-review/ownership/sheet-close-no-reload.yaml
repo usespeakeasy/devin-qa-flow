@@ -1,0 +1,18 @@
+# Closing the concept details sheet does not reload Smart Review: data changed on the server while the sheet was open stays hidden.
+# Entry: details sheet over Smart Review (sheet-open.yaml), then debug.qa.srdata=fixture_more. Exit: Smart Review without qa-c4.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: smart_review_concept_details_sheet
+    timeout: 10000
+- assertVisible:
+    id: smart_review_start_button
+- assertVisible:
+    id: smart_review_concept_row_qa-c1
+- assertNotVisible:
+    id: smart_review_concept_row_qa-c4
+- takeScreenshot: sheet-closed-no-reload

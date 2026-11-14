@@ -26,15 +26,18 @@ env:
 - assertVisible:
     id: smart_review_all_concepts_list
 - takeScreenshot: removed-from-all
-# The chip row scrolls sideways on its own; point swipe on the chip row (y 20%) because it has no ID.
+# The chip row scrolls sideways on its own; chips have no IDs, so swipes start on a chip's text (a point swipe misses the row
+# when the emulator's status bar height differs). Never start a swipe on the leftmost chip: the left edge triggers system Back.
 - repeat:
     times: 4
     while:
       notVisible: "^Removed$"
     commands:
       - swipe:
-          start: 85%, 20%
-          end: 15%, 20%
+          from:
+            text: "^Learned$|^New$|^Mastered$"
+          direction: LEFT
+      - waitForAnimationToEnd
 - tapOn: "^Removed$"
 - extendedWaitUntil:
     visible:
@@ -59,8 +62,10 @@ env:
       notVisible: "^All$"
     commands:
       - swipe:
-          start: 15%, 20%
-          end: 85%, 20%
+          from:
+            text: "^Learned$"
+          direction: RIGHT
+      - waitForAnimationToEnd
 - tapOn: "^All$"
 - extendedWaitUntil:
     visible:

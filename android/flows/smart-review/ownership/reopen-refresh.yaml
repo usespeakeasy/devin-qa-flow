@@ -1,0 +1,18 @@
+# Launcher Home on Smart Review, then reopen the app without stopping it: Smart Review still shows and refreshes its concepts.
+# Entry: Smart Review sent to the launcher (adb shell input keyevent KEYCODE_HOME) after debug.qa.srdata changed to fixture_more.
+# Exit: Smart Review with qa-c4.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: smart_review_practice_tab
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_row_qa-c4
+    timeout: 20000
+- takeScreenshot: reopen-refresh

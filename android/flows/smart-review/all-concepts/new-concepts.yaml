@@ -1,0 +1,37 @@
+# Concepts a finished lesson earns show on Smart Review and in All concepts.
+# Entry: Home tab. Precondition: QA-only fixture switched from debug.qa.srdata=fixture to fixture_more after Smart Review loaded once
+# (fixture_more adds "mucho gusto" qa-c4 and "nos vamos" qa-c5). Exit: All concepts.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_practice
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_practice_tab
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_row_qa-c4
+    timeout: 15000
+- assertVisible:
+    id: smart_review_concept_row_qa-c5
+- takeScreenshot: new-concepts-main
+- tapOn:
+    id: smart_review_mastery_score_card
+- extendedWaitUntil:
+    visible:
+      id: smart_review_review_status_row
+    timeout: 10000
+- tapOn:
+    id: smart_review_review_status_row
+- extendedWaitUntil:
+    visible:
+      id: smart_review_all_concepts_list
+    timeout: 15000
+- assertVisible: "^mucho gusto$"
+- assertVisible: "^nos vamos$"
+- takeScreenshot: new-concepts-all

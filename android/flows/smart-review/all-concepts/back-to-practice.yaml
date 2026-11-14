@@ -1,0 +1,27 @@
+# System Back from All concepts walks the Smart Review stack: mastery score page, Smart Review, then the Practice tab.
+# Entry: All concepts opened from the mastery score page. Exit: Practice tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: smart_review_mastery_score_page
+    timeout: 10000
+- assertNotVisible:
+    id: smart_review_all_concepts_screen
+- back
+- extendedWaitUntil:
+    visible:
+      id: smart_review_start_button
+    timeout: 10000
+- takeScreenshot: back-smart-review
+- back
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 10000
+- assertNotVisible:
+    id: smart_review_screen
+- takeScreenshot: back-practice

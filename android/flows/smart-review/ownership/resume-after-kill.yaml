@@ -1,0 +1,23 @@
+# After the process was killed in the background on Smart Review, bring the app back without stopping it: Smart Review restores
+# with its concepts, and system Back returns to the Practice tab.
+# Entry: Smart Review, then launcher Home and `adb shell am kill`. Exit: Practice tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: smart_review_practice_tab
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_row_qa-c1
+    timeout: 20000
+- takeScreenshot: sr-restored-after-kill
+- back
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 15000

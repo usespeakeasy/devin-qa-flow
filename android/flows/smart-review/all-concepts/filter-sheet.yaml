@@ -1,0 +1,38 @@
+# Smart Review > mastery page > All concepts (N) row: a filter chip filters the list, then a concept opens the details sheet over
+# the filtered list; system Back closes only the sheet and the filter stays.
+# Entry: Home tab. Precondition: QA-only Smart Review fixture (debug.qa.srdata=fixture): "hacer algo" new, "yo soy" learned, "tu eres" mastered.
+# Exit: All concepts, Learned chip. Rows and chips have no IDs (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-mastery.yaml
+- tapOn:
+    id: smart_review_review_status_row
+- extendedWaitUntil:
+    visible:
+      id: smart_review_all_concepts_list
+    timeout: 15000
+- assertVisible: "^tu eres$"
+- takeScreenshot: filter-all
+- tapOn: "^Learned$"
+- extendedWaitUntil:
+    notVisible: "^tu eres$"
+    timeout: 10000
+- assertNotVisible: "^hacer algo$"
+- assertVisible: "^yo soy$"
+- tapOn: "^yo soy$"
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_details_sheet
+    timeout: 10000
+- takeScreenshot: filter-sheet
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: smart_review_concept_details_sheet
+    timeout: 10000
+- assertVisible:
+    id: smart_review_all_concepts_list
+- assertNotVisible: "^tu eres$"
+- takeScreenshot: filter-sheet-closed
