@@ -1,0 +1,41 @@
+# Article reader > Vocabulary & patterns sheet already open: tap the TERM row, Expression Details (FromArticle)
+# opens, system Back closes it and the vocab sheet shows TERM again. Run it repeatedly to check a row reopens the
+# dictionary after a close (the reader's covered state clears when the sheet leaves).
+# Entry: the vocab sheet open with TERM on screen (open-from-article-vocab-row.yaml, then Back or save-and-close.yaml).
+# Exit: the vocab sheet with TERM on screen (CLOSE=false: tutor_expression_details_content).
+# Selectors: the vocab rows have no resource-id (text fallback on TERM).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TERM: ${TERM || "el hormigón"}
+  OPEN: ${OPEN || "true"}
+  CLOSE: ${CLOSE || "true"}
+---
+# OPEN=false only closes an open sheet (after the runner's screenshot).
+- runFlow:
+    when:
+      true: ${OPEN == "true"}
+    commands:
+      - extendedWaitUntil:
+          visible: "^${TERM}$"
+          timeout: 10000
+      - tapOn: "^${TERM}$"
+      - extendedWaitUntil:
+          visible:
+            id: tutor_expression_details_content
+          timeout: 15000
+# CLOSE=false stops on the open sheet so the runner can take its screenshot, then Back.
+- runFlow:
+    when:
+      true: ${CLOSE == "true"}
+    commands:
+      - waitForAnimationToEnd:
+          timeout: 2000
+      - back
+      - extendedWaitUntil:
+          notVisible:
+            id: tutor_expression_details_sheet
+          timeout: 10000
+      - extendedWaitUntil:
+          visible: "^${TERM}$"
+          timeout: 10000
