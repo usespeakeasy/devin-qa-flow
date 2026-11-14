@@ -1,0 +1,60 @@
+# Manage Account > Delete Account > "Confirm account deletion" > the provider's "verify to delete" dialog > Continue,
+# for a third-party (Kakao, LINE, Naver) account; then waits for where the provider step ends.
+# EXPECT=signed_out: the signed-out storybook (`onboarding_storybook_sign_in_button`), no Home.
+# EXPECT=stays: Manage Account is still up (`manage_account_screen`) with no dialog over it.
+# EXPECT=error: an error dialog over Manage Account (`simple_dialog`), left open for the caller's screenshot.
+# Can delete the account (a reauth that lands on it): throwaway sign-up accounts only, never a pool account.
+# Entry: `home_root_ready`, a third-party account (on dev, the QA-only Kakao patch of speak-android#9357 QA).
+# Selectors: IDs only.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  EXPECT: ${EXPECT || "signed_out"}
+  SHOT: ${SHOT || "delete-account-provider-reauth"}
+---
+# Not delete-account-open-reauth.yaml: its last step asserts no dialog, and here a second dialog follows.
+- runFlow: ../../common/open-manage-account.yaml
+- tapOn:
+    id: edit_delete_account
+- extendedWaitUntil:
+    visible:
+      id: simple_dialog
+    timeout: 10000
+- tapOn:
+    id: simple_dialog_positive_button
+# The provider's "verify to delete" dialog ("Your account is connected with Kakao").
+- extendedWaitUntil:
+    visible:
+      id: simple_dialog
+    timeout: 10000
+- tapOn:
+    id: simple_dialog_positive_button
+- runFlow:
+    when:
+      true: ${EXPECT == "signed_out"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: onboarding_storybook_sign_in_button
+          timeout: 30000
+      - assertNotVisible:
+          id: home_root_ready
+- runFlow:
+    when:
+      true: ${EXPECT == "stays"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: manage_account_screen
+          timeout: 15000
+      - assertNotVisible:
+          id: simple_dialog
+- runFlow:
+    when:
+      true: ${EXPECT == "error"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: simple_dialog
+          timeout: 30000
+- takeScreenshot: ${SHOT}

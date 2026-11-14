@@ -1,0 +1,12 @@
+# Home -> Profile tab -> Settings -> Manage Account. Entry: `home_root_ready`. Exit: `manage_account_screen`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-settings.yaml
+- tapOn:
+    id: settings_manage_account_option
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 15000

@@ -1,0 +1,76 @@
+# Manage Account > Email editor > NEW_EMAIL > Save > the third-party sign-in dialog > positive button, for a
+# third-party (Kakao, LINE, Naver) account; then waits for where the provider step ends.
+# EXPECT=signed_out: the signed-out storybook (`onboarding_storybook_sign_in_button`), no Home.
+# EXPECT=saved: the editor closes back to Manage Account, which shows NEW_EMAIL.
+# EXPECT=stays: the editor is still up (`single_field_input_screen`) with no dialog over it.
+# EXPECT=error: the editor is still up after the provider step (the caller's screenshot shows the error).
+# Params (run time only): EMAIL (the signed-in account's email), NEW_EMAIL (any unused address).
+# Entry: Manage Account (`manage_account_screen`), a third-party account (on dev, the QA-only Kakao patch of
+# speak-android#9357 QA). Selectors: the email field is `input` index 0, as in edit-email-wrong-password.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  EXPECT: ${EXPECT || "signed_out"}
+  SHOT: ${SHOT || "edit-email-provider-reauth"}
+---
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 20000
+- tapOn:
+    id: edit_email
+- extendedWaitUntil:
+    visible:
+      id: single_field_input_screen
+    timeout: 15000
+- assertVisible:
+    id: input
+    index: 0
+    text: ${EMAIL}
+- tapOn:
+    id: input
+    index: 0
+- pressKey: Remote Dpad Down
+- eraseText: 80
+- inputText: ${NEW_EMAIL}
+- hideKeyboard
+- tapOn:
+    id: settings_list_primary_button
+- extendedWaitUntil:
+    visible:
+      id: simple_dialog
+    timeout: 15000
+- tapOn:
+    id: simple_dialog_positive_button
+- runFlow:
+    when:
+      true: ${EXPECT == "signed_out"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: onboarding_storybook_sign_in_button
+          timeout: 30000
+      - assertNotVisible:
+          id: home_root_ready
+- runFlow:
+    when:
+      true: ${EXPECT == "saved"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: manage_account_screen
+          timeout: 30000
+      - assertNotVisible:
+          id: single_field_input_screen
+      - assertVisible: ${NEW_EMAIL}
+- runFlow:
+    when:
+      true: ${EXPECT == "stays" || EXPECT == "error"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: single_field_input_screen
+          timeout: 30000
+      - assertNotVisible:
+          id: simple_dialog
+- takeScreenshot: ${SHOT}
