@@ -1,0 +1,29 @@
+# Profile tab > scroll to the Assessment card (`app_assessment_entry_card`) and screenshot it. The run script
+# then checks which button shows: `app_assessment_entry_card_unlock_button` (locked, "Unlock with <tier>") or
+# `app_assessment_entry_card_start_button` (Start).
+# Entry: Home or Profile. Exit: Profile with the card on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "profile-card"}
+---
+- runFlow:
+    when:
+      notVisible:
+        id: action_settings
+    commands:
+      - tapOn:
+          id: main_tab_profile
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: app_assessment_entry_card_(unlock|start)_button
+    direction: DOWN
+    timeout: 30000
+    centerElement: true
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}

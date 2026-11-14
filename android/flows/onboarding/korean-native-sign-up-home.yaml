@@ -1,0 +1,17 @@
+# Fresh Korean-native, English-learning email sign-up to Home: storybook > Get started > English > Korean >
+# keep English > Email sign up > onboarding chat > curriculum > Home (premium intro dismissed).
+# Entry: app data cleared and overrides set; the flow cold-starts the app. Pass a throwaway account at run time
+# (never commit it): maestro test -e EMAIL=$(qa_android.py newuser) -e PASSWORD=... korean-native-sign-up-home.yaml
+# Exit: `learning_path_ready`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- runFlow: korean-native-sign-up-options.yaml
+- runFlow: email-sign-up-to-chat.yaml
+- runFlow: chat-to-generate-curriculum.yaml
+- runFlow: tap-generate-curriculum.yaml
+- runFlow: curriculum-loaded.yaml
+- runFlow: curriculum-last-card-home.yaml

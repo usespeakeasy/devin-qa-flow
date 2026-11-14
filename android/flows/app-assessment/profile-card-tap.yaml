@@ -1,0 +1,37 @@
+# Profile Assessment card: tap TAP (`unlock` or `start` = the card button by id, `title` = the card title text
+# TITLE, text fallback: the title has no resource-id), then wait for what opens: the Superwall paywall
+# (`main-editor-container`), the native premium screen (`onboarding_premium_intro_(ready|error)`, or its error
+# dialog `button1`) or the assessment intro (`app_assessment_intro`). The run script asserts which one.
+# Entry: profile-card-scroll.yaml. Exit: the opened screen, not closed (close-paywall.yaml closes a paywall).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TAP: ${TAP || "unlock"}
+  TITLE: ${TITLE || ""}
+  SHOT: ${SHOT || "profile-card-tap"}
+---
+- runFlow:
+    when:
+      true: ${TAP == "unlock"}
+    commands:
+      - tapOn:
+          id: app_assessment_entry_card_unlock_button
+- runFlow:
+    when:
+      true: ${TAP == "start"}
+    commands:
+      - tapOn:
+          id: app_assessment_entry_card_start_button
+- runFlow:
+    when:
+      true: ${TAP == "title"}
+    commands:
+      - tapOn:
+          text: ${TITLE}
+- extendedWaitUntil:
+    visible:
+      id: (main-editor-container|onboarding_premium_intro_(ready|error)|button1|app_assessment_intro)
+    timeout: 45000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}

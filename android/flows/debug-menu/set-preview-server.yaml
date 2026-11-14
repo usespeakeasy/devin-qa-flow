@@ -1,0 +1,55 @@
+# Debug Menu > search "Server": Server Endpoint = Preview, then pick preview environment NAME from the list
+# (fetched from api.usespeak.dev/.well-known/preview-environments). Force-stop and relaunch after it so the
+# next cold start uses the preview backend. `qa_android.py fresh` (pm clear) drops it.
+# Entry: any state, signed in or out. Exit: back on the filtered Debug Menu with NAME shown.
+# maestro test -e NAME=us-free-plan-enrollment set-preview-server.yaml
+# The row id is `debug_preview_environment_<display name>`, so the flow searches the namespace NAME (it matches
+# the row's URL), taps the first row and asserts the Server Endpoint card shows LABEL (the display name).
+# maestro test -e NAME=us-free-plan-enrollment -e LABEL="DO NOT MERGE: US free plan backend rollup" ...
+# Selectors: the Server Endpoint "Preview" radio has no resource-id (first "Preview" text, text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  NAME: ${NAME}
+  LABEL: ${LABEL || NAME}
+---
+- launchApp:
+    stopApp: true
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 30000
+- tapOn:
+    id: debug_menu_search
+- inputText: Server
+- hideKeyboard
+- extendedWaitUntil:
+    visible: "Server Endpoint"
+    timeout: 15000
+- tapOn:
+    text: "^Preview$"
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: debug_preview_environments_screen
+    timeout: 15000
+- extendedWaitUntil:
+    notVisible:
+      id: debug_preview_environments_loading
+    timeout: 30000
+- tapOn:
+    id: debug_preview_environments_search
+- inputText: ${NAME}
+- hideKeyboard
+- tapOn:
+    id: debug_preview_environment_.*
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 15000
+- assertVisible: ${LABEL}
+- assertVisible:
+    id: debug_menu_screen
+- takeScreenshot: preview_server

@@ -1,5 +1,5 @@
-# Full-screen sign-up options -> Continue with Email -> EMAIL and PASSWORD -> ticks the AI data consent row when it
-# shows -> Sign up -> notification prompt (allowed when shown) -> onboarding chat ready.
+# Full-screen sign-up options -> Continue with Email -> EMAIL and PASSWORD -> ticks Accept All when the consent list
+# shows (Korean flow), else the AI data consent row when it shows -> Sign up -> notification prompt (allowed when shown) -> onboarding chat ready.
 # Entry: `auth_options_screen` (sign-up). Pass a throwaway account at run time (never commit it):
 # maestro test -e EMAIL=$(qa_android.py newuser) -e PASSWORD=... email-sign-up-to-chat.yaml
 appId: ${APP_ID}
@@ -9,6 +9,15 @@ env:
 - runFlow: open-email-sign-up-form.yaml
 - runFlow:
     when:
+      visible:
+        id: onboarding_sign_up_consent_all
+    commands:
+      - tapOn:
+          id: onboarding_sign_up_consent_all
+- runFlow:
+    when:
+      notVisible:
+        id: onboarding_sign_up_consent_all
       visible:
         id: onboarding_sign_up_consent_ai_data
     commands:

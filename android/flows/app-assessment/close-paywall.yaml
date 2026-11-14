@@ -1,0 +1,41 @@
+# Close what the Assessment card opened (Superwall web view: Back; native premium screen: the billing error
+# dialog OK `button1`, then `exit`; assessment intro: its close button) and wait for Profile (`action_settings`).
+# Entry: profile-card-tap.yaml. Exit: Profile.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- repeat:
+    times: 3
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: button1
+          commands:
+            - tapOn:
+                id: button1
+- runFlow:
+    when:
+      visible:
+        id: main-editor-container
+    commands:
+      - back
+- runFlow:
+    when:
+      visible:
+        id: onboarding_premium_intro_(ready|error)
+    commands:
+      - tapOn:
+          id: exit
+- runFlow:
+    when:
+      visible:
+        id: app_assessment_intro
+    commands:
+      - tapOn:
+          id: app_assessment_intro_close_button
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 30000

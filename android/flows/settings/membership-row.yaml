@@ -1,0 +1,26 @@
+# Profile > Settings: the first row (`settings_manage_membership_option`) reads TITLE with subtitle SUBTITLE.
+# With no TITLE it only screenshots the row (the run script reads it).
+# Entry: Profile (`action_settings`). Exit: Settings.
+# maestro test -e TITLE="Upgrade to Premium Plus" -e SUBTITLE="Account status: Free" membership-row.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "settings-membership-row"}
+  TITLE: ${TITLE || ""}
+  SUBTITLE: ${SUBTITLE || ""}
+---
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_membership_option
+    timeout: 20000
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      true: ${TITLE != ""}
+    commands:
+      - assertVisible: "^${TITLE}$"
+      - assertVisible: "^${SUBTITLE}$"

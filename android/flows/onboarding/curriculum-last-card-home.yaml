@@ -18,7 +18,7 @@ env:
     id: onboarding_curriculum_action_get_started
 - extendedWaitUntil:
     visible:
-      id: (onboarding_premium_intro_(ready|error)|home_root_ready)
+      id: (onboarding_premium_intro_(ready|error)|main-editor-container|home_root_ready)
     timeout: 60000
 - runFlow: ../../common/dismiss-premium-intro.yaml
 - extendedWaitUntil:
