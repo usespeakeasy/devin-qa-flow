@@ -1,0 +1,33 @@
+# Type into the Create/Edit screen's My role, AI's role and scene fields. An empty value skips that field.
+# Text goes in at the tap point, so on the Edit screen it is added to the saved text. Entry/exit: Create or Edit screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  USER_ROLE: ${USER_ROLE || ""}
+  AI_ROLE: ${AI_ROLE || ""}
+  SCENARIO: ${SCENARIO || ""}
+---
+- runFlow:
+    when:
+      true: ${USER_ROLE != ""}
+    commands:
+      - tapOn:
+          id: ai_tutor_create_community_input_user_role
+      - inputText: ${USER_ROLE}
+      - hideKeyboard
+- runFlow:
+    when:
+      true: ${AI_ROLE != ""}
+    commands:
+      - tapOn:
+          id: ai_tutor_create_community_input_ai_role
+      - inputText: ${AI_ROLE}
+      - hideKeyboard
+- runFlow:
+    when:
+      true: ${SCENARIO != ""}
+    commands:
+      - tapOn:
+          id: ai_tutor_create_community_input_scenario
+      - inputText: ${SCENARIO}
+      - hideKeyboard

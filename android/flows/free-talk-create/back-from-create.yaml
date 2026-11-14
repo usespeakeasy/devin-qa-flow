@@ -1,0 +1,21 @@
+# Create/Edit screen > system back: the screen closes once and Free Talk shows (no second Create screen under it).
+# Hides the keyboard first so back closes the screen. Entry: Create or Edit screen (after a restore too).
+# Exit: Free Talk tab with the Topics/Community header.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: ai_tutor_create_community_input_user_role
+- hideKeyboard
+- back
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_tab|ai_tutor_topics_tab|ai_tutor_tab_bar
+    timeout: 10000
+- assertNotVisible:
+    id: ai_tutor_create_community_input_user_role
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: ai_tutor_create_community_input_user_role

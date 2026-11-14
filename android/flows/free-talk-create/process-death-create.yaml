@@ -1,0 +1,24 @@
+# Process death on the Create/Edit screen: Home key, wait for the saved instance state, kill the process
+# (Maestro killApp, an `am kill` of the backgrounded app), reopen from the existing task. The case script checks
+# that the PID changed and that logcat shows `instance state restored`.
+# Entry: Create or Edit screen. Exit: Create or Edit screen after restore (assert the fields with assert-create-fields.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: ai_tutor_create_community_input_user_role
+- pressKey: Home
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_create_community_input_user_role
+    timeout: 5000
+- waitForAnimationToEnd:
+    timeout: 2000
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_create_community_input_user_role
+    timeout: 60000

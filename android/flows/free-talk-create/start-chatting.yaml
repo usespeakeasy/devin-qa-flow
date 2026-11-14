@@ -1,0 +1,47 @@
+# Create/Edit screen > Start chatting: the Create screen is replaced by the AI lesson (chat).
+# Answers the AI data consent alert with Allow if it shows. Exit: AI lesson with the first partner message.
+# Entry: Create or Edit screen with all three fields filled. Precondition: Subscription override > Premium.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: ai_tutor_start_chatting_button
+- extendedWaitUntil:
+    visible:
+      id: ai_data_consent_alert|ai_lesson_pre_lesson_start|ai_lesson_partner_message
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_allow
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_start|ai_lesson_partner_message
+    timeout: 30000
+# Roleplay pre-lesson: Chat mode, then Start lesson.
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_pre_lesson_start
+    commands:
+      - tapOn:
+          id: mode_toggle_chat
+      - tapOn:
+          id: ai_lesson_pre_lesson_start
+- runFlow:
+    when:
+      visible:
+        id: ai_data_consent_alert
+    commands:
+      - tapOn:
+          id: ai_data_consent_alert_allow
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_partner_message
+    timeout: 60000
+- assertNotVisible:
+    id: ai_tutor_create_community_input_user_role

@@ -1,0 +1,55 @@
+# speak-dev://tutor/freechat-create from Home, then the Community tab: the create-a-scenario screen (CreateCommunity, New) opens with empty fields.
+# Answers the first-visit Free Talk intro dialog with Get started if it shows.
+# Entry: cold start (common/launch-home.yaml). Exit: Create screen, empty fields, Start chatting disabled.
+# Precondition: signed-in dev account, Debug Menu > Subscription override > Premium.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow: ../ai-data-consent/dismiss-home-popups.yaml
+# The Free Talk header's Create your own opens the older character screen (AiLessonCreate). CreateCommunity opens
+# from the free chat link: the tab lands on Topics and the Community page follows the link once it is shown.
+- openLink: speak-dev://tutor/freechat-create
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_tab|ai_tutor_tab_bar|ai_tutor_intro_dialog_get_started_button
+    timeout: 45000
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_intro_dialog_get_started_button
+    commands:
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
+# With android_nav3_segment_kill_switch ON the older Free Talk controller shows; its tabs have no id
+# (text fallback inside ai_tutor_tab_bar).
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_community_tab
+    commands:
+      - tapOn:
+          id: ai_tutor_community_tab
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_tab_bar
+      notVisible:
+        id: ai_tutor_community_tab
+    commands:
+      - tapOn:
+          text: "Community"
+          childOf:
+            id: ai_tutor_tab_bar
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_create_community_input_user_role
+    timeout: 30000
+- extendedWaitUntil:
+    notVisible:
+      id: loading_container
+    timeout: 20000
+- assertVisible:
+    id: ai_tutor_start_chatting_button
+    enabled: false

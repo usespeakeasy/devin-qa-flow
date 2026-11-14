@@ -1,0 +1,23 @@
+# Create/Edit screen: rotate to landscape and back; the fields keep their text (the case script runs
+# assert-create-fields.yaml after). Entry: Create or Edit screen. Exit: same screen, portrait.
+# No hideKeyboard here: with the keyboard already hidden it presses Back and closes the screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: ai_tutor_create_community_input_user_role
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_create_community_input_user_role
+    timeout: 20000
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_create_community_input_user_role
+    timeout: 20000

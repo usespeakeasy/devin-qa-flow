@@ -1,0 +1,29 @@
+# Favorites > saved scenario > details sheet > Edit: the sheet closes and the Edit screen (CreateCommunity, Edit)
+# opens with the scenario's saved roles and scene. Entry: cold start. Exit: Edit screen loaded, Start chatting enabled.
+# Precondition: signed-in dev account, Subscription override > Premium, TOPIC in Favorites (seed it once with the
+# heart on its Community card, see free-talk/open-favorites-topic.yaml). QA builds route Edit to CreateCommunity with the QA-only
+# CommunityDetailsEntries patch (develop routes it to the older AiLessonCreate character screen).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TOPIC: ${TOPIC || "Espresso vs\\. Latte Art"}
+---
+- runFlow:
+    file: ../free-talk/open-favorites-topic.yaml
+    env:
+      TOPIC: ${TOPIC}
+- tapOn:
+    id: ai_tutor_community_details_edit_button
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_create_community_input_user_role
+    timeout: 30000
+- extendedWaitUntil:
+    notVisible:
+      id: loading_container
+    timeout: 20000
+- assertNotVisible:
+    id: ai_tutor_community_details_sheet
+- assertVisible:
+    id: ai_tutor_start_chatting_button
+    enabled: true

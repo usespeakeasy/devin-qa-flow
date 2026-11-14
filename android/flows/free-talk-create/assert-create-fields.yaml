@@ -1,0 +1,49 @@
+# Assert the Create/Edit screen's field texts (regexes; an empty value skips that field) and whether
+# Start chatting is enabled (START=enabled or disabled). Entry/exit: Create or Edit screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  USER_ROLE: ${USER_ROLE || ""}
+  AI_ROLE: ${AI_ROLE || ""}
+  SCENARIO: ${SCENARIO || ""}
+  START: ${START || "enabled"}
+---
+- extendedWaitUntil:
+    notVisible:
+      id: loading_container
+    timeout: 20000
+- runFlow:
+    when:
+      true: ${USER_ROLE != ""}
+    commands:
+      - assertVisible:
+          id: ai_tutor_create_community_input_user_role
+          text: ${USER_ROLE}
+- runFlow:
+    when:
+      true: ${AI_ROLE != ""}
+    commands:
+      - assertVisible:
+          id: ai_tutor_create_community_input_ai_role
+          text: ${AI_ROLE}
+- runFlow:
+    when:
+      true: ${SCENARIO != ""}
+    commands:
+      - assertVisible:
+          id: ai_tutor_create_community_input_scenario
+          text: ${SCENARIO}
+- runFlow:
+    when:
+      true: ${START == "enabled"}
+    commands:
+      - assertVisible:
+          id: ai_tutor_start_chatting_button
+          enabled: true
+- runFlow:
+    when:
+      true: ${START == "disabled"}
+    commands:
+      - assertVisible:
+          id: ai_tutor_start_chatting_button
+          enabled: false
