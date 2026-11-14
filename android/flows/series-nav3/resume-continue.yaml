@@ -1,0 +1,29 @@
+# Cold link with saved progress: "Continue where you left off?" (SimpleDialog) opens; Continue closes it and lands
+# on a series card. Entry: lesson LESSON_ID has saved progress (resume-seed.yaml, answer two cards, Back > Quit; a force-stop alone saves none).
+# Exit: tap_to_continue or speak_now_header. Selectors: the resume dialog has no app resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible: "Continue where you left off\\?"
+    timeout: 60000
+- takeScreenshot: resume-dialog
+- tapOn: "^Continue$"
+- extendedWaitUntil:
+    notVisible: "Continue where you left off\\?"
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: "tap_to_continue|speak_now_header"
+    timeout: 60000
+- assertVisible:
+    id: series_list

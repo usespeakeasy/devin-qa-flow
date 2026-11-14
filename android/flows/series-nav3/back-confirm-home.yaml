@@ -1,0 +1,33 @@
+# System Back on a started series card: "Are you sure you want to quit this lesson?" shows; Quit lands on Home
+# (a difficulty check-in may show first; Just right). Entry: an answered or later series card. Exit: home_root_ready.
+# Selectors: the close sheet has no app resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: series_list
+- back
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 15000
+- takeScreenshot: back-close-sheet
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: "custom_units_difficulty_check_in_just_right|home_root_ready"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: custom_units_difficulty_check_in_just_right
+    commands:
+      - takeScreenshot: back-check-in
+      - tapOn:
+          id: custom_units_difficulty_check_in_just_right
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: series_list
