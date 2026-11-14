@@ -1,0 +1,24 @@
+# Tutor (drill) lesson already open: tap Next on every card until the lesson end flow (or Home) shows.
+# Unlike tutor-lesson/skip-drill-to-lesson-end it doesn't reopen the lesson deep link over the open lesson.
+# Entry: a drill lesson (`drill_lesson_skip`). Exit: a `lesson_end_*` screen, an ask-for-review dialog or Home.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 30000
+- repeat:
+    while:
+      visible:
+        id: drill_lesson_skip
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "(lesson_end_.*|ask_for_review_.*dialog|home_root_ready)"
+    timeout: 60000

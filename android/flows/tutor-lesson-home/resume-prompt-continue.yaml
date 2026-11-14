@@ -1,0 +1,27 @@
+# Tutor (drill) lesson reopened after process death: if the "Continue where you left off?" prompt shows (it can take
+# a few seconds after the lesson restores), tap Continue. Entry: a restored drill lesson. Exit: the drill lesson shows Next.
+# Selectors: the prompt is the shared SimpleDialog (`simple_dialog`); Continue is its positive button.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: simple_dialog_positive_button
+    timeout: 10000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: simple_dialog_positive_button
+    commands:
+      - tapOn:
+          id: simple_dialog_positive_button
+      - extendedWaitUntil:
+          notVisible:
+            id: simple_dialog
+          timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 30000

@@ -1,0 +1,43 @@
+# Cold start from a `speak-dev://lesson?id=` deep link opens the tutor (drill) lesson; a "Continue where you
+# left off?" prompt (shown late on a cold start) is answered with Start over.
+# Entry: any signed-in state. Exit: the drill lesson (`drill_lesson_root`) on its first card.
+# Selectors: the prompt is the shared SimpleDialog (`simple_dialog`); Start over is its negative button.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+---
+- stopApp
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- repeat:
+    times: 30
+    while:
+      notVisible:
+        id: drill_lesson_skip
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: simple_dialog_negative_button
+          commands:
+            - tapOn:
+                id: simple_dialog_negative_button
+      - waitForAnimationToEnd:
+          timeout: 2000
+- runFlow:
+    when:
+      visible:
+        id: simple_dialog_negative_button
+    commands:
+      - tapOn:
+          id: simple_dialog_negative_button
+      - extendedWaitUntil:
+          notVisible:
+            id: simple_dialog
+          timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 30000
+- assertVisible:
+    id: drill_lesson_root

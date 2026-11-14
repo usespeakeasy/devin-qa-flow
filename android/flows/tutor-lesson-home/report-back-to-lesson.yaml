@@ -1,0 +1,17 @@
+# Tutor (drill) lesson report screen (opened by tutor-lesson/report.yaml) > Back returns to the same lesson.
+# Entry: the report screen or report options sheet over a drill lesson. Exit: the drill lesson (`drill_lesson_root`).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- repeat:
+    while:
+      notVisible:
+        id: drill_lesson_root
+    times: 3
+    commands:
+      - pressKey: Back
+      - waitForAnimationToEnd:
+          timeout: 2000
+- assertVisible:
+    id: drill_lesson_root
