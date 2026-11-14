@@ -18,6 +18,18 @@ env:
             visible: "^Quit$"
           commands:
             - tapOn: "^Quit$"
+      # A free account gets the premium intro after Quit; on dev it can fail to load and shows an error alert.
+      - extendedWaitUntil:
+          visible:
+            id: "series_list|home_root_ready|onboarding_premium_intro_error"
+          timeout: 20000
+      - runFlow:
+          when:
+            visible:
+              id: onboarding_premium_intro_error
+          commands:
+            - tapOn:
+                id: "android:id/button1"
       - extendedWaitUntil:
           visible:
             id: "series_list|home_root_ready"
