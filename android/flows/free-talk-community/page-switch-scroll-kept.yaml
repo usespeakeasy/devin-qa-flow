@@ -1,0 +1,52 @@
+# Free Talk tab page scroll kept across a page switch (speak-android#9385).
+# STEP=scroll: TOP_ID (the first card on the page) is on screen; scroll down two swipes (about one page, less on a short list).
+# STEP=top: scroll back up until TOP_ID shows (resets the page for the next case).
+# STEP=switch: open the other page (OTHER_TAB_ID, arrival OTHER_ROOT_ID) and come back (BACK_TAB_ID, arrival
+# BACK_ROOT_ID). Clipped cards above the list still count as visible to Maestro, so the case script compares the first visible card id and bounds from a dump
+# taken after each step, so the scroll offset itself is measured.
+# Entry: Free Talk tab on the BACK_TAB_ID page. Exit: same page, scrolled.
+# maestro test -e STEP=scroll -e TOP_ID=ai_tutor_lesson_item_<a> page-switch-scroll-kept.yaml
+# maestro test -e STEP=switch -e TOP_ID=... -e OTHER_TAB_ID=ai_tutor_community_tab -e OTHER_ROOT_ID=ai_tutor_community_recycler_view \
+#   -e BACK_TAB_ID=ai_tutor_topics_tab -e BACK_ROOT_ID=ai_tutor_overview_list page-switch-scroll-kept.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  STEP: ${STEP || "scroll"}
+---
+- runFlow:
+    when:
+      true: ${STEP == "scroll"}
+    commands:
+      - assertVisible:
+          id: ${TOP_ID}
+      - scroll
+      - scroll
+      - waitForAnimationToEnd:
+          timeout: 2000
+- runFlow:
+    when:
+      true: ${STEP == "switch"}
+    commands:
+      - tapOn:
+          id: ${OTHER_TAB_ID}
+      - extendedWaitUntil:
+          visible:
+            id: ${OTHER_ROOT_ID}
+          timeout: 20000
+      - tapOn:
+          id: ${BACK_TAB_ID}
+      - extendedWaitUntil:
+          visible:
+            id: ${BACK_ROOT_ID}
+          timeout: 20000
+      - waitForAnimationToEnd:
+          timeout: 2000
+- runFlow:
+    when:
+      true: ${STEP == "top"}
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: ${TOP_ID}
+          direction: UP
+          timeout: 30000

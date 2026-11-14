@@ -1,0 +1,26 @@
+# Free Talk > Topics: a lesson card (CARD_ID) opens the pre-lesson screen; system Back returns to Topics with the card
+# still on screen (speak-android#9385).
+# Entry: Topics page with CARD_ID on screen. Exit: Topics page.
+# maestro test -e CARD_ID=ai_tutor_lesson_item_<lesson> topics-card-back.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: ${CARD_ID}
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_pre_lesson_screen
+    timeout: 30000
+- assertNotVisible:
+    id: ai_tutor_overview_list
+- takeScreenshot: topics_card_prelesson
+- back
+- extendedWaitUntil:
+    visible:
+      id: ${CARD_ID}
+    timeout: 15000
+- assertVisible:
+    id: ai_tutor_overview_list
+- assertNotVisible:
+    id: ai_lesson_pre_lesson_screen

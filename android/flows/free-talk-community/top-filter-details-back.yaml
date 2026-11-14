@@ -6,6 +6,7 @@ appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
   LABEL: ${LABEL || "Top"}
+  SHOT: ${SHOT || "details_sheet"}
 ---
 - tapOn:
     id: "ai_tutor_community_item_.*"
@@ -14,6 +15,7 @@ env:
     visible:
       id: ai_tutor_community_details_start_chatting_button
     timeout: 15000
+- takeScreenshot: ${SHOT}
 - pressKey: Back
 - extendedWaitUntil:
     notVisible:

@@ -2,7 +2,7 @@
 # OPEN=tab cold-starts, opens the Free Talk tab and its Community tab; OPEN=none starts on the Community page.
 # TAPS=double double-taps the Top chip; one sheet must open (the case script closes it with one Back).
 # Entry: signed in (OPEN=tab) or the Community page (OPEN=none). Exit: the sheet open.
-# Selectors: the Community tab has no resource-id (text fallback); the sheet is ai_tutor_community_top_filter_sheet.
+# Selectors: ai_tutor_community_tab (not on the legacy AiTutorIntroController tab); the sheet is ai_tutor_community_top_filter_sheet.
 # maestro test -e OPEN=tab open-top-filter.yaml
 appId: ${APP_ID}
 env:
@@ -20,7 +20,8 @@ env:
             PAGE: any
             OPEN: tab
             INTRO: dismiss
-      - tapOn: "^Community$"
+      - tapOn:
+          id: ai_tutor_community_tab
 - extendedWaitUntil:
     visible:
       id: ai_tutor_community_tab_top
