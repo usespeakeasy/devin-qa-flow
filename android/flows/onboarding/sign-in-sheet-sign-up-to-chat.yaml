@@ -1,0 +1,27 @@
+# Signed-out welcome > Log in > "Don't have an account? Sign up" (onboarding in the sign-in sheet) > learning English >
+# native NATIVE > Keep English > sign-up options > Email sign-up (EMAIL, PASSWORD) > onboarding chat ready.
+# Entry: app data cleared, storybook on screen. Pass a throwaway account at run time (never commit it):
+# maestro test -e EMAIL=$(qa_android.py newuser) -e PASSWORD=... sign-in-sheet-sign-up-to-chat.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  NATIVE: ${NATIVE || "japanese_english"}
+---
+- runFlow: ../auth/open-sign-in-options.yaml
+- tapOn:
+    id: auth_options_secondary_text_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_en_us
+    timeout: 30000
+- runFlow:
+    file: open-app-language-sheet.yaml
+    env:
+      NATIVE: ${NATIVE}
+- tapOn:
+    id: onboarding_app_language_keep_button
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 30000
+- runFlow: email-sign-up-to-chat.yaml

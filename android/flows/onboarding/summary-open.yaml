@@ -9,10 +9,14 @@ env:
 ---
 - tapOn:
     id: onboarding_magic_action_generate_curriculum
-- assertVisible: "Building your custom course"
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_summary_loading|onboarding_summary_ready"
+    timeout: 20000
 - takeScreenshot: ${SHOT}
 - back
-- assertVisible: "Building your custom course|^Get started$"
+- assertVisible:
+    id: "onboarding_summary_loading|onboarding_summary_ready"
 - assertNotVisible:
     id: onboarding_magic_ready
 - assertNotVisible:

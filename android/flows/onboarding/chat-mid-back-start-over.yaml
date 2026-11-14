@@ -1,0 +1,29 @@
+# Onboarding chat past the intro > system Back: the start-over sheet (`onboarding_magic_reset_sheet`) opens over the
+# chat > Start over (`onboarding_magic_action_restart`): the chat starts again from its first turn.
+# Entry: a chat turn after Start (`onboarding_magic_user_turn_ready`, e.g. after chat-first-answer.yaml).
+# Exit: the chat's first turn again (`onboarding_magic_text_input` or the intro's Start), no sheet.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "case"}
+---
+- assertVisible:
+    id: onboarding_magic_user_turn_ready
+- pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_reset_sheet
+    timeout: 10000
+- takeScreenshot: ${SHOT}-sheet
+- tapOn:
+    id: onboarding_magic_action_restart
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding_magic_reset_sheet
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_magic_text_input|onboarding_magic_action_start"
+    timeout: 60000
+- assertVisible:
+    id: onboarding_magic_ready
