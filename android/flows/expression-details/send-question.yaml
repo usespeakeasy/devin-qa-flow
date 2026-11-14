@@ -1,0 +1,21 @@
+# Subflow of open-from-chat: in a new tutor thread, ask what WORD means.
+# Entry: tutor chat with input_message enabled. Exit: question sent.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WORD: ${WORD || "aprovechar"}
+---
+# A new thread, so an older card for WORD can't match.
+- tapOn:
+    id: new_thread_button
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: input_message
+      enabled: true
+    timeout: 20000
+- tapOn:
+    id: input_message
+- inputText: "What does ${WORD} mean"
+- tapOn:
+    id: send_button

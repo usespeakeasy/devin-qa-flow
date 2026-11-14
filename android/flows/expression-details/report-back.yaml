@@ -6,6 +6,16 @@ env:
 ---
 - tapOn:
     id: tutor_expression_details_report_button
+# At the end of the list the button's center can sit under the gesture bar (Navigation 3 sheet, 1080x2400), so
+# the id tap lands outside the sheet. Then tap its label, whose bounds are clipped to the visible part.
+- waitForAnimationToEnd:
+    timeout: 2000
+- runFlow:
+    when:
+      notVisible:
+        id: report_screen
+    commands:
+      - tapOn: "^Report feedback$"
 - extendedWaitUntil:
     visible:
       id: report_screen

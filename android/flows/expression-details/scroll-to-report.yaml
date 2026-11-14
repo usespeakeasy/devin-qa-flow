@@ -10,3 +10,5 @@ env:
     direction: DOWN
     timeout: 20000
     centerElement: false
+# Report is the last row; at the scroll threshold its center can still sit under the gesture bar.
+- scroll

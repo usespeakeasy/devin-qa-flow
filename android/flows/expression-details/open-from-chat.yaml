@@ -3,30 +3,39 @@
 # Entry: signed in, any state (cold starts). Exit: tutor_expression_details_content.
 # The keyboard can capitalize WORD in the sent message, so only the reply's card is asserted.
 # Selectors: the card is `card` with its headword in `title` (shared ids, so WORD picks it).
+# REUSE_THREAD=1: if the open thread has no WORD card, reopen the thread that asked about WORD from
+# history (reopen-thread.yaml) instead of sending again (free accounts hit "Speak Tutor daily limit reached" after about 4 messages).
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
   WORD: ${WORD || "aprovechar"}
+  REUSE_THREAD: ${REUSE_THREAD || ""}
 ---
 - launchApp:
     stopApp: true
 - runFlow: ../../common/home-popups.yaml
 - tapOn:
     id: learning_path_tutor_entry
-# A new thread, so an older card for WORD (same account on both builds) can't match.
-- tapOn:
-    id: new_thread_button
-    optional: true
 - extendedWaitUntil:
     visible:
       id: input_message
       enabled: true
     timeout: 20000
-- tapOn:
-    id: input_message
-- inputText: "What does ${WORD} mean"
-- tapOn:
-    id: send_button
+- runFlow:
+    when:
+      true: ${REUSE_THREAD == ""}
+    file: send-question.yaml
+    env:
+      WORD: ${WORD}
+- runFlow:
+    when:
+      true: ${REUSE_THREAD != ""}
+      notVisible:
+        id: title
+        text: "(?i)${WORD}"
+    file: reopen-thread.yaml
+    env:
+      WORD: ${WORD}
 - extendedWaitUntil:
     visible:
       id: title

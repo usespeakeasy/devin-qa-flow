@@ -1,0 +1,43 @@
+# Subflow of open-from-chat: open the history thread that asked about WORD, so its card is on screen.
+# Falls back to send-question.yaml when no such thread is listed.
+# Entry: tutor chat. Exit: tutor chat showing WORD's card, or the question sent.
+# Selectors: the history row has a per-thread id (tutor_threads_item_<id>), so it is matched by its title text.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WORD: ${WORD || "aprovechar"}
+---
+- tapOn:
+    id: threads_button
+- extendedWaitUntil:
+    visible:
+      id: tutor_threads_history_list
+    timeout: 15000
+- runFlow:
+    when:
+      visible: "(?i).*${WORD}.*"
+    commands:
+      - tapOn: "(?i).*${WORD}.*"
+      - extendedWaitUntil:
+          visible:
+            id: input_message
+          timeout: 20000
+- runFlow:
+    when:
+      visible:
+        id: tutor_threads_history_list
+    commands:
+      - tapOn:
+          id: tutor_threads_history_back_button
+      - extendedWaitUntil:
+          visible:
+            id: input_message
+          timeout: 15000
+- runFlow:
+    when:
+      notVisible:
+        id: title
+        text: "(?i)${WORD}"
+    file: send-question.yaml
+    env:
+      WORD: ${WORD}

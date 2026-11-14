@@ -23,6 +23,8 @@ env:
     visible:
       id: article-popover-dictionary-icon
     timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 2000
 - tapOn:
     id: article-popover-dictionary-icon
 # The first tap on the icon can land while the popover is still settling and do nothing; tap it once more.
@@ -36,6 +38,21 @@ env:
       visible:
         id: article-popover-dictionary-icon
     commands:
+      - tapOn:
+          id: article-popover-dictionary-icon
+# A tap while the popover still shows its loading shimmer dismisses it; open the popover again.
+- runFlow:
+    when:
+      notVisible:
+        id: tutor_expression_details_content
+    commands:
+      - tapOn: ${WORD}
+      - extendedWaitUntil:
+          visible:
+            id: article-popover-dictionary-icon
+          timeout: 10000
+      - waitForAnimationToEnd:
+          timeout: 2000
       - tapOn:
           id: article-popover-dictionary-icon
 - extendedWaitUntil:

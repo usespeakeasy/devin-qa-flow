@@ -1,0 +1,33 @@
+# Expression Details: tap save once, then system Back: the sheet closes and ORIGIN shows. The icon has no state in
+# the tree, so the runner checks the `Magic Dictionary Modal Save Tapped` Track line and the caller's row in a shot.
+# Entry: tutor_expression_details_content. Exit: ORIGIN (a resource-id regex, or ORIGIN_TEXT when the caller has no id).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ORIGIN: ${ORIGIN || ""}
+  ORIGIN_TEXT: ${ORIGIN_TEXT || ""}
+---
+- tapOn:
+    id: tutor_expression_details_save_button
+- waitForAnimationToEnd:
+    timeout: 2000
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_expression_details_sheet
+    timeout: 10000
+- runFlow:
+    when:
+      true: ${ORIGIN != ""}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: ${ORIGIN}
+          timeout: 10000
+- runFlow:
+    when:
+      true: ${ORIGIN_TEXT != ""}
+    commands:
+      - extendedWaitUntil:
+          visible: ${ORIGIN_TEXT}
+          timeout: 10000

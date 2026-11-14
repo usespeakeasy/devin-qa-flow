@@ -1,0 +1,25 @@
+# Article reader > Vocabulary & patterns box > tap the TERM row: Expression Details (ExpressionDetails.FromArticle)
+# opens over the vocabulary sheet. Entry: article_lesson_screen with no sheet open (open-from-article.yaml, then
+# back-to-origin.yaml with ORIGIN=article_lesson_screen). Exit: tutor_expression_details_content.
+# Selectors: the vocab rows have no resource-id (text fallback on TERM).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TERM: ${TERM || "el hormigón"}
+---
+- scrollUntilVisible:
+    element:
+      id: article_lesson_vocab_and_patterns
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: article_lesson_vocab_and_patterns
+# The vocab sheet is a Compose Dialog window whose tags are not exposed as resource-ids, so TERM is the arrival.
+- extendedWaitUntil:
+    visible: "^${TERM}$"
+    timeout: 10000
+- tapOn: "^${TERM}$"
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_content
+    timeout: 20000
