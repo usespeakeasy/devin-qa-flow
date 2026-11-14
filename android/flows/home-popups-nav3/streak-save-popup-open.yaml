@@ -1,0 +1,14 @@
+# Streak Save V1 as a Main popup on a Home cold start: the sheet shows over Home. Used before rotate-assert-open.yaml.
+# Entry: any; needs the popup due (QA build: `setprop debug.qa.popup streaksave`). Exit: the sheet open over Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: course_streak_save_screen_root
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000

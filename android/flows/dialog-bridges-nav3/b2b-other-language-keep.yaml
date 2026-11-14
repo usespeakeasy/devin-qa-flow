@@ -1,0 +1,29 @@
+# Debug Menu > Dialog Bridges > "B2B Access Welcome — Other Language" (`Destination.B2bAccessWelcome` with a language
+# choice): the sheet offers the other pair; "Keep learning" closes it back to Dialog Bridges without switching the course.
+# Entry: signed in, any state (restarts the app). Exit: Dialog Bridges. Saves SHOT.png (the open sheet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "b2b-other-language"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: b2b_access_welcome_other_language
+- extendedWaitUntil:
+    visible:
+      id: b2b_access_welcome_keep_learning_button
+    timeout: 20000
+- assertVisible:
+    id: b2b_access_welcome_start_button
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: b2b_access_welcome_keep_learning_button
+- extendedWaitUntil:
+    notVisible:
+      id: b2b_access_welcome_modal
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_b2b_access_welcome_other_language

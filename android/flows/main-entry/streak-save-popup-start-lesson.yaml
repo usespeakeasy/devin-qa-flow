@@ -1,6 +1,6 @@
 # Streak Save V1 as a Main popup on a Home cold start (streak_2_0 off, a streak to save): the sheet shows over Home;
 # its "Start lesson" button opens the next lesson (ARRIVAL id regex; home_root_ready when the next lesson is premium-gated);
-# Back returns to Home with the bar.
+# Back returns to Home with the bar (dismissing the lesson finish paywall when a free account gets it).
 # Entry: any; needs the popup due (QA build: `setprop debug.qa.popup streaksave`). Exit: Home tab. Saves SHOT-dialog.png and SHOT.png.
 # maestro test -e ARRIVAL="drill_lesson_root" -e SHOT=streak-save-popup streak-save-popup-start-lesson.yaml
 appId: ${APP_ID}
@@ -37,6 +37,24 @@ env:
           commands:
             - tapOn:
                 id: ".*quit.*confirm.*|.*exit.*confirm.*|.*quit_button|.*exit_button"
+      # The lesson close confirmation sheet (LessonCloseConfirmationBottomSheet) has no resource IDs.
+      - runFlow:
+          when:
+            visible: "^Quit$"
+          commands:
+            - tapOn: "^Quit$"
+      # A free account can get the lesson finish paywall after quitting; the emulator has no Play billing, so it
+      # shows a generic error dialog (no resource IDs) over AiTutorPremiumIntro. Dismiss both to reach Home.
+      - runFlow:
+          when:
+            visible: "An unexpected error occurred\\."
+          commands:
+            - tapOn: "^OK$"
+      - runFlow:
+          when:
+            visible: "Unlock"
+          commands:
+            - back
 - extendedWaitUntil:
     visible:
       id: learning_path_ready

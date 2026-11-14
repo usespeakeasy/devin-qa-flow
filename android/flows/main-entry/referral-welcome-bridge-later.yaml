@@ -4,34 +4,12 @@
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
-  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
   SHOT: ${SHOT || "referral-welcome-bridge"}
 ---
-- launchApp:
-    stopApp: true
-- extendedWaitUntil:
-    visible:
-      id: home_root_ready
-    timeout: 60000
-- openLink: ${DEBUG_MENU_LINK}
-- extendedWaitUntil:
-    visible:
-      id: debug_menu_screen
-    timeout: 15000
-- scrollUntilVisible:
-    element:
-      id: debug_menu_dialog_bridges
-    direction: DOWN
-    timeout: 20000
-- tapOn:
-    id: debug_menu_dialog_bridges
-- scrollUntilVisible:
-    element:
-      id: debug_dialog_bridges_referral_welcome
-    direction: DOWN
-    timeout: 30000
-- tapOn:
-    id: debug_dialog_bridges_referral_welcome
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: referral_welcome
 - extendedWaitUntil:
     visible:
       id: referral_welcome_dialog_root

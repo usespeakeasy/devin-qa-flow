@@ -1,0 +1,51 @@
+# Debug Menu > Dialog Bridges > "Community Top Filter" (`Destination.CommunityTopFilterDialog` entry): the Top filter
+# sheet opens with Day, Week, Month and Year; picking OPTION closes it back to Dialog Bridges; reopened, Back closes it.
+# Entry: signed in, any state (restarts the app). Exit: Dialog Bridges. Saves SHOT.png (the open sheet).
+# maestro test -e OPTION=week community-top-filter-bridge.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  OPTION: ${OPTION || "week"}
+  SHOT: ${SHOT || "community-top-filter-bridge"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: community_top_filter
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_top_filter_sheet
+    timeout: 15000
+- assertVisible:
+    id: ai_tutor_community_top_filter_option_day
+- assertVisible:
+    id: ai_tutor_community_top_filter_option_year
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: ai_tutor_community_top_filter_option_${OPTION}
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_community_top_filter_sheet
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_screen
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: community_top_filter
+      RESTART: "false"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_top_filter_sheet
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 3000
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_community_top_filter_sheet
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_screen

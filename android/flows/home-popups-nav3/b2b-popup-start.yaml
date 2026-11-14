@@ -1,0 +1,28 @@
+# B2B Access Welcome as a Main popup on a Home cold start (`Destination.B2bAccessWelcome` from Main): its start button
+# ("Sounds good!") closes it to Home and it does not show again in that process.
+# Entry: any; needs the popup due (QA build: `setprop debug.qa.popup b2b`). Exit: Home tab. Saves SHOT.png and SHOT-home.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "b2b-popup"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: b2b_access_welcome_start_button
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: b2b_access_welcome_start_button
+- extendedWaitUntil:
+    notVisible:
+      id: b2b_access_welcome_modal
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- takeScreenshot: ${SHOT}-home
