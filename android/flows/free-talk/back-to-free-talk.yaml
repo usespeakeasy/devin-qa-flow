@@ -1,0 +1,25 @@
+# System Back from a screen opened from the Free Talk tab (create community, AI lesson create): the Free Talk tab shows.
+# Back twice when the first Back only hides the keyboard (create community focuses its first field).
+# Entry: a screen opened from Free Talk. Exit: Free Talk tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- back
+- runFlow:
+    when:
+      notVisible:
+        id: ai_tutor_title
+    commands:
+      - waitForAnimationToEnd:
+          timeout: 2000
+      - runFlow:
+          when:
+            notVisible:
+              id: ai_tutor_title
+          commands:
+            - back
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000

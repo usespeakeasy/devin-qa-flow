@@ -1,0 +1,32 @@
+# Free Talk > History button: History opens; with BACK=true its in-app Back arrow returns to the Free Talk tab.
+# Entry: Home tab or Free Talk tab, signed in. Exit: History (BACK=false) or Free Talk tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  BACK: ${BACK || "true"}
+---
+- tapOn:
+    id: main_tab_free_talk
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_intro_dialog_get_started_button
+    commands:
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
+- tapOn:
+    id: ai_tutor_history_button
+- extendedWaitUntil:
+    visible:
+      id: history_screen
+    timeout: 20000
+- runFlow:
+    when:
+      true: ${BACK == "true"}
+    commands:
+      - tapOn:
+          id: history_back_button
+      - extendedWaitUntil:
+          visible:
+            id: ai_tutor_title
+          timeout: 20000

@@ -1,0 +1,49 @@
+# Free Talk > Topics > category TAB > tap the template card LESSON: the create community screen (Destination.CreateCommunity) opens.
+# Entry: Home tab or Free Talk tab, signed in. Exit: create community screen.
+# Precondition: LESSON is a template card (server template=true). Pool accounts on dev have none, so QA runs hard-code one
+# with a QA-only patch in AiTutorOverviewDataMapping (e.g. LESSON=EN_ES_AIT_RP_meet_a_new_friend, TAB=Roleplay).
+# Selectors: the category tab has no resource-id (TAB text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TAB: ${TAB || "Roleplay"}
+  LESSON: ${LESSON || "EN_ES_AIT_RP_meet_a_new_friend"}
+---
+- tapOn:
+    id: main_tab_free_talk
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_intro_dialog_get_started_button
+    commands:
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_topics_tab
+    commands:
+      - tapOn:
+          id: ai_tutor_topics_tab
+# Develop's AiTutorIntroController kill switch fallback has no tab IDs (text fallback).
+- runFlow:
+    when:
+      notVisible:
+        id: ai_tutor_topics_tab
+    commands:
+      - tapOn: "Topics"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_overview_root
+    timeout: 20000
+- tapOn: ${TAB}
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_lesson_item_${LESSON}
+    timeout: 20000
+- tapOn:
+    id: ai_tutor_lesson_item_${LESSON}
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_create_community_title
+    timeout: 20000

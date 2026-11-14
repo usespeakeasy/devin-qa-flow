@@ -1,0 +1,73 @@
+# Free Talk tab: Topics and Community load, then switch Topics > Community > Topics.
+# Entry: Home tab, signed in, Community offered (tab bar header). Exit: Free Talk > Topics.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_free_talk
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_intro_dialog_get_started_button
+    commands:
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_topics_tab
+    commands:
+      - tapOn:
+          id: ai_tutor_topics_tab
+# Develop's AiTutorIntroController kill switch fallback has no tab IDs (text fallback).
+- runFlow:
+    when:
+      notVisible:
+        id: ai_tutor_topics_tab
+    commands:
+      - tapOn: "Topics"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_overview_root
+    timeout: 20000
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_community_tab
+    commands:
+      - tapOn:
+          id: ai_tutor_community_tab
+# Develop's AiTutorIntroController kill switch fallback has no tab IDs (text fallback).
+- runFlow:
+    when:
+      notVisible:
+        id: ai_tutor_community_tab
+    commands:
+      - tapOn: "Community"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_community_recycler_view
+    timeout: 20000
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_topics_tab
+    commands:
+      - tapOn:
+          id: ai_tutor_topics_tab
+# Develop's AiTutorIntroController kill switch fallback has no tab IDs (text fallback).
+- runFlow:
+    when:
+      notVisible:
+        id: ai_tutor_topics_tab
+    commands:
+      - tapOn: "Topics"
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_overview_root
+    timeout: 20000

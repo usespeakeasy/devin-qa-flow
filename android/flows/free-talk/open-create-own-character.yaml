@@ -1,0 +1,21 @@
+# Free Talk > Create your own (floating button): AI lesson create opens on the character step (Destination.AiLessonCreate).
+# Entry: Home tab or Free Talk tab, signed in (Premium override). Exit: character step.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_free_talk
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_intro_dialog_get_started_button
+    commands:
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
+- tapOn:
+    id: ai_tutor_create_community_button
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_create_character_continue
+    timeout: 20000
