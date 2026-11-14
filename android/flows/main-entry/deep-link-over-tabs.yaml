@@ -1,0 +1,49 @@
+# A screen opened by deep link LINK shows over Main (the tab bar), and closing it shows the tab bar again.
+# COLD=true force-stops the app first (cold start through the link); COLD=false sends it to the running app.
+# ARRIVAL is an id regex for the linked screen (speak-dev://chat `chat_recycler_view`, speak-dev://streak
+# `streak_title`, speak-dev://assessment `app_assessment_intro_start_button`). CLOSE_ID is tapped first when set
+# (`close_button` on chat); then Back until `main_tab_home` shows (max 3). Not for speak-dev://premium-sale on the
+# emulator: after the billing error it stays under a progress dialog (see LEARNINGS).
+# Entry: signed in, any. Exit: Main with the tab bar. Saves SHOT.png (linked screen) and SHOT-closed.png.
+# maestro test -e LINK=speak-dev://chat -e ARRIVAL=chat_recycler_view -e CLOSE_ID=close_button -e COLD=true deep-link-over-tabs.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  COLD: ${COLD || "false"}
+  CLOSE_ID: ${CLOSE_ID || ""}
+  SHOT: ${SHOT || "deep-link-over-tabs"}
+---
+- runFlow:
+    when:
+      true: ${COLD == "true"}
+    commands:
+      - stopApp
+- openLink: ${LINK}
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 45000
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      true: ${CLOSE_ID != ""}
+    commands:
+      - tapOn:
+          id: ${CLOSE_ID}
+- repeat:
+    times: 3
+    while:
+      notVisible:
+        id: main_tab_home
+    commands:
+      - back
+      - extendedWaitUntil:
+          visible:
+            id: main_tab_home
+          timeout: 8000
+          optional: true
+- assertVisible:
+    id: main_tab_home
+- assertNotVisible:
+    id: ${ARRIVAL}
+- takeScreenshot: ${SHOT}-closed
