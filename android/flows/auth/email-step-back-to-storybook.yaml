@@ -1,0 +1,16 @@
+# Signed-out storybook > Log in > Email: the sheet back arrow returns to the options, then system Back
+# closes the sheet to the storybook.
+# Entry: app data cleared (`onboarding_storybook_sign_in_button` on screen). Exit: the storybook.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/open-email-sign-in.yaml
+- runFlow: sheet-back-to-options.yaml
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: auth_options_screen
+    timeout: 15000
+- assertVisible:
+    id: onboarding_storybook_sign_in_button

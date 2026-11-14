@@ -1,0 +1,10 @@
+# Signed-out storybook > Get started > Spanish > email sign-up > onboarding chat ready.
+# Entry: app data cleared. Pass a throwaway account at run time (never commit it):
+# maestro test -e EMAIL=$(qa_android.py newuser) -e PASSWORD=... storybook-email-sign-up-to-chat.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: storybook-get-started.yaml
+- runFlow: pick-spanish-open-auth.yaml
+- runFlow: email-sign-up-to-chat.yaml

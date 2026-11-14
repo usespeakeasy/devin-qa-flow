@@ -1,0 +1,36 @@
+# B2B invite sign-in options > Email > sign in: the result returns to the invitation, which acknowledges
+# the seat; after the premium intro (error dialog on the emulator, closed) the B2B welcome sheet shows.
+# Entry: `auth_options_screen` opened by b2b-invite-open.yaml (also after process death). Params: EMAIL, PASSWORD.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: button_email
+- assertVisible:
+    id: onboarding_sign_in_screen
+- runFlow: ../../common/submit-email-sign-in.yaml
+- extendedWaitUntil:
+    visible:
+      id: (onboarding_premium_intro_(ready|error)|b2b_access_welcome_modal)
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: button1
+    commands:
+      - tapOn:
+          id: button1
+- runFlow:
+    when:
+      visible:
+        id: onboarding_premium_intro_ready
+    commands:
+      - tapOn:
+          id: exit
+- extendedWaitUntil:
+    visible:
+      id: b2b_access_welcome_modal
+    timeout: 60000
+- assertVisible:
+    id: b2b_access_welcome_start_button

@@ -1,0 +1,9 @@
+# B2B access invite for an existing account, opened signed out: email sign-in from the sign-in options the
+# link opens returns the result to the invitation, which shows the B2B welcome sheet.
+# Entry: app data cleared. Params: TOKEN (see b2b-invite-open.yaml), EMAIL, PASSWORD (run time only).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: b2b-invite-open.yaml
+- runFlow: b2b-options-email-sign-in-welcome.yaml

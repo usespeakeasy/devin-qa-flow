@@ -1,0 +1,15 @@
+# B2B access invite for an existing account, opened signed out: system Back on the sign-in options it opens
+# cancels sign-in and ends the invitation. Ends once the options close; the run script checks what shows
+# next (develop 6f1f095f43: a blank `conductor_root`, see the run's results).
+# Entry: app data cleared. Params: TOKEN (see b2b-invite-open.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: b2b-invite-open.yaml
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: auth_options_screen
+    timeout: 15000
+- waitForAnimationToEnd

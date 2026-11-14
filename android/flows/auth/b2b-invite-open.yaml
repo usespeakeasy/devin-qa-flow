@@ -1,0 +1,14 @@
+# B2B access invite for an existing account, opened signed out: the link opens the sign-in options
+# (`Destination.B2bAccessSignIn`, opened for a result) at once. Stops there so the run script can
+# press Back, kill the app or sign in.
+# Entry: app data cleared. Params: TOKEN (a delivery token for an existing-account invite: a seeded seat,
+# or `qa-...` under a QA patch that fakes exchange/acknowledge).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://b2b-access?token=${TOKEN}
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 30000
