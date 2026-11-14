@@ -1,0 +1,13 @@
+# Home shows the learning path (`learning_path_ready`) after the Home popups close. Entry: app on Home, signed in.
+# Exit: Home with the learning path. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "home-learning-path"}
+---
+- runFlow: ../../common/home-popups.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- takeScreenshot: ${SHOT}

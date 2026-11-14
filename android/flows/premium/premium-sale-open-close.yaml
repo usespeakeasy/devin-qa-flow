@@ -1,0 +1,52 @@
+# speak-dev://premium-sale opens the upgrade paywall over Home (Superwall web view, or the native premium screen with
+# its billing error on a google_apis AVD); closing it (error OK, then the X `exit` or system Back; on develop a dim paywall loading overlay can cover the X) lands on Home with no crash.
+# Entry: Home, signed in, Free. Exit: home_root_ready, or the stuck loading overlay (see the last step). Saves SHOT.png (the open paywall).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "premium-sale"}
+---
+- openLink: speak-dev://premium-sale
+- extendedWaitUntil:
+    visible:
+      id: "main-editor-container|onboarding_premium_intro_.*|button1"
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- repeat:
+    times: 3
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: button1
+          commands:
+            - tapOn:
+                id: button1
+- runFlow:
+    when:
+      visible:
+        id: main-editor-container
+    commands:
+      - back
+- repeat:
+    while:
+      notVisible:
+        id: home_root_ready
+    times: 3
+    commands:
+      - tapOn:
+          id: exit
+          optional: true
+      - runFlow:
+          when:
+            notVisible:
+              id: home_root_ready
+          commands:
+            - back
+# develop 6f1f095f43 on google_apis: a second ProgressDialogController stays over the native screen after the
+# error OK, so neither X nor Back closes it; the case then only checks the app is still in the foreground.
+- extendedWaitUntil:
+    visible:
+      id: "home_root_ready|indicator"
+    timeout: 30000
+- takeScreenshot: ${SHOT}-closed

@@ -1,0 +1,46 @@
+# Finish a drill lesson (skip every card) and walk its lesson end steps to Home, whatever steps the
+# dev server sends; a review dialog, if served, is answered No. For the review prompt itself use
+# lesson-to-home-with-review.yaml (needs the QA-only AskForReview patch) or the debug lesson end.
+# Entry: Home, signed in, Debug Menu > Subscription override > Premium (a free account hits "Preview Finished").
+# Exit: home_root_ready. Saves SHOT-first-step.png and SHOT-home.png.
+# Selectors: drill_lesson_skip, lesson_end_* roots, ask_for_review_* (speak-android#8660).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+  SHOT: ${SHOT || "lesson-end"}
+---
+- runFlow: ../../common/home-popups.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- runFlow: ../../common/pass-qa-pre-lesson.yaml
+- repeat:
+    while:
+      notVisible:
+        id: "lesson_end_.*|ask_for_review_.*dialog|parentPanel"
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*|ask_for_review_.*dialog|parentPanel"
+    timeout: 30000
+- takeScreenshot: ${SHOT}-first-step
+- runFlow:
+    when:
+      visible:
+        id: "ask_for_review_.*dialog"
+    commands:
+      - runFlow: review-dialog-to-home.yaml
+- runFlow:
+    when:
+      notVisible:
+        id: home_root_ready
+    commands:
+      - runFlow: ../../common/finish-lesson-end.yaml
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- takeScreenshot: ${SHOT}-home
