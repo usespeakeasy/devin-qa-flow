@@ -1,0 +1,24 @@
+# Appetizer Lesson popup: the close X on the lesson closes the dialog back to Home, and it doesn't re-open.
+# Entry: the dialog up with the first question (run popup-open.yaml first; QA patch `debug.qa.popup=appetizer`).
+# Exit: Home tab. Saves SHOT.png on Home.
+# maestro test -e SHOT=appetizer-close close-x.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "appetizer-close"}
+---
+- tapOn:
+    id: appetizer_lesson_close
+- extendedWaitUntil:
+    notVisible:
+      id: appetizer_lesson_dialog
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: appetizer_lesson_dialog
+- takeScreenshot: ${SHOT}

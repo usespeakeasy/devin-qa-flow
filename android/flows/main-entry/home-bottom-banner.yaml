@@ -1,0 +1,22 @@
+# Home with the bottom banner up (the trial consent banner, `BottomBannerView`): the banner and the bottom tab bar both show.
+# The harness then compares bounds: the banner's bottom edge sits at or above the tab bar's top edge.
+# Entry: signed in, any state (restarts the app). Needs the banner due (QA build: `setprop debug.qa.banner 1`).
+# Exit: Home. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "home-bottom-banner"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: bottom_banner_text
+    timeout: 15000
+- assertVisible:
+    id: main_tab_home
+- takeScreenshot: ${SHOT}

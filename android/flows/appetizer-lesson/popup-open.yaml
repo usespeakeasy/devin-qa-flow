@@ -1,0 +1,26 @@
+# Appetizer Lesson popup on a Home cold start (`Destination.AppetizerLesson` dialog over Main): the dialog and its
+# embedded lesson page show. Entry: signed in, started course (restarts the app). Needs the popup due (QA build:
+# `setprop debug.qa.popup appetizer`, which also pins the Spanish greetings word-smart group); clear the property after
+# this flow, or Home reopens the popup when the dialog closes. Exit: the open dialog. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "appetizer-popup"}
+---
+# The embedded page sometimes paints without exposing its accessibility tree on the first cold start; a relaunch fixes it.
+- retry:
+    maxRetries: 2
+    commands:
+      - launchApp:
+          stopApp: true
+      - extendedWaitUntil:
+          visible:
+            id: appetizer_lesson_dialog
+          timeout: 60000
+      - extendedWaitUntil:
+          visible:
+            text: "Check"
+          timeout: 45000
+- assertVisible:
+    id: appetizer_lesson_close
+- takeScreenshot: ${SHOT}

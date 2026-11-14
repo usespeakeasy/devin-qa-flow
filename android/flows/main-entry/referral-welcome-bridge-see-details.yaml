@@ -1,0 +1,47 @@
+# Debug Menu > Dialog Bridges > "Referral Welcome": "See details" closes the dialog back to Dialog Bridges.
+# (`Destination.ReferralWelcome` Navigation 3 entry, or the bridge controller with the kill switch ON.)
+# Entry: signed in, any state (restarts the app). Exit: Dialog Bridges list. Saves SHOT.png (the open dialog).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
+  SHOT: ${SHOT || "referral-welcome-bridge-see-details"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- openLink: ${DEBUG_MENU_LINK}
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: debug_menu_dialog_bridges
+    direction: DOWN
+    timeout: 20000
+- tapOn:
+    id: debug_menu_dialog_bridges
+- scrollUntilVisible:
+    element:
+      id: debug_dialog_bridges_referral_welcome
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: debug_dialog_bridges_referral_welcome
+- extendedWaitUntil:
+    visible:
+      id: referral_welcome_dialog_root
+    timeout: 15000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: referral_welcome_dialog_see_details_button
+- extendedWaitUntil:
+    notVisible:
+      id: referral_welcome_dialog_root
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_referral_welcome

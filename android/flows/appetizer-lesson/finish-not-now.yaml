@@ -1,0 +1,104 @@
+# Finish the Appetizer lesson (the English-Spanish greetings word-smart group the QA build pins), then "Not right now"
+# on the streak screen: the dialog closes back to Home.
+# Entry: popup-open.yaml, with the popup property cleared. Exit: Home. Saves SHOT-done.png (streak screen) and SHOT.png (Home).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "appetizer-finish"}
+---
+# The page has no IDs (web content): text selectors only. Each known prompt gets its answer; an unknown one gets the
+# first option by point (no selector reaches an option whose text isn't known), and a wrong answer comes back later.
+- repeat:
+    times: 60
+    while:
+      notVisible:
+        id: appetizer_lesson_not_now
+    commands:
+      - runFlow:
+          when:
+            visible: "Tap to reveal"
+          commands:
+            - tapOn: "Tap to reveal"
+      - runFlow:
+          when:
+            visible: "Check"
+          commands:
+            - runFlow:
+                when:
+                  visible: "Hello[.!]"
+                commands:
+                  - tapOn: "¡?Hola[.!]?"
+            - runFlow:
+                when:
+                  visible: "Good morning[.!]"
+                commands:
+                  - tapOn: "¡?Buenos días[.!]?"
+            - runFlow:
+                when:
+                  visible: "Good afternoon[.!]"
+                commands:
+                  - tapOn: "¡?Buenas tardes[.!]?"
+            - runFlow:
+                when:
+                  visible: "Good evening[.!]"
+                commands:
+                  - tapOn: "¡?Buenas noches[.!]?"
+            - runFlow:
+                when:
+                  visible: "Good night[.!]"
+                commands:
+                  - tapOn: "¡?Buenas noches[.!]?"
+            - runFlow:
+                when:
+                  visible: "Goodbye[.!]"
+                commands:
+                  - tapOn: "¡?Adiós[.!]?"
+            - runFlow:
+                when:
+                  visible: "Thank you[.!]"
+                commands:
+                  - tapOn: "¡?Gracias[.!]?"
+            - runFlow:
+                when:
+                  visible: "Please[.!]"
+                commands:
+                  - tapOn: "¡?Por favor[.!]?"
+            - runFlow:
+                when:
+                  visible: "See you later[.!]"
+                commands:
+                  - tapOn: "¡?Hasta luego[.!]?"
+            - runFlow:
+                when:
+                  notVisible: "Hello[.!]|Good morning[.!]|Good afternoon[.!]|Good evening[.!]|Good night[.!]|Goodbye[.!]|Thank you[.!]|Please[.!]|See you later[.!]"
+                commands:
+                  # Unknown prompt: options have no IDs and unknown text, so tap the first option by point
+                  # (options start under the prompt card at about 70% height; a wrong answer comes back later).
+                  - tapOn:
+                      point: "50%,70%"
+            - tapOn: "Check"
+      - runFlow:
+          when:
+            visible: "Continue"
+          commands:
+            - tapOn: "Continue"
+            - waitForAnimationToEnd:
+                timeout: 2000
+- extendedWaitUntil:
+    visible:
+      id: appetizer_lesson_not_now
+    timeout: 30000
+- takeScreenshot: ${SHOT}-done
+- tapOn:
+    id: appetizer_lesson_not_now
+- extendedWaitUntil:
+    notVisible:
+      id: appetizer_lesson_dialog
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertVisible:
+    id: main_tab_home
+- takeScreenshot: ${SHOT}
