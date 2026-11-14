@@ -1,0 +1,29 @@
+# Back from the series lesson (close sheet > Quit when it shows, difficulty check-in answered when it shows): the
+# lesson closes onto the screen that opened it, ARRIVAL_ID (default the Debug Menu Deeplink Lesson screen).
+# Entry: series card. Exit: ARRIVAL_ID, no series_list.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ARRIVAL_ID: ${ARRIVAL_ID || "debug_lesson_deeplink_launch"}
+---
+- back
+- waitForAnimationToEnd:
+    timeout: 2000
+- runFlow:
+    when:
+      visible: "^Quit$"
+    commands:
+      - tapOn: "^Quit$"
+- runFlow:
+    when:
+      visible:
+        id: custom_units_difficulty_check_in_just_right
+    commands:
+      - tapOn:
+          id: custom_units_difficulty_check_in_just_right
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000
+- assertNotVisible:
+    id: series_list

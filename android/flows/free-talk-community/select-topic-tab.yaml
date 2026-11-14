@@ -1,0 +1,14 @@
+# Free Talk Topics page: tap the topic tab TAB_ID (ai_tutor_overview_tab_<id>, the run picks a non-first one) and
+# check it is the checked tab. Entry: Free Talk tab on Topics. Exit: same, TAB_ID checked.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: ${TAB_ID}
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: ${TAB_ID}
+      checked: true
+    timeout: 10000

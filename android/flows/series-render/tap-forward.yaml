@@ -1,0 +1,27 @@
+# SeriesLesson: tap Tap anywhere to continue TAPS times (a listening line card is skipped too, no speech needed),
+# so the lesson (a resume prompt is answered Start over first) sits a few cards past the start. Entry: any series card. Exit: series card TAPS cards later.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TAPS: ${TAPS || "4"}
+---
+- waitForAnimationToEnd:
+    timeout: 2000
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "^Start over$"
+- repeat:
+    times: ${TAPS}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: tap_to_continue
+          timeout: 30000
+      - tapOn:
+          id: tap_to_continue
+      - waitForAnimationToEnd:
+          timeout: 2000
+      - assertVisible:
+          id: series_list

@@ -1,0 +1,20 @@
+# Onboarding chat intro after process death or rotation: the same step is back (Start shown), not the storybook,
+# the learning language step or the sign-up options. Entry: relaunch after a kill on the chat intro. Exit: chat intro.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "chat-intro-restored"}
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_ready
+    timeout: 60000
+- assertVisible:
+    id: onboarding_magic_action_start
+- assertNotVisible:
+    id: onboarding_storybook_screen
+- assertNotVisible:
+    id: onboarding_language_screen
+- assertNotVisible:
+    id: auth_options_screen
+- takeScreenshot: ${SHOT}

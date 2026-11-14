@@ -1,0 +1,21 @@
+# SeriesLesson after process death, rotation or a view rebuild: the lesson is back on the card whose line or title
+# is CARD (regex), with no resume prompt and not on Home. Entry: relaunch. Exit: the same series card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD: ${CARD || ".+"}
+  SHOT: ${SHOT || "series-restored-card"}
+---
+- extendedWaitUntil:
+    visible:
+      id: series_list
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: "line|title"
+    text: ${CARD}
+- assertNotVisible: "Continue where you left off\\?"
+- assertNotVisible:
+    id: home_root_ready
+- takeScreenshot: ${SHOT}

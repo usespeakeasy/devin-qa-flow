@@ -1,10 +1,16 @@
 # Video lesson in can't speak now mode: play until card CARD shows (cards advance without speech).
+# The first turn-on shows the Can't speak now? dialog (Got it); a resume prompt is answered Start over.
 # Entry: video lesson (can't speak now is turned on here if it is off). Exit: video lesson, card CARD.
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
   CARD: ${CARD || "1 of 4"}
 ---
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "^Start over$"
 - extendedWaitUntil:
     visible:
       id: cant_speak_now_toggle
@@ -17,6 +23,14 @@ env:
     commands:
       - tapOn:
           id: cant_speak_now_toggle
+      - extendedWaitUntil:
+          visible:
+            id: subway_mode_dialog_button
+          timeout: 5000
+          optional: true
+      - tapOn:
+          id: subway_mode_dialog_button
+          optional: true
       - extendedWaitUntil:
           visible:
             id: cant_speak_now_toggle
