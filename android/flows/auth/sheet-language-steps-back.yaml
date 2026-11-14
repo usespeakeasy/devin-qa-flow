@@ -1,6 +1,6 @@
 # Signed-out welcome > Log in > "Don't have an account? Sign up" (onboarding in the sign-in sheet) > learning step >
-# English > native step. The sheet's language steps have no back arrow; system Back closes the whole sheet to the
-# welcome screen (develop behavior).
+# English > native step, then system Back walks back one step at a time: native step > learning step > sign-in
+# options > the welcome screen (develop `6f1f095f43` behavior).
 # Entry: `onboarding_storybook_sign_in_button` (app data cleared or a cold start while signed out).
 appId: ${APP_ID}
 env:
@@ -18,12 +18,24 @@ env:
 - runFlow: ../onboarding/open-native-language.yaml
 - assertVisible:
     id: onboarding_language_screen
-- back
+- pressKey: back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_en_us
+    timeout: 15000
+- assertVisible:
+    id: onboarding_language_screen
+- pressKey: back
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 15000
+- assertNotVisible:
+    id: onboarding_language_screen
+- pressKey: back
 - extendedWaitUntil:
     visible:
       id: onboarding_storybook_sign_in_button
     timeout: 15000
-- assertNotVisible:
-    id: onboarding_language_screen
 - assertNotVisible:
     id: auth_options_screen
