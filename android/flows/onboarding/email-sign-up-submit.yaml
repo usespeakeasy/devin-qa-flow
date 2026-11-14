@@ -1,0 +1,30 @@
+# Sign-up options -> Continue with Email -> EMAIL and PASSWORD -> consent rows when shown -> Sign up.
+# Ends at the Sign up tap, before the auth screen exits, so the run script can press Home, kill the process or wait.
+# Entry: `auth_options_screen` (sign-up, after the language steps). Pass a throwaway account at run time (never commit it).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-email-sign-up-form.yaml
+- runFlow:
+    when:
+      visible:
+        id: onboarding_sign_up_consent_all
+    commands:
+      - tapOn:
+          id: onboarding_sign_up_consent_all
+- runFlow:
+    when:
+      notVisible:
+        id: onboarding_sign_up_consent_all
+      visible:
+        id: onboarding_sign_up_consent_ai_data
+    commands:
+      - tapOn:
+          id: onboarding_sign_up_consent_ai_data
+- scrollUntilVisible:
+    element:
+      id: onboarding_sign_up_submit_button
+    direction: DOWN
+- tapOn:
+    id: onboarding_sign_up_submit_button

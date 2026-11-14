@@ -1,0 +1,20 @@
+# B2B invite for an existing account: "Sign in to continue" options -> Continue with Email -> EMAIL and PASSWORD ->
+# Sign in. Ends at the tap so the run script can wait for the invitation result, background or kill the app.
+# Entry: signed out, `speak-dev://b2b-access?token=<seat>` opened on `auth_options_screen` ("Sign in to continue").
+# Without a seeded existing-account seat, a QA-only patch can fake the exchange and acknowledge calls.
+# Pass a pool account at run time: maestro test -e EMAIL=... -e PASSWORD=... (never commit them).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: auth_options_screen
+    timeout: 30000
+- tapOn:
+    id: button_email
+- extendedWaitUntil:
+    visible:
+      id: onboarding_sign_in_screen
+    timeout: 15000
+- runFlow: ../../common/submit-email-sign-in.yaml
