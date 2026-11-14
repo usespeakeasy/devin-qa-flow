@@ -1,0 +1,50 @@
+# Free Talk > Community > TOPIC > details sheet > Immersive (mode_toggle_immersive) > Start chatting:
+# the community roleplay opens in immersive mode and the partner's first line plays.
+# Entry: cold start (open-community-topic.yaml), or WARM=true from Home without a force-stop. Precondition: signed-in dev account, Subscription
+# override Premium, ai_lesson_immersive_toggle ON (the sheet's mode toggle shows only then).
+# Exit: AI lesson in immersive mode, mic not recording (ai_lesson_primary_record).
+# Selectors: the topic card has no resource-id (text fallback, via open-community-topic.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  TOPIC: ${TOPIC || "Espresso vs\\. Latte Art"}
+  WARM: ${WARM || "false"}
+---
+- runFlow:
+    file: ../free-talk/open-community-topic.yaml
+    env:
+      TOPIC: ${TOPIC}
+      WARM: ${WARM}
+- tapOn:
+    id: mode_toggle_immersive
+- tapOn:
+    id: ai_tutor_community_details_start_chatting_button
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_community_details_sheet
+    timeout: 10000
+# An unfinished earlier run of the same topic asks to continue; start over so every case starts the same.
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_resume_start_over
+    commands:
+      - tapOn:
+          id: ai_lesson_resume_start_over
+- extendedWaitUntil:
+    visible:
+      id: "ai_lesson_primary_(send|record)"
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_record_cancel
+    commands:
+      - tapOn:
+          id: ai_lesson_record_cancel
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_primary_record
+    timeout: 10000
+- assertVisible:
+    id: ai_lesson_screen

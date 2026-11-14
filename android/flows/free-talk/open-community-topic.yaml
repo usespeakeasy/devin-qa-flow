@@ -1,13 +1,26 @@
 # Free Talk tab > Community > tap a topic: the community details sheet opens.
-# Entry: cold start (launch-home). Precondition: signed-in dev account. TOPIC is a title on the
+# Entry: cold start (launch-home), or with WARM=true the running app on Home (no force-stop, so a
+# started service survives, for process and task-removal cases). Precondition: signed-in dev account. TOPIC is a title on the
 # Community Hot list (dev data, e.g. "Espresso vs\\. Latte Art").
 # Selectors: the bottom tab, the Community tab, the topic card and the sheet's Start chatting
 # button have no resource-id (text fallback).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
+  WARM: ${WARM || "false"}
 ---
-- runFlow: ../../common/launch-home.yaml
+- runFlow:
+    when:
+      true: ${WARM != "true"}
+    file: ../../common/launch-home.yaml
+- runFlow:
+    when:
+      true: ${WARM == "true"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: learning_path_ready
+          timeout: 60000
 - tapOn: "Free Talk"
 # First visit on an account shows the Free Talk intro dialog over the tab.
 - runFlow:

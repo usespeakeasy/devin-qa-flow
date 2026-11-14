@@ -1,0 +1,22 @@
+# Structured conversation: top bar X > quit confirmation > Quit: the lesson closes.
+# Entry: SC lesson (open-debug-sc-lesson.yaml). Exit: off conversation_lesson_screen.
+# Selectors: the X has no resource-id (point fallback 7%,8%, as in ai-lesson/quit-x.yaml); the
+# confirmation's Quit has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: conversation_lesson_screen
+    timeout: 30000
+- tapOn:
+    point: "7%,8%"
+- extendedWaitUntil:
+    visible: "^Quit$"
+    timeout: 10000
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    notVisible:
+      id: conversation_lesson_screen
+    timeout: 20000
