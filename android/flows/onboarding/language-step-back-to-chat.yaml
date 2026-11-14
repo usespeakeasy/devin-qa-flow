@@ -1,0 +1,19 @@
+# Post-sign-in learning step over the onboarding chat > system Back: the chat shows again (ARRIVAL_ID, default the
+# switch-language button; `onboarding_magic_action_start` when the chat needed a language pair) and onboarding stays.
+# Entry: learning step opened from the chat (chat-open-switch-language, chat-start-opens-learning-language).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ARRIVAL_ID: ${ARRIVAL_ID || "onboarding_magic_action_switch_language"}
+---
+- assertVisible:
+    id: onboarding_language_option_en_us
+- pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000
+- assertVisible:
+    id: onboarding_magic_ready
+- assertNotVisible:
+    id: onboarding_language_screen

@@ -1,0 +1,44 @@
+# Onboarding chat (signed in) > switch-language button > learning step English > native step NATIVE (default Spanish)
+# > Keep English on the app language sheet when it shows > short loading dialog > the chat restarts with the new pair
+# and skips its intro: first turn (name) with no Start and no switch-language button.
+# Entry: `onboarding_magic_ready` with the switch-language button, `onboarding_update_language_pair_post_signup` ON.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  NATIVE: ${NATIVE || "spanishmx_english"}
+---
+- runFlow: chat-open-switch-language.yaml
+- runFlow: open-native-language.yaml
+- tapOn:
+    id: onboarding_language_option_${NATIVE}
+- runFlow:
+    when:
+      visible:
+        id: onboarding_language_continue_button
+    commands:
+      - tapOn:
+          id: onboarding_language_continue_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_app_language_keep_button
+    timeout: 5000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: onboarding_app_language_keep_button
+    commands:
+      - tapOn:
+          id: onboarding_app_language_keep_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_text_input
+    timeout: 60000
+- assertVisible:
+    id: onboarding_magic_user_turn_ready
+- assertNotVisible:
+    id: onboarding_magic_action_start
+- assertNotVisible:
+    id: onboarding_magic_action_switch_language
+- assertNotVisible:
+    id: onboarding_language_screen

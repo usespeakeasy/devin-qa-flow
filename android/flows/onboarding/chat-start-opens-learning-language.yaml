@@ -1,0 +1,21 @@
+# Onboarding chat intro for an account with no language pair > Start: the learning step opens over the chat.
+# Stops there. Entry: `onboarding_magic_action_start`, `onboarding_update_language_pair_post_signup` ON, account with
+# no language pair (on dev: QA-only patch, see the INDEX row).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_action_start
+    timeout: 60000
+- assertNotVisible:
+    id: onboarding_magic_action_switch_language
+- tapOn:
+    id: onboarding_magic_action_start
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_en_us
+    timeout: 30000
+- assertVisible:
+    id: onboarding_language_screen

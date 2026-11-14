@@ -1,0 +1,15 @@
+# Native language step > system Back: the learning step shows again (English option, no native options).
+# Entry: native step (open-native-language).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: onboarding_language_option_korean_english
+- pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_en_us
+    timeout: 15000
+- assertNotVisible:
+    id: onboarding_language_option_korean_english

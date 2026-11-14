@@ -1,0 +1,20 @@
+# Onboarding chat (signed in) > switch-language button ("Not learning <language>? Switch language") > learning step over
+# the chat. Stops there so the run can press Back, rotate or kill the app.
+# Entry: `onboarding_magic_ready` with the switch-language button, `onboarding_update_language_pair_post_signup` ON
+# (Debug Menu > Feature flag override).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_magic_action_switch_language
+    timeout: 60000
+- tapOn:
+    id: onboarding_magic_action_switch_language
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_option_en_us
+    timeout: 30000
+- assertVisible:
+    id: onboarding_language_screen
