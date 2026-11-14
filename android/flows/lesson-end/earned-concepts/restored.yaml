@@ -1,0 +1,18 @@
+# New Concepts step restored after process death: the step and its rows come back, not Home or the lesson.
+# Entry: New Concepts step, then Home, `am kill` until `pidof` is empty, relaunch with
+# `am start -a android.intent.action.MAIN -c android.intent.category.LAUNCHER -f 0x10200000 -n <pkg>/com.selabs.speak.SpeakActivity`.
+# Exit: the restored New Concepts step.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  CONCEPT: "muy bien"
+---
+- extendedWaitUntil:
+    visible:
+      id: smart_review_concept_summary_root
+    timeout: 60000
+- assertVisible: ${CONCEPT}
+- assertVisible:
+    id: smart_review_concept_summary_continue_button
+- assertNotVisible:
+    id: home_root_ready

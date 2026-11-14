@@ -1,0 +1,14 @@
+# New Concepts step: one tap on Continue moves to the next lesson end step (or closes the lesson end).
+# Entry: New Concepts step. Exit: the next lesson end step or Home.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: smart_review_concept_summary_continue_button
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*_root|home_root_ready"
+    timeout: 15000
+- assertNotVisible:
+    id: smart_review_concept_summary_root
