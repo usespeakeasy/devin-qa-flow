@@ -1,0 +1,42 @@
+# Answer the assessment and reach the results: Start (`app_assessment_intro_start_button`), allow the
+# microphone if asked, record the (one) prompt, Continue, wait for results (`app_assessment_result`).
+# Entry: assessment intro, a one-prompt attempt (QA-only `debug.qa.aa` patch) or each prompt repeated by the caller.
+# Exit: results. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "finish-to-result"}
+---
+- tapOn:
+    id: app_assessment_intro_start_button
+- extendedWaitUntil:
+    visible:
+      id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+    timeout: 4000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+    commands:
+      - tapOn:
+          id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+- extendedWaitUntil:
+    visible:
+      id: lesson_voice_record_button
+    timeout: 30000
+- tapOn:
+    id: lesson_voice_record_button
+- extendedWaitUntil:
+    visible:
+      id: app_assessment_question_continue_button
+    timeout: 60000
+- tapOn:
+    id: app_assessment_question_continue_button
+- extendedWaitUntil:
+    visible:
+      id: app_assessment_result
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${SHOT}

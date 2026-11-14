@@ -1,0 +1,28 @@
+# Leave the results back to Profile (`action_settings`): Close (`app_assessment_result_close_button`) when the
+# results show one, otherwise system Back (results reached by finishing an attempt have no Close).
+# Entry: results opened from Profile. Exit: Profile. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "result-close"}
+---
+- runFlow:
+    when:
+      visible:
+        id: app_assessment_result_close_button
+    commands:
+      - tapOn:
+          id: app_assessment_result_close_button
+- runFlow:
+    when:
+      notVisible:
+        id: action_settings
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 30000
+- assertNotVisible:
+    id: app_assessment_result
+- takeScreenshot: ${SHOT}

@@ -1,0 +1,17 @@
+# After Return home: system Back does not reopen the assessment (results and intro stay gone; the app
+# leaves to the launcher or stays on Main). Entry: Home tab after result-return-home.yaml. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "result-back-no-reopen"}
+---
+- back
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: app_assessment_result
+- assertNotVisible:
+    id: app_assessment_intro
+- assertNotVisible:
+    id: app_assessment_question
+- takeScreenshot: ${SHOT}

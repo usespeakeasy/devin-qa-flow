@@ -1,0 +1,17 @@
+# Deep link `speak-dev://assessment` (LINK) opens the standalone assessment (`SCREEN`, intro for a new learner).
+# Entry: signed in, app running on Main. Exit: the assessment screen. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LINK: ${LINK || "speak-dev://assessment"}
+  SCREEN: ${SCREEN || "app_assessment_intro"}
+  SHOT: ${SHOT || "deep-link-open"}
+---
+- openLink: ${LINK}
+- extendedWaitUntil:
+    visible:
+      id: ${SCREEN}
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${SHOT}

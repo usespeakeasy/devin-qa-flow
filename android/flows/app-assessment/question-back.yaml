@@ -1,0 +1,47 @@
+# System Back on an assessment question: the "Leave assessment?" dialog shows; Stay keeps the question,
+# Leave closes the assessment and Profile shows (`action_settings`). Entry: assessment intro opened from Profile.
+# Exit: Profile. Text fallback: the dialog and its Stay/Leave buttons have no resource-id.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "question-back"}
+---
+- tapOn:
+    id: app_assessment_intro_start_button
+- extendedWaitUntil:
+    visible:
+      id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+    timeout: 4000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+    commands:
+      - tapOn:
+          id: com.android.permissioncontroller:id/permission_allow_foreground_only_button
+- extendedWaitUntil:
+    visible:
+      id: app_assessment_question
+    timeout: 30000
+- back
+- extendedWaitUntil:
+    visible:
+      text: "Leave assessment\\?"
+    timeout: 10000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    text: "Stay"
+- extendedWaitUntil:
+    visible:
+      id: app_assessment_question
+    timeout: 10000
+- back
+- tapOn:
+    text: "Leave"
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 30000
+- assertNotVisible:
+    id: app_assessment_question

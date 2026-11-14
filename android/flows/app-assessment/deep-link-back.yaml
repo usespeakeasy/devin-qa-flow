@@ -1,0 +1,15 @@
+# System Back on the assessment opened by deep link: the assessment closes and Main shows again
+# (`main_tab_home`). Entry: deep-link-open.yaml from Home. Exit: Home. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "deep-link-back"}
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: main_tab_home
+    timeout: 15000
+- assertNotVisible:
+    id: app_assessment_intro
+- takeScreenshot: ${SHOT}
