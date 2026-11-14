@@ -1,0 +1,43 @@
+# Free Talk Spanish roleplay (CARD_ID on the Topics tab, EN_ES dev data): three typed turns that order, pay and
+# say goodbye, then End lesson: the lesson end flow opens and the lesson screen is gone.
+# Entry: cold start. Precondition: signed-in dev account learning Spanish, Premium.
+# Exit: first lesson end step (with the QA build patch that puts AI_LESSON_SUMMARY first, the AI summary page).
+# Selectors: as in open-burger-lesson.yaml and finish-burger-lesson.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD_ID: ${CARD_ID || "ai_tutor_lesson_item_EN_ES_AIT_SPECIALS_BADBUNNY_at_a_beach_bar"}
+---
+- runFlow:
+    file: open-burger-lesson.yaml
+    env:
+      CARD_ID: ${CARD_ID}
+- runFlow:
+    file: ../ai-lesson/type-turn.yaml
+    env:
+      TEXT: "Hola! Quiero una pina colada y unos nachos, por favor."
+- runFlow:
+    file: ../ai-lesson/type-turn.yaml
+    env:
+      TEXT: "Cuanto cuesta todo? Pago con tarjeta."
+- runFlow:
+    file: ../ai-lesson/type-turn.yaml
+    env:
+      TEXT: "Perfecto, muchas gracias. Adios, hasta luego!"
+- hideKeyboard
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_quit_sheet
+    commands:
+      - tapOn: "^Keep Learning$"
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_end_lesson
+    timeout: 90000
+- tapOn:
+    id: ai_lesson_end_lesson
+- extendedWaitUntil:
+    notVisible:
+      id: ai_lesson_screen
+    timeout: 60000
