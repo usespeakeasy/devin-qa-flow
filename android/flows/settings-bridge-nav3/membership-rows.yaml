@@ -3,7 +3,9 @@
 # (See All Subscriptions opens the status page in the browser, Back returns), cancel (Cancel Subscription opens Cancel
 # membership, Back returns), resub (Resubscribe; nothing opens without a Play purchase, the caller counts the
 # resubscribeMembershipTapped events), after_dialog (open the certificate dialog, tap Cancel and tap the same spot again
-# 500 ms later: the second tap lands on Cancel Subscription behind it and opens Cancel membership). Entry: signed in (restarts the app) as a paid (not trial) premium account; cancel
+# 500 ms later: the second tap lands on Cancel Subscription behind it and opens Cancel membership), after_dialog_row (open the
+# certificate dialog, tap Cancel, tap See All Subscriptions with the settle capped at 200 ms: one browser page opens and one Back
+# returns to Manage membership). Entry: signed in (restarts the app) as a paid (not trial) premium account; cancel
 # and resub need the CTA (dev: QA-only patch, `debug.qa.sub=cancel|resub`). Exit: Manage membership.
 # The second tap goes as soon as the row is back (settle capped at 200 ms). Saves SHOT.png (first open) and
 # SHOT_again.png (second open).
@@ -146,6 +148,35 @@ env:
       - waitForAnimationToEnd
       - takeScreenshot: ${SHOT}
       - back
+- runFlow:
+    when:
+      true: ${ROW == "after_dialog_row"}
+    commands:
+      - tapOn:
+          id: item_request_certificate
+      - extendedWaitUntil:
+          visible:
+            id: request_certificate_submit_button
+          timeout: 15000
+      - waitForAnimationToEnd
+      - tapOn:
+          id: request_certificate_cancel_button
+          waitToSettleTimeoutMs: 200
+      - tapOn:
+          id: item_see_all_subscriptions
+          waitToSettleTimeoutMs: 200
+      - extendedWaitUntil:
+          visible:
+            id: .*location_bar
+          timeout: 30000
+      - takeScreenshot: ${SHOT}
+      - back
+      - extendedWaitUntil:
+          visible:
+            id: item_see_all_subscriptions
+          timeout: 15000
+      - assertNotVisible:
+          id: request_certificate_submit_button
 - extendedWaitUntil:
     visible:
       id: item_see_all_subscriptions

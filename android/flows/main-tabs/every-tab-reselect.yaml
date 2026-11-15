@@ -1,7 +1,7 @@
 # Tap every bottom tab by ID, then tap it again (reselect): the tab stays selected and its content stays.
 # Entry: Home tab (home_root_ready). Exit: Home tab. Tabs the account doesn't have are skipped.
 # Arrival per tab: Home learning_path_ready, Free Talk ai_tutor_history_button (intro dialog dismissed), Practice practice_tab_screen,
-# Challenge challenge_tab_screen (Navigation 3) or challenge_tab_root (kill switch on), Profile stat_streak_title.
+# Challenge challenge_tab_screen (Navigation 3) or challenge_tab_root (kill switch on), Profile stat_streak_title (or stat_sentences_title when a free account's Premium card pushes the streak below the fold).
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
@@ -82,7 +82,7 @@ env:
     id: main_tab_profile
 - extendedWaitUntil:
     visible:
-      id: stat_streak_title
+      id: "stat_streak_title|stat_sentences_title"
     timeout: 30000
 - tapOn:
     id: main_tab_profile
@@ -90,7 +90,7 @@ env:
     id: main_tab_profile
     selected: true
 - assertVisible:
-    id: stat_streak_title
+    id: "stat_streak_title|stat_sentences_title"
 - takeScreenshot: ${SHOT}
 - tapOn:
     id: main_tab_home
