@@ -7,7 +7,7 @@
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
-  TOPIC: "At a Bad Bunny Concert"
+  TOPIC: ${TOPIC || "At a Bad Bunny Concert"}
 ---
 - runFlow: ../../common/launch-home.yaml
 - tapOn: "Free Talk"
