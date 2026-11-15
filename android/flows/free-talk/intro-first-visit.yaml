@@ -1,0 +1,58 @@
+# First Free Talk tab visit: the "Build confidence with Free Talk" intro dialog opens once. CLOSE=button taps
+# Get started, CLOSE=back presses system Back; the dialog closes and the Free Talk tab stays. Then Home and
+# back to Free Talk: the dialog does not show again.
+# Entry: Home, signed in, intro never shown on this install (`qa_android.py fresh` + `login`; the flag is local
+# app defaults, not server state). Exit: Free Talk tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CLOSE: ${CLOSE || "button"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- tapOn:
+    id: main_tab_free_talk
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_intro_dialog
+    timeout: 20000
+- waitForAnimationToEnd
+- takeScreenshot: intro-first-visit_open
+- runFlow:
+    when:
+      true: ${CLOSE == "button"}
+    commands:
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
+- runFlow:
+    when:
+      true: ${CLOSE == "back"}
+    commands:
+      - back
+- extendedWaitUntil:
+    notVisible:
+      id: ai_tutor_intro_dialog
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 10000
+- takeScreenshot: intro-first-visit_closed
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- tapOn:
+    id: main_tab_free_talk
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_title
+    timeout: 20000
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: ai_tutor_intro_dialog
+- takeScreenshot: intro-first-visit_reopened

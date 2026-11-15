@@ -28,8 +28,19 @@ env:
     id: debug_menu_feature_flag_override
 - tapOn:
     id: debug_feature_flag_search
-- inputText: ${FLAG}
-- hideKeyboard
+# The first typed key is sometimes doubled ("aandroid_..."), which filters the list to nothing, so clear and type
+# again until the flag's value chip shows.
+- retry:
+    maxRetries: 2
+    commands:
+      - eraseText: 80
+      - inputText: ${FLAG}
+      - hideKeyboard
+      - extendedWaitUntil:
+          visible:
+            id: debug_feature_flag_value_${FLAG}
+            index: 0
+          timeout: 5000
 # The value chip cycles on tap. The source label under the key (`SERVER · off`, `LOCAL · on`) shows the override that took.
 - repeat:
     times: 3

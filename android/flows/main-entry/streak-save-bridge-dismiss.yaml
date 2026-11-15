@@ -1,0 +1,42 @@
+# Debug Menu > Dialog Bridges > "Streak Save": the V1 "Save your N-day streak!" sheet closes with system Back, then
+# opens again and closes with a tap on the scrim above the sheet. Both land back on the Dialog Bridges list.
+# Entry: signed in, any state (restarts the app). Exit: Dialog Bridges list.
+# Point fallback: the scrim above the sheet has no node of its own.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: ../../common/open-dialog-bridge.yaml
+    env:
+      ROW: streak_save
+      RESTART: "true"
+- extendedWaitUntil:
+    visible:
+      id: course_streak_save_screen_root
+    timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: streak-save-dismiss_open
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: course_streak_save_screen_root
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_streak_save
+- tapOn:
+    id: debug_dialog_bridges_streak_save
+- extendedWaitUntil:
+    visible:
+      id: course_streak_save_screen_root
+    timeout: 15000
+- waitForAnimationToEnd
+- tapOn:
+    point: "50%,8%"
+- extendedWaitUntil:
+    notVisible:
+      id: course_streak_save_screen_root
+    timeout: 10000
+- assertVisible:
+    id: debug_dialog_bridges_streak_save
+- takeScreenshot: streak-save-dismiss_closed
