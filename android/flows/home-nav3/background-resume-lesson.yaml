@@ -1,0 +1,57 @@
+# Background the app on a lesson opened from Home, resume it: the same lesson shows (no restart to Home),
+# then Back (Quit when the quit sheet shows) returns to Home on the Home tab.
+# Entry: Home tab showing learning_path_ready with LOOP_TEXT on screen. Exit: Home tab.
+# maestro test -e LOOP_TEXT="^Make small talk$" -e CTA=learning_path_popover_preview_button -e CONTINUE=learning_path_jump_ahead_continue -e ARRIVAL=drill_lesson_root -e SHOT=bg-lesson background-resume-lesson.yaml
+# Selectors: the loop is tapped by its title (text fallback; the loop id is per-account); the quit sheet has no resource-ids.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- tapOn: ${LOOP_TEXT}
+- tapOn:
+    id: ${CTA}
+- runFlow:
+    when:
+      visible:
+        id: ${CONTINUE}
+    commands:
+      - tapOn:
+          id: ${CONTINUE}
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- pressKey: Home
+- extendedWaitUntil:
+    notVisible:
+      id: ${ARRIVAL}
+    timeout: 10000
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- assertNotVisible:
+    id: learning_path_ready
+- takeScreenshot: ${SHOT}-resumed
+- back
+- runFlow:
+    when:
+      visible: "^Quit$"
+    commands:
+      - tapOn: "^Quit$"
+- runFlow: ../../common/dismiss-premium-intro.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- assertVisible:
+    id: main_tab_home
+    selected: true
+- runFlow: assert-nothing-reopened.yaml
