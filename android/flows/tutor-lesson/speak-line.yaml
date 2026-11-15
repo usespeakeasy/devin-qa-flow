@@ -1,0 +1,16 @@
+# Drill lesson by deep link (default `EN_ES_A1-1_quetal_SP_DL_IC`), Next once to the first speaking card
+# ("¿Qué tal la familia?"), where the mic starts listening. The caller checks the ASR result in logcat
+# (`SpeakWebSocketFlow: sending output: Final(...)`).
+# Entry: Home, signed in, Premium (Subscription override), so the free preview doesn't end the lesson.
+# The emulator has no mic: speech needs the QA-only `AndroidAudioRecorder` patch that plays
+# `cache/qa_audio.pcm` (16 kHz mono PCM16 of the line) on both builds.
+# Selectors: IDs only.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: open-fresh.yaml
+- runFlow:
+    file: skip-cards.yaml
+    env:
+      N: 1

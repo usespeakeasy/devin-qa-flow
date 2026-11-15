@@ -1,0 +1,30 @@
+# Welcome > Log in > Continue with Google > Back on Google's "Choose an account": still signed out on the
+# sign-in options, with no error shown.
+# Entry: `onboarding_storybook_sign_in_button` (after `qa_android.py fresh`).
+# Precondition: qa@usespeak.com added in Android Settings, screen lock set (see the skill's "Android Google sign-in").
+# Selectors: the Google button, Google's account chooser and the error text have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_sign_in_button
+    timeout: 60000
+- tapOn:
+    id: onboarding_storybook_sign_in_button
+- tapOn: "Continue with Google"
+- extendedWaitUntil:
+    visible: "Choose an account"
+    timeout: 30000
+- back
+- extendedWaitUntil:
+    visible: "Continue with Google"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "An unexpected error occurred\\."
+    timeout: 3000
+    optional: true
+- assertNotVisible:
+    id: home_root_ready
+- assertNotVisible: "An unexpected error occurred\\."
