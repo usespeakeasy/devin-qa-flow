@@ -1,0 +1,30 @@
+# Expression Details > Report, then the report sheet's close button: only the report sheet closes, Expression Details stays.
+# Entry: tutor_expression_details_report_button on screen (scroll-to-report.yaml). Exit: tutor_expression_details_sheet.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: tutor_expression_details_report_button
+# Same gesture-bar fallback as report-back.yaml.
+- waitForAnimationToEnd:
+    timeout: 2000
+- runFlow:
+    when:
+      notVisible:
+        id: report_screen
+    commands:
+      - tapOn: "^Report feedback$"
+- extendedWaitUntil:
+    visible:
+      id: report_screen
+    timeout: 15000
+- hideKeyboard
+- tapOn:
+    id: report_close_button
+- extendedWaitUntil:
+    notVisible:
+      id: report_screen
+    timeout: 10000
+- assertVisible:
+    id: tutor_expression_details_sheet
