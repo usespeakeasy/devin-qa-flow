@@ -3,7 +3,8 @@ appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
 ---
-- tapOn: "Profile"
+- tapOn:
+    id: main_tab_profile
 - tapOn:
     id: action_settings
 - extendedWaitUntil:
