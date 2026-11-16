@@ -1,0 +1,25 @@
+# Home learning path > second loop > Preview opens the AI lesson pre-lesson (Speak Embedded, `ai-lesson-start-button`)
+# over the tabs; system Back returns to Home with the path. Entry: Home (`learning_path_ready`). Exit: Home.
+# Saves SHOT.png (the lesson) and SHOT-back.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "home-lesson"}
+---
+- runFlow: ../../common/start-path-lesson.yaml
+- extendedWaitUntil:
+    visible:
+      id: ai-lesson-start-button
+    timeout: 30000
+- assertNotVisible:
+    id: main_tab_home
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 15000
+- assertVisible:
+    id: main_tab_home
+    selected: true
+- takeScreenshot: ${SHOT}-back

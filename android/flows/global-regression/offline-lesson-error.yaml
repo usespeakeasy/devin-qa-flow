@@ -1,0 +1,51 @@
+# Airplane mode on (set before), Home path lesson Preview: the lesson web view opens ("Webpage not available") and an
+# error alert ("An unexpected error occurred.", OK) shows over it, dimming it. The alert can show
+# again later; EXIT=back closes it with system Back, EXIT=ok with its OK button, leaving the lesson, and Back then
+# closes the lesson to Home. Entry: Home (`learning_path_ready`), offline. Exit: Home. Saves SHOT.png (the first alert).
+# Selectors: text fallback for the alert. The Conductor dialog exposes the platform `message` / `button1` ids, the
+# Navigation 3 GenericErrorDialog entry exposes no ids, so only the text matches on both.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  EXIT: ${EXIT || "ok"}
+  SHOT: ${SHOT || "offline-lesson-error"}
+---
+- runFlow: ../../common/start-path-lesson.yaml
+- extendedWaitUntil:
+    visible: "An unexpected error occurred\\."
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      true: ${EXIT == "back"}
+    commands:
+      - back
+- runFlow:
+    when:
+      true: ${EXIT == "ok"}
+    commands:
+      - tapOn: "^OK$"
+- extendedWaitUntil:
+    notVisible: "An unexpected error occurred\\."
+    timeout: 5000
+- takeScreenshot: ${SHOT}-dismissed
+# Back closes the lesson; a retried request can raise the alert again (about 25 s later), so dismiss up to 6 left. Each
+# OK tap prints one line, so the count of taps is the count of re-raised alerts.
+- back
+- waitForAnimationToEnd:
+    timeout: 2000
+- repeat:
+    times: 6
+    while:
+      visible: "An unexpected error occurred\\."
+    commands:
+      - tapOn: "^OK$"
+      - waitForAnimationToEnd:
+          timeout: 2000
+- takeScreenshot: ${SHOT}-after-dismiss
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 15000
+- assertNotVisible: "An unexpected error occurred\\."
+- takeScreenshot: ${SHOT}-closed

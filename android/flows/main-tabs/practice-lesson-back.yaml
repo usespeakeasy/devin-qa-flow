@@ -1,0 +1,33 @@
+# Practice tab > quick lesson card (jump-in lesson, opens the Speak Embedded quick lesson web view) > system Back:
+# Practice comes back with the tab bar. Entry: Main tabs, signed in. Exit: Practice tab. Saves SHOT.png (the lesson).
+# Selectors: the quick lesson card id ends in a per-lesson id (practice_tab_card_jump_in_lesson_<id>), so it is
+# matched by regex; the lesson web view exposes its DOM id `title-bar` (the view itself has only the "Speak Embedded" description).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "practice-lesson"}
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 30000
+- tapOn:
+    id: "practice_tab_card_jump_in_lesson_.*"
+- extendedWaitUntil:
+    visible:
+      id: title-bar
+    timeout: 30000
+- assertNotVisible:
+    id: main_tab_practice
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 15000
+- assertVisible:
+    id: main_tab_practice
+    selected: true
+- takeScreenshot: ${SHOT}-back

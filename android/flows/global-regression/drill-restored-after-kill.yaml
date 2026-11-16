@@ -35,7 +35,7 @@ env:
 # Back after the restore either opens the close sheet (Quit) or closes the lesson straight to the tab it was opened from.
 - extendedWaitUntil:
     visible:
-      id: main_navigation
+      id: main_tab_home
     timeout: 30000
 - assertNotVisible:
     id: drill_lesson_root

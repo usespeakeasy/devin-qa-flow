@@ -34,6 +34,12 @@ env:
     commands:
       - tapOn:
           id: button1
+# Navigation 3 builds show the generic error as a Compose dialog with no button1.
+- runFlow:
+    when:
+      visible: "An unexpected error occurred\\."
+    commands:
+      - tapOn: "^OK$"
 - runFlow:
     when:
       visible:
