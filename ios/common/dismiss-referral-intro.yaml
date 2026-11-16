@@ -1,0 +1,17 @@
+# Dismisses the "Invite friends" referral intro sheet that can cover Home on a pool account (the experiment shows it once).
+# Entry: Home, sheet maybe shown. No-op when absent. Exit: Home (home.root.ready).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow:
+    when:
+      visible:
+        id: "referral.intro.ready"
+    commands:
+      - tapOn:
+          id: "referral.intro.action.later"
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready"
+    timeout: 15000
