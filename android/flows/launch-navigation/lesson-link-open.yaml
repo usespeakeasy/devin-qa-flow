@@ -1,0 +1,27 @@
+# Lesson deep link (speak-dev://lesson?id=LESSON_ID) opens the lesson (ARRIVAL; a Free account gets the preview, which can
+# play to Preview Finished on its own). COLD=true stops the app first (cold start: Home becomes root under the lesson).
+# Entry: signed in, any screen (COLD=false) or any state (COLD=true). Exit: ARRIVAL showing. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_KR_L1_onboarding_SP_DL_IC"}
+  COLD: ${COLD || "false"}
+  ARRIVAL: ${ARRIVAL || "card_count|drill_lesson_root|preview_finished_screen"}
+  SHOT: ${SHOT || "lesson-link"}
+---
+- runFlow:
+    when:
+      true: ${COLD == "true"}
+    commands:
+      - stopApp
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- runFlow:
+    when:
+      visible: "Continue where you left off\\?"
+    commands:
+      - tapOn: "^Start over$"
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 60000
+- takeScreenshot: ${SHOT}

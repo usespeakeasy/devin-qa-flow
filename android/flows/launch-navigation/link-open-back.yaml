@@ -1,0 +1,28 @@
+# Running app deep link LINK (e.g. speak-dev://review): ARRIVAL opens, Back shows UNDER on tab UNDER_TAB
+# (default Home; speak-dev://review lands on Practice, practice_tab_list / main_tab_practice).
+# Entry: Home, signed in. Exit: UNDER. Saves SHOT.png (arrival) and SHOT-back.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "link"}
+  UNDER: ${UNDER || "learning_path_ready"}
+  UNDER_TAB: ${UNDER_TAB || "main_tab_home"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- openLink: ${LINK}
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: ${UNDER}
+    timeout: 20000
+- assertVisible:
+    id: ${UNDER_TAB}
+- takeScreenshot: ${SHOT}-back

@@ -1,0 +1,25 @@
+# Global builds: speak-dev://support on a running, signed-in app opens the Intercom messenger home; Back returns to the
+# screen under it (UNDER id, default Home's learning_path_ready). Saves SHOT.png and SHOT-back.png.
+# Entry: UNDER showing. Exit: UNDER showing.
+# Selectors: the Intercom messenger has no app resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  UNDER: ${UNDER || "learning_path_ready"}
+  SHOT: ${SHOT || "support"}
+---
+- extendedWaitUntil:
+    visible:
+      id: ${UNDER}
+    timeout: 30000
+- openLink: speak-dev://support
+- extendedWaitUntil:
+    visible: "How can we help\\?|Send us a message"
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: ${UNDER}
+    timeout: 20000
+- takeScreenshot: ${SHOT}-back

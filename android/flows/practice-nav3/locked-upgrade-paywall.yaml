@@ -1,0 +1,60 @@
+# Free account: Practice > AI Tutor Call hero's "Unlock with Premium Plus" (premium-locked) opens the upgrade paywall
+# (native premium screen with its billing error on a google_apis AVD, or the Superwall web view); closing it (error OK,
+# then the X `exit` or Back) returns to Practice main, then Home tab.
+# Entry: main tabs, Free. Exit: Home tab. Saves SHOT.png (paywall) and SHOT-closed.png (Practice after close).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "locked-upgrade"}
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_hero_card_locked_upgrade
+    timeout: 20000
+- tapOn:
+    id: phone_speak_hero_card_locked_upgrade
+- extendedWaitUntil:
+    visible:
+      id: "main-editor-container|onboarding_premium_intro_.*|button1"
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- repeat:
+    times: 3
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: button1
+          commands:
+            - tapOn:
+                id: button1
+- repeat:
+    while:
+      notVisible:
+        id: practice_tab_screen
+    times: 3
+    commands:
+      - tapOn:
+          id: exit
+          optional: true
+      - runFlow:
+          when:
+            notVisible:
+              id: practice_tab_screen
+          commands:
+            - back
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_screen
+    timeout: 20000
+- assertVisible:
+    id: phone_speak_hero_card_locked_upgrade
+- takeScreenshot: ${SHOT}-closed
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000

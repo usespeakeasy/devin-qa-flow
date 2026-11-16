@@ -1,0 +1,13 @@
+# Running app deep link LINK opens ARRIVAL (e.g. speak-dev://premium-sale > the upgrade paywall), left open for a
+# lifecycle check by the caller. Entry: signed in, app running. Exit: ARRIVAL showing. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "link-open"}
+---
+- openLink: ${LINK}
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- takeScreenshot: ${SHOT}

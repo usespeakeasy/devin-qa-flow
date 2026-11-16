@@ -1,0 +1,12 @@
+# After a recreation (font scale change) or process death and relaunch: ARRIVAL shows again. Saves SHOT.png.
+# Entry: the screen under test, or the relaunching app. Exit: ARRIVAL showing.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "arrival"}
+---
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- takeScreenshot: ${SHOT}

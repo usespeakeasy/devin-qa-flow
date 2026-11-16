@@ -1,12 +1,13 @@
-# speak-dev://premium-sale opens the upgrade paywall over Home (Superwall web view, or the native premium screen with
+# speak-dev://premium-sale (or LINK, e.g. a Skill check locked lesson link) opens the upgrade paywall over Home (Superwall web view, or the native premium screen with
 # its billing error on a google_apis AVD); closing it (error OK, then the X `exit` or system Back; on develop a dim paywall loading overlay can cover the X) lands on Home with no crash.
 # Entry: Home, signed in, Free. Exit: home_root_ready, or the stuck loading overlay (see the last step). Saves SHOT.png (the open paywall).
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
   SHOT: ${SHOT || "premium-sale"}
+  LINK: ${LINK || "speak-dev://premium-sale"}
 ---
-- openLink: speak-dev://premium-sale
+- openLink: ${LINK}
 - extendedWaitUntil:
     visible:
       id: "main-editor-container|onboarding_premium_intro_.*|button1"
