@@ -1,0 +1,16 @@
+# Meet the Tutor: open the intake call and wait until it is live (the tutor's first turn shows Mute).
+# Entry: Home. Precondition: as ios/common/open-meet-the-tutor.yaml, mic allowed on the simulator.
+# Exit: the intake call screen, call live. The caller talks (audio-pipe) and ends it with another flow.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/open-meet-the-tutor.yaml
+- extendedWaitUntil:
+    visible:
+      id: "phone-speak.call.action.end-call"
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: "phone-speak.call.action.mute"
+    timeout: 45000

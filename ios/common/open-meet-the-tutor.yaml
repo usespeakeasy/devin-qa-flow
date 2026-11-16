@@ -18,11 +18,19 @@ env:
       id: "course-select.toolbar.action.close"
     timeout: 20000
 # TEMPORARY TEXT FALLBACK: the Create a course button (SUICreateCustomCourseButton) has no accessibility id.
+# The selector opens scrolled to the active course, which can sit below Create a course (a custom course).
+- scrollUntilVisible:
+    element:
+      text: "Create a course"
+    direction: UP
+    timeout: 8000
+    optional: true
 - scrollUntilVisible:
     element:
       text: "Create a course"
     direction: DOWN
     timeout: 20000
+- waitForAnimationToEnd
 - tapOn: "Create a course"
 - extendedWaitUntil:
     visible:

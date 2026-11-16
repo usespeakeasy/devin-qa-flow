@@ -1,0 +1,22 @@
+# Meet the Tutor: after the tutor says goodbye and ends the intake call, "Building your custom course" shows,
+# then the planned course (or a generation failure alert when the server build fails).
+# Entry: the intake call screen, the tutor about to end it (the caller answered with audio-pipe).
+# Exit: the building screen is gone. Screenshots: mtt-building, mtt-built.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    notVisible:
+      id: "phone-speak.call.action.end-call"
+    timeout: 120000
+# TEMPORARY TEXT FALLBACK: the building screen has no accessibility id.
+- extendedWaitUntil:
+    visible: "Building your custom course.*"
+    timeout: 30000
+- takeScreenshot: mtt-building
+- extendedWaitUntil:
+    notVisible: "Building your custom course.*"
+    timeout: 240000
+- waitForAnimationToEnd
+- takeScreenshot: mtt-built

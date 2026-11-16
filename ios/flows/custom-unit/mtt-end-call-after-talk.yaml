@@ -1,0 +1,27 @@
+# Meet the Tutor: the learner taps End call on a live intake call (held 90 s+), before the tutor says goodbye.
+# Entry: the intake call screen (mtt-call-live.yaml). Exit: Custom courses (course-select.toolbar.action.close).
+# Before speak-ios#10368 a "Building your custom course" screen shows for about 45 s first; after it, none.
+# The screenshot names: mtt-after-end (2 s after the tap), mtt-closed (Custom courses).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: "phone-speak.call.action.end-call"
+- extendedWaitUntil:
+    notVisible:
+      id: "phone-speak.call.action.end-call"
+    timeout: 20000
+# TEMPORARY TEXT FALLBACK: the building screen has no accessibility id.
+- extendedWaitUntil:
+    visible: "Building your custom course.*"
+    timeout: 4000
+    optional: true
+- takeScreenshot: mtt-after-end
+- extendedWaitUntil:
+    visible:
+      id: "course-select.toolbar.action.close"
+    timeout: 120000
+- takeScreenshot: mtt-closed
+- assertNotVisible:
+    id: "custom-unit.generation.refusal-alert.action.ok|custom-unit.generation.failure-alert.action.retry"

@@ -1,0 +1,22 @@
+# Dismisses the Home "Made for you" custom-course announcement popover, shown after a custom course is built.
+# Entry: Home. No-op when the popover is absent. Exit: Home (home.root.ready).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow:
+    when:
+      visible:
+        id: "custom-courses.announcement.action.primary"
+    commands:
+      # POINT: the full-screen PopoverDismissRegion is centered on the card, so a tap on its id hits the card.
+      - tapOn:
+          point: "50%,8%"
+      - extendedWaitUntil:
+          notVisible:
+            id: "custom-courses.announcement.action.primary"
+          timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready"
+    timeout: 10000
