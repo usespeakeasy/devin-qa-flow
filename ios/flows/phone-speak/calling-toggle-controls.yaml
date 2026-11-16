@@ -1,0 +1,44 @@
+# Phone Speak calling screen: tap Mute, CC and Speaker twice each, about 2 s apart, with a
+# full resolution screenshot at each settled state (for icon-swap transition checks on a recording).
+# Entry: call-start-in-app.yaml (call active, phone_speak_speaker_button=on so the Speaker button
+# shows). Exit: the same call with every toggle back in its starting state.
+# Params: SHOT (screenshot name prefix).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible:
+    id: "phone-speak.call.action.loudspeaker"
+- takeScreenshot: ${SHOT}-0-start
+- tapOn:
+    id: "phone-speak.call.action.mute"
+    waitToSettleTimeoutMs: 1500
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-1-mute-on
+- tapOn:
+    id: "phone-speak.call.action.mute"
+    waitToSettleTimeoutMs: 1500
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-2-mute-off
+- tapOn:
+    id: "phone-speak.call.action.captions"
+    waitToSettleTimeoutMs: 1500
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-3-cc-1
+- tapOn:
+    id: "phone-speak.call.action.captions"
+    waitToSettleTimeoutMs: 1500
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-4-cc-2
+- tapOn:
+    id: "phone-speak.call.action.loudspeaker"
+    waitToSettleTimeoutMs: 1500
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-5-speaker-1
+- tapOn:
+    id: "phone-speak.call.action.loudspeaker"
+    waitToSettleTimeoutMs: 1500
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}-6-speaker-2
+- assertVisible:
+    id: "phone-speak.call.action.end-call"
