@@ -1,0 +1,40 @@
+# Speaking Drill (TutorLessonVC) word tap: on the first matching speaking card ("¿Qué tal?")
+# tap the word "tal?" and the Word Meanings sheet (WordMeaningBottomSheetView) opens; a tap
+# on the dimmed area above closes it and the same card is back.
+# The sheet is not in the Maestro tree (separate presentation), so the case script asserts it
+# from the app log: `Speaking Card Word Tapped`, then `Track screen: 'Pronunciation Card'`
+# (WordMeaningBottomSheetViewModel.analyticsScreenName) and `PC Data Loaded`, then
+# `PC Close Tapped` and `Speaking Card Viewed` with the same itemId as the tapped lineId.
+# Entry: the lesson just opened with
+# `xcrun simctl openurl <sim> speak-dev://lesson?id=EN_ES_A1-1_quetal_SP_DL_IC`.
+# Preconditions: signed in, EN_ES_A1-1 course, `drill_reskin_pronunciation_coach=off`
+# (speak-dev://set-split-overrides). Dev build. On iOS 27 sims lesson audio can hang the
+# main thread; the case script restarts host coreaudiod when `afplay` stalls.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible:
+      id: "tutor-lesson.close"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "lesson.matching-card.action.retry"
+    timeout: 90000
+# Word segments of the matching card have no accessibility id (QA ticket filed).
+- assertVisible: "tal\\?"
+- tapOn: "tal\\?"
+- waitForAnimationToEnd:
+    timeout: 5000
+# Run with `maestro test --test-output-dir <dir>`; the PNG lands under <dir>/**/takeScreenshot/.
+- takeScreenshot: drill-word-meanings
+# The sheet has no close control; tap the dimmed area above it (no id to target).
+- tapOn:
+    point: "50%,20%"
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: "lesson.matching-card.action.retry"
+- assertVisible: "tal\\?"
