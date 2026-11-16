@@ -6,8 +6,10 @@ appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
 ---
-# launch-home closes the referral promo a signed-in cold start can show over Home.
-- runFlow: ../../common/launch-home.yaml
+# home-popups closes the sheets a signed-in cold start can show over Home (referral, streak save, Made for you).
+- launchApp:
+    stopApp: true
+- runFlow: ../../common/home-popups.yaml
 - tapOn:
     id: home_course_selector
 - extendedWaitUntil:

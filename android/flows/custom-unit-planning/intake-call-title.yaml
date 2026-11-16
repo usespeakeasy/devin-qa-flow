@@ -1,0 +1,29 @@
+# Intake call header title while connecting: from the planning intro, "Let's go!" opens the tutor intake call; while it
+# says "Calling…" the header should not read the app fallback "AI Tutor Call" (speak-android#9296 hides the title until
+# the server's arrives); the flow waits for the server title TITLE (default "Meet your tutor", en native).
+# Entry: the planning intro from open-create-course-from-courses.yaml, `meet_the_tutor_enabled`, `tutor_experience`,
+# `ait_phone_speak_decisions_gate`, `ait_phone_speak_cascade` ON, a non-B2B account on a pair with a seeded intake
+# lesson (English > Spanish), microphone granted. Exit: the connected call with End call.
+# The fallback title shows for about a second on builds before #9296, too short for Maestro (assertNotVisible waits
+# for it to go away, so it passes either way): check "Calling…" frames from the recording, not this flow.
+# Selectors: the header title has no resource-id (text fallback for TITLE).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TITLE: ${TITLE || "Meet your tutor"}
+---
+- runFlow: tap-lets-go.yaml
+- extendedWaitUntil:
+    visible:
+      id: "phone_speak_call_end_call|ai_data_consent_alert"
+    timeout: 45000
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call
+    timeout: 45000
+- extendedWaitUntil:
+    visible: ${TITLE}
+    timeout: 45000

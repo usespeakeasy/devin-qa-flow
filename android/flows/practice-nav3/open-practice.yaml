@@ -5,11 +5,10 @@ appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
 ---
-- runFlow: ../home-announcement/launch-home.yaml
-- tapOn:
-    id: referral_welcome_dialog_later_button
-    optional: true
-- runFlow: ../home-announcement/dismiss-announcement.yaml
+- launchApp:
+    stopApp: true
+# home-popups closes every sheet a signed-in cold start can show (referral, streak save, Made for you, ...).
+- runFlow: ../../common/home-popups.yaml
 - tapOn:
     id: main_tab_practice
 - extendedWaitUntil:

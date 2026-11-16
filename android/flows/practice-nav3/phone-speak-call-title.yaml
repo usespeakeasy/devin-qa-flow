@@ -1,0 +1,14 @@
+# AI Tutor Call from Practice: the call header reads the app title "AI Tutor Call" while calling and once connected
+# (calls other than the tutor intake keep it, speak-android#9296).
+# Entry: Practice main, Premium (a free account gets the paywall instead). Exit: the connected call with End call.
+# Selectors: the header title and the timer have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: phone-speak-open-call.yaml
+- assertVisible: "AI Tutor Call"
+- extendedWaitUntil:
+    visible: "\\d\\d:\\d\\d"
+    timeout: 45000
+- assertVisible: "AI Tutor Call"
