@@ -12,6 +12,11 @@ env:
       id: "tap_to_continue|speak_now_header|series_list"
     timeout: 60000
     optional: true
+# The resume modal can open a few seconds after series_list shows (seen on develop and the branch).
+- extendedWaitUntil:
+    visible: "Continue where you left off\\?"
+    timeout: 8000
+    optional: true
 - runFlow:
     when:
       visible: "Continue where you left off\\?"
