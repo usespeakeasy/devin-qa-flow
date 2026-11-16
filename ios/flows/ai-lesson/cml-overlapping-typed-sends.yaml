@@ -1,0 +1,46 @@
+# Case: a second typed message sent right after a first one that failed, in a chat-mode AI lesson (CML). Both sends
+# are failed by the AIL debug menu's "Fake: next turn RPC fails" (armed before each send; it refuses the send before it
+# leaves the device). Checks the field holds exactly the last typed text and the lesson ends ("Oops!") on the second
+# failure (FailureStreak.lessonLimit = 2).
+# Entry: any state (cold-starts to Home). Exit: "Oops!" alert over the ended lesson.
+# Preconditions: as cml-open-first-turn.yaml; a learning language with keyboard input (non-segmented, e.g. Spanish;
+# JA/KO/ZH lessons hide the keyboard button). Dev, Debug-Dev (debug pill on).
+# Params: TOPIC (topic card title in the account's Free Talk catalog), FIRST_TEXT, SECOND_TEXT.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  TOPIC: At a Bad Bunny Concert
+  FIRST_TEXT: Hola quiero una entrada
+  SECOND_TEXT: Dos entradas por favor
+---
+- runFlow:
+    file: cml-open-first-turn.yaml
+    env:
+      TOPIC: ${TOPIC}
+# Auto-start recording may own the bar after the first turn; its cancel button has no ID (label fallback).
+- tapOn:
+    text: "close-icon"
+    optional: true
+- tapOn: "keyboard-filled-icon"
+- extendedWaitUntil:
+    visible: "Reply\\.\\.\\."
+    timeout: 5000
+- tapOn:
+    id: debug.ail.simulate-connection
+- tapOn: "Fake: next turn RPC fails"
+- tapOn: "Reply\\.\\.\\."
+- inputText: ${FIRST_TEXT}
+- tapOn:
+    id: arrow.up
+- tapOn:
+    id: debug.ail.simulate-connection
+- tapOn: "Fake: next turn RPC fails"
+- eraseText: 80
+- inputText: ${SECOND_TEXT}
+# Exact match: the field holds only the last typed text, no older message restored under it.
+- assertVisible: ${SECOND_TEXT}
+- tapOn:
+    id: arrow.up
+- extendedWaitUntil:
+    visible: "Oops!"
+    timeout: 15000

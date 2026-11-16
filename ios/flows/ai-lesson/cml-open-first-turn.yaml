@@ -3,11 +3,11 @@
 # Preconditions: signed in; split overrides ai_lesson_native=default_chat&chat_mode_native=on; Premium override
 # (common/set-subscription-premium.yaml); Show Debug Controls on (Debug-Dev default).
 # Params: TOPIC (topic card title on the Topics tab; the default is in the EN_JP pool catalog). Maestro 2.12.1 lets
-# this env block win over -e, so edit the default to change it.
+# a plain default in this env block win over -e and a caller's runFlow env, so the default reads TOPIC first.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak-v2.dev
-  TOPIC: At a Burger Place
+  TOPIC: ${TOPIC || "At a Burger Place"}
 ---
 - runFlow: ../../common/launch-home.yaml
 - tapOn:

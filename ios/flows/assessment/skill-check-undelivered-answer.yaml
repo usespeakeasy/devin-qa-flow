@@ -1,0 +1,111 @@
+# Case: a unit skill check (chat-mode AI lesson in assessment mode) answer that cannot be delivered. Clears the
+# multiple-choice and tap-to-build blocks with the green debug answer, records an answer in the first speaking task,
+# arms the AIL debug menu's "Fake: next turn RPC fails" while recording (fails the submit) and submits. Checks Continue
+# (structured-conversation.action.continue) is never enabled after the failed submit, then taps the answer's
+# retry and waits for Continue to enable once the answer reaches the tutor.
+# Entry: any state (cold-starts to Home). Exit: speaking task with Continue enabled.
+# Preconditions: signed in; ASSESSMENT_LESSON_ID is a unit skill check (…__SC_AST) of the account's course with
+# keyboard input (non-segmented learning language); dev, Debug-Dev. The caller injects speech with
+# speak-ios Scripts/audio-pipe.py say before the run (consumed by the first recording) and again after the app logs
+# "Turn failed, lesson continues" (consumed by the retry recording).
+# Params: ASSESSMENT_LESSON_ID; SHOT_DIR (where c-after-failure.png goes).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  ASSESSMENT_LESSON_ID: EN_ES_A1-1__UNIT_1__SC_AST
+  SHOT_DIR: .
+---
+- runFlow: ../../common/launch-home.yaml
+- openLink: "speak-dev://lesson?id=${ASSESSMENT_LESSON_ID}"
+- runFlow: ../../common/confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible:
+      id: skill-check.intro.action.start
+    timeout: 20000
+- tapOn:
+    id: skill-check.intro.action.start
+- extendedWaitUntil:
+    visible:
+      id: debug.ail.correct-response
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 2000
+# A skill check left mid-way asks "Continue where you left off?" (Continue / Start over). The sheet is not in the
+# accessibility tree (only the loading lesson behind it is), so Start over is tapped by point; the lesson keeps its
+# loading icon while the sheet waits.
+- runFlow:
+    when:
+      visible: "tutor-chat-dictionary-loading-icon"
+    commands:
+      - tapOn:
+          point: "50%,91%"
+- extendedWaitUntil:
+    visible:
+      id: debug.ail.correct-response
+      enabled: true
+    timeout: 45000
+# The green debug answer is disabled while the tutor speaks; taps then are no-ops.
+- repeat:
+    while:
+      notVisible: "AssessmentTaskUncheckedIcon"
+    times: 40
+    commands:
+      - tapOn:
+          id: debug.ail.correct-response
+          optional: true
+          retryTapIfNoChange: false
+      - waitForAnimationToEnd:
+          timeout: 2000
+- extendedWaitUntil:
+    visible: "sdt-ui-microphone-fill|I’m listening\\.\\.\\."
+    timeout: 45000
+- tapOn:
+    text: "sdt-ui-microphone-fill"
+    optional: true
+- extendedWaitUntil:
+    visible: "I’m listening\\.\\.\\."
+    timeout: 10000
+# Live transcript is not shown before submit; give the injected speech (about 2 s) time to play into the recording.
+- waitForAnimationToEnd:
+    timeout: 2000
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: debug.ail.simulate-connection
+- tapOn: "Fake: next turn RPC fails"
+- tapOn: "sdt-ui-arrow-up"
+- assertNotVisible:
+    id: structured-conversation.action.continue
+    enabled: true
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: structured-conversation.action.continue
+    enabled: true
+# The failed answer shows a retry button (label only) and a disabled Continue.
+- assertVisible: "retry-icon"
+- assertVisible:
+    id: structured-conversation.action.continue
+    enabled: false
+- takeScreenshot: ${SHOT_DIR}/c-after-failure
+# Maestro reports the retry image's bounds as the whole bubble row, so its center misses the trailing button; tap it
+# by point (iPhone 17, one-line task header).
+- tapOn:
+    point: "87%,44%"
+- extendedWaitUntil:
+    visible: "I’m listening\\.\\.\\."
+    timeout: 10000
+- assertNotVisible:
+    id: structured-conversation.action.continue
+    enabled: true
+# Live transcript is not shown before submit; give the injected speech (about 2 s) time to play into the recording.
+- waitForAnimationToEnd:
+    timeout: 2000
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn: "sdt-ui-arrow-up"
+- extendedWaitUntil:
+    visible:
+      id: structured-conversation.action.continue
+      enabled: true
+    timeout: 30000

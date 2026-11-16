@@ -1,0 +1,40 @@
+# Case: a failed typed send followed by a switch to voice whose turn also fails, in a chat-mode AI lesson (CML). The
+# AIL debug menu's "Fake: next turn RPC fails" is armed before the typed send and again before the switch to voice
+# (switching starts recording, so the armed failure fails the start-turn). Checks the lesson ends ("Oops!") on the
+# second failure: switching input mode does not reset the streak.
+# Entry: any state (cold-starts to Home). Exit: "Oops!" alert over the ended lesson.
+# Preconditions: as cml-overlapping-typed-sends.yaml.
+# Params: TOPIC, FIRST_TEXT.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  TOPIC: At a Bad Bunny Concert
+  FIRST_TEXT: Hola quiero una entrada
+---
+- runFlow:
+    file: cml-open-first-turn.yaml
+    env:
+      TOPIC: ${TOPIC}
+- tapOn:
+    text: "close-icon"
+    optional: true
+- tapOn: "keyboard-filled-icon"
+- extendedWaitUntil:
+    visible: "Reply\\.\\.\\."
+    timeout: 5000
+- tapOn:
+    id: debug.ail.simulate-connection
+- tapOn: "Fake: next turn RPC fails"
+- tapOn: "Reply\\.\\.\\."
+- inputText: ${FIRST_TEXT}
+- tapOn:
+    id: arrow.up
+- tapOn:
+    id: debug.ail.simulate-connection
+- tapOn: "Fake: next turn RPC fails"
+# Switch to voice (SF symbol name is the only identifier).
+- tapOn:
+    id: mic.fill
+- extendedWaitUntil:
+    visible: "Oops!"
+    timeout: 15000
