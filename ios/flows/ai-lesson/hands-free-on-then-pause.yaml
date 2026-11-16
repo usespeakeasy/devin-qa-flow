@@ -1,0 +1,12 @@
+# Turns hands-free on from the lesson Settings sheet and taps Pause right away, with no wait in between, so the Pause
+# lands while the switch's resume RPC is pending (speak-ios#10426). The caller checks the order of "Pause successful",
+# "Resume successful" and "Resume for mode transition skipped" in the app log; the bar state isn't in the tree.
+# Pause is a point tap (200,793 pt on iPhone 18 Pro): the hands-free pause/resume button has no identifier.
+# Entry: native AI lesson open in manual mode. Exit: lesson, hands-free on, Pause tapped.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: toggle-hands-free.yaml
+- tapOn:
+    point: "200,793"

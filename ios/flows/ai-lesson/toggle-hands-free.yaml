@@ -10,5 +10,11 @@ env:
 - extendedWaitUntil:
     visible: "Hands-free speaking"
     timeout: 10000
-- tapOn: "Hands-free speaking"
+# The row's switch has no identifier, and a tap on the "Hands-free speaking" label doesn't flip it, so this taps the
+# switch by its value ("0"/"1") between the rows above and below it. A fixed point fails: the sheet drops the "Auto
+# start recording" row in hands-free mode, which moves the rows (speak-ios#10426 QA, 2026-11-16).
+- tapOn:
+    text: "[01]"
+    below: "Always show translations"
+    above: "Slow audio"
 - tapOn: "close-icon"
