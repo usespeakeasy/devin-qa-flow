@@ -1,0 +1,49 @@
+# Debug Menu > Feature flag override filtered to FLAG: the list opens and the flag's row is shown (SHOWN=true) or
+# absent (SHOWN=false, e.g. a removed flag). The search field must hold FLAG exactly, so a doubled first key that
+# filters to nothing can't pass as absent. Read-only.
+# Entry: any state, signed in or signed out (the flow cold-starts the app). Exit: the filtered override list.
+# maestro test -e FLAG=android_nav3_segment_kill_switch -e SHOWN=false -e SHOT=flag flag-row-shown.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOWN: ${SHOWN || "true"}
+  SHOT: ${SHOT || "flag-row"}
+---
+- launchApp:
+    stopApp: true
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_feature_flag_override
+    timeout: 30000
+- tapOn:
+    id: debug_menu_feature_flag_override
+- tapOn:
+    id: debug_feature_flag_search
+- retry:
+    maxRetries: 2
+    commands:
+      - eraseText: 80
+      - inputText: ${FLAG}
+      - hideKeyboard
+      - assertVisible:
+          id: debug_feature_flag_search
+          text: ${FLAG}
+- runFlow:
+    when:
+      true: ${SHOWN == "true"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: debug_feature_flag_value_${FLAG}
+            index: 0
+          timeout: 10000
+- runFlow:
+    when:
+      true: ${SHOWN != "true"}
+    commands:
+      - waitForAnimationToEnd:
+          timeout: 2000
+      - assertNotVisible:
+          id: debug_feature_flag_value_${FLAG}
+- takeScreenshot: ${SHOT}

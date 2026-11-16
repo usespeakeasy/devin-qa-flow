@@ -28,6 +28,19 @@ env:
 - tapOn:
     id: learning_path_lesson_item_${LESSON_ID}
 # A lesson ahead of progress can open the "Skipping lessons?" sheet straight from the item, with no popover.
+# A returning account's popover can instead scroll the tapped item to the middle and wait for a second tap.
+- extendedWaitUntil:
+    visible:
+      id: "learning_path_popover_preview_button|learning_path_jump_ahead_continue"
+    timeout: 5000
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: "learning_path_popover_preview_button|learning_path_jump_ahead_continue"
+    commands:
+      - tapOn:
+          id: learning_path_lesson_item_${LESSON_ID}
 - extendedWaitUntil:
     visible:
       id: "learning_path_popover_preview_button|learning_path_jump_ahead_continue"

@@ -1,14 +1,20 @@
-# Practice tab: the Practice hub shows (Quick lessons, Review).
+# Practice tab: the Practice hub shows with its Smart Review card. The hub's sections are server-driven ("Quick lessons"
+# is not always there), so the flow checks ids, not section titles.
 # Entry: Home tab. Precondition: signed-in dev account with the Practice tab.
-# Selectors: the bottom tab and the hub sections have no resource-id (text fallback).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
   SHOT: arrival
 ---
-- tapOn: "Practice"
+- tapOn:
+    id: main_tab_practice
 - extendedWaitUntil:
-    visible: "Quick lessons"
+    visible:
+      id: practice_tab_list
     timeout: 20000
-- assertVisible: "Review"
+- scrollUntilVisible:
+    element:
+      id: practice_tab_card_smart_review
+    direction: DOWN
+    timeout: 10000
 - takeScreenshot: ${SHOT}
