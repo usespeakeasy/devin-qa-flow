@@ -1,0 +1,29 @@
+# Case: failed turn start. Arm "Fake: next turn RPC fails", tap record: the recording is undone, the mic is back
+# and the lesson stays open (debug answer bar still there, no end-of-lesson screen).
+# Entry: chat-mode roleplay, manual turns (hands-free off), tutor turn playing or done, Show Debug Controls on.
+# Manual chat mode auto-starts a recording after the tutor turn; the flow cancels it (close-icon) to get the idle mic.
+# The turn-failure log line ("Turn failed, lesson continues") is the case script's mechanical check.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "sdt-ui-arrow-up"
+    timeout: 60000
+    optional: true
+- runFlow:
+    when:
+      visible: "sdt-ui-arrow-up"
+    commands:
+      - tapOn: "close-icon"
+- extendedWaitUntil:
+    visible: "sdt-ui-microphone-fill"
+    timeout: 15000
+- runFlow: arm-turn-rpc-failure.yaml
+- tapOn: "sdt-ui-microphone-fill"
+- extendedWaitUntil:
+    visible: "sdt-ui-microphone-fill"
+    timeout: 20000
+- assertNotVisible: "sdt-ui-arrow-up"
+- assertVisible:
+    id: debug.ail.correct-response

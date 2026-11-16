@@ -1,0 +1,11 @@
+# Chat-mode roleplay, manual turns: after a sent voice reply, wait for the tutor's reply to finish. Manual chat mode
+# auto-starts the next recording when the tutor turn ends, so the send arrow coming back is the arrival.
+# Entry: right after cml-send-voice-reply.yaml. Exit: next recording live.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "sdt-ui-arrow-up"
+    timeout: 90000
+- assertVisible: "replay-icon"

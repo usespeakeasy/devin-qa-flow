@@ -1,0 +1,16 @@
+# AI lesson debug bar: arm "Fake: next turn RPC fails" (the next turn RPC or typed send fails before it is sent, once).
+# Entry: native AI lesson on screen, Show Debug Controls on (debug bar expanded). Exit: same screen, failure armed.
+# The armed failure hits the NEXT turn RPC: arm before the record tap to fail the start, arm while recording to fail the end.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: debug.ail.simulate-connection
+- extendedWaitUntil:
+    visible: "Fake: next turn RPC fails"
+    timeout: 5000
+- tapOn: "Fake: next turn RPC fails"
+- extendedWaitUntil:
+    notVisible: "Fake: next turn RPC fails"
+    timeout: 5000

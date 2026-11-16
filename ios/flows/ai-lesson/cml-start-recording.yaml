@@ -1,0 +1,18 @@
+# Chat-mode roleplay, manual turns: tap the idle mic and wait for the live recording (send arrow shown).
+# Entry: tutor turn done: mic idle, or a recording manual chat mode auto-started (then nothing to tap). Exit: recording live; the caller injects speech (audio-pipe) and runs cml-send-voice-reply.yaml.
+# The mic and arrow buttons have no ids (speak-ios#9810 asks for ai-lesson.bottom.action.record): glyph names are the fallback.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "sdt-ui-microphone-fill|sdt-ui-arrow-up"
+    timeout: 60000
+- runFlow:
+    when:
+      notVisible: "sdt-ui-arrow-up"
+    commands:
+      - tapOn: "sdt-ui-microphone-fill"
+- extendedWaitUntil:
+    visible: "sdt-ui-arrow-up"
+    timeout: 15000

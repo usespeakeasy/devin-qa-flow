@@ -1,0 +1,17 @@
+# Case: failed turn end. With a recording live, arm "Fake: next turn RPC fails" and tap stop (send arrow): the answer
+# is removed, the mic is back and the lesson stays open.
+# Entry: recording live (cml-start-recording.yaml), speech injected, Show Debug Controls on.
+# Arming before the record tap fails the start instead (turn-rpc-fails-on-start.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible: "sdt-ui-arrow-up"
+- runFlow: arm-turn-rpc-failure.yaml
+- tapOn: "sdt-ui-arrow-up"
+- extendedWaitUntil:
+    visible: "sdt-ui-microphone-fill"
+    timeout: 20000
+- assertNotVisible: "sdt-ui-arrow-up"
+- assertVisible:
+    id: debug.ail.correct-response
