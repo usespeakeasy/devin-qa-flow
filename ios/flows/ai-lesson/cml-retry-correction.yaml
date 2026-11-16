@@ -13,6 +13,13 @@ env:
 - extendedWaitUntil:
     visible: "Retry"
     timeout: 40000
+# Retry shows with the feedback while the tutor reply still streams and scrolls the list; a tap then lands on the
+# tutor bubble (a replay). The debug answer buttons enable once that reply ends.
+- extendedWaitUntil:
+    visible:
+      id: debug.ail.correct-response
+      enabled: true
+    timeout: 40000
 - tapOn: ".*Retry"
 - extendedWaitUntil:
     visible: "sdt-ui-arrow-up|sdt-ui-microphone-fill"
