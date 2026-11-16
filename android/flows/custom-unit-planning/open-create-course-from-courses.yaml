@@ -14,8 +14,15 @@ env:
     id: home_course_selector
 - extendedWaitUntil:
     visible:
-      id: level_selector_create_custom_course
+      id: level_selector_ready
     timeout: 30000
+# Accounts with several learning plans push Custom courses below the fold.
+- scrollUntilVisible:
+    element:
+      id: level_selector_create_custom_course
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
 - tapOn:
     id: level_selector_create_custom_course
 - extendedWaitUntil:
