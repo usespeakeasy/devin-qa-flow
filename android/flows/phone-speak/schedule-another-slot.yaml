@@ -1,0 +1,24 @@
+# Weekly Schedule: Schedule another call, Save the picker's default day; the sheet closes.
+# Entry: Weekly Schedule open (open-weekly-schedule.yaml, or the deep link on an arm without the ring card)
+# with at least one saved slot and a free day left.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- scrollUntilVisible:
+    element:
+      id: phone_speak_schedule_schedule_another
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    id: phone_speak_schedule_schedule_another
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_picker_save
+    timeout: 15000
+- tapOn:
+    id: phone_speak_schedule_picker_save
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_schedule_picker_sheet
+    timeout: 30000

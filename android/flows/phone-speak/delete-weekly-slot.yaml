@@ -1,0 +1,25 @@
+# Weekly Schedule: tap the DAY slot (e.g. monday), Delete it in the picker; the sheet closes and the slot is gone.
+# Entry: Weekly Schedule open with a saved DAY slot. Used to return an account to no saved slot.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- scrollUntilVisible:
+    element:
+      id: phone_speak_schedule_slot_${DAY}
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    id: phone_speak_schedule_slot_${DAY}
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_picker_sheet
+    timeout: 15000
+# The picker's Delete button has no resource ID.
+- tapOn: "^Delete$"
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_schedule_picker_sheet
+    timeout: 30000
+- assertNotVisible:
+    id: phone_speak_schedule_slot_${DAY}

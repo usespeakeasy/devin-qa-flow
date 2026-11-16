@@ -1,0 +1,19 @@
+# Opens Weekly Schedule (PhoneSpeakScheduleRoute) by deep link on an arm with no ring card
+# (`phone_speak_ringing_call` = off) and waits for Schedule another call.
+# Entry: signed-in dev account with a saved weekly slot.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- openLink: speak-dev://phone-speak?action=schedule
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_schedule_standalone_loading
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: phone_speak_schedule_schedule_another
+    direction: DOWN
+    timeout: 15000
+- assertNotVisible:
+    id: phone_speak_schedule_ring_switch
