@@ -1,0 +1,47 @@
+# Debug Menu > Feature flag override > Add Flag: add FLAG as a custom flag (override ON), for a client flag that
+# Split's sync does not list yet (e.g. a new UserExperiment before its Split split exists on dev).
+# Entry: any state (cold starts the app first). Exit: the override list showing FLAG ON. Force-stop and relaunch
+# so the next cold start reads it. maestro test -e FLAG=phone_speak_suggestions add-feature-flag.yaml
+# Selectors: the Add Flag field has no resource-id (text fallback "Add Flag", its label); it is the search bar's
+# second page (swipe left on debug_feature_flag_search). Point fallback: Gboard's Send key (see below).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
+---
+- launchApp:
+    stopApp: true
+- openLink: ${DEBUG_MENU_LINK}
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_feature_flag_override
+    timeout: 30000
+- tapOn:
+    id: debug_menu_feature_flag_override
+- extendedWaitUntil:
+    visible:
+      id: debug_feature_flag_screen
+    timeout: 10000
+- swipe:
+    from:
+      id: debug_feature_flag_search
+    direction: LEFT
+- extendedWaitUntil:
+    visible: "Add Flag"
+    timeout: 5000
+- tapOn: "Add Flag"
+- inputText: ${FLAG}
+# Point fallback: Add Flag only submits on the IME Send action (pressKey Enter types a newline into the
+# multi-line field), so tap Gboard's Send key, bottom right of the keyboard.
+- tapOn:
+    point: 92%, 91%
+- hideKeyboard
+- extendedWaitUntil:
+    visible:
+      id: debug_feature_flag_value_${FLAG}
+      index: 0
+    timeout: 10000
+- assertVisible:
+    id: debug_feature_flag_source_${FLAG}
+    text: "LOCAL.*"
+    index: 0

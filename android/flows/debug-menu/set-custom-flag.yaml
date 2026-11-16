@@ -1,0 +1,43 @@
+# Debug Menu > Feature flag override: set a custom flag (one added with add-feature-flag.yaml) to VALUE (ON or OFF).
+# Custom rows have no debug_feature_flag_value_/source_ IDs, unlike Split rows (set-feature-flag.yaml).
+# Entry: any state (cold starts the app first). Exit: the override list showing "LOCAL · <value>" for FLAG.
+# maestro test -e FLAG=phone_speak_suggestions -e VALUE=OFF set-custom-flag.yaml
+# Selectors: the row's value button and source line have no resource-id (text fallbacks "ON|OFF|SERVER",
+# "LOCAL · on|off"); the search leaves FLAG's rows only (Recent and Custom), so index 0 is FLAG.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
+---
+- launchApp:
+    stopApp: true
+- openLink: ${DEBUG_MENU_LINK}
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_feature_flag_override
+    timeout: 30000
+- tapOn:
+    id: debug_menu_feature_flag_override
+- tapOn:
+    id: debug_feature_flag_search
+- eraseText: 80
+- inputText: ${FLAG}
+- hideKeyboard
+- extendedWaitUntil:
+    visible:
+      text: ${FLAG}
+      index: 0
+    timeout: 5000
+- repeat:
+    times: 3
+    while:
+      notVisible:
+        text: "${'LOCAL · ' + VALUE.toLowerCase()}"
+        index: 0
+    commands:
+      - tapOn:
+          text: "ON|OFF|SERVER"
+          index: 0
+- assertVisible:
+    text: "${'LOCAL · ' + VALUE.toLowerCase()}"
+    index: 0

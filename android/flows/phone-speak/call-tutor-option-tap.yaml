@@ -1,0 +1,30 @@
+# Phone Speak call screen: the tutor option pills show while the call waits on the learner; tapping OPTION
+# hides the row. Needs phone_speak_suggestions ON, PhoneSpeakCallScreen2 (phone_speak_ui_revamp not off) and
+# options from the source (before JRNY-4973: QA-only patch making NoPhoneSpeakTutorOptions emit OPTION).
+# maestro test -e OPTION="For travel" call-tutor-option-tap.yaml
+# Entry: an active call with the tutor's first line (call-start-in-app.yaml); the pills show once it stops talking. Exit: the same call screen, no pills.
+# Selectors: every pill shares phone_speak_call_tutor_option, so OPTION picks one by its label (a text
+# node inside the pill).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  OPTION: ${OPTION || "For travel"}
+---
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_tutor_option
+    timeout: 30000
+- assertVisible:
+    text: ${OPTION}
+    childOf:
+      id: phone_speak_call_tutor_option
+- tapOn:
+    text: ${OPTION}
+    childOf:
+      id: phone_speak_call_tutor_option
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_call_tutor_option
+    timeout: 5000
+- assertVisible:
+    id: phone_speak_call_end_call

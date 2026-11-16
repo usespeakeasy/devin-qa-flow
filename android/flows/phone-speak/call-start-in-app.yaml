@@ -1,0 +1,37 @@
+# Phone Speak: start an in-app call (not a ring) from the `speak-dev://phone-speak?action=call` link and wait
+# until the call is connected and the tutor's first line shows in the transcript.
+# Entry: Home (signed in). Preconditions: an account entitled to Phone Speak calls on dev (Premium Plus, or
+# Subscription override Plus; a 403 closes the call screen), microphone granted, the account has finished a call
+# before (else the intro shows first and phone_speak_intro_continue is tapped). Flag overrides set before launch
+# (e.g. phone_speak_ui_revamp=agent-transcript for PhoneSpeakCallScreen2). Exit: the call screen, call active.
+# Hang up before 60 s for a short call (no survey or summary). Selectors: transcript lines have no resource-id
+# (any text inside phone_speak_call_transcript).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- openLink: speak-dev://phone-speak?action=call
+- extendedWaitUntil:
+    visible:
+      id: "phone_speak_call_end_call|phone_speak_intro_continue|ai_data_consent_alert"
+    timeout: 45000
+- tapOn:
+    id: phone_speak_intro_continue
+    optional: true
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call
+    timeout: 45000
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_mute
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      text: ".+"
+      childOf:
+        id: phone_speak_call_transcript
+    timeout: 30000

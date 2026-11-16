@@ -1,0 +1,18 @@
+# Phone Speak call screen while the call waits on the learner: no tutor option pills
+# (phone_speak_call_tutor_option). Covers phone_speak_suggestions OFF, a build before speak-android#9134, and an
+# empty options source.
+# Waits up to 20 s for a pill (on a patched build one shows once the tutor stops talking), then asserts none.
+# Entry: an active call with the tutor's first line (call-start-in-app.yaml). Exit: the same call screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_tutor_option
+    timeout: 20000
+    optional: true
+- assertVisible:
+    id: phone_speak_call_end_call
+- assertNotVisible:
+    id: phone_speak_call_tutor_option
