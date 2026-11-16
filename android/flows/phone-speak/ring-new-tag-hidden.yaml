@@ -1,0 +1,40 @@
+# Weekly Schedule: the "Ring my phone" card has no "New" tag (phone_speak_ring_new_tag OFF).
+# Entry: signed-in dev account with Phone speak access (Subscription override Plus on a pool account), a saved
+# weekly slot (save-weekly-slot.yaml) and a ring-setting arm from the server. Flags: phone_speak_ui_revamp ON,
+# phone_speak_ring_new_tag set with debug-menu/set-feature-flag.yaml first (builds from before speak-android#9218
+# have no such flag and always show the tag).
+# Selectors: the tag has no resource-id; it is matched by its label text inside the ring card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- openLink: speak-dev://phone-speak?action=schedule
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_standalone_screen
+    timeout: 20000
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_schedule_standalone_loading
+    timeout: 20000
+# A cold start can put the referral welcome dialog over the schedule.
+- runFlow:
+    when:
+      visible:
+        id: referral_welcome_dialog_root
+    commands:
+      - tapOn:
+          id: referral_welcome_dialog_later_button
+- scrollUntilVisible:
+    element:
+      id: phone_speak_schedule_ring_switch
+    direction: DOWN
+    timeout: 15000
+- assertVisible:
+    id: phone_speak_schedule_ring_switch
+- assertNotVisible:
+    text: "^NEW$"
+    childOf:
+      id: phone_speak_schedule_ring_switch
