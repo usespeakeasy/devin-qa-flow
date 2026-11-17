@@ -1,0 +1,52 @@
+# Magic Onboarding chat to the end: walk-to-freeform, then type ANSWER on each freeform turn
+# until Generate my curriculum, curriculum, summary or a language step shows.
+# Entry: onboarding chat after Start.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  ANSWER: "${typeof ANSWER === 'undefined' ? 'I studied English in school for six years and I am intermediate. I want to travel to New York with friends in three months and I can practice fifteen minutes every day. The most difficult thing for me is speaking confidently, because I freeze and forget words when I talk to native speakers.' : ANSWER}"
+---
+- repeat:
+    while:
+      notVisible:
+        id: "onboarding.action.generate-curriculum|onboarding.curriculum.ready|onboarding.summary.ready|onboarding.language.option.*"
+    times: 30
+    commands:
+      - runFlow: allow-notifications-alert.yaml
+      - runFlow: walk-to-freeform.yaml
+      - runFlow:
+          when:
+            visible:
+              id: onboarding.action.switch-to-text
+          commands:
+            - tapOn:
+                id: onboarding.action.switch-to-text
+            - extendedWaitUntil:
+                visible:
+                  id: onboarding.freeform.input
+                timeout: 10000
+      - runFlow:
+          when:
+            visible:
+              id: onboarding.freeform.input
+          commands:
+            - runFlow: allow-notifications-alert.yaml
+            - extendedWaitUntil:
+                visible:
+                  id: onboarding.user-turn.ready
+                timeout: 120000
+            - tapOn:
+                id: onboarding.freeform.input
+            - inputText: ${ANSWER}
+            - tapOn:
+                id: onboarding.freeform.send
+            - waitForAnimationToEnd:
+                timeout: 15000
+            - extendedWaitUntil:
+                visible:
+                  id: "onboarding.user-turn.ready|onboarding.action.generate-curriculum|onboarding.language.option.*|onboarding.curriculum.ready|onboarding.summary.ready|onboarding.questionnaire.option.*|onboarding.text-input|onboarding.action.continue|.*Would Like to Send You Notifications"
+                timeout: 120000
+      - extendedWaitUntil:
+          visible:
+            id: "onboarding.questionnaire.option.*|onboarding.text-input|onboarding.freeform.input|onboarding.action.switch-to-text|onboarding.action.generate-curriculum|onboarding.action.continue|onboarding.language.option.*|onboarding.curriculum.ready|onboarding.summary.ready|.*Would Like to Send You Notifications"
+          timeout: 90000

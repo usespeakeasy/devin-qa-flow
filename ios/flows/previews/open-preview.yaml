@@ -1,0 +1,14 @@
+# C: open one debug preview by name and wait for its arrival ID.
+# Entry: any screen of a dev build. Pass -e NAME (URL-encoded preview name) and -e EXPECT (ID regex).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  EXPECT: "${typeof EXPECT === 'undefined' ? '.*' : EXPECT}"
+---
+- openLink: speak-dev://preview?name=${NAME}
+- runFlow: ../../common/confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible:
+      id: ${EXPECT}
+    timeout: 15000
+- waitForAnimationToEnd

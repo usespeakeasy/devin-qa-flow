@@ -1,0 +1,21 @@
+# B2: send the recording while the case script's proxy drops connections; the tutor asks to retry.
+# Entry: recording (arrow.up) with audio already played.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+# With debugAudioAutoStopFileRecorder the recording stops and sends itself when the injected audio ends.
+- runFlow:
+    when:
+      visible:
+        id: arrow.up
+    commands:
+      - tapOn:
+          id: arrow.up
+- extendedWaitUntil:
+    visible: "Sorry, I had trouble understanding you.*"
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: mic.fill
+    timeout: 30000

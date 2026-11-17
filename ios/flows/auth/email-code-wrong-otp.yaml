@@ -1,0 +1,88 @@
+# A3: email code sign-up -> consent -> OTP screen -> wrong code error -> resend -> Back cancels to
+# account options. Real OTP delivery is not checked.
+# Entry: auth.options.screen (onboarding/to-auth-options.yaml). Pass -e EMAIL (throwaway).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  SHOTS: "${typeof SHOTS === 'undefined' ? '' : SHOTS}"
+---
+- tapOn:
+    id: auth.provider.email-code
+- extendedWaitUntil:
+    visible:
+      id: "auth.social-consent.screen|auth.email-code.field"
+    timeout: 15000
+- runFlow:
+    when:
+      visible:
+        id: auth.social-consent.screen
+    commands:
+      - repeat:
+          while:
+            visible:
+              id: onboarding_requirement_main_button
+              checked: false
+          times: 4
+          commands:
+            - tapOn:
+                id: onboarding_requirement_main_button
+                checked: false
+      - tapOn:
+          id: auth.social-consent.continue
+- extendedWaitUntil:
+    visible:
+      id: auth.email-code.field
+    timeout: 15000
+- tapOn:
+    id: auth.email-code.field
+- inputText: ${EMAIL}
+- tapOn:
+    id: auth.email-code.submit
+- extendedWaitUntil:
+    visible:
+      id: auth.otp.field
+    timeout: 30000
+- tapOn:
+    id: auth.otp.field
+- inputText: "000000"
+- runFlow:
+    when:
+      visible:
+        id: auth.otp.submit
+        enabled: true
+    commands:
+      - tapOn:
+          id: auth.otp.submit
+- extendedWaitUntil:
+    visible:
+      id: auth.otp.error
+    timeout: 20000
+- takeScreenshot: ${SHOTS}a3-otp-error
+- extendedWaitUntil:
+    visible:
+      id: auth.otp.resend
+      enabled: true
+    timeout: 45000
+- tapOn:
+    id: auth.otp.resend
+# After a resend the button is replaced by a "Resend available in Ns" countdown.
+- extendedWaitUntil:
+    visible: "Resend available in \\d+s"
+    timeout: 10000
+- takeScreenshot: ${SHOTS}a3-otp-resent
+- tapOn:
+    id: BackButton
+- extendedWaitUntil:
+    visible:
+      id: "auth.options.screen|auth.email-code.field"
+    timeout: 10000
+- runFlow:
+    when:
+      visible:
+        id: auth.email-code.field
+    commands:
+      - tapOn: "Back"
+- extendedWaitUntil:
+    visible:
+      id: auth.options.screen
+    timeout: 10000

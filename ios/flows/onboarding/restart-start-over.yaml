@@ -1,0 +1,18 @@
+# B2: X -> restart sheet -> Start over returns to the Magic Onboarding welcome.
+# Entry: onboarding chat (onboarding.action.open-reset). "Start over" has no ID.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  SHOTS: "${typeof SHOTS === 'undefined' ? '' : SHOTS}"
+---
+- tapOn:
+    id: onboarding.action.open-reset
+- extendedWaitUntil:
+    visible: "Start over"
+    timeout: 10000
+- takeScreenshot: ${SHOTS}b2-restart-sheet
+- tapOn: "Start over"
+- extendedWaitUntil:
+    visible:
+      id: onboarding.action.start
+    timeout: 20000

@@ -1,0 +1,27 @@
+# B2: Start -> first voice turn -> tap the mic -> cancel (xmark) returns to the mic button.
+# Entry: onboarding welcome. Mic buttons have only image-name IDs (mic.fill, xmark, arrow.up).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  SHOTS: "${typeof SHOTS === 'undefined' ? '' : SHOTS}"
+---
+- tapOn:
+    id: onboarding.action.start
+- runFlow: walk-to-freeform.yaml
+- extendedWaitUntil:
+    visible:
+      id: mic.fill
+    timeout: 30000
+- tapOn:
+    id: mic.fill
+- extendedWaitUntil:
+    visible:
+      id: xmark
+    timeout: 15000
+- takeScreenshot: ${SHOTS}b2-recording
+- tapOn:
+    id: xmark
+- extendedWaitUntil:
+    visible:
+      id: mic.fill
+    timeout: 15000

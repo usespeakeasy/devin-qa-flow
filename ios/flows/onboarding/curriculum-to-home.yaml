@@ -1,0 +1,60 @@
+# B3/B4: from the curriculum, summary or mini-lesson, continue (closing the mini-lesson) to Home.
+# Screenshots each step under SHOTS. Entry: finish-chat.yaml exit. Exit: home.root.ready.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  SHOTS: "${typeof SHOTS === 'undefined' ? '' : SHOTS}"
+---
+- repeat:
+    while:
+      notVisible:
+        id: home.root.ready
+    times: 8
+    commands:
+      - runFlow: allow-notifications-alert.yaml
+      - runFlow:
+          when:
+            visible:
+              id: "onboarding.mini-lesson.ready|onboarding.mini-lesson.error"
+          commands:
+            - takeScreenshot: ${SHOTS}b3-mini-lesson
+            - tapOn:
+                id: "onboarding.mini-lesson.action.dismiss|onboarding.mini-lesson.action.skip"
+            - runFlow:
+                when:
+                  visible:
+                    id: onboarding.mini-lesson.skip-sheet.action.skip
+                commands:
+                  - tapOn:
+                      id: onboarding.mini-lesson.skip-sheet.action.skip
+      - runFlow:
+          when:
+            visible:
+              id: onboarding.curriculum.ready
+          commands:
+            - takeScreenshot: ${SHOTS}b3-curriculum
+            - tapOn:
+                id: onboarding.curriculum.action.get-started
+      - runFlow:
+          when:
+            visible:
+              id: onboarding.summary.ready
+          commands:
+            - takeScreenshot: ${SHOTS}b3-summary
+            - tapOn:
+                id: onboarding.summary.action.continue
+      - runFlow:
+          when:
+            visible:
+              id: onboarding.premium-intro.action.close
+          commands:
+            - takeScreenshot: ${SHOTS}b4-premium-intro
+            - tapOn:
+                id: onboarding.premium-intro.action.close
+      - waitForAnimationToEnd:
+          timeout: 10000
+      - extendedWaitUntil:
+          visible:
+            id: "home.root.ready|onboarding.curriculum.ready|onboarding.summary.ready|onboarding.mini-lesson.ready|onboarding.mini-lesson.error|onboarding.premium-intro.action.close"
+          timeout: 90000
+- takeScreenshot: ${SHOTS}b4-home

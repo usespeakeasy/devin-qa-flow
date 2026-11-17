@@ -1,0 +1,33 @@
+# A1: type the password on the filled sign-in sheet, submit with Return (the keyboard covers
+# Sign in) and reach Home or its first post-sign-in prompt.
+# Entry: email sign-in sheet with the email typed (reset-password.yaml). Pass -e PASSWORD.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: auth.password.field
+- inputText: ${PASSWORD}
+- pressKey: Enter
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|onboarding_notification_secondary_button|ai-data-consent.action.agree|custom-courses.announcement.action.primary|onboarding.premium-intro.action.close"
+    timeout: 40000
+- runFlow:
+    when:
+      visible:
+        id: onboarding_notification_secondary_button
+    commands:
+      - tapOn:
+          id: onboarding_notification_secondary_button
+      - runFlow:
+          when:
+            visible: "You can enable or disable notifications at any time in Settings\\."
+          commands:
+            - tapOn: "OK"
+- runFlow: ../../common/dismiss-ai-data-consent.yaml
+- runFlow: ../../common/dismiss-home-interstitials.yaml
+- extendedWaitUntil:
+    visible:
+      id: home.root.ready
+    timeout: 20000

@@ -1,0 +1,13 @@
+# Lifecycle: Home button mid-onboarding, then bring the app back; the same step is still shown.
+# Entry: onboarding chat. Pass -e EXPECT (ID regex of the step shown before backgrounding).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- pressKey: HOME
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: ${EXPECT}
+    timeout: 15000

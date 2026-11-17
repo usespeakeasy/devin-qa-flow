@@ -1,0 +1,63 @@
+# Magic Onboarding chat: answer name (text), questionnaire and Continue steps until a freeform
+# (voice or text) turn, the curriculum step or the summary shows.
+# Entry: onboarding chat after Start. Answers are fixed: name "Bloo bot", option "other" or the first.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- repeat:
+    while:
+      notVisible:
+        id: "onboarding.freeform.input|onboarding.action.generate-curriculum|onboarding.action.switch-to-text|onboarding.curriculum.ready|onboarding.summary.ready"
+    times: 25
+    commands:
+      - runFlow: allow-notifications-alert.yaml
+      - runFlow:
+          when:
+            visible:
+              id: onboarding.text-input
+          commands:
+            - tapOn:
+                id: onboarding.text-input
+            - eraseText: 20
+            - inputText: "Bloo bot"
+            - tapOn:
+                id: onboarding.action.continue
+      - runFlow:
+          when:
+            visible:
+              id: "onboarding.questionnaire.option.other"
+          commands:
+            - tapOn:
+                id: "onboarding.questionnaire.option.other"
+            - tapOn:
+                id: onboarding.action.continue
+      - runFlow:
+          when:
+            visible:
+              id: "onboarding.questionnaire.option.*"
+            notVisible:
+              id: "onboarding.questionnaire.option.other"
+          commands:
+            - takeScreenshot: unmapped
+            - tapOn:
+                id: "onboarding.questionnaire.option.*"
+                index: 0
+            - tapOn:
+                id: onboarding.action.continue
+      - runFlow:
+          when:
+            visible:
+              id: onboarding.action.continue
+              enabled: true
+            notVisible:
+              id: "onboarding.questionnaire.option.*|onboarding.text-input"
+          commands:
+            - tapOn:
+                id: onboarding.action.continue
+            - waitForAnimationToEnd:
+                timeout: 10000
+      - extendedWaitUntil:
+          visible:
+            id: "onboarding.questionnaire.option.*|onboarding.text-input|onboarding.freeform.input|onboarding.action.switch-to-text|onboarding.action.generate-curriculum|onboarding.action.continue|.*Would Like to Send You Notifications"
+          timeout: 60000

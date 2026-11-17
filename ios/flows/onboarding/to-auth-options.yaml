@@ -1,0 +1,85 @@
+# Fresh install -> Storybook Get started -> learning (and native) language -> account options.
+# Entry: app data cleared. Exit: auth.options.screen. No account needed.
+# LEARNING is the onboarding.language.option.<locale> to pick (en-US, ja-JP, zh-CN...); NATIVE the
+# native pair id on the next screen (korean-english, korean-japanese, english-chinese), if shown.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  LEARNING: "${typeof LEARNING === 'undefined' ? 'es-MX' : LEARNING}"
+  NATIVE: "${typeof NATIVE === 'undefined' ? 'none' : NATIVE}"
+---
+# The ATT sheet and the "Open in Speak Dev?" sheet (from the split-override link) come in either order.
+- repeat:
+    while:
+      notVisible:
+        id: "onboarding_notification_primary_button|onboarding.storybook.screen|onboarding.storybook.continue|onboarding.storybook.get-started"
+    times: 10
+    commands:
+      - runFlow: ../../common/confirm-open-in-app.yaml
+      - runFlow:
+          when:
+            visible: "Ask App Not to Track"
+          commands:
+            - tapOn: "Ask App Not to Track"
+      - waitForAnimationToEnd
+- runFlow:
+    when:
+      visible:
+        id: onboarding_notification_primary_button
+    commands:
+      - tapOn:
+          id: onboarding_notification_primary_button
+      - runFlow:
+          when:
+            visible: "Allow"
+          commands:
+            - tapOn: "Allow"
+- extendedWaitUntil:
+    visible:
+      id: "onboarding.storybook.screen|onboarding.storybook.continue|onboarding.storybook.get-started"
+    timeout: 30000
+- repeat:
+    while:
+      notVisible:
+        id: onboarding.storybook.get-started
+    times: 6
+    commands:
+      - tapOn:
+          id: onboarding.storybook.continue
+- tapOn:
+    id: onboarding.storybook.get-started
+- extendedWaitUntil:
+    visible:
+      id: onboarding.language.option.${LEARNING}
+    timeout: 30000
+- tapOn:
+    id: onboarding.language.option.${LEARNING}
+- runFlow:
+    when:
+      visible:
+        id: onboarding.language.continue
+        enabled: true
+    commands:
+      - tapOn:
+          id: onboarding.language.continue
+# Native language step (shown for learning languages with several native pairs).
+- runFlow:
+    when:
+      visible:
+        id: "onboarding.language.option.${NATIVE}(CN)?"
+    commands:
+      - tapOn:
+          id: "onboarding.language.option.${NATIVE}(CN)?"
+      - tapOn:
+          id: onboarding.language.continue
+- runFlow:
+    when:
+      visible:
+        id: onboarding.app-language.keep
+    commands:
+      - tapOn:
+          id: onboarding.app-language.keep
+- extendedWaitUntil:
+    visible:
+      id: auth.options.screen
+    timeout: 30000

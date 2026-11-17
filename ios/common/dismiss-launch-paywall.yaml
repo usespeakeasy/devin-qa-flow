@@ -12,3 +12,14 @@ env:
       - extendedWaitUntil:
           notVisible: "Check out plans"
           timeout: 10000
+# Superwall launch paywall on a Free pool account ("Join over 5 million users", Subscribe /
+# View more plans); its close X (top right) is web content outside the tree.
+- runFlow:
+    when:
+      visible: "View more plans"
+    commands:
+      - tapOn:
+          point: "91%,8%"
+      - extendedWaitUntil:
+          notVisible: "View more plans"
+          timeout: 10000

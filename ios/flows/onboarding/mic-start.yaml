@@ -1,0 +1,16 @@
+# B2: tap the mic on a voice turn and wait for the recording controls. The case script then plays
+# Debug Audio (audio-pipe say). Entry: voice turn (mic.fill).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: mic.fill
+    timeout: 60000
+- tapOn:
+    id: mic.fill
+- extendedWaitUntil:
+    visible:
+      id: arrow.up
+    timeout: 15000

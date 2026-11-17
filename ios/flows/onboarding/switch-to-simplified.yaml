@@ -1,0 +1,24 @@
+# Simplified onboarding: X -> restart sheet -> Switch to simplified setup.
+# Entry: onboarding chat. Precondition: onboarding_switch_to_basic=switch_to_simplified.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  SHOTS: "${typeof SHOTS === 'undefined' ? '' : SHOTS}"
+---
+- tapOn:
+    id: onboarding.action.open-reset
+- extendedWaitUntil:
+    visible:
+      id: onboarding.action.skip-personalization
+    timeout: 10000
+- takeScreenshot: ${SHOTS}simplified-sheet
+- tapOn:
+    id: onboarding.action.skip-personalization
+- extendedWaitUntil:
+    notVisible:
+      id: onboarding.action.skip-personalization
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: onboarding.flow.ready
+    timeout: 20000

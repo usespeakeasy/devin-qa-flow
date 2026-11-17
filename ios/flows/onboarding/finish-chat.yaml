@@ -1,0 +1,44 @@
+# B3: walk the chat to the end (deferred language step: keep the shown choice), Generate my
+# curriculum, and wait for the curriculum, summary or mini-lesson. Entry: onboarding chat.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  SHOTS: "${typeof SHOTS === 'undefined' ? '' : SHOTS}"
+---
+- repeat:
+    while:
+      notVisible:
+        id: "onboarding.action.generate-curriculum|onboarding.curriculum.*|onboarding.summary.*|onboarding.mini-lesson.*"
+    times: 4
+    commands:
+      - runFlow: walk-chat.yaml
+      - runFlow:
+          when:
+            visible:
+              id: onboarding.language.option.*
+          commands:
+            - takeScreenshot: ${SHOTS}b1-deferred-language
+            - runFlow:
+                when:
+                  visible:
+                    id: onboarding.language.continue
+                    enabled: false
+                commands:
+                  - tapOn:
+                      id: onboarding.language.option.*
+                      index: 0
+            - tapOn:
+                id: onboarding.language.continue
+            - waitForAnimationToEnd
+- runFlow:
+    when:
+      visible:
+        id: onboarding.action.generate-curriculum
+    commands:
+      - tapOn:
+          id: onboarding.action.generate-curriculum
+- extendedWaitUntil:
+    visible:
+      id: "onboarding.curriculum.ready|onboarding.summary.ready|onboarding.mini-lesson.ready|onboarding.mini-lesson.error"
+    timeout: 180000
+- waitForAnimationToEnd

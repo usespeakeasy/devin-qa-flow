@@ -1,0 +1,10 @@
+# Taps Allow on the iOS notification permission alert when it shows. Entry: any screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow:
+    when:
+      visible: "Don’t Allow"
+    commands:
+      - tapOn: "Allow"

@@ -1,13 +1,28 @@
 # Home -> Profile tab -> Settings.
-# Entry: Home (home.root.ready). The Profile tab and the gear have no identifier; the gear's
-# label is its image name.
+# Entry: Home (home.root.ready).
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak-v2.dev
 ---
-- tapOn: "Profile"
-- tapOn: "settings tab icon"
+- tapOn:
+    id: tab-bar.tab.profile
+# A Free account can get the Superwall launch paywall over Profile.
+- runFlow: dismiss-launch-paywall.yaml
+# Closing the launch paywall can drop back to Home; reselect Profile.
+- runFlow:
+    when:
+      notVisible:
+        id: profile.action.settings
+    commands:
+      - tapOn:
+          id: tab-bar.tab.profile
 - extendedWaitUntil:
     visible:
-      id: "Settings"
+      id: profile.action.settings
+    timeout: 10000
+- tapOn:
+    id: profile.action.settings
+- extendedWaitUntil:
+    visible:
+      id: settings.row.account
     timeout: 10000

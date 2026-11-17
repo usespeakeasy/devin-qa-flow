@@ -1,0 +1,22 @@
+# Developer Settings -> "Market (relaunch required)" -> MARKET (Global or China) -> close.
+# Entry: any screen of a dev build. The case script relaunches the app afterwards.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  MARKET: "${typeof MARKET === 'undefined' ? 'Global' : MARKET}"
+---
+- openLink: speak-dev://debug
+- runFlow: confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible:
+      id: debug.action.close
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: debug.row.market
+    timeout: 30000
+- tapOn:
+    text: ${MARKET}
+    below: "Market \\(relaunch required\\)"
+- tapOn:
+    id: debug.action.close

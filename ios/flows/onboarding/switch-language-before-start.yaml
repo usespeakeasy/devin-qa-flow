@@ -1,0 +1,18 @@
+# B1: Magic Onboarding welcome -> "Not learning ...? Switch language" -> language screen -> close (X)
+# returns to the welcome. Entry: onboarding welcome (onboarding.action.start).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  SHOTS: "${typeof SHOTS === 'undefined' ? '' : SHOTS}"
+---
+- tapOn: "Not learning .*"
+- extendedWaitUntil:
+    visible:
+      id: onboarding.language.screen
+    timeout: 15000
+- takeScreenshot: ${SHOTS}b1-switch-language
+- tapOn: "close-icon"
+- extendedWaitUntil:
+    visible:
+      id: onboarding.action.start
+    timeout: 15000
