@@ -1,0 +1,14 @@
+# Chat-mode roleplay (CML): end a voice answer fed by audio-pipe. Debug audio usually auto-sends; tap the send arrow
+# only when the recording is still live. Entry: audio injected into a live recording. Exit: recording closed.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow:
+    when:
+      visible: "sdt-ui-arrow-up"
+    commands:
+      - tapOn: "sdt-ui-arrow-up"
+- extendedWaitUntil:
+    notVisible: "sdt-ui-arrow-up"
+    timeout: 10000

@@ -1,0 +1,12 @@
+# AIL chat (CML): with "Fake: next turn RPC fails" armed, tap Retry on the latest feedback card so the retried answer's
+# turn start fails, and wait for the failed turn caption. LSN-3987 / speak-ios#10508: from that fix on, the card's
+# Retry comes back with the caption; before it, Retry stayed hidden. The caller checks Retry from the tree.
+# Entry: feedback card with Retry on screen, mic idle or keyboard (cml-wait-feedback.yaml). Exit: caption shown.
+# Preconditions: Show Debug Controls on (debug.ail.simulate-connection menu).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: arm-turn-rpc-failure.yaml
+- runFlow: cml-tap-feedback-retry.yaml
+- runFlow: cml-wait-turn-failed.yaml

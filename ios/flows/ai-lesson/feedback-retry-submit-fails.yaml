@@ -1,0 +1,11 @@
+# AIL chat (CML): send a voice Retry answer while "Fake: next turn RPC fails" is armed, so the answer's submit (end
+# user turn) fails, and wait for the failed turn caption in the same run (it is transient). LSN-3987 repro 2: the
+# mic-opened path, which speak-ios#10508 does not change. The caller checks the card's Retry from the tree.
+# Entry: live Retry recording, fake armed during it (arm-turn-rpc-failure.yaml), answer audio injected (audio-pipe).
+# Exit: caption shown, screenshot SHOT taken. Preconditions: Show Debug Controls on, debug audio enabled.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: cml-finish-voice-reply.yaml
+- runFlow: cml-wait-turn-failed.yaml

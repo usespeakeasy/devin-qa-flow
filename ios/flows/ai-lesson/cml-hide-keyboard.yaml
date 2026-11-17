@@ -1,0 +1,11 @@
+# Chat-mode roleplay (CML): hide the system keyboard so the chat (feedback card, failed turn caption) is not covered.
+# Entry: keyboard input with the system keyboard up. Exit: keyboard hidden, Reply... field still shown.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- hideKeyboard
+- extendedWaitUntil:
+    notVisible:
+      id: Return
+    timeout: 5000

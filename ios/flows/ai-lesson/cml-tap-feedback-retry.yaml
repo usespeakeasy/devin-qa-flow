@@ -1,0 +1,7 @@
+# Chat-mode roleplay (CML): tap Retry on the latest feedback card (text fallback; the button has no ID).
+# Entry: feedback card with Retry on screen. Exit: tap sent; voice input opens a recording, keyboard input waits for text.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn: ".*Retry"

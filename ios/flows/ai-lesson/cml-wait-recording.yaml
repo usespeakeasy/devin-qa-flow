@@ -1,0 +1,8 @@
+# Chat-mode roleplay (CML): wait for a live recording (send arrow shown), e.g. after Retry on a feedback card in voice input.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "sdt-ui-arrow-up"
+    timeout: 20000

@@ -1,0 +1,27 @@
+# Chat-mode roleplay (CML): wait for a feedback card with Retry (e.g. Improve word choice) and the end of the tutor
+# reply (green debug answer enabled), then cancel the recording manual chat mode auto-starts, so the mic is idle.
+# Entry: right after a learner answer that gets a correction. Exit: feedback card with Retry on screen, mic idle or keyboard.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: ".*Retry"
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: debug.ail.correct-response
+      enabled: true
+    timeout: 60000
+- extendedWaitUntil:
+    visible: "sdt-ui-arrow-up"
+    timeout: 4000
+    optional: true
+- runFlow:
+    when:
+      visible: "sdt-ui-arrow-up"
+    commands:
+      - tapOn: "close-icon"
+      - extendedWaitUntil:
+          notVisible: "sdt-ui-arrow-up"
+          timeout: 10000

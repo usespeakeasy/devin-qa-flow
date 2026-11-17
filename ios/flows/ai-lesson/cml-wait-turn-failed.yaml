@@ -1,0 +1,11 @@
+# Chat-mode roleplay (CML): wait for the failed turn caption ("Something went wrong. Try again.").
+# Entry: right after a turn whose start or submit fails (e.g. "Fake: next turn RPC fails" armed). Exit: caption shown,
+# screenshot SHOT (relative name; run with --test-output-dir) taken at once since the caption is transient.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "Something went wrong.*"
+    timeout: 30000
+- takeScreenshot: ${SHOT || "turn-failed"}

@@ -1,0 +1,30 @@
+# Chat-mode roleplay (CML): type TEXT in the keyboard field and send it.
+# Entry: native chat-mode lesson, mic idle, a recording manual chat mode auto-started, or keyboard already open.
+# Exit: TEXT sent (field empty). The caller waits for the reply or the failure.
+# Preconditions: a learning language with keyboard input (e.g. Spanish). Params: TEXT.
+# Fallbacks: close-icon (auto-start recording cancel), keyboard-filled-icon and arrow.up are glyph names, Reply... is the placeholder.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  TEXT: ${TEXT || "Hola"}
+---
+- runFlow:
+    when:
+      notVisible: "Reply\\.\\.\\."
+    commands:
+      - runFlow:
+          when:
+            visible: "sdt-ui-arrow-up"
+          commands:
+            - tapOn: "close-icon"
+      - extendedWaitUntil:
+          visible: "keyboard-filled-icon"
+          timeout: 15000
+      - tapOn: "keyboard-filled-icon"
+      - extendedWaitUntil:
+          visible: "Reply\\.\\.\\."
+          timeout: 5000
+- tapOn: "Reply\\.\\.\\."
+- inputText: ${TEXT}
+- tapOn:
+    id: arrow.up
