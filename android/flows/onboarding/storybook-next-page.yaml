@@ -1,0 +1,14 @@
+# Signed-out storybook: one swipe left to the next page. The run script screenshots and dumps each page in between.
+# Entry: `onboarding_storybook_screen` on screen (app data cleared). Exit: the storybook, one page further.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: onboarding_storybook_get_started_button
+- swipe:
+    direction: LEFT
+- assertVisible:
+    id: onboarding_storybook_screen
+- assertVisible:
+    id: onboarding_storybook_get_started_button
