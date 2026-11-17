@@ -1,0 +1,32 @@
+# Home offline, then CYCLES times: Home key, relaunch without stopping, wait for the generic error
+# alert ("An unexpected error occurred.", OK). Each return reloads Home and fails, which calls
+# RootNavigation.showErrorDialog: develop stacked one alert per return, speak-android#9524 keeps one.
+# Entry: Home (`learning_path_ready`), online, signed in. Exit: alert showing, airplane mode on.
+# A return that shows no new alert within 20 s is not a failure (the reload can be skipped); at least one
+# alert must show by the end. Saves SHOT.png. The caller counts the alerts by tapping OK (dismiss loop) and turns airplane mode off.
+# Selectors: text fallback for the alert; the Navigation 3 GenericErrorDialog entry exposes no ids.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "offline-background-cycles"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 60000
+- runFlow: ../../common/airplane-on.yaml
+- repeat:
+    times: 5
+    commands:
+      - pressKey: Home
+      - launchApp:
+          appId: ${APP_ID}
+          stopApp: false
+      - extendedWaitUntil:
+          visible: "An unexpected error occurred\\."
+          timeout: 20000
+          optional: true
+      - waitForAnimationToEnd:
+          timeout: 2000
+- assertVisible: "An unexpected error occurred\\."
+- takeScreenshot: ${SHOT}

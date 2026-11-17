@@ -1,0 +1,23 @@
+# Generic error alert showing: landscape then portrait, the alert stays.
+# Entry: alert "An unexpected error occurred." showing. Exit: same alert, portrait. Saves SHOT-landscape.png and SHOT.png.
+# Selectors: text fallback for the alert; the Navigation 3 GenericErrorDialog entry exposes no ids.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "rotate-error-dialog"}
+---
+- assertVisible: "An unexpected error occurred\\."
+- setOrientation: LANDSCAPE_LEFT
+- extendedWaitUntil:
+    visible: "An unexpected error occurred\\."
+    timeout: 20000
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${SHOT}-landscape
+- setOrientation: PORTRAIT
+- extendedWaitUntil:
+    visible: "An unexpected error occurred\\."
+    timeout: 20000
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${SHOT}

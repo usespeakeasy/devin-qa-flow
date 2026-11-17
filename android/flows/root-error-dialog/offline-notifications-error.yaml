@@ -1,0 +1,16 @@
+# Generic error dialog outside Home: Settings > Notifications with the network off fails to load and shows
+# "An unexpected error occurred." (NotificationsEntry, root showErrorDialog with onDismiss = back).
+# The flow stops with the alert open; the run closes it with OK and checks Settings is back.
+# Entry: `home_root_ready`, airplane mode on (common/airplane-on.yaml). Saves SHOT.png with the alert open.
+# Selectors: the Settings row and the generic error have no resource-id (text fallbacks, CLNT-1361).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "offline-notifications-error"}
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn: "^Notifications$"
+- extendedWaitUntil:
+    visible: "An unexpected error occurred\\."
+    timeout: 30000
+- takeScreenshot: ${SHOT}

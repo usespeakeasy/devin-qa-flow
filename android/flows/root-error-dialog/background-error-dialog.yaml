@@ -1,0 +1,12 @@
+# Generic error alert showing: press Home so the case script can kill the process (`am kill`, retried
+# until `pidof` is empty; Maestro's killApp right after Home leaves the process alive).
+# Entry: alert "An unexpected error occurred." showing. Exit: launcher, app in the background.
+# Selectors: text fallback for the alert; the Navigation 3 GenericErrorDialog entry exposes no ids.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible: "An unexpected error occurred\\."
+- pressKey: Home
+- waitForAnimationToEnd:
+    timeout: 2000

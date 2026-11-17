@@ -1,0 +1,19 @@
+# Process death relaunch: the process was killed in the background (case script checked `pidof` is empty),
+# relaunch without stopping so the saved back stack restores. Offline, Home's reload can add an alert.
+# Entry: app process dead. Exit: the restored root stack, an alert showing or Home. Saves SHOT.png.
+# Selectors: text fallback for the alert; the Navigation 3 GenericErrorDialog entry exposes no ids.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "relaunch-after-kill"}
+---
+- launchApp:
+    appId: ${APP_ID}
+    stopApp: false
+- extendedWaitUntil:
+    visible: "An unexpected error occurred\\."
+    timeout: 30000
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ${SHOT}
