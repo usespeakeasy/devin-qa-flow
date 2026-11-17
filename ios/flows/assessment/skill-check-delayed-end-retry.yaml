@@ -1,0 +1,133 @@
+# Case: a unit skill check speaking answer whose end is in flight and then cannot be delivered. Needs the QA-only
+# speak-ios patch that delays the endUserTurn RPC by 12 s in AILessonTurnService.sendTurnRPC. Clears the MC and
+# tap-to-build blocks with the green debug answer, records the first speaking answer, arms "Fake: next turn RPC fails"
+# while recording and submits. Polls that Continue (structured-conversation.action.continue) never enables for 10.5 s,
+# then retries the answer (retry, or the mic) before the old end settles at 12 s, polls Continue through the settle,
+# submits the retry and waits for Continue to enable once that answer reaches the tutor (its end is delayed 12 s too).
+# Entry: any state (cold-starts to Home). Exit: speaking task with Continue enabled.
+# Preconditions: as skill-check-undelivered-answer.yaml; the caller injects speech (audio-pipe say) at each
+# "Manual mode: user turn started" log line. Params: ASSESSMENT_LESSON_ID, SHOT_DIR.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  ASSESSMENT_LESSON_ID: EN_ES_A1-1__UNIT_1__SC_AST
+  SHOT_DIR: .
+---
+- runFlow: ../../common/launch-home.yaml
+- openLink: "speak-dev://lesson?id=${ASSESSMENT_LESSON_ID}"
+- runFlow: ../../common/confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible:
+      id: skill-check.intro.action.start
+    timeout: 20000
+- tapOn:
+    id: skill-check.intro.action.start
+- extendedWaitUntil:
+    visible:
+      id: debug.ail.correct-response
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 2000
+# Resume sheet ("Continue where you left off?") is not in the tree; Start over by point.
+- runFlow:
+    when:
+      visible: "tutor-chat-dictionary-loading-icon"
+    commands:
+      - tapOn:
+          point: "50%,91%"
+- extendedWaitUntil:
+    visible:
+      id: debug.ail.correct-response
+      enabled: true
+    timeout: 45000
+- repeat:
+    while:
+      notVisible: "AssessmentTaskUncheckedIcon"
+    times: 40
+    commands:
+      - tapOn:
+          id: debug.ail.correct-response
+          optional: true
+          retryTapIfNoChange: false
+      - waitForAnimationToEnd:
+          timeout: 2000
+- extendedWaitUntil:
+    visible: "sdt-ui-microphone-fill|I’m listening\\.\\.\\."
+    timeout: 45000
+- tapOn:
+    text: "sdt-ui-microphone-fill"
+    optional: true
+- extendedWaitUntil:
+    visible: "I’m listening\\.\\.\\."
+    timeout: 10000
+- runFlow: ../ai-lesson/arm-turn-rpc-failure.yaml
+- extendedWaitUntil:
+    visible: "qa-never-shown"
+    timeout: 3000
+    optional: true
+- tapOn: "sdt-ui-arrow-up"
+# Poll: an enabled Continue at any point in the first 10.5 s ends the wait early and fails the assert below.
+- extendedWaitUntil:
+    visible:
+      id: structured-conversation.action.continue
+      enabled: true
+    timeout: 10500
+    optional: true
+- assertNotVisible:
+    id: structured-conversation.action.continue
+    enabled: true
+- takeScreenshot: ${SHOT_DIR}/c-end-pending
+# Retry before the old end settles: the caller taps the answer's retry (AXe, 366,381 on iPhone 17) 10.5 s after the app logs
+# UserTurn.finishRequested; Maestro is too slow to land it before the 12 s settle.
+- extendedWaitUntil:
+    visible: "I’m listening\\.\\.\\."
+    timeout: 5000
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: structured-conversation.action.continue
+      enabled: true
+    timeout: 4000
+    optional: true
+- assertNotVisible:
+    id: structured-conversation.action.continue
+    enabled: true
+- takeScreenshot: ${SHOT_DIR}/c-after-stale
+# If the retry was not reachable before the settle, retry now.
+- runFlow:
+    when:
+      notVisible: "I’m listening\\.\\.\\."
+    commands:
+      - extendedWaitUntil:
+          visible: "retry-icon"
+          timeout: 10000
+      - assertNotVisible:
+          id: structured-conversation.action.continue
+          enabled: true
+      - takeScreenshot: ${SHOT_DIR}/c-after-failure
+      - tapOn:
+          point: "87%,44%"
+      - extendedWaitUntil:
+          visible: "I’m listening\\.\\.\\."
+          timeout: 10000
+- extendedWaitUntil:
+    visible: "qa-never-shown"
+    timeout: 4000
+    optional: true
+- tapOn: "sdt-ui-arrow-up"
+- extendedWaitUntil:
+    visible:
+      id: structured-conversation.action.continue
+      enabled: true
+    timeout: 6000
+    optional: true
+- assertNotVisible:
+    id: structured-conversation.action.continue
+    enabled: true
+- takeScreenshot: ${SHOT_DIR}/c-retry-pending
+- extendedWaitUntil:
+    visible:
+      id: structured-conversation.action.continue
+      enabled: true
+    timeout: 30000
+- takeScreenshot: ${SHOT_DIR}/c-continue-enabled

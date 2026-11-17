@@ -1,0 +1,74 @@
+# Case: a voice turn's end still in flight when the learner records again, in a chat-mode AI lesson (CML). Needs the
+# QA-only speak-ios patch that delays the endUserTurn RPC by 12 s in AILessonTurnService.sendTurnRPC (over the 10 s
+# button timeout, under the 15 s LiveKit RPC timeout). A typed send fails first ("Fake: next turn RPC fails"), then the
+# flow switches to voice, arms the failure while recording and stops the recording (its end now fails after 12 s),
+# waits for the mic to come back after the 10 s button timeout and records a newer turn before the old end settles.
+# Screenshots b-stale-settled after the old end settles; if the lesson is still open, it fails the newer turn's end
+# too and waits for "Oops!". The app log shows whether the old end was superseded.
+# Entry: any state (cold-starts to Home). Exit: "Oops!" alert over the ended lesson.
+# Preconditions: as cml-overlapping-typed-sends.yaml; the caller injects speech (audio-pipe say) at each
+# "Manual mode: user turn started" log line. Params: TOPIC, FIRST_TEXT, SHOT_DIR.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+  TOPIC: At a Bad Bunny Concert
+  FIRST_TEXT: Hola quiero una entrada
+  SHOT_DIR: .
+---
+- runFlow:
+    file: cml-open-first-turn.yaml
+    env:
+      TOPIC: ${TOPIC}
+- tapOn:
+    text: "close-icon"
+    optional: true
+- tapOn: "keyboard-filled-icon"
+- extendedWaitUntil:
+    visible: "Reply\\.\\.\\."
+    timeout: 5000
+- runFlow: arm-turn-rpc-failure.yaml
+- tapOn: "Reply\\.\\.\\."
+- inputText: ${FIRST_TEXT}
+- tapOn:
+    id: arrow.up
+- extendedWaitUntil:
+    visible:
+      id: mic.fill
+    timeout: 15000
+# Switch to voice (SF symbol name is the only identifier); switching starts recording.
+- tapOn:
+    id: mic.fill
+- extendedWaitUntil:
+    visible: "sdt-ui-arrow-up"
+    timeout: 15000
+- runFlow: arm-turn-rpc-failure.yaml
+- extendedWaitUntil:
+    visible: "qa-never-shown"
+    timeout: 3000
+    optional: true
+- tapOn: "sdt-ui-arrow-up"
+# The end is now delayed 12 s. The mic comes back when the 10 s button timeout fires; Maestro taps about 2 s after
+# that, too close to the 12 s settle, so the caller taps the mic (AXe) at the app's "Loading state timeout triggered"
+# log line. Before may end the lesson on the old end's failure while the newer turn starts.
+- extendedWaitUntil:
+    notVisible: "sdt-ui-arrow-up"
+    timeout: 5000
+- extendedWaitUntil:
+    visible: "sdt-ui-arrow-up|Oops!"
+    timeout: 16000
+- takeScreenshot: ${SHOT_DIR}/b-newer-recording
+# Let the old end settle (12 s after the stop).
+- extendedWaitUntil:
+    visible: "Oops!"
+    timeout: 5000
+    optional: true
+- takeScreenshot: ${SHOT_DIR}/b-stale-settled
+- runFlow:
+    when:
+      notVisible: "Oops!"
+    commands:
+      - runFlow: arm-turn-rpc-failure.yaml
+      - tapOn: "sdt-ui-arrow-up"
+- extendedWaitUntil:
+    visible: "Oops!"
+    timeout: 25000
