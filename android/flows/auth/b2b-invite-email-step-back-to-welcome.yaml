@@ -1,0 +1,22 @@
+# B2B access invite sign-in options > Email > the sheet back arrow returns to the options, then system Back
+# ends the invitation and shows the welcome screen.
+# Entry: app data cleared (welcome screen). Params: TOKEN (see b2b-invite-open.yaml). Exit: the welcome screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: b2b-invite-open.yaml
+- tapOn:
+    id: button_email
+- assertVisible:
+    id: onboarding_sign_in_screen
+- runFlow: sheet-back-to-options.yaml
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: auth_options_screen
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_screen
+    timeout: 15000

@@ -1,0 +1,15 @@
+# B2B access invite for an existing account, opened signed out from the welcome screen: system Back on the
+# sign-in options it opens ends the invitation and shows the welcome screen again (release/4.75.0 9009576530:
+# a blank screen instead, CLNT-2136).
+# Entry: app data cleared (welcome screen). Params: TOKEN (see b2b-invite-open.yaml). Exit: the welcome screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: b2b-invite-sign-in-back.yaml
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_screen
+    timeout: 15000
+- assertVisible:
+    id: onboarding_storybook_sign_in_button

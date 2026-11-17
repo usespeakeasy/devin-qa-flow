@@ -1,0 +1,9 @@
+# Back on a B2B invite's sign-in options shows the welcome screen; Back again leaves the app, so nothing
+# was left on the back stack under the welcome screen.
+# Entry: app data cleared (welcome screen). Params: TOKEN (see b2b-invite-open.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: b2b-invite-sign-in-back-to-welcome.yaml
+- runFlow: ../onboarding/storybook-back-exits.yaml

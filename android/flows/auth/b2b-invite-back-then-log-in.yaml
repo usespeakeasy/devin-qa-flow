@@ -1,0 +1,15 @@
+# Back on a B2B invite's sign-in options, then the welcome screen's own Log in > Email: sign-in reaches Home
+# with no B2B welcome sheet (the abandoned invitation is not acknowledged).
+# Entry: app data cleared (welcome screen). Params: TOKEN (see b2b-invite-open.yaml), EMAIL, PASSWORD.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: b2b-invite-sign-in-back-to-welcome.yaml
+- runFlow: email-sign-in.yaml
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- assertNotVisible:
+    id: b2b_access_welcome_modal
