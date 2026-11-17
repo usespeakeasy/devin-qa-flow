@@ -1,0 +1,16 @@
+# Learning path live lesson tile: tap it, the live lesson opens and the tutor joins (talks).
+# Entry: Home (learning_path_ready). Precondition: a live lesson on the path; on dev accounts without one
+# the run uses a QA-only patch that makes the first path launch in a process open the live lesson.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/start-path-lesson.yaml
+- extendedWaitUntil:
+    visible:
+      id: live_lesson_footer
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_subtitle
+    timeout: 60000

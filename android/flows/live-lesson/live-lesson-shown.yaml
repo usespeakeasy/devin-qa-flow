@@ -1,0 +1,15 @@
+# Assert the live lesson screen is up and the tutor is talking, e.g. after a dark mode switch,
+# warm reopen or process death relaunch done by the case script.
+# Entry: a live lesson was running before the script's action.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: live_lesson_footer
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_subtitle
+    timeout: 60000

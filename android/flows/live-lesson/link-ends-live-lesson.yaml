@@ -1,0 +1,24 @@
+# A deep link opened during a live lesson ends the lesson, then opens its own screen (CLNT-2192).
+# The order (Live Lesson Ended reason=replaced, LiveKit Disconnection event, then the screen) is checked
+# in logcat by the case script; this flow asserts the arrival and that the live lesson is gone.
+# Entry: signed in. OPEN=true (default) opens the live lesson first; OPEN=false expects one already running.
+# maestro test -e LINK=speak-dev://practice -e WAIT=practice_tab_list link-ends-live-lesson.yaml
+# maestro test -e LINK='speak-dev://lesson?id=EN_ES_A1-1_quetal_SP_DL_IC' -e WAIT='drill_lesson_skip|tap_to_continue' link-ends-live-lesson.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  OPEN: ${OPEN || "true"}
+  LINK: ${LINK || "speak-dev://practice"}
+  WAIT: ${WAIT || "practice_tab_list"}
+---
+- runFlow:
+    when:
+      true: ${OPEN == "true"}
+    file: ../../common/open-live-lesson.yaml
+- openLink: ${LINK}
+- extendedWaitUntil:
+    visible:
+      id: ${WAIT}
+    timeout: 60000
+- assertNotVisible:
+    id: live_lesson_footer

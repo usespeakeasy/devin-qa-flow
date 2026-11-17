@@ -1,0 +1,17 @@
+# The same live lesson link opened during that live lesson: the new screen replaces the old one and the
+# session keeps running (no Live Lesson Ended, checked in logcat by the case script).
+# Entry: signed in, any screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/open-live-lesson.yaml
+- openLink: speak-dev://live-lesson?id=EN_ES_A1-1_quetal_no_muchogusto_no_vamos_TL_LIVE&context-id=EN_ES_A1-1
+- extendedWaitUntil:
+    visible:
+      id: live_lesson_footer
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_subtitle
+    timeout: 60000

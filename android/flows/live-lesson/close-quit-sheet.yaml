@@ -1,0 +1,62 @@
+# Live lesson close: the header close (BACK=false) or system Back (BACK=true) shows the quit sheet
+# ("Are you sure you want to quit this lesson?"); ACTION=keep taps Keep Learning and the lesson stays,
+# ACTION=quit taps Quit and the lesson leaves (then ARRIVE, an id regex, shows), ACTION=none leaves
+# the sheet up. SHOT=<path> screenshots the sheet.
+# Entry: live lesson screen (common/open-live-lesson.yaml).
+# Selectors: the quit sheet (LiveLessonQuitSheet) exposes no resource-ids, so its title and buttons are text.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  BACK: ${BACK || "false"}
+  ACTION: ${ACTION || "keep"}
+  ARRIVE: ${ARRIVE || "none"}
+  SHOT: ${SHOT || "none"}
+---
+- runFlow:
+    when:
+      true: ${BACK == "true"}
+    commands:
+      - back
+- runFlow:
+    when:
+      true: ${BACK != "true"}
+    commands:
+      - tapOn:
+          id: lesson_top_bar_close
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 10000
+- assertVisible: "Keep Learning"
+- assertVisible: "^Quit$"
+- runFlow:
+    when:
+      true: ${SHOT != "none"}
+    commands:
+      - takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      true: ${ACTION == "keep"}
+    commands:
+      - tapOn: "Keep Learning"
+      - extendedWaitUntil:
+          notVisible: "Are you sure you want to quit this lesson\\?"
+          timeout: 10000
+      - assertVisible:
+          id: live_lesson_footer
+- runFlow:
+    when:
+      true: ${ACTION == "quit"}
+    commands:
+      - tapOn: "^Quit$"
+      - extendedWaitUntil:
+          notVisible:
+            id: live_lesson_footer
+          timeout: 30000
+      - runFlow:
+          when:
+            true: ${ARRIVE != "none"}
+          commands:
+            - extendedWaitUntil:
+                visible:
+                  id: ${ARRIVE}
+                timeout: 30000

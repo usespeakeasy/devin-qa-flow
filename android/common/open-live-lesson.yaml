@@ -1,0 +1,18 @@
+# Open a live lesson by deep link and wait until the tutor speaks (subtitle line shown under the tutor).
+# Entry: signed in, any screen, microphone permission granted. Exit: live lesson screen, tutor talking.
+# maestro test -e LESSON_ID=EN_ES_A1-1_quetal_no_muchogusto_no_vamos_TL_LIVE -e CONTEXT_ID=EN_ES_A1-1 open-live-lesson.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_no_muchogusto_no_vamos_TL_LIVE"}
+  CONTEXT_ID: ${CONTEXT_ID || "EN_ES_A1-1"}
+---
+- openLink: speak-dev://live-lesson?id=${LESSON_ID}&context-id=${CONTEXT_ID}
+- extendedWaitUntil:
+    visible:
+      id: live_lesson_footer
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_subtitle
+    timeout: 60000

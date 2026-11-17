@@ -1,0 +1,35 @@
+# Quit a path-opened live lesson, then start another path lesson while it is still ending: the launch
+# waits for the end (Live Lesson Ended, LiveKit Disconnection event in logcat), then the lesson opens.
+# Entry: live lesson opened from the path (path-live-lesson.yaml). Precondition: the ending lasts long
+# enough to tap (QA-only patch holds the ending 6 s).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: close-quit-sheet.yaml
+    env:
+      ACTION: quit
+- extendedWaitUntil:
+    visible:
+      id: "learning_path_ready|course_streak_repair_dialog_root"
+    timeout: 30000
+# Quitting can bring up the streak repair dialog over Home; Back closes it.
+- runFlow:
+    when:
+      visible:
+        id: course_streak_repair_dialog_root
+    commands:
+      - back
+      - extendedWaitUntil:
+          visible:
+            id: learning_path_ready
+          timeout: 10000
+- runFlow: ../../common/start-path-lesson.yaml
+# WAIT is text: the next path lesson on a fresh A1 account is an AI tutor lesson whose intro
+# ("Quick Catch-up", Start) exposes no resource-id.
+- extendedWaitUntil:
+    visible: "^Start$"
+    timeout: 60000
+- assertNotVisible:
+    id: live_lesson_footer
