@@ -1,0 +1,28 @@
+# Profile -> Settings -> Manage Account -> Name, type NAME_TEXT into the field without saving. The caller then
+# rotates or kills the app and checks the typed text comes back (`SingleFieldInputViewModel` keeps it in its
+# SavedStateHandle). Entry: `home_root_ready`. Exit: `single_field_input_screen` with NAME_TEXT in `input`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  NAME_TEXT: ${NAME_TEXT || "QA Restore Name"}
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn:
+    id: settings_manage_account_option
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 15000
+- tapOn:
+    id: edit_name
+- extendedWaitUntil:
+    visible:
+      id: single_field_input_screen
+    timeout: 15000
+- tapOn:
+    id: input
+- inputText: ${NAME_TEXT}
+- assertVisible:
+    id: input
+    text: ${NAME_TEXT}
+- hideKeyboard
