@@ -1,0 +1,49 @@
+# Profile course row > "Switch to this course?" (SimpleDialog, a navigateForResult dialog), dismissed without an
+# answer: DISMISS=back (system Back) or DISMISS=outside (tap on the scrim). The dialog closes once, does not come
+# back, and Profile still shows the course rows. The caller checks which row carries CURRENT.
+# Entry: Profile tab with two or more started courses; COURSE is a non-current course's title regex. Exit: Profile.
+# maestro test -e COURSE="^Beginner Part 1" -e DISMISS=outside -e SHOT=dismiss course-switch-dismiss.yaml
+# Selectors: course rows have no per-course resource-id (text fallback); the outside tap is a point on the scrim
+# above the dialog card, which has no id.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DISMISS: ${DISMISS || "back"}
+  SHOT: ${SHOT || "course-dismiss"}
+---
+- scrollUntilVisible:
+    element:
+      text: ${COURSE}
+    direction: DOWN
+    centerElement: true
+- tapOn:
+    text: ${COURSE}
+- extendedWaitUntil:
+    visible:
+      id: simple_dialog
+    timeout: 10000
+- assertVisible: "Switch to this course\\?"
+- takeScreenshot: ${SHOT}-open
+- runFlow:
+    when:
+      true: ${DISMISS == "back"}
+    commands:
+      - back
+- runFlow:
+    when:
+      true: ${DISMISS == "outside"}
+    commands:
+      # Scrim above the dialog card (no id).
+      - tapOn:
+          point: "50%,8%"
+- extendedWaitUntil:
+    notVisible:
+      id: simple_dialog
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertNotVisible:
+    id: simple_dialog
+- assertVisible:
+    text: ${COURSE}
+- takeScreenshot: ${SHOT}-closed

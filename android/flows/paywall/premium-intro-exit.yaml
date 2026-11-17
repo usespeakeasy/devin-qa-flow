@@ -1,0 +1,56 @@
+# Paywall exit: Home > Get Premium opens the premium intro paywall; its close (exit) returns to Home on the Home tab
+# and nothing re-opens. On the emulator (no Play Billing) a billing error dialog can show first; OK dismisses it.
+# Entry: Home tab (learning_path_ready), signed in, free account. Exit: Home tab.
+# maestro test -e SHOT=paywall premium-intro-exit.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "paywall-exit"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: learning_path_popover_lesson_menu
+    commands:
+      - swipe:
+          direction: DOWN
+      - waitForAnimationToEnd
+- tapOn:
+    id: course_premium_upgrade_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_premium_intro_(ready|error)
+    timeout: 30000
+# Billing error dialog (onboarding_premium_intro_error): its OK has no id here (text fallback); android:id/button1 on
+# the framework AlertDialog variant.
+- repeat:
+    times: 3
+    while:
+      visible:
+        id: onboarding_premium_intro_error|button1
+    commands:
+      - tapOn:
+          text: "^OK$"
+      - waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: exit
+    timeout: 10000
+- takeScreenshot: ${SHOT}-open
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- assertNotVisible:
+    id: onboarding_premium_intro_(ready|error)
+- assertVisible:
+    id: main_tab_home
+    selected: true
+- takeScreenshot: ${SHOT}-closed
+- runFlow: ../home-nav3/assert-nothing-reopened.yaml

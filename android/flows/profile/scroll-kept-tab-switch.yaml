@@ -1,33 +1,39 @@
-# Profile tab: scroll down to "Your courses" (the toolbar name fades in), switch to Home and back:
-# the list is still scrolled (courses header shown, the stats are not). Entry: Profile tab at the top.
-# Saves SHOT-scrolled.png and SHOT-back.png. Exit: Profile tab, scrolled.
+# Profile scroll position survives a tab switch: Profile, scroll down to "See all activities", Home tab, Profile tab again:
+# Profile is still scrolled (the activity log button shows, the stats header does not).
+# Entry: main tabs, signed in, an account with activity log rows. Exit: Profile tab, scrolled.
+# maestro test -e SHOT=scroll scroll-kept-tab-switch.yaml
+# Selectors: "See all activities" is a generic `button` id shared by other rows (text fallback).
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
-  SHOT: ${SHOT || "profile"}
+  SHOT: ${SHOT || "profile-scroll"}
 ---
+- tapOn:
+    id: main_tab_profile
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 30000
 - scrollUntilVisible:
     element:
-      text: Your courses
+      text: "^See all activities$"
     direction: DOWN
-    centerElement: true
-- waitForAnimationToEnd:
-    timeout: 3000
+    timeout: 20000
 - assertNotVisible:
-    id: stat_sentences_title
+    id: stat_sentences_title|stat_streak_title
 - takeScreenshot: ${SHOT}-scrolled
 - tapOn:
     id: main_tab_home
 - extendedWaitUntil:
     visible:
-      id: home_root_ready
+      id: learning_path_ready
     timeout: 30000
 - tapOn:
     id: main_tab_profile
 - extendedWaitUntil:
     visible:
-      text: Your courses
-    timeout: 15000
+      text: "^See all activities$"
+    timeout: 10000
 - assertNotVisible:
-    id: stat_sentences_title
-- takeScreenshot: ${SHOT}-back
+    id: stat_sentences_title|stat_streak_title
+- takeScreenshot: ${SHOT}-kept

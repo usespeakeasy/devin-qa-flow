@@ -1,0 +1,58 @@
+# Background on the current lesson started from Home (popover Start, as start-current-lesson-quit.yaml), Home key,
+# relaunch without stopping: the same lesson (ARRIVAL) shows, not Home. With Developer options > Don't keep activities ON
+# this is the activity-recreation check. Back (Quit on the quit sheet) returns to Home on the Home tab.
+# Entry: Home tab showing learning_path_ready. Exit: Home tab.
+# maestro test -e ARRIVAL=card_count -e SHOT=dka background-resume-current-lesson.yaml
+# Selectors: the quit sheet has no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: "learning_path_lesson_start_.*"
+    commands:
+      - tapOn:
+          id: "learning_path_loop_.*"
+          index: 0
+- tapOn:
+    id: "learning_path_lesson_start_.*"
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- pressKey: Home
+- extendedWaitUntil:
+    notVisible:
+      id: ${ARRIVAL}
+    timeout: 10000
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- assertNotVisible:
+    id: learning_path_ready
+- takeScreenshot: ${SHOT}-resumed
+- back
+- runFlow:
+    when:
+      visible: "^Quit$"
+    commands:
+      - tapOn: "^Quit$"
+- runFlow: ../../common/dismiss-premium-intro.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- assertVisible:
+    id: main_tab_home
+    selected: true
+- runFlow: assert-nothing-reopened.yaml

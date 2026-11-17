@@ -1,0 +1,22 @@
+# Debug Menu opened by `adb shell am start -a android.intent.action.VIEW -d speak-dev://debug-menu com.selabs.speak.dev`
+# (run by the caller, warm or after a force-stop): the Debug Menu shows, system Back returns to CALLER (a resource-id
+# regex such as `action_settings` for Profile or `home_root_ready` for Home), and the Debug Menu is gone.
+# Entry: the deep link was just sent. Exit: CALLER showing.
+# maestro test -e CALLER=action_settings -e SHOT=debug-warm back-to-caller.yaml
+# Selectors: the Debug Menu title has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "debug-menu"}
+---
+- extendedWaitUntil:
+    visible: "^Debug Menu$"
+    timeout: 30000
+- takeScreenshot: ${SHOT}-open
+- back
+- extendedWaitUntil:
+    visible:
+      id: ${CALLER}
+    timeout: 15000
+- assertNotVisible: "^Debug Menu$"
+- takeScreenshot: ${SHOT}-back

@@ -14,13 +14,17 @@ env:
     visible:
       id: (onboarding_premium_intro_(ready|error)|b2b_access_welcome_modal)
     timeout: 60000
-- runFlow:
-    when:
+# Billing error: the framework AlertDialog (button1) or the in-content onboarding_premium_intro_error dialog, whose
+# OK has no id (text fallback).
+- repeat:
+    times: 3
+    while:
       visible:
-        id: button1
+        id: onboarding_premium_intro_error|button1
     commands:
       - tapOn:
-          id: button1
+          text: "^OK$"
+      - waitForAnimationToEnd
 - runFlow:
     when:
       visible:
