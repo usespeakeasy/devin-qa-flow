@@ -1,6 +1,7 @@
 # Home: open the AI data alert's lesson site from the learning path without relaunching (a connectivity
 # or account state set before the flow is kept): expand the second lesson loop and tap Preview.
 # Entry: Home (`learning_path_ready`). Exit: right after the tap, before the lesson or the AI data alert shows.
+# An account that hasn't finished unit 1 gets the "Skipping lessons?" jump-ahead sheet first; the flow taps Let's go!.
 # Why Preview and not Start: on dev, a new account's first loop Start ("[PROD-CLONE] ...") opens nothing.
 appId: ${APP_ID}
 env:
@@ -20,3 +21,12 @@ env:
           index: 1
 - tapOn:
     id: learning_path_popover_preview_button
+- waitForAnimationToEnd:
+    timeout: 2000
+- runFlow:
+    when:
+      visible:
+        id: learning_path_jump_ahead_continue
+    commands:
+      - tapOn:
+          id: learning_path_jump_ahead_continue

@@ -1,0 +1,56 @@
+# Challenge tab > Leagues (locked, no league yet) > Unlock Leagues: the premium intro opens over Main
+# (the dev emulator shows its "An unexpected error occurred." product error, closed with OK), Back returns
+# to the locked Leagues page on the Challenge tab. Saves SHOT.png (premium intro) and SHOT-back.png.
+# Entry: any Main tab, on an account without Leagues (the Leagues page shows `placeholder_join_button`).
+# Exit: the same Leagues page.
+# Selectors: the generic error text and OK button have no app resource-id (text fallback, CLNT-2155);
+# the Leagues page tab is tapped by text only when another page is selected (CLNT-1280).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "unlock-leagues"}
+---
+- tapOn:
+    id: main_tab_challenges
+- extendedWaitUntil:
+    visible:
+      id: challenge_tab_screen
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: placeholder_join_button
+    commands:
+      - tapOn:
+          text: "^Leagues$"
+- extendedWaitUntil:
+    visible:
+      id: placeholder_join_button
+    timeout: 30000
+- tapOn:
+    id: placeholder_join_button
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_premium_intro_(ready|error)"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        text: "An unexpected error occurred\\."
+    commands:
+      - tapOn:
+          text: "^OK$"
+- assertVisible:
+    id: "onboarding_premium_intro_(ready|error)"
+- assertNotVisible:
+    id: main_tab_challenges
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: placeholder_join_button
+    timeout: 15000
+- assertVisible:
+    id: main_tab_challenges
+    selected: true
+- takeScreenshot: ${SHOT}-back
