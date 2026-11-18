@@ -1,8 +1,8 @@
 # Phone Speak: after the "How was your call?" survey is skipped, Continue on the call summary and each EOL screen
-# until Practice or the post-call Ring my phone prompt (screenshot call-eol-done).
+# until Practice or the post-call schedule prompt (Ring my phone card, or "At your scheduled time" from speak-ios#10492) (screenshot call-eol-done).
 # The survey is a popover in its own window that Maestro's tree does not show; the caller skips it
 # (e.g. AXe tap on survey.action.skip) before this flow.
-# Entry: the survey skipped after a Phone Speak call held 90 s+. Exit: Practice or Ring my phone.
+# Entry: the survey skipped after a Phone Speak call held 90 s+. Exit: Practice or the post-call schedule prompt.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak-v2.dev
@@ -16,7 +16,7 @@ env:
     id: "phone-speak.summary.action.continue"
 - repeat:
     while:
-      notVisible: "Ring my phone"
+      notVisible: "Ring my phone|At your scheduled time"
     times: 6
     commands:
       - extendedWaitUntil:

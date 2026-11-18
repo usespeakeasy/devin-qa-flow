@@ -1,6 +1,6 @@
 # Ends a Phone Speak call held past 60 s, skips the "How was your call?" survey, taps Continue on the
 # summary and then each later EOL screen's continue, until the screen the call was opened from (Practice)
-# or the post-call schedule prompt (Ring my phone card) shows.
+# or the post-call schedule prompt (Ring my phone card, or "At your scheduled time" from speak-ios#10492) shows.
 # Entry: call screen (call-start-in-app.yaml), call held 65 s or more by the caller.
 appId: ${APP_ID}
 env:
@@ -22,7 +22,7 @@ env:
     id: "phone-speak.summary.action.continue"
 - repeat:
     while:
-      notVisible: "Ring my phone"
+      notVisible: "Ring my phone|At your scheduled time"
     times: 6
     commands:
       - extendedWaitUntil:

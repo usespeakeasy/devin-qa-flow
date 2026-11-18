@@ -1,0 +1,29 @@
+# Phone Speak: after the "How was your call?" survey is skipped, Continue on the call summary and each EOL screen
+# until the post-call schedule prompt (PhoneSpeakScheduleCtaScreen, "Ready to make it a habit?") shows; unlike
+# call-summary-eol.yaml it stops there instead of skipping it.
+# The server sends the prompt (`phoneSpeakScheduleCta` in the EOL order) only to a learner with no saved weekly
+# slot, and with no slot it shows the empty state: the delivery card appears only after a slot is saved
+# (schedule-cta-add-slot.yaml).
+# The summary can come after the streak screens (new streak day), so one loop taps whichever continue shows.
+# Entry: the survey skipped (AXe tap on survey.action.skip) after a Phone Speak call held 65 s+, on an account
+# with no saved weekly slot. Exit: the post-call schedule prompt.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- repeat:
+    while:
+      notVisible: "Ready to make it a habit\\?"
+    times: 8
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "phone-speak.summary.action.continue|lesson.end.(level-progress|new-concepts|streak-progress|streak-saved|streak-freeze).action.continue|lesson.end.widget-prompt.action.skip"
+          timeout: 15000
+          optional: true
+      - tapOn:
+          id: "phone-speak.summary.action.continue|lesson.end.(level-progress|new-concepts|streak-progress|streak-saved|streak-freeze).action.continue|lesson.end.widget-prompt.action.skip"
+          optional: true
+- extendedWaitUntil:
+    visible: "Ready to make it a habit\\?"
+    timeout: 10000

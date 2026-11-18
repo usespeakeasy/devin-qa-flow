@@ -1,0 +1,15 @@
+# Phone Speak Schedule: delete the weekly slot on DAY (row "<DAY>s, <time>") and wait for the empty state.
+# Entry: the Schedule screen with that slot (open-weekly-schedule.yaml). Params: DAY (e.g. "Wednesday").
+# No automation ids on the slot row or Delete: text fallbacks.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn: "${DAY}s, .*"
+- extendedWaitUntil:
+    visible: "^Delete$"
+    timeout: 10000
+- tapOn: "^Delete$"
+- extendedWaitUntil:
+    visible: "Schedule a weekly call"
+    timeout: 20000

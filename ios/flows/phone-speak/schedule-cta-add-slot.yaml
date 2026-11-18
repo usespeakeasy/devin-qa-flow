@@ -1,0 +1,19 @@
+# Phone Speak schedule (post-call prompt or Schedule screen) in its empty state: save a weekly slot on DAY at the
+# default time and wait for the delivery card that shows next to a slot ("Ring my phone" switch before
+# speak-ios#10492, "At your scheduled time" Call me / Notify me from it).
+# Entry: "Schedule a weekly call" visible. Params: DAY (e.g. "Wednesday"). Server state: delete the slot after
+# (delete-weekly-slot.yaml), or the post-call prompt stops showing.
+# No automation ids on the button, day chips or Save: text fallbacks.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn: "Schedule a weekly call"
+- extendedWaitUntil:
+    visible: "^${DAY}$"
+    timeout: 10000
+- tapOn: "^${DAY}$"
+- tapOn: "^Save$"
+- extendedWaitUntil:
+    visible: "At your scheduled time|Ring my phone"
+    timeout: 20000
