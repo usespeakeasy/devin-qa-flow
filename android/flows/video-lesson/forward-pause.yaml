@@ -1,0 +1,23 @@
+# Video lesson: Forward once from card "1 of N" to card "2 of N", then pause it with play_line (Pause), so the
+# lesson stays on card 2 with no speech. Entry: video lesson on card "1 of N" (open-lesson.yaml), N >= 2.
+# Exit: card "2 of N", play_line shows Play.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: "1 of \\d+"
+    timeout: 30000
+- tapOn:
+    id: forward_container
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: "2 of \\d+"
+    timeout: 30000
+- runFlow: pause-card.yaml
+- assertVisible:
+    id: card_count
+    text: "2 of \\d+"

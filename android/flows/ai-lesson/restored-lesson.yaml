@@ -1,0 +1,40 @@
+# After process death mid AI lesson: the same lesson comes back (TOPIC title; resume sheet Continue if it shows),
+# not Home. The transcript restarts at the partner's opening line on develop, so the runner compares the
+# transcript with harness `dump` instead of asserting the typed turn. Entry: relaunch after the harness killed
+# the backgrounded app (`am kill`, or `kill -9` when the lesson's service keeps it alive) during the lesson
+# (type-turn.yaml). Exit: AI lesson. Saves SHOT-arrival.png and SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "restored-lesson"}
+---
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_resume_sheet|ai_lesson_screen
+    timeout: 60000
+- takeScreenshot: ${SHOT}-arrival
+# The resume sheet can show a few seconds after the restored lesson screen.
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_resume_sheet
+    timeout: 10000
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: ai_lesson_resume_continue
+    commands:
+      - tapOn:
+          id: ai_lesson_resume_continue
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_screen
+    timeout: 30000
+- assertNotVisible:
+    id: home_root_ready
+- extendedWaitUntil:
+    visible:
+      id: ai_lesson_partner_message
+    timeout: 30000
+- assertVisible: ${TOPIC}
+- takeScreenshot: ${SHOT}

@@ -6,11 +6,22 @@ env:
 ---
 - launchApp:
     stopApp: true
-# A signed-in cold start can show the referral promo over Home; close it so learning_path_ready shows.
+# A signed-in cold start can show the referral promo or the "Find your English level" sheet
+# (app_assessment_popup) over Home; close them so learning_path_ready shows.
 - extendedWaitUntil:
     visible:
-      id: "learning_path_ready|referral_welcome_dialog_later_button"
+      id: "learning_path_ready|referral_welcome_dialog_later_button|app_assessment_popup"
     timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: app_assessment_popup
+    commands:
+      - back
+      - extendedWaitUntil:
+          visible:
+            id: "learning_path_ready|referral_welcome_dialog_later_button"
+          timeout: 15000
 - runFlow:
     when:
       visible:

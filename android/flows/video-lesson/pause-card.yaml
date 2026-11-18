@@ -1,0 +1,25 @@
+# Video lesson: pause the playing card with play_line (content description Pause), so the lesson stays on
+# that card (can't speak now mode moves on by itself). Entry: video lesson, card playing (play-to-card.yaml).
+# Exit: same card, play_line shows Play.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: play_line
+    timeout: 20000
+- runFlow:
+    when:
+      visible:
+        id: play_line
+        text: "Pause"
+    commands:
+      - tapOn:
+          id: play_line
+          text: "Pause"
+- extendedWaitUntil:
+    visible:
+      id: play_line
+      text: "Play"
+    timeout: 10000

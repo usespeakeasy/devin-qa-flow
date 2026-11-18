@@ -1,0 +1,32 @@
+# After process death on Challenge Prizes: the prizes screen comes back with the same challenge's prize (PRIZE regex),
+# then Back shows Challenge Details of the same challenge (TITLE regex), not another one and not the list.
+# Entry: relaunch after the harness killed the backgrounded app (`am kill`) on the prizes screen.
+# Exit: Challenge Details. Saves SHOT-prizes.png and SHOT-details.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  PRIZE: ${PRIZE || "QA prize 5"}
+  TITLE: ${TITLE || "QA 9513 Challenge"}
+  SHOT: ${SHOT || "restored"}
+---
+- extendedWaitUntil:
+    visible:
+      id: challenge_prizes_screen
+    timeout: 60000
+- extendedWaitUntil:
+    visible: ${PRIZE}
+    timeout: 15000
+- takeScreenshot: ${SHOT}-prizes
+- back
+- extendedWaitUntil:
+    visible:
+      id: challenge_details_screen
+    timeout: 15000
+- assertNotVisible:
+    id: challenge_prizes_screen
+- scrollUntilVisible:
+    element: ${TITLE}
+    direction: UP
+    timeout: 15000
+- assertVisible: ${TITLE}
+- takeScreenshot: ${SHOT}-details

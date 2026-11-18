@@ -1,0 +1,21 @@
+# After process death on a singles pack: the pack screen (`Destination.SinglesPack` entry) comes back with the same
+# pack (PACK title in header_title) and its lessons. Entry: relaunch after the harness killed the backgrounded app
+# (`am kill`) on the pack (open-pack.yaml). Exit: pack screen. Saves SHOT.png.
+# maestro test -e PACK="원어민과의 대화: 일상, 회사, 학교" restored-pack.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "restored-pack"}
+---
+- extendedWaitUntil:
+    visible:
+      id: header_title
+      text: ${PACK}
+    timeout: 60000
+- assertVisible:
+    id: single_title
+- assertVisible:
+    id: exit
+- assertNotVisible:
+    id: home_root_ready
+- takeScreenshot: ${SHOT}

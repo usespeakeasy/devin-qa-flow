@@ -1,0 +1,26 @@
+# Challenge Details > Win Prizes row: the prizes screen (`Destination.ChallengePrizes` entry) opens over the details.
+# Entry: Challenge Details of a challenge with prizes (challenge-leave/open-details.yaml). On dev with no active
+# challenge, the QA-only `ChallengeRepositoryImpl` patch adds "QA 9513 Challenge" (QA of speak-android#9513).
+# Exit: prizes screen (challenge_prizes_screen). Saves SHOT.png.
+# Selectors: the Win Prizes row has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "challenge-prizes"}
+---
+- extendedWaitUntil:
+    visible:
+      id: challenge_details_screen
+    timeout: 20000
+- scrollUntilVisible:
+    element: "^Win Prizes$"
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- tapOn: "^Win Prizes$"
+- extendedWaitUntil:
+    visible:
+      id: challenge_prizes_screen
+    timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
