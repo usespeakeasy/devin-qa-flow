@@ -1,0 +1,27 @@
+# Tutor chat > History: open the newest thread whose row mentions WORD, then tap its WORD dictionary card;
+# Expression Details opens over that thread. Fails (no send fallback) when no row mentions WORD.
+# Entry: tutor chat (input_message). Exit: tutor_expression_details_content. Params: WORD (required).
+# Selectors: rows have per-thread ids (tutor_threads_item_<id>), so the row is matched by its title text; the top match is the newest.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: threads_button
+- extendedWaitUntil:
+    visible:
+      id: tutor_threads_history_list
+    timeout: 20000
+- tapOn: "(?i).*${WORD}.*"
+- extendedWaitUntil:
+    visible:
+      id: title
+      text: "(?i)${WORD}"
+    timeout: 30000
+- tapOn:
+    id: title
+    text: "(?i)${WORD}"
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_content
+    timeout: 20000

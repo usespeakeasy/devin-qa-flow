@@ -1,0 +1,19 @@
+# After process death with Expression Details open over tutor chat: the sheet comes back; Back closes it onto the chat.
+# Entry: app relaunched from the launcher after the kill. Exit: tutor chat (input_message), sheet gone.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_content
+    timeout: 30000
+- pressKey: back
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_expression_details_content
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: input_message
+    timeout: 20000

@@ -1,0 +1,14 @@
+# Tutor chat shows the thread that mentions EXPECT and not the one that mentions NOT (e.g. after a restore).
+# Entry: tutor chat (input_message). Exit: same. Params: EXPECT, NOT (both required, regex fragments).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: input_message
+    timeout: 30000
+- extendedWaitUntil:
+    visible: "(?is).*${EXPECT}.*"
+    timeout: 30000
+- assertNotVisible: "(?is).*${NOT}.*"

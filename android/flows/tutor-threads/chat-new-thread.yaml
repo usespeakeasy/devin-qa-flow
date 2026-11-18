@@ -1,0 +1,36 @@
+# Tutor chat > new thread button (new_thread_button): an empty thread opens; with MESSAGE, send it and wait for the reply.
+# Entry: tutor chat (input_message). Exit: tutor chat on the new thread (empty, or with the reply shown).
+# Params: MESSAGE (optional; empty keeps the thread empty).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: new_thread_button
+- extendedWaitUntil:
+    visible:
+      id: input_message
+      enabled: true
+    timeout: 20000
+- runFlow:
+    when:
+      true: ${MESSAGE != null && MESSAGE != ""}
+    commands:
+      - tapOn:
+          id: input_message
+      - inputText: ${MESSAGE}
+      - tapOn:
+          id: send_button
+      - extendedWaitUntil:
+          notVisible:
+            id: input_message
+            enabled: true
+          timeout: 5000
+          optional: true
+      - extendedWaitUntil:
+          visible:
+            id: input_message
+            enabled: true
+          timeout: 90000
+      - waitForAnimationToEnd:
+          timeout: 5000

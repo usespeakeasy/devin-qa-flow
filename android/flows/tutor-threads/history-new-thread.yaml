@@ -1,0 +1,38 @@
+# Tutor chat > History > new thread (tutor_threads_new_thread_button): send MESSAGE and wait for the reply.
+# Entry: tutor chat (input_message). Exit: tutor chat on the new thread with the reply shown.
+# Params: MESSAGE (required).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: threads_button
+- extendedWaitUntil:
+    visible:
+      id: tutor_threads_history_screen
+    timeout: 20000
+- tapOn:
+    id: tutor_threads_new_thread_button
+- extendedWaitUntil:
+    visible:
+      id: input_message
+      enabled: true
+    timeout: 20000
+- tapOn:
+    id: input_message
+- inputText: ${MESSAGE}
+- tapOn:
+    id: send_button
+- extendedWaitUntil:
+    notVisible:
+      id: input_message
+      enabled: true
+    timeout: 5000
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: input_message
+      enabled: true
+    timeout: 90000
+- waitForAnimationToEnd:
+    timeout: 5000
