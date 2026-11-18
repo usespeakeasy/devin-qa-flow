@@ -1,0 +1,14 @@
+# Leagues username sheet with the keyboard up: a tap on the scrim closes the sheet and it stays closed.
+# Entry: keyboard-focus.yaml. Exit: Dialog Bridges.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+# The scrim has no node; the top of the screen is above the sheet with the keyboard up.
+- tapOn:
+    point: "50%,8%"
+- extendedWaitUntil:
+    notVisible:
+      id: leagues_username_input_screen
+    timeout: 10000
+- runFlow: keyboard-stays-closed.yaml

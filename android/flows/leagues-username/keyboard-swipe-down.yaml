@@ -1,0 +1,15 @@
+# Leagues username sheet with the keyboard up: dragging the sheet down from its title closes it and it stays closed.
+# Entry: keyboard-focus.yaml. Exit: Dialog Bridges.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- swipe:
+    from: "Choose your username"
+    direction: DOWN
+    duration: 400
+- extendedWaitUntil:
+    notVisible:
+      id: leagues_username_input_screen
+    timeout: 10000
+- runFlow: keyboard-stays-closed.yaml

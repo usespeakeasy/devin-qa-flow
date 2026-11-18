@@ -1,0 +1,12 @@
+# Leagues username sheet: tap the username field so the keyboard comes up (the case script checks the IME).
+# Entry: the sheet shows (android/common/open-leagues-username-bridge.yaml). Exit: the sheet with the field focused.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: username_input
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: leagues_username_input_screen

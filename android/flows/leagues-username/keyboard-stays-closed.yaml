@@ -1,0 +1,14 @@
+# Leagues username sheet: after a dismiss, the sheet stays closed for about 4 s (it does not pop back up).
+# Entry: the sheet was just dismissed. Exit: Dialog Bridges, sheet closed.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- repeat:
+    times: 4
+    commands:
+      - waitForAnimationToEnd:
+          timeout: 1000
+      - assertNotVisible:
+          id: leagues_username_input_screen
+- assertVisible: "Leagues Username"

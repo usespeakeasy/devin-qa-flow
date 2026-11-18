@@ -1,0 +1,13 @@
+# Leagues username sheet with the keyboard up: Continue with the name unchanged closes the sheet (the scene's own hide)
+# and it stays closed. Entry: keyboard-focus.yaml. Exit: Dialog Bridges.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: primary_button
+- extendedWaitUntil:
+    notVisible:
+      id: leagues_username_input_screen
+    timeout: 10000
+- runFlow: keyboard-stays-closed.yaml

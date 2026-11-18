@@ -1,0 +1,16 @@
+# Leagues username sheet with the keyboard up: Back closes the keyboard, then the sheet, and the sheet stays closed.
+# Entry: keyboard-focus.yaml. Exit: Dialog Bridges.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- repeat:
+    while:
+      visible:
+        id: leagues_username_input_screen
+    times: 2
+    commands:
+      - back
+      - waitForAnimationToEnd:
+          timeout: 2000
+- runFlow: keyboard-stays-closed.yaml
