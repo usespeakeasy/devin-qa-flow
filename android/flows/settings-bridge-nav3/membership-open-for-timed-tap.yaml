@@ -1,0 +1,50 @@
+# Profile > Settings > Manage membership: open one row's target and stay there, so the case script can send an
+# `adb shell "input ..."` timed sequence (Maestro taps land 290 to 490 ms apart, too slow for 120 to 700 ms gaps).
+# OPEN: cancel (Cancel Subscription opens Cancel membership), certificate (Get Subscription History opens the
+# certificate dialog). LAUNCH: true restarts the app and walks to Manage membership first; false starts on Manage membership.
+# Entry: signed in, premium; cancel needs the CTA (dev: QA-only patch, `debug.qa.sub=cancel`). Exit: Cancel membership or
+# the open certificate dialog. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "membership-open"}
+  OPEN: ${OPEN || "cancel"}
+  LAUNCH: ${LAUNCH || "true"}
+---
+- runFlow:
+    when:
+      true: ${LAUNCH == "true"}
+    commands:
+      - launchApp:
+          stopApp: true
+      - runFlow: ../launch/home-ready-after-launch.yaml
+      - runFlow:
+          file: ../settings/open-manage-membership.yaml
+          env:
+            SHOT: ${SHOT}_membership
+- extendedWaitUntil:
+    visible:
+      id: item_subscription_change_cta
+    timeout: 15000
+- runFlow:
+    when:
+      true: ${OPEN == "cancel"}
+    commands:
+      - tapOn:
+          id: item_subscription_change_cta
+      - extendedWaitUntil:
+          visible:
+            id: cancel_membership_screen
+          timeout: 15000
+- runFlow:
+    when:
+      true: ${OPEN == "certificate"}
+    commands:
+      - tapOn:
+          id: item_request_certificate
+      - extendedWaitUntil:
+          visible:
+            id: request_certificate_cancel_button
+          timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
