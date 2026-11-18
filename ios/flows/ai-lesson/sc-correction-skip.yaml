@@ -1,0 +1,18 @@
+# Structured Conversation (SwiftUI history): tap Skip on the correction card shown after a wrong speaking turn.
+# Entry: SC lesson with a correction card in the history (red debug button on a speaking turn). Changes lesson
+# progress only. The card's Retry and Skip buttons carry no accessibility identifier, so this uses the "Skip" text
+# and scrolls down to it first, since a list that stopped following leaves the card under the input bar.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- scrollUntilVisible:
+    element:
+      text: "Skip"
+    direction: DOWN
+    timeout: 15000
+    speed: 60
+    visibilityPercentage: 100
+- tapOn:
+    text: "Skip"
+    retryTapIfNoChange: false
