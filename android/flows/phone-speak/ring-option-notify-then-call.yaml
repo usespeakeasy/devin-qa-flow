@@ -1,0 +1,34 @@
+# Schedule (PhoneSpeakScheduleRoute, "At your scheduled time" card from speak-android#9400): tap Notify me,
+# it stays selected once the save ends; tap Call me, it stays selected; no full-screen alerts dialog.
+# Entry: Schedule open on the ring card (open-weekly-schedule.yaml), microphone granted and full-screen
+# alerts allowed. Ends with Call me selected. Develop before 4eab5a66f7 has the Ring my phone switch instead.
+# Selectors: Call me keeps the shipped `phone_speak_schedule_ring_switch` tag until its rename to
+# `phone_speak_schedule_ring_option_call`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: phone_speak_schedule_ring_option_notify
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_ring_option_notify
+      checked: true
+      enabled: true
+    timeout: 15000
+- assertVisible:
+    id: phone_speak_schedule_ring_switch
+    checked: false
+- tapOn:
+    id: phone_speak_schedule_ring_switch
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_ring_switch
+      checked: true
+      enabled: true
+    timeout: 15000
+- assertVisible:
+    id: phone_speak_schedule_ring_option_notify
+    checked: false
+- assertNotVisible:
+    id: phone_speak_schedule_ring_full_screen_alerts_dialog

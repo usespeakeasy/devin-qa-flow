@@ -19,5 +19,5 @@ env:
     timeout: 30000
 - openLink: speak-dev://phone-speak?action=schedule
 - extendedWaitUntil:
-    visible: "Ring my phone"
+    visible: "Ring my phone|At your scheduled time"
     timeout: 20000
