@@ -1,0 +1,39 @@
+# Two different packs opened one after another each keep their own state (Destination.SinglesPack
+# entries must get distinct content keys): PACK_A > swipe up > back > PACK_B shows its own title
+# at the top > back > PACK_A shows its own title again.
+# Entry: Home. Precondition: ko-en or ja-en dev account, learning_path_explore ON.
+# maestro test -e PACK_A="..." -e PACK_B="..." two-packs-own-state.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: open-explore.yaml
+- runFlow:
+    file: open-pack.yaml
+    env:
+      PACK: ${PACK_A}
+- runFlow: pack-swipe-up.yaml
+- runFlow: pack-system-back.yaml
+- runFlow:
+    file: open-pack.yaml
+    env:
+      PACK: ${PACK_B}
+- assertVisible:
+    id: header_title
+    text: ${PACK_B}
+- assertNotVisible:
+    id: header_title
+    text: ${PACK_A}
+- assertVisible:
+    id: single_title
+- runFlow: pack-system-back.yaml
+- runFlow:
+    file: open-pack.yaml
+    env:
+      PACK: ${PACK_A}
+- assertVisible:
+    id: header_title
+    text: ${PACK_A}
+- assertVisible:
+    id: single_title
+- runFlow: pack-system-back.yaml
