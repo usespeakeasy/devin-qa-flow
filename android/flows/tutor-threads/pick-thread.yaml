@@ -1,0 +1,19 @@
+# Chat History > tap thread ITEM: tutor chat opens on it, showing text matching EXPECT.
+# Entry: tutor_threads_history_screen. Exit: tutor chat (input_message). Params: ITEM, EXPECT (required).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: tutor_threads_item_${ITEM}
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_threads_history_screen
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: input_message
+    timeout: 20000
+- extendedWaitUntil:
+    visible: "(?is).*${EXPECT}.*"
+    timeout: 30000

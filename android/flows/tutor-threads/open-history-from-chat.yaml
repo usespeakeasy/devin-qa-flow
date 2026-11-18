@@ -1,0 +1,14 @@
+# Tutor chat > History (threads_button): Chat History opens. The list may be empty.
+# Entry: tutor chat (input_message). Exit: tutor_threads_history_screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: threads_button
+- extendedWaitUntil:
+    visible:
+      id: tutor_threads_history_screen
+    timeout: 20000
+- waitForAnimationToEnd:
+    timeout: 2000

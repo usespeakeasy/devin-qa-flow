@@ -1,0 +1,42 @@
+# Tutor chat: send MESSAGE, and while the reply streams open History and tap thread ITEM. For HOLD_S seconds
+# (about one check per second) the chat keeps showing text matching EXPECT and nothing matching NOT.
+# Entry: tutor chat (input_message) on another thread. Exit: tutor chat on ITEM.
+# Params: MESSAGE, ITEM, EXPECT, NOT (required), HOLD_S (default 10).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  HOLD_S: ${HOLD_S || 10}
+---
+- extendedWaitUntil:
+    visible:
+      id: input_message
+      enabled: true
+    timeout: 20000
+- tapOn:
+    id: input_message
+- inputText: ${MESSAGE}
+- tapOn:
+    id: send_button
+- tapOn:
+    id: threads_button
+- extendedWaitUntil:
+    visible:
+      id: tutor_threads_item_${ITEM}
+    timeout: 20000
+- takeScreenshot: history-while-streaming
+- tapOn:
+    id: tutor_threads_item_${ITEM}
+- extendedWaitUntil:
+    visible: "(?is).*${EXPECT}.*"
+    timeout: 30000
+- repeat:
+    times: ${HOLD_S}
+    commands:
+      - assertVisible: "(?is).*${EXPECT}.*"
+      - assertNotVisible: "(?is).*${NOT}.*"
+      # One-second pause between checks; this id never exists.
+      - extendedWaitUntil:
+          visible:
+            id: qa_never_present
+          timeout: 1000
+          optional: true

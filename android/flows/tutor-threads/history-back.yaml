@@ -1,0 +1,29 @@
+# Chat History > back to tutor chat, with the in-app back arrow (BACK=arrow, tutor_threads_history_back_button)
+# or system Back (BACK=system).
+# Entry: tutor_threads_history_screen. Exit: tutor chat (input_message).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  BACK: ${BACK || "arrow"}
+---
+- assertVisible:
+    id: tutor_threads_history_screen
+- runFlow:
+    when:
+      true: ${BACK == "arrow"}
+    commands:
+      - tapOn:
+          id: tutor_threads_history_back_button
+- runFlow:
+    when:
+      true: ${BACK == "system"}
+    commands:
+      - pressKey: back
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_threads_history_screen
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: input_message
+    timeout: 20000

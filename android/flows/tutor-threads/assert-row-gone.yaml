@@ -1,0 +1,12 @@
+# Chat History no longer lists thread ITEM (tutor_threads_item_<thread id>).
+# Entry: tutor_threads_history_screen. Exit: same. Params: ITEM (required).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: tutor_threads_history_screen
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_threads_item_${ITEM}
+    timeout: 15000

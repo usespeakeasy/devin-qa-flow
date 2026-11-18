@@ -1,0 +1,40 @@
+# Chat History > options of thread ITEM > Delete > "Are you sure?" > Delete: the dialog closes on Chat History.
+# Entry: tutor_threads_history_screen with row ITEM (tutor_threads_item_<thread id>). Exit: Chat History.
+# Params: ITEM (required, the backend thread id). The row check is left to the caller (assert-row-gone.yaml),
+# because an offline delete puts the row back.
+# Selectors: the dialog's title and buttons have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: tutor_threads_options_button_${ITEM}
+    timeout: 20000
+- tapOn:
+    id: tutor_threads_options_button_${ITEM}
+- waitForAnimationToEnd:
+    timeout: 2000
+# A tap while the list is still settling can be lost; tap once more if the options sheet didn't open.
+- runFlow:
+    when:
+      notVisible:
+        id: tutor_thread_options_delete
+    commands:
+      - tapOn:
+          id: tutor_threads_options_button_${ITEM}
+- extendedWaitUntil:
+    visible:
+      id: tutor_thread_options_delete
+    timeout: 10000
+- tapOn:
+    id: tutor_thread_options_delete
+- extendedWaitUntil:
+    visible: "^Are you sure\\?$"
+    timeout: 10000
+- tapOn: "^Delete$"
+- extendedWaitUntil:
+    notVisible: "^Are you sure\\?$"
+    timeout: 10000
+- assertVisible:
+    id: tutor_threads_history_screen

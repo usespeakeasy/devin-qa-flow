@@ -1,0 +1,23 @@
+# Tutor chat is a new, empty thread, as after the new-thread button: the greeting row (tutor_incoming_message_row)
+# shows, no outgoing message row (tutor_outgoing_message_row), the new-thread button (new_thread_button) is hidden,
+# and no text matches NOT (the deleted thread's message).
+# Entry: tutor chat (input_message). Exit: same. Params: NOT (required, regex fragment).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: input_message
+    timeout: 20000
+- extendedWaitUntil:
+    notVisible:
+      id: tutor_outgoing_message_row
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: tutor_incoming_message_row
+    timeout: 15000
+- assertNotVisible:
+    id: new_thread_button
+- assertNotVisible: "(?is).*${NOT}.*"
