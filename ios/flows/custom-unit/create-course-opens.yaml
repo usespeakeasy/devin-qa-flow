@@ -1,0 +1,28 @@
+# Create a course > Let's go!, then wait for whichever opens first: the planning chat (Doug, user turn ready)
+# or the Meet the Tutor intake call (End call). The caller reads the tree afterwards (maestro hierarchy) to tell
+# which one is up, so the same flow runs on builds with and without the intake call (speak-ios#10469 removes it).
+# Entry: Home (home.root.ready). Precondition: as ios/common/open-meet-the-tutor.yaml, Premium Plus,
+# dynamic_on_demand_unit_gen=on, launched with SPEAK_AUTOMATION_MARKERS=1 (custom-unit.planning.* markers).
+# Exit: planning chat with its first user turn ready, or the intake call screen. Screenshot create-course-opened.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/open-meet-the-tutor.yaml
+# A fresh account shows the AI data consent alert before the call or the chat starts.
+- extendedWaitUntil:
+    visible:
+      id: "ai-data-consent.alert.allow|custom-unit.planning.user-turn-ready|phone-speak.call.action.end-call"
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: ai-data-consent.alert.allow
+    commands:
+      - tapOn:
+          id: ai-data-consent.alert.allow
+- extendedWaitUntil:
+    visible:
+      id: "custom-unit.planning.user-turn-ready|phone-speak.call.action.end-call"
+    timeout: 60000
+- takeScreenshot: create-course-opened
