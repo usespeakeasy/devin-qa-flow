@@ -1,0 +1,12 @@
+# Schedule with Speak notifications denied: tap "Turn on notification" and wait for iOS Settings
+# (Speak Dev's page, its Notifications page, or the "Return to Speak Dev" breadcrumb).
+# Entry: the schedule, notifications off (common/system-notifications-off.yaml). Text fallback, no ID.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn: "Turn on notification"
+- extendedWaitUntil:
+    visible:
+      id: breadcrumb
+    timeout: 15000

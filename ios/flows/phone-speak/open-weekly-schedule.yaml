@@ -1,8 +1,11 @@
-# Opens Weekly Schedule from the `speak-dev://phone-speak?action=schedule` link (Practice request) and waits
-# for the Ring my phone card, scrolling to it when a large font pushes it below the fold.
+# Opens the Phone Speak schedule from the `speak-dev://phone-speak?action=schedule` link (Practice request) and
+# waits for the delivery card, scrolling to it when a large font pushes it below the fold.
 # Entry: Home or Practice on a signed-in dev account with Phone Speak access and a saved weekly slot (the
-# card shows only next to a slot); the ring card is server-gated by `phone_speak_ringing_call`.
-# No automation ids on develop yet (ID PR speak-ios#10261): text fallbacks "Weekly Schedule" and "Ring my phone".
+# card shows only next to a slot); the card is server-gated by `phone_speak_ringing_call`, whose live arms are
+# `opt_in` and `opt_out` (`set-split-overrides?phone_speak_ringing_call=opt_out`; "on" is unknown and hides it).
+# Branch-aware: the title is "Schedule" (older builds: "Weekly Schedule"); the card is the "Ring my phone"
+# switch before speak-ios#10492 and the "At your scheduled time" Call me / Notify me options from it.
+# No automation ids on develop yet (ID PR speak-ios#10261): text fallbacks for the title and the card.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak-v2.dev
@@ -10,10 +13,10 @@ env:
 - openLink: speak-dev://phone-speak?action=schedule
 - runFlow: ../../common/confirm-open-in-app.yaml
 - extendedWaitUntil:
-    visible: "Weekly Schedule"
+    visible: "Schedule|Weekly Schedule"
     timeout: 30000
 - scrollUntilVisible:
     element:
-      text: "Ring my phone"
+      text: "Ring my phone|At your scheduled time"
     direction: DOWN
     timeout: 15000

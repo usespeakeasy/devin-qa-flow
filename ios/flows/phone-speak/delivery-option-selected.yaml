@@ -1,0 +1,15 @@
+# Schedule: the delivery option OPTION reads selected and the other one does not (no tap).
+# Entry: the schedule with the "At your scheduled time" card, speak-ios#10492+.
+# Params: OPTION and OTHER ("Call me" / "Notify me"). Text fallbacks on the row labels, no IDs.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      text: "${OPTION}, .*"
+      selected: true
+    timeout: 10000
+- assertNotVisible:
+    text: "${OTHER}, .*"
+    selected: true

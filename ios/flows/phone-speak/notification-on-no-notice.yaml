@@ -1,0 +1,11 @@
+# Schedule with Speak notifications allowed: no notifications-off notice ("Notification is off") shows.
+# Entry: the schedule (open-weekly-schedule.yaml), notifications on (common/system-notifications-on.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "Ring my phone|At your scheduled time"
+    timeout: 10000
+- assertNotVisible: "Notification is off"
+- assertNotVisible: "Turn on notification"

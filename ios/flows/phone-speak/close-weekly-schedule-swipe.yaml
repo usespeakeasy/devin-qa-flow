@@ -1,0 +1,18 @@
+# Phone Speak schedule: interactive swipe back from the left edge to the screen that opened it
+# (Practice tab from the schedule link). Entry: the schedule screen (open-weekly-schedule.yaml).
+# The swipe is a point gesture by nature (edge pan); text fallbacks for the card titles.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- swipe:
+    start: 0%, 50%
+    end: 85%, 50%
+    duration: 500
+- extendedWaitUntil:
+    notVisible: "Ring my phone|At your scheduled time"
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: tab-bar.tab.practice
+    timeout: 10000

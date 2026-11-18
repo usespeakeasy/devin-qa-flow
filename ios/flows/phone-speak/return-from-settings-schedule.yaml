@@ -1,0 +1,11 @@
+# iOS Settings opened from the schedule: tap "Return to Speak Dev" (what a user does) and wait for the
+# schedule's delivery card. Entry: iOS Settings with the breadcrumb, opened from the schedule.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: breadcrumb
+- extendedWaitUntil:
+    visible: "Ring my phone|At your scheduled time"
+    timeout: 15000

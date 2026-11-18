@@ -1,5 +1,5 @@
-# Weekly Schedule: Back to the screen that opened it (Practice tab from the schedule link).
-# Entry: Weekly Schedule.
+# Phone Speak schedule: nav bar Back to the screen that opened it (Practice tab from the schedule link).
+# Entry: the schedule screen (open-weekly-schedule.yaml). Text fallbacks for the card titles.
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak-v2.dev
@@ -7,5 +7,9 @@ env:
 - tapOn:
     id: BackButton
 - extendedWaitUntil:
-    notVisible: "Weekly Schedule"
+    notVisible: "Ring my phone|At your scheduled time"
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: tab-bar.tab.practice
     timeout: 10000

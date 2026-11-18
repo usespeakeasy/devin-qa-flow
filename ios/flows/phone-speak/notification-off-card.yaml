@@ -1,0 +1,14 @@
+# Schedule with Speak notifications off: the notifications-off notice ("Notification is off",
+# "Turn on notification") shows. Before speak-ios#10492 it is a standalone card; from it, it is inside the
+# delivery card (delivery-notification-off-notice.yaml checks the position).
+# Entry: the schedule, notifications off (common/system-notifications-off.yaml). Text fallbacks, no IDs.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- scrollUntilVisible:
+    element:
+      text: "Turn on notification"
+    direction: DOWN
+    timeout: 10000
+- assertVisible: "Notification is off"

@@ -1,0 +1,23 @@
+# Schedule, Call me selected, microphone denied: the microphone notice and its compact "Turn on microphone"
+# button show under the Call me row, above Notify me.
+# Entry: the schedule, speak-ios#10492+, Call me selected (delivery-option-set.yaml), microphone denied
+# (`xcrun simctl privacy <udid> revoke microphone <bundle id>` before the app launches). Text fallbacks.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      text: "Call me, .*"
+      selected: true
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      text: "Turn on the microphone so calls can ring.*"
+      below: "Call me, .*"
+      above: "Notify me, .*"
+    timeout: 10000
+- assertVisible:
+    text: "Turn on microphone"
+    below: "Call me, .*"
+    above: "Notify me, .*"

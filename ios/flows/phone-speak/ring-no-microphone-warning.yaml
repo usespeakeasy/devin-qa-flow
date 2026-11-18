@@ -1,0 +1,13 @@
+# Weekly Schedule (before speak-ios#10492): with the ring off the card shows no microphone warning.
+# Entry: Weekly Schedule, ring off (ring-set.yaml RING=0), microphone denied.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      text: "0"
+      rightOf: "Ring my phone"
+    timeout: 10000
+- assertNotVisible: "Turn on microphone"
+- assertNotVisible: "Turn on the microphone so calls can ring.*"

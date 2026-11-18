@@ -1,0 +1,24 @@
+# Schedule: select the delivery option OPTION ("Call me" = ring on, "Notify me" = ring off), whatever
+# its start, and wait for its row to read selected. Server state: it survives a reinstall and a new login.
+# Entry: the schedule with the "At your scheduled time" card (open-weekly-schedule.yaml), speak-ios#10492+.
+# Params: OPTION ("Call me" or "Notify me"). Rows have no ID (diff adds none): text fallback on the
+# combined row label "<OPTION>, ..." and its isSelected trait (Maestro `selected`).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "${OPTION}, .*"
+    timeout: 10000
+- runFlow:
+    when:
+      notVisible:
+        text: "${OPTION}, .*"
+        selected: true
+    commands:
+      - tapOn: "${OPTION}, .*"
+- extendedWaitUntil:
+    visible:
+      text: "${OPTION}, .*"
+      selected: true
+    timeout: 10000

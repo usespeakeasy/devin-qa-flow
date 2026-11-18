@@ -1,0 +1,12 @@
+# Schedule, microphone denied: with Notify me selected the card shows no microphone notice.
+# Entry: the schedule, speak-ios#10492+, microphone denied. Selects Notify me (delivery-option-set.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow:
+    file: delivery-option-set.yaml
+    env:
+      OPTION: Notify me
+- assertNotVisible: "Turn on microphone"
+- assertNotVisible: "Turn on the microphone so calls can ring.*"

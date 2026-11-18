@@ -1,0 +1,26 @@
+# Schedule with Speak notifications off: "Notification is off" and "Turn on notification" show inside the
+# delivery card under the selected option (above Notify me when Call me is selected).
+# Entry: the schedule, speak-ios#10492+, OPTION selected (delivery-option-set.yaml), notifications off
+# (common/system-notifications-off.yaml). Params: OPTION. Text fallbacks, no IDs.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      text: "Notification is off"
+      below: "${OPTION}, .*"
+    timeout: 10000
+- runFlow:
+    when:
+      true: ${OPTION == 'Call me'}
+    commands:
+      - assertVisible:
+          text: "Notification is off"
+          above: "Notify me, .*"
+      - assertVisible:
+          text: "Turn on notification"
+          above: "Notify me, .*"
+- assertVisible:
+    text: "Turn on notification"
+    below: "${OPTION}, .*"
