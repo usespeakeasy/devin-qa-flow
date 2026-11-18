@@ -1,0 +1,19 @@
+# Phone Speak calling screen: request landscape, screenshot (SHOT-free names rotate-landscape, rotate-portrait),
+# back to portrait, End call still shown. Speak is portrait-only on iPhone (UISupportedInterfaceOrientations =
+# Portrait), so the layout should not rotate. Always end in PORTRAIT: until Maestro sets portrait again its taps
+# land in landscape coordinates (wrong tab, no-op taps) for every later flow on that simulator.
+# Entry: call screen (call-start-in-app or mtt-call-live). Exit: call screen, portrait.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd
+- takeScreenshot: rotate-landscape
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "phone-speak.call.action.end-call"
+    timeout: 10000
+- takeScreenshot: rotate-portrait
