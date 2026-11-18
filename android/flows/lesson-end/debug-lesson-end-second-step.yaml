@@ -1,0 +1,21 @@
+# Lesson end from the debug deep link with SUMMARY then TAKEAWAYS (`LessonEndDebugOverride`, no QA patch):
+# the summary shows, Continue moves the lesson end flow to its second step, Takeaways.
+# Entry: Home, signed in. Exit: lesson_end_takeaways_root showing (second step of the flow).
+# Selectors: lesson_end_reskin_root, lesson_end_reskin_continue_button, lesson_end_takeaways_root.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+---
+- runFlow:
+    file: debug-lesson-end-open.yaml
+    env:
+      LESSON_ID: ${LESSON_ID}
+      SCREENS: SUMMARY,TAKEAWAYS
+      ARRIVAL_ID: lesson_end_reskin_root
+- tapOn:
+    id: lesson_end_reskin_continue_button
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_takeaways_root
+    timeout: 30000

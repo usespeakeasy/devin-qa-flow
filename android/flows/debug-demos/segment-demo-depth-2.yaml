@@ -1,0 +1,23 @@
+# Debug Menu > Demos > Navigation segment demo, then "Append key" pushes a second SegmentDemoKey
+# (SegmentDemoViewModel reads its depth from the key), then "viewmodel +1" and "saveable +1" on it.
+# Exit: "Segment demo, key depth 2", depth 2, ViewModel count=1, rememberSaveable count=1.
+# The ViewModel line reads "depth from navKey=" on develop before CLNT-2177, "depth from the key=" after. Entry: signed in, any state (cold starts).
+# Selectors: demo rows and buttons have no resource-id (text fallback; debug-only screen).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: nav-open-row.yaml
+    env:
+      ROW: Navigation segment demo
+      ROOT_TEXT: "Segment demo, key depth 1"
+- tapOn: "^Append key \\(depth 2, Parallax\\)$"
+- extendedWaitUntil:
+    visible: "Segment demo, key depth 2"
+    timeout: 15000
+- assertVisible: "ViewModel .*, depth from .*=2, count=0"
+- tapOn: "^viewmodel \\+1$"
+- tapOn: "^saveable \\+1$"
+- assertVisible: "ViewModel .*, depth from .*=2, count=1"
+- assertVisible: "^rememberSaveable count=1$"

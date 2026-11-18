@@ -1,0 +1,35 @@
+# Settings > Manage Account > Phone number: the phone number input (`PhoneNumberInput` entry,
+# PhoneNumberInputViewModel, the same screen the referral screen opens with source Referral) opens and TEXT
+# is typed, without saving. The caller then backgrounds/kills the app and checks the text comes back.
+# Entry: Home (home_root_ready), signed in on an account that can edit contact details (test user).
+# Exit: referral_phone_number_input_screen with TEXT in the input.
+# maestro test -e TEXT=2025550123 edit-phone-number-type.yaml
+# Selectors: settings_manage_account_option, manage_account_screen, edit_phone_number,
+# referral_phone_number_input_screen, input.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TEXT: ${TEXT || "2025550123"}
+  TEXT_SHOWN: ${TEXT_SHOWN || "555"}
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn:
+    id: settings_manage_account_option
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 20000
+- tapOn:
+    id: edit_phone_number
+- extendedWaitUntil:
+    visible:
+      id: referral_phone_number_input_screen
+    timeout: 15000
+- tapOn:
+    id: input
+- inputText: ${TEXT}
+- extendedWaitUntil:
+    visible:
+      id: input
+      text: ".*${TEXT_SHOWN}.*"
+    timeout: 5000

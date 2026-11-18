@@ -1,0 +1,32 @@
+# Settings > Manage Account > Name: the single-field editor (SingleFieldInput) opens and TEXT is typed over
+# the current name, without saving. The caller then backgrounds/kills the app and checks the text comes back.
+# Entry: Home (home_root_ready), signed in. Exit: single_field_input_screen with TEXT in the input.
+# maestro test -e TEXT="QA Typed Name" edit-name-type.yaml
+# Selectors: settings_manage_account_option, manage_account_screen, edit_name, single_field_input_screen, input.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TEXT: ${TEXT || "QA Typed Name"}
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn:
+    id: settings_manage_account_option
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 20000
+- tapOn:
+    id: edit_name
+- extendedWaitUntil:
+    visible:
+      id: single_field_input_screen
+    timeout: 15000
+- tapOn:
+    id: input
+- eraseText: 60
+- inputText: ${TEXT}
+- extendedWaitUntil:
+    visible:
+      id: input
+      text: ${TEXT}
+    timeout: 5000

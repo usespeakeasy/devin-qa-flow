@@ -1,0 +1,46 @@
+# Debug Menu > search "Server" > Server Endpoint "Preview": the preview environments list
+# (`DebugMenuKey.PreviewEnvironments`, PreviewEnvironmentsViewModel) loads, and QUERY is typed in its search,
+# without picking a row. The caller then backgrounds/kills the app and checks the screen comes back.
+# Entry: any state, signed in (cold starts). Exit: debug_preview_environments_screen, search holding QUERY.
+# Selectors: the Server Endpoint "Preview" radio has no resource-id (first "Preview" text, text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  QUERY: ${QUERY || "plan"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: "home_root_ready|course_streak_save_dialog_root"
+    timeout: 60000
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 30000
+- tapOn:
+    id: debug_menu_search
+- inputText: Server
+- hideKeyboard
+- extendedWaitUntil:
+    visible: "Server Endpoint"
+    timeout: 15000
+- tapOn:
+    text: "^Preview$"
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: debug_preview_environments_screen
+    timeout: 15000
+- extendedWaitUntil:
+    notVisible:
+      id: debug_preview_environments_loading
+    timeout: 30000
+- tapOn:
+    id: debug_preview_environments_search
+- inputText: ${QUERY}
+- hideKeyboard
+- assertVisible:
+    id: debug_preview_environments_search
+    text: ".*${QUERY}.*"

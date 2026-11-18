@@ -23,8 +23,24 @@ env:
 - scrollUntilVisible:
     element:
       id: debug_menu_demos
+- waitForAnimationToEnd:
+    timeout: 2000
 - tapOn:
     id: debug_menu_demos
+# The Demos tap is dropped now and then (whenResumed while the scroll settles), on develop too: tap again.
+- runFlow:
+    when:
+      visible:
+        id: debug_menu_demos
+    commands:
+      - waitForAnimationToEnd:
+          timeout: 2000
+      - tapOn:
+          id: debug_menu_demos
+- extendedWaitUntil:
+    notVisible:
+      id: debug_menu_demos
+    timeout: 10000
 - scrollUntilVisible:
     element:
       text: ^${ROW}$
