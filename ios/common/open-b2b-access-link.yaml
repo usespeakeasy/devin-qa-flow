@@ -1,0 +1,8 @@
+# Opens a B2B access invitation link (speak-dev://b2b-access) with the credential TOKEN.
+# Entry: any state. Pass -e TOKEN (a fake deep_link_sub1; needs a QA build that stubs the B2B repositories).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- openLink: speak-dev://b2b-access?deep_link_sub1=${TOKEN}&deep_link_sub2=qa-invite
+- runFlow: confirm-open-in-app.yaml

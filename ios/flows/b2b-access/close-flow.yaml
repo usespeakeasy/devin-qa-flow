@@ -1,0 +1,31 @@
+# B: open the invitation flow, close it (account switch Cancel), back on Home; a second deep link
+# (speak-dev://debug) still routes.
+# Entry: signed in, Home. Precondition: as open-account-switch.yaml. Pass -e TOKEN.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: open-account-switch.yaml
+- takeScreenshot: b1-flow-presented
+- tapOn:
+    id: b2b-access.account-switch.action.cancel
+- extendedWaitUntil:
+    visible:
+      id: home.root.ready
+    timeout: 15000
+- assertNotVisible:
+    id: b2b-access.account-switch.action.cancel
+- takeScreenshot: b1-closed
+- openLink: speak-dev://debug
+- runFlow: ../../common/confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible:
+      id: debug.action.close
+    timeout: 15000
+- takeScreenshot: b2-second-link
+- tapOn:
+    id: debug.action.close
+- extendedWaitUntil:
+    visible:
+      id: home.root.ready
+    timeout: 15000

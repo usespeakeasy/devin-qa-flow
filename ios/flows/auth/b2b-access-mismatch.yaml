@@ -1,0 +1,32 @@
+# C: open a B2B access invitation for another email signed out, sign in from the flow with the run's
+# account -> mismatch screen. Back to sign in: signed out, the flow's account options show again over
+# onboarding home. Sign in again -> mismatch -> Continue with personal account -> Home.
+# Entry: signed out. Precondition: QA build stubbing B2BAccessAcknowledgementRepository
+# (TOKEN prefix qa-mismatch- = refused as account mismatch). Pass -e TOKEN -e EMAIL -e PASSWORD.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/open-b2b-access-link.yaml
+- runFlow: ../../common/b2b-access-sign-in.yaml
+- extendedWaitUntil:
+    visible:
+      id: b2b-access.account-mismatch.action.back-to-sign-in
+    timeout: 40000
+- takeScreenshot: c1-mismatch
+- tapOn:
+    id: b2b-access.account-mismatch.action.back-to-sign-in
+- extendedWaitUntil:
+    visible:
+      id: auth.options.screen
+    timeout: 40000
+- takeScreenshot: c2-flow-again
+- runFlow: ../../common/b2b-access-sign-in.yaml
+- extendedWaitUntil:
+    visible:
+      id: b2b-access.account-mismatch.action.back-to-sign-in
+    timeout: 40000
+- tapOn:
+    id: b2b-access.account-mismatch.action.continue-with-personal-account
+- runFlow: ../../common/b2b-access-land-in-app.yaml
+- takeScreenshot: c3-landed

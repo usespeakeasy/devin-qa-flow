@@ -1,0 +1,23 @@
+# B2B access account options (auth.options.screen over the invitation flow) -> Continue with Email -> sign in.
+# Entry: the flow's account options sheet. Pass -e EMAIL and -e PASSWORD.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: auth.options.screen
+    timeout: 30000
+- tapOn:
+    id: auth.provider.email
+- extendedWaitUntil:
+    visible:
+      id: auth.sign-in.screen
+    timeout: 10000
+- tapOn:
+    id: auth.email.field
+- inputText: ${EMAIL}
+- tapOn:
+    id: auth.password.field
+- inputText: ${PASSWORD}
+- pressKey: Enter

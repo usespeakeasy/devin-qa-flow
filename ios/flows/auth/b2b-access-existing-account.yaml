@@ -1,0 +1,41 @@
+# A: open a B2B access invitation link signed out, sign in from the flow's account options,
+# the invitation is acknowledged and the app lands on Home (welcome sheet first when shown).
+# Entry: signed out (onboarding.storybook.sign-in). Precondition: QA build stubbing B2BAccessRepository
+# and B2BAccessAcknowledgementRepository (TOKEN with prefix qa-ok- = existing account, acknowledged).
+# Pass -e TOKEN -e EMAIL -e PASSWORD.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/open-b2b-access-link.yaml
+- extendedWaitUntil:
+    visible:
+      id: auth.options.screen
+    timeout: 30000
+- takeScreenshot: a1-flow-presented
+- runFlow: ../../common/b2b-access-sign-in.yaml
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_notification_secondary_button|b2b-access.welcome.action.start-learning|ai-data-consent.action.agree|home.root.ready"
+    timeout: 40000
+- runFlow:
+    when:
+      visible:
+        id: onboarding_notification_secondary_button
+    commands:
+      - tapOn:
+          id: onboarding_notification_secondary_button
+      - runFlow:
+          when:
+            visible: "You can enable or disable notifications at any time in Settings\\."
+          commands:
+            - tapOn: "OK"
+- extendedWaitUntil:
+    visible:
+      id: b2b-access.welcome.action.start-learning
+    timeout: 40000
+- takeScreenshot: a2-welcome
+- tapOn:
+    id: b2b-access.welcome.action.start-learning
+- runFlow: ../../common/b2b-access-land-in-app.yaml
+- takeScreenshot: a3-landed

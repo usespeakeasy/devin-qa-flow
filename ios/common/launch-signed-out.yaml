@@ -1,0 +1,12 @@
+# Cold start of a fresh install to the signed-out welcome screen.
+# Entry: app installed, never launched (or signed out).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: onboarding.storybook.sign-in
+    timeout: 60000

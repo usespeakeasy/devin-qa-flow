@@ -1,0 +1,36 @@
+# After a B2B access completion: dismiss the welcome sheet and post-sign-in prompts, reach Home.
+# Entry: the flow just completed (welcome sheet, prompt or Home).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: "b2b-access.welcome.action.start-learning|home.root.ready|onboarding_notification_secondary_button|ai-data-consent.action.agree|custom-courses.announcement.action.primary|onboarding.premium-intro.action.close"
+    timeout: 40000
+- runFlow:
+    when:
+      visible:
+        id: b2b-access.welcome.action.start-learning
+    commands:
+      - takeScreenshot: b2b-welcome
+      - tapOn:
+          id: b2b-access.welcome.action.start-learning
+- runFlow:
+    when:
+      visible:
+        id: onboarding_notification_secondary_button
+    commands:
+      - tapOn:
+          id: onboarding_notification_secondary_button
+      - runFlow:
+          when:
+            visible: "You can enable or disable notifications at any time in Settings\\."
+          commands:
+            - tapOn: "OK"
+- runFlow: dismiss-ai-data-consent.yaml
+- runFlow: dismiss-home-interstitials.yaml
+- extendedWaitUntil:
+    visible:
+      id: home.root.ready
+    timeout: 30000

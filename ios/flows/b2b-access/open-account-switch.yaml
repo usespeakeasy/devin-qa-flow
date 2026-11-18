@@ -1,0 +1,11 @@
+# Signed in, open a provisioned B2B access invitation: the flow offers the account switch.
+# Entry: signed in, Home. Precondition: QA build stubbing B2BAccessRepository (TOKEN prefix qa-new-). Pass -e TOKEN.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/open-b2b-access-link.yaml
+- extendedWaitUntil:
+    visible:
+      id: b2b-access.account-switch.action.cancel
+    timeout: 30000
