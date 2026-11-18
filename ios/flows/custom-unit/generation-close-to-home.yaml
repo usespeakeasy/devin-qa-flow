@@ -1,0 +1,35 @@
+# A: close (X) the custom unit generation loading screen while lessons still generate. The X dismisses
+# the planning flow back to its presenter (the Courses selector when entered from Courses > Create a
+# course); the flow then closes the selector. Checks: the loading screen goes away and Home's learning
+# path shows (home.root.ready, home.learning-path.ready); the run reads the new course
+# (home.course.current.*), its unit and its lessons from a hierarchy dump at arrival.
+# Entry: exit of common/create-course-approve.yaml (loading screen with the X). Preconditions as that flow.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible:
+    id: custom-unit.generation.loading
+- tapOn:
+    id: custom-unit.generation.action.cancel
+- extendedWaitUntil:
+    visible:
+      id: "course-select.root.ready|home.root.ready"
+    timeout: 30000
+- assertNotVisible:
+    id: custom-unit.generation.loading
+- runFlow:
+    when:
+      visible:
+        id: course-select.root.ready
+    commands:
+      - tapOn:
+          id: course-select.toolbar.action.close
+- extendedWaitUntil:
+    visible:
+      id: home.root.ready
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: home.learning-path.ready
+    timeout: 30000

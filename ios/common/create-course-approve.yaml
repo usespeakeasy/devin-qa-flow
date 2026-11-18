@@ -1,0 +1,48 @@
+# Home > Courses > Create a course > Let's go! > answer the Doug planning chat until the plan Review
+# shows approve, then approve it. Exit: the generation loading screen (marker
+# custom-unit.generation.loading) with its close X (custom-unit.generation.action.cancel).
+# Entry: Home (home.root.ready). Preconditions: English to Spanish personal Premium Plus account,
+# split overrides dynamic_on_demand_unit_gen=on and meet_the_tutor_enabled=off (Create a course opens
+# the planning chat, not the intake call), launched with SPEAK_AUTOMATION_MARKERS=1.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: open-meet-the-tutor.yaml
+- extendedWaitUntil:
+    visible:
+      id: custom-unit.planning.ready
+    timeout: 30000
+- repeat:
+    times: 6
+    while:
+      notVisible:
+        id: custom-unit.plan-details.action.approve
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "custom-unit.plan-details.action.approve|custom-unit.planning.user-turn-ready"
+          timeout: 90000
+      - runFlow:
+          when:
+            notVisible:
+              id: custom-unit.plan-details.action.approve
+          commands:
+            - tapOn:
+                id: custom-unit.planning.input
+            - inputText: "Ordering food and chatting with waiters at restaurants when I travel in Mexico. Please make the plan now."
+            - tapOn:
+                id: custom-unit.planning.action.send
+- extendedWaitUntil:
+    visible:
+      id: custom-unit.plan-details.action.approve
+      enabled: true
+    timeout: 60000
+- tapOn:
+    id: custom-unit.plan-details.action.approve
+- extendedWaitUntil:
+    visible:
+      id: custom-unit.generation.loading
+    timeout: 30000
+- assertVisible:
+    id: custom-unit.generation.action.cancel

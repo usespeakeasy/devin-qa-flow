@@ -1,0 +1,23 @@
+# B: wait for the custom unit generation loading screen to finish (100%, short dwell, closes by itself).
+# Checks: the loading screen goes away without a tap and Home's learning path shows (home.root.ready,
+# home.learning-path.ready); the run reads the selected course (home.course.current.*) from a hierarchy
+# dump at arrival. Entry: exit of common/create-course-approve.yaml, or later while the loading screen
+# is still up (it may already be closing after its 1.5 s dwell at 100%). Preconditions as that flow.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    notVisible:
+      id: custom-unit.generation.loading
+    timeout: 420000
+- assertNotVisible:
+    id: "custom-unit.generation.failure-alert.action.retry|custom-unit.generation.refusal-alert.action.ok"
+- extendedWaitUntil:
+    visible:
+      id: home.root.ready
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: home.learning-path.ready
+    timeout: 30000
