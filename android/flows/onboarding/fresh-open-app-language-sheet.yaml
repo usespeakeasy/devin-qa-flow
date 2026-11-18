@@ -1,0 +1,23 @@
+# Storybook > Get started > learning English > native NATIVE (default Korean) > "Would you like to use Speak in
+# Korean?" sheet (`onboarding_app_language_sheet`). Stops with the sheet open so the run can background, kill,
+# rotate or answer it.
+# Entry: app data cleared, storybook on screen, app in English.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  NATIVE: ${NATIVE || "korean_english"}
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_get_started_button
+    timeout: 60000
+- tapOn:
+    id: onboarding_storybook_get_started_button
+- extendedWaitUntil:
+    visible:
+      id: onboarding_language_screen
+    timeout: 30000
+- runFlow:
+    file: open-app-language-sheet.yaml
+    env:
+      NATIVE: ${NATIVE}

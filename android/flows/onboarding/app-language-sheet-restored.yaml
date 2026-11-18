@@ -1,0 +1,17 @@
+# App language sheet after process death, Don't keep activities or a recreate: the sheet is back with both
+# answers over the native step, not the sign-up options. Entry: relaunch after a kill with the sheet open.
+# Exit: the sheet still open.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: onboarding_app_language_sheet
+    timeout: 60000
+- assertVisible:
+    id: onboarding_app_language_keep_button
+- assertVisible:
+    id: onboarding_app_language_switch_button
+- assertNotVisible:
+    id: auth_options_screen
