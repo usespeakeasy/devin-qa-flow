@@ -1,0 +1,16 @@
+# Debug Demos list > system Back returns to the Debug Menu (its Demos row), with no Test Overlay card left.
+# Run after test-overlay-close.yaml EXIT=back to check root Back works once the overlay is gone.
+# Entry: Demos list opened from the Debug Menu (open-test-overlay.yaml VIA=menu). Exit: Debug Menu.
+# Selectors: the Demos list button and overlay card have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible: "^Test Overlay$"
+- back
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_demos
+    timeout: 10000
+- assertNotVisible: "^Test Overlay$"
+- assertNotVisible: "This overlay is rendered by the OverlayNavHost\\."

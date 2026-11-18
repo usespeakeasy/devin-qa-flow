@@ -1,0 +1,24 @@
+# Back while the planning intro is open over a video lesson that composed under it (CLNT-2151, speak-android#9548):
+# the overlay takes it and quits from its intro (no exit sheet), and the lesson stays with no quit sheet. The next
+# Back is the lesson's own (video-lesson/back-quit-home.yaml).
+# BACK=system sends the first Back here; BACK=none when the caller already sent it (a predictive back swipe by adb).
+# Entry: planning intro over the video lesson (lesson-link-under-intro.yaml). Exit: the video lesson.
+# maestro test -e BACK=system back-over-lesson.yaml
+# Selectors: the lesson quit sheet has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  BACK: ${BACK || "system"}
+---
+- runFlow:
+    when:
+      true: ${BACK == "system"}
+    commands:
+      - back
+- extendedWaitUntil:
+    notVisible:
+      id: custom_unit_planning_screen
+    timeout: 15000
+- assertVisible:
+    id: card_count
+- assertNotVisible: "Are you sure you want to quit this lesson\\?"

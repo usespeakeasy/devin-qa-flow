@@ -1,0 +1,19 @@
+# Custom unit planning intro stays on top while a video lesson deep link composes a root entry under it
+# (CLNT-2151, speak-android#9548). Open the lesson once on the account first (video-lesson/open-lesson.yaml) so its
+# AI data consent alert and resume prompt don't show over the overlay.
+# Entry: planning intro (open-create-course-from-courses.yaml), Premium. Exit: planning intro over the video lesson.
+# maestro test -e LESSON_ID=KR_EN_UC_L1_howstheweather_VL lesson-link-under-intro.yaml
+# Selectors: the intro message has no resource-id (text fallback via intro-shown.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "KR_EN_UC_L1_howstheweather_VL"}
+---
+- runFlow: intro-shown.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+# The lesson composes under the overlay; its card counter is in the same window's tree.
+- extendedWaitUntil:
+    visible:
+      id: card_count
+    timeout: 60000
+- runFlow: intro-shown.yaml
