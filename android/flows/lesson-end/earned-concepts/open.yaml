@@ -6,9 +6,7 @@ env:
   CONCEPT: "^muy bien$"
   LESSON_ID: EN_ES_A1-1_quetal_SP_DL_IC
 ---
-- tapOn:
-    text: "Later"
-    optional: true
+- runFlow: ../../../common/home-popups.yaml
 - openLink: speak-dev://lesson?id=${LESSON_ID}
 - extendedWaitUntil:
     visible:
