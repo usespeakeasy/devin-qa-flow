@@ -1,0 +1,31 @@
+# Developer Settings (speak-dev://debug): scroll to the Reset overrides footer and assert exactly one
+# debug override is active (DebugScreenView footer "1 override is active."), then Close.
+# Use it after setting a single UserDefaults debug override (e.g. Lesson Delight) to prove the app honored it.
+# `xcrun simctl pbpaste` does not see Copy Reproduction Configuration on the iOS 27 sim.
+# Entry: signed in, any screen. Dev build. Ends where it started.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- openLink: speak-dev://debug
+- runFlow: confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible:
+      id: "debug.action.close"
+    timeout: 20000
+- scrollUntilVisible:
+    element: "1 override is active\\. Reset.*"
+    direction: DOWN
+    timeout: 40000
+- takeScreenshot: ${SHOT}
+- scrollUntilVisible:
+    element:
+      id: "debug.action.close"
+    direction: UP
+    timeout: 30000
+- tapOn:
+    id: "debug.action.close"
+- extendedWaitUntil:
+    notVisible:
+      id: "debug.action.close"
+    timeout: 10000

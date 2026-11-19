@@ -1,0 +1,37 @@
+# Series lesson (SeriesLessonVC): debug-skip (lesson.debug.action.skip) to the first series completed
+# card of EN_ES_A1-1_quetal_SP and check its look: the Lesson Delight check ring hero
+# ("Part N of M" / "Completed", EXPECT=ring; fast skips can pass series 1, so N is not pinned) or the classic card ("COMPLETED", no "Part N of M", EXPECT=plain;
+# lesson.series.completed.action.next-series is not in the Maestro tree). Takes SHOT at the card.
+# Entry: the lesson just opened with `xcrun simctl openurl <sim> speak-dev://lesson?id=EN_ES_A1-1_quetal_SP`.
+# Preconditions: signed in, Dev build with debug features allowed, Lesson Delight debug override.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible:
+      id: "lesson.series.action.close"
+    timeout: 30000
+- repeat:
+    while:
+      notVisible: "COMPLETED|Completed"
+    times: 30
+    commands:
+      - tapOn:
+          id: "lesson.debug.action.skip"
+      - waitForAnimationToEnd:
+          timeout: 3000
+- takeScreenshot: ${SHOT}
+- runFlow:
+    when:
+      true: ${EXPECT == 'ring'}
+    commands:
+      - assertVisible: "Part [0-9]+ of [0-9]+"
+      - assertVisible: "Completed"
+- runFlow:
+    when:
+      true: ${EXPECT == 'plain'}
+    commands:
+      - assertVisible: "COMPLETED"
+      - assertNotVisible: "Part [0-9]+ of [0-9]+"

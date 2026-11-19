@@ -1,0 +1,48 @@
+# Speaking Drill (TutorLessonVC): debug-Skip through part 1 of EN_ES_A1-1_quetal_SP_DL_IC (Matching
+# Card items, debug card-type label; part 1 has speaking lines) and check what follows: the Lesson Delight "Part 1 of N / Completed"
+# check ring moment (EXPECT=moment) or straight to part 2 with no moment (EXPECT=none).
+# Takes SHOT (relative name, run with --test-output-dir) at the arrival point.
+# Entry: the lesson just opened with
+# `xcrun simctl openurl <sim> speak-dev://lesson?id=EN_ES_A1-1_quetal_SP_DL_IC`.
+# Preconditions: signed in, EN_ES_A1-1 course, Dev build with debug features allowed, Lesson Delight
+# debug override in UserDefaults (lesson_delight, lesson_delight_settings). Case script also checks
+# `Lesson Delight Part Moment Shown` in the app log. Run the afplay/coreaudiod watchdog on iOS 27 sims.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/confirm-open-in-app.yaml
+- extendedWaitUntil:
+    visible:
+      id: "tutor-lesson.close"
+    timeout: 30000
+- extendedWaitUntil:
+    visible: "^Skip$"
+    timeout: 30000
+- repeat:
+    while:
+      visible: "Matching Card"
+    times: 20
+    commands:
+      - tapOn: "^Skip$"
+      - waitForAnimationToEnd:
+          timeout: 4000
+- extendedWaitUntil:
+    visible: "Part 1 of [0-9]+"
+    timeout: 4000
+    optional: true
+- takeScreenshot: ${SHOT}
+- assertVisible:
+    id: "tutor-lesson.close"
+- runFlow:
+    when:
+      true: ${EXPECT == 'moment'}
+    commands:
+      - assertVisible: "Part 1 of [0-9]+"
+      - assertVisible: "Completed"
+- runFlow:
+    when:
+      true: ${EXPECT == 'none'}
+    commands:
+      - assertNotVisible: "Part [0-9]+ of [0-9]+"
+      - assertNotVisible: "Completed"
