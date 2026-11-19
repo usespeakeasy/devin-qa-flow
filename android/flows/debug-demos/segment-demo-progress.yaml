@@ -1,0 +1,76 @@
+# Navigation segment demo: "Progress 5 s" shows SpeakProgressDialog over a dimmed screen, then
+# ACTION=wait (back does nothing, the loader closes by itself after 5 s), back, tap (on the dim, away
+# from the loader) or stop (the loader is still up when the flow ends; the run script then rotates,
+# kills or reads the window). CANCELABLE=true|false picks the button. Maestro's tap and back wait up to
+# about 5 s for the spinning loader to settle, so a QA run lengthens PROGRESS_MILLIS (QA-only patch, both
+# builds) when it must act before the 5 s run ends; the wait allows 25 s.
+# Entry: signed in, any state (cold starts through speak-dev://demos?id=nav-segment).
+# Exit: "last result=..." for wait/back/tap, the loader (`indicator`) for stop.
+# Selectors: demo buttons and result text have no resource-id (debug-only screen); the tap on the dim is
+# a point because the dim has no node of its own.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CANCELABLE: ${CANCELABLE || "false"}
+  ACTION: ${ACTION || "wait"}
+---
+- runFlow:
+    file: nav-demo-link.yaml
+    env:
+      DEMO_ID: nav-segment
+      ROOT_TEXT: "Segment demo, key depth 1"
+- runFlow:
+    when:
+      true: ${CANCELABLE == "true"}
+    commands:
+      - scrollUntilVisible:
+          element: "^Progress 5 s \\(cancelable\\)$"
+      - tapOn:
+          text: "^Progress 5 s \\(cancelable\\)$"
+          waitToSettleTimeoutMs: 1000
+- runFlow:
+    when:
+      true: ${CANCELABLE != "true"}
+    commands:
+      - scrollUntilVisible:
+          element: "^Progress 5 s \\(not cancelable\\)$"
+      - tapOn:
+          text: "^Progress 5 s \\(not cancelable\\)$"
+          waitToSettleTimeoutMs: 1000
+- extendedWaitUntil:
+    visible:
+      id: indicator
+    timeout: 3000
+- runFlow:
+    when:
+      true: ${ACTION == "wait"}
+    commands:
+      - pressKey: Back
+      - assertVisible:
+          id: indicator
+      - extendedWaitUntil:
+          notVisible:
+            id: indicator
+          timeout: 25000
+      - assertVisible: "^last result=progress finished, cancelable=${CANCELABLE}$"
+- runFlow:
+    when:
+      true: ${ACTION == "back"}
+    commands:
+      - pressKey: Back
+      - extendedWaitUntil:
+          notVisible:
+            id: indicator
+          timeout: 2000
+      - assertVisible: "^last result=progress canceled$"
+- runFlow:
+    when:
+      true: ${ACTION == "tap"}
+    commands:
+      - tapOn:
+          point: "50%,12%"
+      - extendedWaitUntil:
+          notVisible:
+            id: indicator
+          timeout: 2000
+      - assertVisible: "^last result=progress canceled$"
