@@ -1,0 +1,20 @@
+# Video lesson on card CARD: press Back and wait up to 5 s for the quit sheet. The case script reads
+# the result (sheet or Home) with the harness; this flow asserts only the start card.
+# Entry: video lesson, card CARD. Exit: quit sheet open, or Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD: ${CARD || "1 of \\d+"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+- back
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?|What would you like to do\\?"
+    timeout: 5000
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 2000
