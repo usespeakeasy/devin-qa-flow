@@ -1,0 +1,30 @@
+# Sign-in sheet ("Sign in to continue", `auth_options_screen`) closes by HOW=back (system Back) or HOW=outside (tap
+# the scrim above the sheet) and lands on the signed-out storybook (speak-android#9582).
+# Entry: app data cleared, sign-in sheet open over the storybook (open-sign-in-options.yaml). Exit: storybook.
+# Selectors: the scrim has no ID, so the outside tap is a point above the sheet.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  HOW: ${HOW || "back"}
+---
+- assertVisible:
+    id: auth_options_screen
+- runFlow:
+    when:
+      true: ${HOW == "back"}
+    commands:
+      - back
+- runFlow:
+    when:
+      true: ${HOW == "outside"}
+    commands:
+      - tapOn:
+          point: "50%,10%"
+- extendedWaitUntil:
+    notVisible:
+      id: auth_options_screen
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: onboarding_storybook_sign_in_button
+    timeout: 10000
