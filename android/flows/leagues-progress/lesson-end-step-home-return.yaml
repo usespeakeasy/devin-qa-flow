@@ -1,0 +1,18 @@
+# Case: press Home as soon as the lesson end Leagues step opens, come back from the launcher: the step
+# settles as in lesson-end-step.yaml. Entry: any signed-in state. Preconditions: as common/open-leagues-lesson-end-step.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/open-leagues-lesson-end-step.yaml
+- pressKey: Home
+- assertNotVisible:
+    id: lesson_end_leagues_progress_root
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_leagues_progress_root
+    timeout: 30000
+- runFlow: lesson-end-step-settles.yaml
+- takeScreenshot: leagues-step-home-return-settled

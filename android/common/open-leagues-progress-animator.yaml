@@ -10,17 +10,7 @@ env:
 ---
 - launchApp:
     stopApp: true
-- extendedWaitUntil:
-    visible:
-      id: "home_root_ready|referral_welcome_dialog_root"
-    timeout: 30000
-- tapOn:
-    id: referral_welcome_dialog_later_button
-    optional: true
-- extendedWaitUntil:
-    visible:
-      id: home_root_ready
-    timeout: 15000
+- runFlow: home-popups.yaml
 - openLink: speak-dev://debug-menu
 - runFlow:
     when:

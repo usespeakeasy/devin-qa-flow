@@ -1,0 +1,30 @@
+# Open a drill lesson and skip every card until the lesson end Leagues step root shows (stops there, animation
+# may still run). Entry: any signed-in state (restarts the app to Home first).
+# Preconditions: the lesson end has a Leagues step: an account in Leagues, or the QA-only patch that puts
+# QaLessonFinishedFlow's LEAGUES data first after LessonCompleted (QA speak-android#9624).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+---
+- launchApp:
+    stopApp: true
+- runFlow: home-popups.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- repeat:
+    while:
+      notVisible:
+        id: lesson_end_leagues_progress_root
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: lesson_end_leagues_progress_root
+    timeout: 30000

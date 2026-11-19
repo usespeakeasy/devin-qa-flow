@@ -1,0 +1,10 @@
+# Case: finish a lesson and tap through to the Leagues step; the tier title and leaderboard show, the row settles, Continue shows.
+# Entry: any signed-in state. Preconditions: as common/open-leagues-lesson-end-step.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/open-leagues-lesson-end-step.yaml
+- takeScreenshot: leagues-step-opened
+- runFlow: lesson-end-step-settles.yaml
+- takeScreenshot: leagues-step-settled

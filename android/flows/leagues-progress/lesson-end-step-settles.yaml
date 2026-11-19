@@ -1,0 +1,27 @@
+# Lesson end Leagues step settles: the tier title and the leaderboard show, NAME settles at RANK with XP,
+# then Continue shows. Entry: the step is open (common/open-leagues-lesson-end-step.yaml).
+# Defaults match the QA-only QaLessonFinishedFlow leagues data (User 3 at rank 3, 1200 XP, title "QA Progress Animation").
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  NAME: ${NAME || "User 3"}
+  RANK: ${RANK || "3"}
+  XP: ${XP || "1200 XP"}
+  TITLE: ${TITLE || "QA Progress Animation"}
+---
+- extendedWaitUntil:
+    visible:
+      id: title
+      text: ${TITLE}
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: name
+    timeout: 15000
+- runFlow:
+    file: animator-settled.yaml
+    env:
+      NAME: ${NAME}
+      RANK: ${RANK}
+      XP: ${XP}
+      TITLE: ${TITLE}
