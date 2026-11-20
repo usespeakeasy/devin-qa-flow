@@ -1,0 +1,38 @@
+# Opens the older Tutor chat (TutorChatVC via home.tutor.action.open) and waits until the
+# message box is ready (consent accepted, loading gone). Ends with the message box focused.
+# Entry: Home (home.root.ready) or the Tutor chat. Exit: Tutor chat, keyboard up.
+# Preconditions: signed in, dev; Premium override (common/set-subscription-premium.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|tutor-chat.input.text-view"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: "home.root.ready"
+    commands:
+      - tapOn:
+          id: "home.tutor.action.open"
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.input.text-view"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: "ai-data-consent.action.agree"
+    commands:
+      - tapOn:
+          id: "ai-data-consent.action.agree"
+- extendedWaitUntil:
+    notVisible:
+      id: "tutor-chat.message.loading"
+    timeout: 30000
+- tapOn:
+    id: "tutor-chat.input.text-view"
+- assertVisible:
+    id: "tutor-chat.input.text-view"
