@@ -1,0 +1,15 @@
+# B1: Expanded Path on; Home shows the expanded lesson rows (expandedPath.node.*), the unit header and the path.
+# Entry: any; cold starts to Home. Precondition: signed in, split learning_path_expanded_path=on
+# (speak-dev://set-split-overrides before the run).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow: ../../common/launch-home.yaml
+- extendedWaitUntil:
+    visible:
+      id: "expandedPath.node.*"
+    timeout: 20000
+- assertVisible: "UNIT [0-9]+"
+- waitForAnimationToEnd
+- takeScreenshot: b1-rows

@@ -1,0 +1,20 @@
+# A1: Home, scroll the learning path down; the pinned unit header (UNIT N + title) follows the unit on screen.
+# Entry: Home (home.root.ready) at the top of the path. Precondition: signed in, any onboarded account
+# with at least 3 units. The case script reads the header from the hierarchy before and after.
+# TEMPORARY TEXT FALLBACK: the pinned unit header has no accessibility id ("UNIT N" text).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready"
+    timeout: 30000
+- assertVisible: "UNIT [0-9]+"
+- takeScreenshot: a1-start
+- swipe: {start: "50%,80%", end: "50%,20%", duration: 400}
+- swipe: {start: "50%,80%", end: "50%,20%", duration: 400}
+- swipe: {start: "50%,80%", end: "50%,20%", duration: 400}
+- waitForAnimationToEnd
+- assertVisible: "UNIT [0-9]+"
+- takeScreenshot: a1-header

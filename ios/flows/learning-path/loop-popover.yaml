@@ -1,0 +1,44 @@
+# A2: tap a loop; its popover opens under it; a scroll closes it; tap again, then a tap outside closes it.
+# Entry: Home, classic path. Precondition: signed in. LOOP_ID: the current loop's id
+# (home.loop.item.<dayID>), whose popover has the lesson Start button (home.lesson.start.*).
+# The case script measures that the popover sits below the loop.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: ${LOOP_ID}
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: "home.lesson.start.*"
+    commands:
+      - tapOn:
+          id: ${LOOP_ID}
+- extendedWaitUntil:
+    visible:
+      id: "home.lesson.start.*"
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: a2-open
+- swipe: {start: "50%,62%", end: "50%,56%", duration: 300}
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: "home.lesson.start.*"
+- takeScreenshot: a2-closed-scroll
+- tapOn:
+    id: ${LOOP_ID}
+- extendedWaitUntil:
+    visible:
+      id: "home.lesson.start.*"
+    timeout: 10000
+- waitForAnimationToEnd
+# Point: the path background beside the loops has no element; its left edge is outside every loop.
+- tapOn:
+    point: "2%,45%"
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: "home.lesson.start.*"
+- takeScreenshot: a2-closed-outside

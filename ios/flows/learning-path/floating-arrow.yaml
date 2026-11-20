@@ -1,0 +1,24 @@
+# A3: scroll the path away from the current loop, tap the floating arrow; the path scrolls back to it.
+# Entry: Home, classic path, no popover open. Precondition: signed in. CURSOR_ID: the current loop's id.
+# TEMPORARY TEXT FALLBACK: the floating cursor button has no accessibility id ("arrow-up" image name).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- swipe: {start: "50%,80%", end: "50%,20%", duration: 400}
+- swipe: {start: "50%,80%", end: "50%,20%", duration: 400}
+- swipe: {start: "50%,80%", end: "50%,20%", duration: 400}
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: ${CURSOR_ID}
+- extendedWaitUntil:
+    visible: "arrow-up"
+    timeout: 10000
+- takeScreenshot: a3-away
+- tapOn: "arrow-up"
+- extendedWaitUntil:
+    visible:
+      id: ${CURSOR_ID}
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: a3-back

@@ -1,0 +1,13 @@
+# B2: Expanded Path: tap a lesson row low on screen; it opens and the path scrolls it up.
+# A lesson row can open its lesson screen. Entry: expanded-path-rows.yaml exit. NODE_ID: an expandedPath.node.<lessonID> in the lower half
+# of the screen. The case script measures the row's move from the hierarchy before and after.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible:
+    id: ${NODE_ID}
+- tapOn:
+    id: ${NODE_ID}
+- waitForAnimationToEnd
+- takeScreenshot: b2-open
