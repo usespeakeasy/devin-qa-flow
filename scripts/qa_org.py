@@ -50,7 +50,16 @@ def request(path, method='GET', body=None):
         headers={'x-access-token': token, 'Content-Type': 'application/json'})
     with urllib.request.urlopen(req, timeout=30) as response:
         data = response.read()
-        return json.loads(data) if data else None
+        # Several Partners POST/PUT handlers return plain-text "Created"/"OK".
+        # A successful mutation must not be retried because its body isn't JSON.
+        if not data:
+            return None
+        try:
+            return json.loads(data)
+        except json.JSONDecodeError:
+            if method in ('POST', 'PUT', 'PATCH') and data.strip() in (b'Created', b'OK'):
+                return None
+            raise
 
 
 def fingerprint(provenance):

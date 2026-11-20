@@ -7,7 +7,46 @@ write access to `speak-v2-2a1f1.devin_qa`, and `QA_ORG_ACCESS_TOKEN` containing 
 The backend is pinned to `https://speak-api.alpha.usespeak.dev`; production and
 preview hosts are not supported. Do not put manifests/receipts in git or reports.
 
-## Refill (operator)
+## Provision (operator/agent)
+
+Use the normal develop Partners admin APIs, not `POST /v1/admin/e2e/users`.
+That E2E endpoint may be cleanup-only on alpha; its 403 does not mean normal
+organization learner creation is unavailable.
+
+```sh
+python3 scripts/qa_org_provision.py --journal /private/path/provision.json --holder SESSION_URL --product EXISTING_DEV_SPEAK_PRODUCT_ID
+```
+
+This creates a fingerprinted organization, a dedicated learner, a non-revenue
+one-seat trial subscription, and its assignment. It disables onboarding campaigns
+and does not create HubSpot deals or payments. Default language pair is
+`korean-english`; select a supported assessment language pair explicitly when needed.
+It then checks the organization rollout and configures a required scheduled
+assessment. The subscription lasts 30 days and the schedule ends in 5 days;
+expired baselines need explicit renewal/reset, not silent reuse.
+
+The provisioner does **not** enroll the fixture or claim mobile readiness. Before
+registration, authenticate as the dedicated learner and verify required eligibility,
+course state and the profile's checks. For dedicated fixtures only, the normal
+Partners admin `POST .../organizations/{id}/users/{userId}/reset-password` returns
+a generated password for email login. Keep it private; never reset a shared learner
+or log the response. No auth token/password belongs in the journal or manifest.
+
+Resume with the same arguments and journal. Successful steps are not repeated.
+A timeout/failed mutation leaves `pending`: inspect backend state by exact name,
+fingerprint and dedicated email, record the confirmed response under that step's
+key, then remove `pending`. Never clear it blindly or create another fixture.
+If a non-required schedule already exists, record its ID as `schedule_id` so resume
+patches that schedule rather than creating a duplicate. Keep journals outside git.
+
+The `app_assessments_required` rollout must target the **organization ID**.
+Individual user targets and mobile overrides are not a substitute. If
+`canRequireAppAssessment` is false, provisioning stops without registering anything
+as ready. Enable only the dedicated dev organization's rollout through the normal
+flag-management process, then resume. Verify learner-facing state separately even
+when the portal actor reports the rollout on.
+
+## Refill / registration
 
 1. Once, run `python3 scripts/qa_org.py init`. Run initialization serially before
    enrolling fixtures; it creates the table and the registry serialization row.
@@ -23,9 +62,8 @@ preview hosts are not supported. Do not put manifests/receipts in git or reports
 4. Provision a dedicated, onboarded learner, active organization membership and
    seat/subscription using the backend admin tools. This learner must **not** also
    be in `qa_account_pool`, another organization fixture, or an unrelated run.
-   Configure the required schedule/audience/dates for the scenario. There is no
-   automatic seat/schedule provisioner in this change: backend setup remains an
-   explicit operator step, not a mobile flag override.
+   Configure the required schedule/audience/dates for the scenario. The provisioner above automates this setup; enrollment and learner-facing
+   verification remain explicit steps, not mobile flag overrides.
 5. Make a private manifest with the following structure (placeholders only):
 
 ```json
@@ -97,6 +135,6 @@ A process dying while `resetting` needs explicit operator investigation; it is n
 silently reclaimed. Do not reset a fixture while a stopped/expired agent may still
 be using it: registry fencing cannot fence requests made directly to the backend.
 
-This change ships pool tooling, not a populated pool, an installed Devin plugin,
-or live B2B e2e validation. First enrollment must be reviewed against the deployed
+This change ships pool and explicit provisioning tooling, not automatic
+replenishment during leasing, an installed Devin plugin, or live B2B e2e validation. First enrollment must be reviewed against the deployed
 backend and the scenario's actual required-state contract.
