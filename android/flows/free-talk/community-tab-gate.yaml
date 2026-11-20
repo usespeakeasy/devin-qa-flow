@@ -1,0 +1,44 @@
+# Free Talk tab (AI Tutor intro): the Topics | Community tab bar is there (EXPECT=shown) or gone, with
+# Topics the only page and no tab bar (EXPECT=hidden). The gate is `isFreeTalkCommunityTabEnabled` (Split
+# `freetalk_community_tab_enabled`, and on newer builds the user's `freeTalkCommunityDisabled`).
+# Entry: cold start (launch-home). Precondition: signed-in dev account, the regular (non-catalog) Free Talk tab.
+# Exit: on the Free Talk tab. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  EXPECT: ${EXPECT || "shown"}
+  SHOT: ${SHOT || "community-tab-gate"}
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn:
+    id: main_tab_free_talk
+# First visit on an account shows the Free Talk intro dialog over the tab.
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_intro_dialog_get_started_button
+    commands:
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_intro_screen
+    timeout: 20000
+# With Community gone the tab bar is not drawn at all (Topics is the only page).
+- runFlow:
+    when:
+      true: ${EXPECT == "shown"}
+    commands:
+      - assertVisible:
+          id: ai_tutor_topics_tab
+      - assertVisible:
+          id: ai_tutor_community_tab
+- runFlow:
+    when:
+      true: ${EXPECT == "hidden"}
+    commands:
+      - assertNotVisible:
+          id: ai_tutor_community_tab
+      - assertNotVisible:
+          id: ai_tutor_tab_bar
+- takeScreenshot: ${SHOT}

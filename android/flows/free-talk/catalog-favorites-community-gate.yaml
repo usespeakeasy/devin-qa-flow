@@ -1,0 +1,38 @@
+# Catalog Free Talk > Favorites (`FreeTalkCatalogFavorites` entry): the list shows LESSON and, when
+# Community is on (EXPECT=shown), the liked community scenario TOPIC; with Community off
+# (EXPECT=hidden) only LESSON.
+# Entry: cold start (launch-home). Preconditions: the catalog Free Talk tab and a favorites list with
+# both kinds; QA runs serve them with the QA-only FreeTalkCatalogRepositoryImpl + MainController patch.
+# Selectors: the cards have no resource-id (text fallback). Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  EXPECT: ${EXPECT || "shown"}
+  SHOT: ${SHOT || "catalog-favorites-community-gate"}
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn:
+    id: main_tab_free_talk
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_intro_dialog_get_started_button
+    commands:
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
+- tapOn:
+    id: ai_tutor_favorites_button
+- extendedWaitUntil:
+    visible: ${LESSON}
+    timeout: 20000
+- runFlow:
+    when:
+      true: ${EXPECT == "shown"}
+    commands:
+      - assertVisible: ${TOPIC}
+- runFlow:
+    when:
+      true: ${EXPECT == "hidden"}
+    commands:
+      - assertNotVisible: ${TOPIC}
+- takeScreenshot: ${SHOT}

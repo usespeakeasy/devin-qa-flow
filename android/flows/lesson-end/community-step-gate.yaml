@@ -1,0 +1,44 @@
+# Finish a drill lesson (skip every card): the lesson end opens on the post to community step
+# ("Share with the community", EXPECT=shown) or, with Community off, on another step (EXPECT=hidden).
+# Entry: cold start (launch-home), signed in, Premium. Precondition: the QA-only COMMUNITY_SCENARIO-first patch in
+# `LessonEndFlowViewModel.updateScreens` (see open-post-to-community.yaml), so the step is first when allowed.
+# Selectors: the post to community step has no resource-id (text fallback). Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP_DL_IC"}
+  EXPECT: ${EXPECT || "shown"}
+  SHOT: ${SHOT || "community-step-gate"}
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow: ../../common/home-popups.yaml
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- runFlow: ../../common/pass-qa-pre-lesson.yaml
+- repeat:
+    while:
+      visible:
+        id: drill_lesson_skip
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*|ask_for_review_.*dialog|parentPanel|unit_end_screen|phone_speak_summary|community_post_root"
+    timeout: 30000
+- runFlow:
+    when:
+      true: ${EXPECT == "shown"}
+    commands:
+      - extendedWaitUntil:
+          visible: "Share with the community"
+          timeout: 15000
+      - assertVisible: "Upload to community"
+- runFlow:
+    when:
+      true: ${EXPECT == "hidden"}
+    commands:
+      - assertNotVisible: "Share with the community"
+      - assertNotVisible: "Upload to community"
+- takeScreenshot: ${SHOT}
