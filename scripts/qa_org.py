@@ -34,8 +34,6 @@ def bq(sql, **params):
             try:
                 return json.loads(r.stdout or '[]')
             except json.JSONDecodeError:
-                if 'SELECT' in sql.upper():
-                    raise RuntimeError('BigQuery did not return JSON')
                 return []
         if 'concurrent' not in (r.stdout + r.stderr).lower():
             raise RuntimeError('BigQuery query failed (inspect CLI authentication/table access)')

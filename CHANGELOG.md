@@ -5,7 +5,7 @@
 Adds develop-only, fingerprinted organization + dedicated learner leases, backend
 checks, renewal, quarantine and explicit reset. Prevents concurrent B2B runs sharing
 state or treating generic users as organization fixtures. Backend seat/schedule
-provisioning and initial pool population remain operator steps. PR: PR_LINK.
+provisioning and initial pool population remain operator steps. PR: https://github.com/usespeakeasy/devin-qa-flow/pull/29.
 
 
 What changed in the QA system, newest first. One entry per change to a skill under `skills/` or to

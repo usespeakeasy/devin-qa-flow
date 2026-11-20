@@ -51,6 +51,12 @@ class OrganizationPoolTests(unittest.TestCase):
         self.assertNotIn('TIMESTAMP_SUB', sql)
         self.assertIn("organization_id='__registry__'", sql)
 
+    def test_dml_row_count_is_not_a_json_error(self):
+        import subprocess
+        result = subprocess.CompletedProcess([], 0, 'Number of affected rows: 1', '')
+        with patch.object(q.subprocess, 'run', return_value=result):
+            self.assertEqual(q.bq('MERGE table USING (SELECT 1) ON FALSE'), [])
+
     def test_json_pointer(self):
         self.assertEqual(q.pointer({'a/b': [{'~key': True}]}, '/a~1b/0/~0key'), True)
 
