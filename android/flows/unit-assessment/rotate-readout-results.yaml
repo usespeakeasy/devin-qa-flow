@@ -1,0 +1,22 @@
+# The readout results list stays on screen across landscape and back to portrait.
+# Entry: readout (skill_check_readout) after a real unit assessment. Exit: readout, portrait.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 2000
+- extendedWaitUntil:
+    visible:
+      id: skill_check_readout
+    timeout: 10000
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 2000
+- extendedWaitUntil:
+    visible:
+      id: skill_check_readout
+    timeout: 10000
+- assertVisible:
+    id: skill_check_create_practice
