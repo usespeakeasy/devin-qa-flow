@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026.11.20.1 — organization fixture pool
+
+Adds develop-only, fingerprinted organization + dedicated learner leases, backend
+checks, renewal, quarantine and explicit reset. Prevents concurrent B2B runs sharing
+state or treating generic users as organization fixtures. Backend seat/schedule
+provisioning and initial pool population remain operator steps. PR: PR_LINK.
+
+
 What changed in the QA system, newest first. One entry per change to a skill under `skills/` or to
 the run instructions (`docs/`, `AGENTS.md`). Flow and `LEARNINGS.md` pushes are not listed here;
 `git log` has them.

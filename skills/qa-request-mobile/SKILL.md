@@ -2,7 +2,7 @@
 name: qa-request-mobile
 description: Run a QA request on a Speak mobile PR (speak-android or speak-ios). Read the PR's "How to test?" section, build the base and the branch against dev or prod, record both runs, and write the Before | After result into the PR description. Use when someone asks for QA, a no-diff check, a before and after recording, or writes "qa-request-mobile <PR link>" in Slack, a PR comment or a Linear issue. Also use it for every @Devin request with a PR or ticket link in #devin-qa-request-mobile, whatever the wording ("test <link>", "check this").
 metadata:
-  version: 2026.11.11.2
+  version: 2026.11.20.1
 ---
 
 # qa-request-mobile
@@ -125,7 +125,7 @@ Read "What's new?" too, so you know which screens the PR touches. Step 2 compare
 
 Write down an expected result for each case before recording, from the pass condition and the claim. A no-diff case passes when After looks and behaves like Before and the pass condition holds. A behavior change case passes when After shows what "What's new?" describes and nothing else changed.
 
-If the prerequisites name no account and the app needs one, use a dev test user (see "Dev accounts") and ask nothing: seed the tier, course, progress, streak and saved lines the cases need with the `test_*` tools. On prod, or when a case needs state neither the tools nor the pool can give (an organization member, a custom course, Leagues enrolled or returning), ask the requester in the thread before building. Smart reviews due: `test_progress_set` with `paceDays` ≥ 3 on a paid tier.
+If the prerequisites name no account and the app needs one, use a dev test user (see "Dev accounts") and ask nothing: seed the tier, course, progress, streak and saved lines the cases need with the `test_*` tools. On prod, or when a case needs state neither the tools nor the pool can give (an organization member without a ready verified fixture, a custom course, Leagues enrolled or returning), ask the requester in the thread before building. Smart reviews due: `test_progress_set` with `paceDays` ≥ 3 on a paid tier.
 
 ### 2. Judge coverage
 
@@ -246,6 +246,16 @@ On Android the dev build is the `developDebug` flavor, package `com.selabs.speak
 On iOS the dev build is the `Speak-Dev` scheme, run on one simulator for both builds. A Linux Devin machine has no Xcode or simulator. Run iOS requests on a macOS Devin machine; from Linux, hand off as described in "iOS requests on a Linux machine", and say so in the thread before building. Never put a password from `email-login` in the PR or the thread. Experiment variants are set with `xcrun simctl openurl <simulator> 'speak-dev://set-split-overrides?<flag>=on'` and sign-in with `speak-dev://code-login?code=...&userId=...&skipNotificationPrompt=true` for a test user, or `speak-dev://email-login?email=...&password=...` for a pool account. The repo's `deep-links` skill lists the rest.
 
 ### Dev accounts
+
+For develop organization/B2B cases, first use the platform-neutral organization
+fixture pool: see [organization-pool.md](../../docs/organization-pool.md). Lease
+the requested profile with `scripts/qa_org.py`, use its dedicated learner on both
+builds, and include organization ID, fingerprint, profile and backend verification
+evidence in the report (never the receipt/token). This replaces a generic user
+lease for that run. No ready verified fixture means ask for provisioning or mark
+`incomplete/account`; do not substitute a generic learner. Release/quarantine on
+every stop, and require operator reset before reuse.
+
 
 Use a test user for every dev run when the session has the Speak (dev) MCP's `test_*` tools, and a pool account otherwise. Base and branch use the same account either way, so their server state matches.
 
