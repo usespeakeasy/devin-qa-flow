@@ -1,0 +1,20 @@
+# Swipes the open popover's activity row by one item to the next activity (drag left) and checks the newly
+# selected activity EXPECT_ID: the debug selected-id label shows it and the primary button becomes
+# home.lesson.start.<EXPECT_ID>.
+# Points, not ids: a swipe from an item id (Maestro edge-to-edge swipe) flings past several items;
+# a 22% drag on the row moves exactly one. The row is at 54% of the screen height for the first
+# loop's popover after launch on iPhone 18 Pro (Maestro rejects ${} params in swipe points).
+# Entry: popover-open-loop.yaml on the first loop. Params (no defaults): EXPECT_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- swipe:
+    start: 50%,54%
+    end: 28%,54%
+    duration: 1000
+- extendedWaitUntil:
+    visible:
+      id: home.lesson.start.${EXPECT_ID}
+    timeout: 5000
+- assertVisible: ${EXPECT_ID}

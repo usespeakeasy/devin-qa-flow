@@ -1,0 +1,16 @@
+# Taps activity LESSON_ID in the open popover when it is not the selected one: it only becomes
+# selected (debug selected-id label and home.lesson.start.<LESSON_ID>), and no lesson opens.
+# Entry: popover-open-loop.yaml. Params (no defaults): LESSON_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: home.lesson.item.${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: home.lesson.start.${LESSON_ID}
+    timeout: 5000
+- assertVisible: ${LESSON_ID}
+- assertVisible:
+    id: home.learning-path.ready

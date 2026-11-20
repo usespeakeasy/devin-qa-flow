@@ -1,0 +1,17 @@
+# Taps the already selected activity LESSON_ID in the open popover: the lesson starts, so the
+# popover's primary button (home.lesson.start.<LESSON_ID>) leaves the screen. The run checks the
+# opened lesson from the app log (Track screen line).
+# Entry: popover-tap-select.yaml or popover-swipe-select.yaml with LESSON_ID selected.
+# Params (no defaults): LESSON_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- assertVisible:
+    id: home.lesson.start.${LESSON_ID}
+- tapOn:
+    id: home.lesson.item.${LESSON_ID}
+- extendedWaitUntil:
+    notVisible:
+      id: home.lesson.start.${LESSON_ID}
+    timeout: 15000

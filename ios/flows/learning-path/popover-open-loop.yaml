@@ -1,0 +1,44 @@
+# Opens the learning path popover of loop LOOP_ID and checks the selected activity SELECTED_ID:
+# the popover's lesson items (home.lesson.item.*) show and the primary button carries
+# home.lesson.start.<SELECTED_ID> (set only for a playable, unfinished selected lesson; pass
+# START_ID=none to skip that check, e.g. a finished or Jump ahead loop). The current loop's popover
+# is open after launch, so the loop is tapped only when its first item FIRST_ID is not on screen.
+# Entry: Home (home.learning-path.ready), launched with SPEAK_AUTOMATION_MARKERS=1 (lesson items
+# are automation markers). Preconditions: signed in, Plus (set-plan-override) so lessons are not
+# entitlement locked. Params (no defaults): LOOP_ID, FIRST_ID, SELECTED_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: home.learning-path.ready
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: home.lesson.item.${FIRST_ID}
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: home.loop.item.${LOOP_ID}
+          direction: DOWN
+          centerElement: true
+          timeout: 20000
+      - tapOn:
+          id: home.loop.item.${LOOP_ID}
+# A tap on another loop while the current loop's popover is open only closes that popover.
+- runFlow:
+    when:
+      notVisible:
+        id: home.lesson.item.${FIRST_ID}
+    commands:
+      - tapOn:
+          id: home.loop.item.${LOOP_ID}
+- extendedWaitUntil:
+    visible:
+      id: home.lesson.item.${FIRST_ID}
+    timeout: 10000
+- extendedWaitUntil:
+    visible: ${SELECTED_ID}
+    timeout: 5000

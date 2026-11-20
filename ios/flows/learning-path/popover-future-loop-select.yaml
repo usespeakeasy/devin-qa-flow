@@ -1,0 +1,15 @@
+# Future loop popover (Jump Ahead): taps activity LESSON_ID, which becomes selected (the debug
+# selected-id label shows it) while the primary button stays Jump Ahead.
+# Entry: popover-open-loop.yaml on a loop after the current one. Params (no defaults): LESSON_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: home.lesson.item.${LESSON_ID}
+- extendedWaitUntil:
+    visible: ${LESSON_ID}
+    timeout: 5000
+- assertVisible: "Jump Ahead"
+- assertVisible:
+    id: home.learning-path.ready
