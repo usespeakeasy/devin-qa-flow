@@ -1,0 +1,12 @@
+# E: cold launch; Home loads, scrolls to the current loop and shows the popover.
+# Entry: any state.
+# Precondition: signed in, in-progress Learning Path (current lesson not finished). Dev or prod.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- launchApp:
+    stopApp: true
+- runFlow: ../../common/home-ready-launched.yaml
+- runFlow: ../../common/learning-path-assert-current-popover.yaml
+- takeScreenshot: e-arrival

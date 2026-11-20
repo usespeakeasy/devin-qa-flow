@@ -1,0 +1,10 @@
+# Arrival: Home shows the current lesson's popover (its Start button).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: "home\\.lesson\\.start\\..*"
+    timeout: 15000
+- waitForAnimationToEnd

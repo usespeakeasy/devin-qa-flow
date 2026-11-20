@@ -1,0 +1,24 @@
+# C: scroll away, open the pushed Unit summary screen, go back; path scrolls to the current loop and shows the popover.
+# Entry: Home.
+# Precondition: signed in, in-progress Learning Path (current lesson not finished). Dev or prod.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: home.root.ready
+    timeout: 20000
+- runFlow: ../../common/learning-path-scroll-away.yaml
+- takeScreenshot: c-scrolled-away
+# TEMPORARY TEXT FALLBACK: the Home header unit-summary button has no accessibility identifier.
+- tapOn: "learning-path-unit-summary"
+- extendedWaitUntil:
+    visible:
+      id: unit-summary.action.back
+    timeout: 10000
+- takeScreenshot: c-unit-summary
+- tapOn:
+    id: unit-summary.action.back
+- runFlow: ../../common/learning-path-assert-current-popover.yaml
+- takeScreenshot: c-arrival

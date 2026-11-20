@@ -1,0 +1,22 @@
+appId: ${APP_ID}
+# Entry: Home.
+# Precondition: signed in, in-progress Learning Path (current lesson not finished). Dev or prod.
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: home.root.ready
+    timeout: 20000
+- runFlow: ../../common/learning-path-scroll-away.yaml
+- takeScreenshot: a-scrolled-away
+- tapOn:
+    id: tab-bar.tab.practice
+- extendedWaitUntil:
+    notVisible:
+      id: home.root.ready
+    timeout: 10000
+- tapOn:
+    id: tab-bar.tab.learningPathCourseOnly
+- runFlow: ../../common/learning-path-assert-current-popover.yaml
+- takeScreenshot: a-arrival

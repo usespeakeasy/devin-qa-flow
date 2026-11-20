@@ -1,0 +1,27 @@
+# G: Notification Center over Home without backgrounding; path scrolls back and shows the popover.
+# Entry: Home.
+# Precondition: signed in, in-progress Learning Path (current lesson not finished). Dev or prod.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: home.root.ready
+    timeout: 20000
+- runFlow: ../../common/learning-path-scroll-away.yaml
+- takeScreenshot: g-scrolled-away
+# System gesture: Notification Center opens from the top-left edge; no element to target.
+- swipe:
+    start: "20%,0%"
+    end: "20%,70%"
+    duration: 500
+- waitForAnimationToEnd
+- takeScreenshot: g-notification-center
+# System gesture: swipe up from the bottom edge closes Notification Center.
+- swipe:
+    start: "50%,99%"
+    end: "50%,30%"
+    duration: 400
+- runFlow: ../../common/learning-path-assert-current-popover.yaml
+- takeScreenshot: g-arrival

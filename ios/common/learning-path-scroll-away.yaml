@@ -1,0 +1,15 @@
+# Scroll the Learning Path away from the current loop; the current lesson's popover is off screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- repeat:
+    times: 3
+    commands:
+      - swipe:
+          start: "50%,75%"
+          end: "50%,25%"
+          duration: 400
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: "home\\.lesson\\.start\\..*"
