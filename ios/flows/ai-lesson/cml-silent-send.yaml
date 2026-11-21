@@ -1,0 +1,21 @@
+# Native AI lesson chat: send a silent answer. Waits for the live recording (arrow), holds about 2 s
+# with no audio, taps send and waits for the recording to end. On a Retry recording the worker answers
+# evaluationFailed; check the card afterwards.
+# Entry: recording live (after cml-start-recording, cml-tap-feedback-retry + cml-wait-recording, or the
+# auto-started mic after a tutor turn). Preconditions: native Chat (chat_mode_native=on), dev, no
+# debug audio injected during the hold.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "sdt-ui-arrow-up"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "__never_shown__"
+    timeout: 2000
+    optional: true
+- tapOn: "sdt-ui-arrow-up"
+- extendedWaitUntil:
+    notVisible: "sdt-ui-arrow-up"
+    timeout: 10000

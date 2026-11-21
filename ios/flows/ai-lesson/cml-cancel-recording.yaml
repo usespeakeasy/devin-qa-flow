@@ -1,0 +1,14 @@
+# Native AI lesson chat: cancel the live recording with the close (x) button before sending.
+# Entry: recording live (arrow visible). Preconditions: native Chat (chat_mode_native=on), dev.
+# Ends with the recording gone; a cancelled Retry recording should bring Retry back on the card.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible: "sdt-ui-arrow-up"
+    timeout: 15000
+- tapOn: "close-icon"
+- extendedWaitUntil:
+    notVisible: "sdt-ui-arrow-up"
+    timeout: 10000
