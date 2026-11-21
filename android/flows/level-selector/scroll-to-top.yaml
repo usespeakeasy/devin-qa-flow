@@ -1,0 +1,16 @@
+# Course selector: scroll the list back to the top (tutor call card or Create a course row in view).
+# Entry: course selector open (level_selector_ready). No account state needed.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: level_selector_ready
+- repeat:
+    times: 4
+    commands:
+      - swipe:
+          direction: DOWN
+          duration: 300
+- assertVisible:
+    id: level_selector_ready
