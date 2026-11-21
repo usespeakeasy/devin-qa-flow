@@ -1,0 +1,38 @@
+# Home > Courses (course selector) > "Create a course" with the tutor intake on: the intake call opens in place of the
+# planning intro (`MeetTheTutorIntake` shows the call screen while init runs), allowing the AI data alert if it shows.
+# Entry: signed in (the flow cold-starts the app first), `meet_the_tutor_enabled` ON for the client and init answering
+# with `meetTheTutor`, microphone granted. On dev Android gets no hand-off from speak-api (the split targets iOS 4.73+
+# and the QA segment), so speak-android#9648 QA forced one with a QA-only `InitMappers` patch (see LEARNINGS).
+# Exit: the call screen with End call.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- runFlow: ../../common/home-popups.yaml
+- tapOn:
+    id: home_course_selector
+- extendedWaitUntil:
+    visible:
+      id: level_selector_ready
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: level_selector_create_custom_course
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- tapOn:
+    id: level_selector_create_custom_course
+- extendedWaitUntil:
+    visible:
+      id: "phone_speak_call_end_call|ai_data_consent_alert"
+    timeout: 45000
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call
+    timeout: 45000
