@@ -1,0 +1,30 @@
+# Language Course: swipe up until a middle learning option (MID_PAIR) and then the last one
+# (LAST_PAIR) are fully on screen. Checks the screen scrolls at a large font scale or display
+# density (speak-android#9446); without scrolling the rows below the fold are not in the tree.
+# Entry: Language Course (language-course-open.yaml). Exit: Language Course, scrolled to the end.
+# Preconditions: an English speaker; on dev English has spanish, french, italian, japanese,
+# korean, chineseCN in that order.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  MID_PAIR: ${MID_PAIR || "english-italian"}
+  LAST_PAIR: ${LAST_PAIR || "english-chineseCN"}
+---
+- assertVisible:
+    id: language_settings_screen
+- scrollUntilVisible:
+    element:
+      id: language_settings_learning_option_${MID_PAIR}
+    direction: DOWN
+    visibilityPercentage: 100
+    timeout: 20000
+- assertVisible:
+    id: language_settings_learning_option_${MID_PAIR}
+- scrollUntilVisible:
+    element:
+      id: language_settings_learning_option_${LAST_PAIR}
+    direction: DOWN
+    visibilityPercentage: 100
+    timeout: 20000
+- assertVisible:
+    id: language_settings_learning_option_${LAST_PAIR}

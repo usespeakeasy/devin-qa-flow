@@ -1,0 +1,21 @@
+# Settings > Language Course: the screen arrives with the "I speak" row (language_settings_native_language).
+# Entry: Home, signed in. Exit: Language Course. Preconditions: none (dev or prod via APP_ID).
+# Selectors: the Settings row has no resource-id, so it is matched by its English title (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/open-settings.yaml
+- scrollUntilVisible:
+    element: "^Language Course$"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "^Language Course$"
+- extendedWaitUntil:
+    visible:
+      id: language_settings_screen
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: language_settings_native_language
+    timeout: 20000
