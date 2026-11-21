@@ -1,0 +1,32 @@
+# Tutor chat: swipe DIRECTION (DOWN = towards newer, UP = towards older) until a bubble containing TEXT
+# shows, so newer or older pages load on the way (TutorChatVC scrollViewWillEndDragging).
+# Entry and exit: Tutor chat.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# Parameters (pass every one with -e; flow env defaults override -e in Maestro 2.12): see header.
+---
+- runFlow:
+    when:
+      true: ${DIRECTION == "DOWN"}
+    commands:
+      - scrollUntilVisible:
+          element: ".*${TEXT}.*"
+          direction: DOWN
+          timeout: 90000
+          speed: 40
+          visibilityPercentage: 50
+- runFlow:
+    when:
+      true: ${DIRECTION == "UP"}
+    commands:
+      - scrollUntilVisible:
+          element: ".*${TEXT}.*"
+          direction: UP
+          timeout: 90000
+          speed: 40
+          visibilityPercentage: 50
+- extendedWaitUntil:
+    notVisible:
+      id: "tutor-chat.message.loading"
+    timeout: 30000

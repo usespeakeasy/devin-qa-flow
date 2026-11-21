@@ -1,0 +1,65 @@
+# Tutor chat > Saved messages > saved item ITEM (backend itemID, the debug label on the reply) > Go to message: the chat reloads around
+# that message (TutorChatVC.ViewModel.fetchDataForSingleThreadMessage), which then pages older and newer.
+# THREADING=on: Saved messages from the title menu (tutor-chat.title); off: the options menu.
+# Entry: Tutor chat. Exit: Tutor chat reloaded around the saved message, loading cell gone.
+# Preconditions: signed in, dev, Tutor message ITEM saved.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# Parameters (pass every one with -e; flow env defaults override -e in Maestro 2.12): see header.
+---
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.input.text-view|tutor-chat.dictation.action.record"
+    timeout: 30000
+- runFlow:
+    when:
+      visible: "^Back to keyboard$"
+    commands:
+      # Dictation mode (kept from the last session) hides the text view; the strip button has no id.
+      - tapOn: "^Back to keyboard$"
+      - extendedWaitUntil:
+          visible:
+            id: "tutor-chat.input.text-view"
+          timeout: 10000
+- runFlow:
+    when:
+      true: ${THREADING == "on"}
+    commands:
+      - tapOn:
+          id: "tutor-chat.title"
+      # The title menu sheet (TutorTitleMenu) is not in Maestro's tree on the iOS 27 simulator, ids or text,
+      # so tap its first row, Saved messages, by point (iPhone 17: row at y 666 of 874 pt).
+      - waitForAnimationToEnd
+      - tapOn:
+          point: 25%, 76%
+- runFlow:
+    when:
+      true: ${THREADING != "on"}
+    commands:
+      - tapOn:
+          id: "tutor-chat.action.options"
+      # UIMenu items carry no id.
+      - tapOn: "^Saved messages$"
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.saved-messages.item.${ITEM}.action.more"
+    timeout: 30000
+# The saved item's more button; its popover has Go to message and Unsave with no ids
+# (TutorChatSavedMessagesController options sheet).
+- tapOn:
+    id: "tutor-chat.saved-messages.item.${ITEM}.action.more"
+- extendedWaitUntil:
+    visible: "^Go to message$"
+    timeout: 15000
+- tapOn: "^Go to message$"
+# Back on the chat. On develop 2df2a8a4de the chat does not centre the saved message: it shows the bottom of
+# the 50-message page that starts at it (speak-api getChatThread messageId), so the caller scrolls to it.
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.input.text-view|tutor-chat.dictation.action.record"
+    timeout: 30000
+- extendedWaitUntil:
+    notVisible:
+      id: "tutor-chat.message.loading"
+    timeout: 30000

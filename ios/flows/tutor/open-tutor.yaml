@@ -1,0 +1,43 @@
+# Home > Tutor (home.tutor.action.open) to the Tutor chat with its messages loaded.
+# Entry: Home (home.root.ready) or the Tutor chat. Exit: Tutor chat, loading cell gone, keyboard input mode.
+# Preconditions: signed in, dev.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready|tutor-chat.input.text-view"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: "home.root.ready"
+    commands:
+      - tapOn:
+          id: "home.tutor.action.open"
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.input.text-view|tutor-chat.dictation.action.record"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: "ai-data-consent.action.agree"
+    commands:
+      - tapOn:
+          id: "ai-data-consent.action.agree"
+- extendedWaitUntil:
+    notVisible:
+      id: "tutor-chat.message.loading"
+    timeout: 30000
+- runFlow:
+    when:
+      visible: "^Back to keyboard$"
+    commands:
+      # Dictation mode (kept from the last session) hides the text view; the strip button has no id.
+      - tapOn: "^Back to keyboard$"
+      - extendedWaitUntil:
+          visible:
+            id: "tutor-chat.input.text-view"
+          timeout: 10000

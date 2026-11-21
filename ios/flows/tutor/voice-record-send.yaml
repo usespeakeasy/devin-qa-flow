@@ -1,0 +1,26 @@
+# Tutor chat dictation: stop recording (record button sends while recording) and wait for the reply.
+# Entry: recording. Exit: Tutor chat, reply loaded.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow:
+    when:
+      visible:
+        id: "tutor-chat.dictation.action.cancel"
+    commands:
+      - tapOn:
+          id: "tutor-chat.dictation.action.record"
+- extendedWaitUntil:
+    notVisible:
+      id: "tutor-chat.dictation.action.cancel"
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.message.loading"
+    timeout: 10000
+    optional: true
+- extendedWaitUntil:
+    notVisible:
+      id: "tutor-chat.message.loading"
+    timeout: 60000

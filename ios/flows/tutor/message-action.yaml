@@ -1,0 +1,20 @@
+# Tutor chat: long press the tutor reply whose debug item-id label (the backend itemID, shown on Dev builds
+# inside the cell) is ITEM, and tap the context menu ACTION (Save, Unsave).
+# Learner bubbles only offer Copy, so Save/Unsave target the tutor reply.
+# Menu items have no id (UIContextMenuConfiguration in TutorChatVC). Entry and exit: Tutor chat.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# Parameters (pass every one with -e; flow env defaults override -e in Maestro 2.12): see header.
+---
+# The keyboard comes up with the context menu (iOS 27 simulator) and covers menu items that open low on the
+# screen, so the caller first drags the chat until that reply sits near the top (the run's position helper
+# reads its frame from `maestro hierarchy`).
+- longPressOn: "${ITEM}"
+- extendedWaitUntil:
+    visible: "^${ACTION}$"
+    timeout: 10000
+- tapOn: "^${ACTION}$"
+- extendedWaitUntil:
+    notVisible: "^${ACTION}$"
+    timeout: 10000

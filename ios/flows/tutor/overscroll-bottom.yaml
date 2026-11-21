@@ -1,0 +1,19 @@
+# Tutor chat at the newest message: three more swipes towards newer, then no loading cell stays.
+# The caller counts thread requests in the app log. Entry and exit: Tutor chat at the bottom.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- repeat:
+    times: 3
+    commands:
+      # Chat list has no id; swipe inside it above the input bar.
+      - swipe:
+          start: 50%, 70%
+          end: 50%, 30%
+          duration: 300
+      - waitForAnimationToEnd
+- extendedWaitUntil:
+    notVisible:
+      id: "tutor-chat.message.loading"
+    timeout: 15000

@@ -1,0 +1,23 @@
+# Tutor chat: switch to dictation (tutor-chat.input.action.dictation), which starts recording at once, or tap
+# record when already in dictation. The caller injects speech with speak-ios Scripts/audio-pipe.py first (a
+# recording takes pending audio as it starts), then runs voice-record-send.yaml.
+# Entry: Tutor chat. Exit: recording started (cancel shown) or already finished.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- runFlow:
+    when:
+      visible:
+        id: "tutor-chat.input.action.dictation"
+    commands:
+      - tapOn:
+          id: "tutor-chat.input.action.dictation"
+- runFlow:
+    when:
+      notVisible:
+        id: "tutor-chat.dictation.action.cancel"
+    commands:
+      - tapOn:
+          id: "tutor-chat.dictation.action.record"
+- takeScreenshot: voice-recording

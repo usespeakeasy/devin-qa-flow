@@ -1,0 +1,13 @@
+# Lifecycle: background the app on the Tutor chat (home key) and bring it back; the bubble containing TEXT
+# is still on screen. Entry and exit: Tutor chat.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# Parameters (pass every one with -e; flow env defaults override -e in Maestro 2.12): see header.
+---
+- pressKey: home
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible: ".*${TEXT}.*"
+    timeout: 15000

@@ -1,0 +1,39 @@
+# Tutor chat: scroll DIRECTION (DOWN = newer, UP = older) to each seeded bubble "PREFIX-N ..." in turn from
+# FROM to TO, so a missing bubble or a page that skips messages fails here (QA of speak-ios#10590).
+# Seed the thread with thread-seed-messages.yaml. Entry and exit: Tutor chat.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# Parameters (pass every one with -e; flow env defaults override -e in Maestro 2.12): see header.
+---
+- evalScript: ${output.n = parseInt(FROM)}
+- evalScript: ${output.steps = Math.abs(parseInt(TO) - parseInt(FROM)) + 1}
+- evalScript: "${output.step = (DIRECTION == 'DOWN') ? 1 : -1}"
+- repeat:
+    times: ${output.steps}
+    commands:
+      - runFlow:
+          when:
+            true: ${DIRECTION == "DOWN"}
+          commands:
+            - scrollUntilVisible:
+                element: "${PREFIX}-${output.n} .*"
+                direction: DOWN
+                timeout: 30000
+                speed: 40
+                visibilityPercentage: 100
+      - runFlow:
+          when:
+            true: ${DIRECTION == "UP"}
+          commands:
+            - scrollUntilVisible:
+                element: "${PREFIX}-${output.n} .*"
+                direction: UP
+                timeout: 30000
+                speed: 40
+                visibilityPercentage: 100
+      - evalScript: ${output.n = output.n + output.step}
+- extendedWaitUntil:
+    notVisible:
+      id: "tutor-chat.message.loading"
+    timeout: 30000

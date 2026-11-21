@@ -1,0 +1,11 @@
+# Tutor chat close (X) lands on Home. Entry: Tutor chat. Exit: Home (home.root.ready).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: "tutor-chat.action.close"
+- extendedWaitUntil:
+    visible:
+      id: "home.root.ready"
+    timeout: 30000

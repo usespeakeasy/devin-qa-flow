@@ -1,0 +1,42 @@
+# Tutor chat: send COUNT typed messages "PREFIX-1" .. "PREFIX-COUNT" in the open thread, waiting for
+# each tutor reply (typing indicator gone), so the thread is long enough to page (QA of speak-ios#10590).
+# Entry: Tutor chat (tutor-chat.input.text-view). Exit: Tutor chat, last reply shown.
+# Preconditions: signed in, dev; Premium so the chat has no message limit.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+# Parameters (pass every one with -e; flow env defaults override -e in Maestro 2.12): see header.
+---
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.input.text-view|tutor-chat.dictation.action.record"
+    timeout: 30000
+- runFlow:
+    when:
+      visible: "^Back to keyboard$"
+    commands:
+      # Dictation mode (kept from the last session) hides the text view; the strip button has no id.
+      - tapOn: "^Back to keyboard$"
+      - extendedWaitUntil:
+          visible:
+            id: "tutor-chat.input.text-view"
+          timeout: 10000
+- evalScript: ${output.seedN = 0}
+- repeat:
+    times: ${COUNT}
+    commands:
+      - evalScript: ${output.seedN = output.seedN + 1}
+      - tapOn:
+          id: "tutor-chat.input.text-view"
+      - inputText: "${PREFIX}-${output.seedN} reply with one short sentence"
+      - tapOn:
+          id: "tutor-chat.input.action.send"
+      - extendedWaitUntil:
+          visible:
+            id: "tutor-chat.message.loading"
+          timeout: 10000
+          optional: true
+      - extendedWaitUntil:
+          notVisible:
+            id: "tutor-chat.message.loading"
+          timeout: 60000
