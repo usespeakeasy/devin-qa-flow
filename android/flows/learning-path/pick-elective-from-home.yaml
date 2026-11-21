@@ -1,0 +1,23 @@
+# Home end of path: tap the next-course row's pick-an-elective button and land on the Course Selector.
+# Entry: Home (home_root_ready) on an account whose current course is finished
+# (speak-dev test_progress_set with the course's last lesson completed) and custom courses on
+# (dynamic_on_demand_unit_gen). Exit: Course Selector opened to its Electives section.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: course_pick_elective_course_button
+    direction: DOWN
+    timeout: 60000
+- tapOn:
+    id: course_pick_elective_course_button
+- extendedWaitUntil:
+    visible:
+      id: level_selector_ready
+    timeout: 30000
