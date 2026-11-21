@@ -4,6 +4,9 @@ What a `qa-request-mobile` run does with this repo, from finding flows to pushin
 writing the ID PR. Read this before touching a flow. The rules for writing a flow file and an
 INDEX.md row are in [AGENTS.md](../AGENTS.md).
 
+For required organization assessments, follow the real-backend setup and case
+checks in [required-assessment-qa.md](required-assessment-qa.md) before building.
+
 ## Per-run workflow
 
 1. `git pull --rebase` on `main`, then read [LEARNINGS.md](../LEARNINGS.md).
