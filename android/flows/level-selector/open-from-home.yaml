@@ -1,0 +1,36 @@
+# Home > course selector button opens the course selector (LevelSelector) on its loaded list.
+# Entry: signed in (the flow cold-starts the app first). Exit: the course selector with level_selector_ready.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+# A free account can get the premium intro on launch; close it (OK dismisses the emulator billing error, no id).
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready|onboarding_premium_intro_(ready|error)
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: onboarding_premium_intro_(ready|error)
+    commands:
+      - repeat:
+          times: 3
+          while:
+            visible:
+              id: onboarding_premium_intro_error|button1
+          commands:
+            - tapOn:
+                text: "^OK$"
+            - waitForAnimationToEnd
+      - tapOn:
+          id: exit
+- runFlow: ../../common/home-popups.yaml
+- tapOn:
+    id: home_course_selector
+- extendedWaitUntil:
+    visible:
+      id: level_selector_ready
+    timeout: 30000

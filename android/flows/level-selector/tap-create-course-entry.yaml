@@ -1,0 +1,23 @@
+# Course selector: tap the create-a-course entry ENTRY_ID. With `dynamic_on_demand_unit_gen` and `meet_the_tutor_enabled`
+# ON (speak-android#9644 on) that is the tutor call card's "Start call" (`level_selector_start_tutor_call`, first section);
+# otherwise "Create a course" under Custom courses (`level_selector_create_custom_course`). Both run the same action:
+# the custom-course paywall when no custom course is left, else custom unit planning (or the intake call it resumes).
+# Entry: the course selector (open-from-home.yaml). Exit: right after the tap; the caller asserts the next screen.
+# maestro test -e ENTRY_ID=level_selector_create_custom_course tap-create-course-entry.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ENTRY_ID: ${ENTRY_ID || "level_selector_start_tutor_call"}
+---
+- extendedWaitUntil:
+    visible:
+      id: level_selector_ready
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: ${ENTRY_ID}
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- tapOn:
+    id: ${ENTRY_ID}
