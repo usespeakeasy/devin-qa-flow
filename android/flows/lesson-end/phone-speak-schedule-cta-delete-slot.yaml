@@ -1,0 +1,25 @@
+# Phone speak schedule step: delete the weekly call a case saved, so the account is back to no slots
+# and the step shows Skip again.
+# Entry: the schedule step showing one saved slot (phone_speak_schedule_slot_<day>) and Continue.
+# Preconditions: Debug Menu > Subscription override > Plus.
+# Selectors: the picker's Delete button has no resource-id (text fallback "Delete").
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: phone_speak_schedule_slot_.*
+    direction: UP
+    timeout: 10000
+- tapOn:
+    id: phone_speak_schedule_slot_.*
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_picker_sheet
+    timeout: 10000
+- tapOn: "^Delete$"
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_skip
+    timeout: 20000

@@ -1,0 +1,51 @@
+# Phone speak schedule step at the lesson end: save a weekly call with notifications denied, scroll to
+# the end, and leave the ring card's "notifications off" notice above Continue for the gap check.
+# Entry: the schedule step open with Skip (qa_android.py bridge openLessonEnd components=PHONE_SPEAK_SCHEDULE_CTA),
+# no weekly call scheduled.
+# Preconditions: Debug Menu > Subscription override > Plus (the server then allows editing the schedule),
+# POST_NOTIFICATIONS revoked with its user-set/user-fixed flags cleared (adb shell pm revoke, pm clear-permission-flags),
+# so Schedule asks for it and the ring card shows Turn on notifications after Don't allow.
+# Exit: scrolled to the end, Continue visible. The run measures the gap between the last card and Continue
+# from the screenshot and the tree (speak-android#9504: 0dp on develop before it, 24dp after).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_skip
+    timeout: 30000
+- tapOn:
+    id: phone_speak_schedule_schedule_call
+# The app may ask for POST_NOTIFICATIONS (system dialog) on Schedule or on Save, depending on whether it
+# asked before; deny it when it shows. The revoke in the preconditions is what makes the notice show.
+- tapOn:
+    id: .*permission_deny_button
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_picker_sheet
+    timeout: 10000
+- tapOn:
+    id: phone_speak_schedule_picker_save
+- tapOn:
+    id: .*permission_deny_button
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_schedule_continue
+    timeout: 20000
+- scrollUntilVisible:
+    element:
+      id: phone_speak_schedule_turn_on_notifications
+    direction: DOWN
+    timeout: 10000
+- repeat:
+    times: 3
+    commands:
+      - swipe:
+          from:
+            id: phone_speak_schedule_ring_switch
+          direction: UP
+- assertVisible:
+    id: phone_speak_schedule_continue
