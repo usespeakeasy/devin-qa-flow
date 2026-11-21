@@ -1,0 +1,20 @@
+# Intake failure screen: a tap on its empty top-left area stays on it and does not reach the
+# Course Selector underneath (whose Close X sits there). speak-android#9650 makes the screen consume it;
+# before it the tap closed the Course Selector, so the level_selector_ready assert fails.
+# Entry: intake-failed-offline.yaml. Exit: same failure screen.
+# Selectors: point "9%,7%" because the target is deliberately empty space (no node); it lies over
+# level_selector_close on a 1080x2400 screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- assertVisible:
+    id: custom_unit_planning_intake_error_dialog
+- assertVisible:
+    id: level_selector_ready
+- tapOn:
+    point: "9%,7%"
+- assertVisible:
+    id: custom_unit_planning_intake_error_dialog
+- assertVisible:
+    id: level_selector_ready

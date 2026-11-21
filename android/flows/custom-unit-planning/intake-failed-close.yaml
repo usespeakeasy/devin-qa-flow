@@ -1,0 +1,17 @@
+# Intake failure screen > Close leaves the flow: the failure screen goes and the Course Selector it
+# was opened from shows again.
+# Entry: intake failure screen opened from the Course Selector tutor call card. Exit: Course Selector.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: custom_unit_planning_intake_cancel_button
+- extendedWaitUntil:
+    notVisible:
+      id: custom_unit_planning_intake_error_dialog
+    timeout: 15000
+- assertVisible:
+    id: level_selector_ready
+- assertVisible:
+    id: level_selector_start_tutor_call

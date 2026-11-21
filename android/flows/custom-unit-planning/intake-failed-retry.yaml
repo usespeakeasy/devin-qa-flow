@@ -1,0 +1,13 @@
+# Intake failure screen > Try again while still offline: the intake retries and fails again, back on
+# the failure screen. Check the second "intake init failed" warning in logcat for the retry itself.
+# Entry: intake-failed-offline.yaml (airplane mode ON). Exit: failure screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: custom_unit_planning_intake_retry_button
+- extendedWaitUntil:
+    visible:
+      id: custom_unit_planning_intake_error_dialog
+    timeout: 45000

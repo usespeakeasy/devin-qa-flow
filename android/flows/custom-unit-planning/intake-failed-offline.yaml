@@ -1,0 +1,19 @@
+# Offline, the Course Selector tutor call card's Start call lands on the intake failure screen
+# (MeetTheTutorNotOpenedScreen, "Couldn't start the call") over the Course Selector.
+# Entry: Course Selector with the tutor call card (level-selector/tutor-call-card-shown.yaml).
+# Exit: failure screen, airplane mode ON (turn it off with common/airplane-off.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/airplane-on.yaml
+- tapOn:
+    id: level_selector_start_tutor_call
+- extendedWaitUntil:
+    visible:
+      id: custom_unit_planning_intake_error_dialog
+    timeout: 45000
+- assertVisible:
+    id: custom_unit_planning_intake_retry_button
+- assertVisible:
+    id: custom_unit_planning_intake_cancel_button

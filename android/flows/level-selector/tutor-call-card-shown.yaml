@@ -1,0 +1,20 @@
+# Course Selector shows the Meet the Tutor call card ("Create a new course" / Start call) at the top.
+# Entry: Home tab. Preconditions: dev, `dynamic_on_demand_unit_gen` ON and `meet_the_tutor_enabled` ON
+# (the latter's debug picker only lists control/off on dev, so ON is written to debug.db; see LEARNINGS).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- openLink: speak-dev://course-selector
+- extendedWaitUntil:
+    visible:
+      id: level_selector_ready
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: level_selector_start_tutor_call
+    timeout: 30000
