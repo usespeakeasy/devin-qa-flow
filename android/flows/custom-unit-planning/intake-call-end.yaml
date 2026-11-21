@@ -1,0 +1,16 @@
+# Tutor intake call > End call: the learner hangs up and the call screen closes.
+# Entry: the Meet the Tutor intake call is open (`intake-call-open.yaml` or `open-intake-call-from-courses.yaml`).
+# Exit: the call screen is gone (the planning flow or Home decides what follows).
+# Preconditions: dev; tutor_experience, meet_the_tutor_enabled, ait_phone_speak_decisions_gate, ait_phone_speak_cascade ON.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: phone_speak_call_end_call
+- tapOn:
+    id: phone_speak_call_end_call
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_call_screen
+    timeout: 30000
