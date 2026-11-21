@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026.11.20.3 — required-assessment QA instructions
+
+Documents active learner-only required schedules, client-header capability checks,
+learner entrypoint verification and paired navigation/cancellation cases. Prevents
+misdiagnosing missing client context as a rollout failure or treating setup as a
+mobile pass. Documents the existing provisioning helper header limitation.
+PR: PR_LINK.
+
+
 ## 2026.11.20.2 — supported organization provisioning
 
 Adds resumable develop-only Partners API provisioning for fingerprinted organizations,

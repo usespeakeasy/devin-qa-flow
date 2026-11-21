@@ -7,6 +7,10 @@ write access to `speak-v2-2a1f1.devin_qa`, and `QA_ORG_ACCESS_TOKEN` containing 
 The backend is pinned to `https://speak-api.alpha.usespeak.dev`; production and
 preview hosts are not supported. Do not put manifests/receipts in git or reports.
 
+For active required schedules, client-header diagnostics and paired mobile cases,
+see [required-assessment-qa.md](required-assessment-qa.md). In particular, a
+headerless capability response is not sufficient evidence that rollout is off.
+
 ## Provision (operator/agent)
 
 Use the normal develop Partners admin APIs, not `POST /v1/admin/e2e/users`.
@@ -42,7 +46,8 @@ patches that schedule rather than creating a duplicate. Keep journals outside gi
 The `app_assessments_required` rollout must target the **organization ID**.
 Individual user targets and mobile overrides are not a substitute. If
 `canRequireAppAssessment` is false, provisioning stops without registering anything
-as ready. Enable only the dedicated dev organization's rollout through the normal
+as ready. First recheck with the target client headers as described above. If the
+rollout is genuinely off, enable only the dedicated dev organization's rollout through the normal
 flag-management process, then resume. Verify learner-facing state separately even
 when the portal actor reports the rollout on.
 
