@@ -1,0 +1,16 @@
+# Phone Speak call: End call within about 15 s of going live (a server short call): no survey, the call closes to
+# UNDER_ID (default home_root_ready, the Home the deep link was opened from).
+# Entry: a live call (lesson-call-open or call-start-in-app). Exit: UNDER_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: phone_speak_call_end_call
+- extendedWaitUntil:
+    visible:
+      id: ${UNDER_ID || "home_root_ready"}
+    timeout: 30000
+- assertNotVisible: "How was your call\\?"
+- assertNotVisible:
+    id: phone_speak_call_screen

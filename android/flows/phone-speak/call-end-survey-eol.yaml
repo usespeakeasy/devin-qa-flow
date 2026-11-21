@@ -1,0 +1,21 @@
+# Phone Speak lesson call: wait until the call timer reads 01:10 to 01:59, End call, the "How was your call?" survey
+# shows, Skip, and the end of lesson starts (summary or a lesson end step such as the streak progress).
+# Entry: a live call (lesson-call-open). Exit: the first end of lesson screen.
+# Selectors: the survey has no resource-id (text fallback); the timer is plain text.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible: "01:[1-5][0-9]"
+    timeout: 120000
+- tapOn:
+    id: phone_speak_call_end_call
+- extendedWaitUntil:
+    visible: "How was your call\\?"
+    timeout: 30000
+- tapOn: "^Skip$"
+- extendedWaitUntil:
+    visible:
+      id: "phone_speak_summary|lesson_end_streak_progress_root|lesson_end_.*|phone_speak_schedule_cta_screen"
+    timeout: 30000

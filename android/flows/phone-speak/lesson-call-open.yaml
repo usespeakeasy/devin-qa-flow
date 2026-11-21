@@ -1,0 +1,37 @@
+# Phone Speak lesson call opened by lesson deep link (`speak-dev://lesson?id=LESSON_ID`, the same
+# LessonDestinationFactory route as a learning path Phone Speak lesson) and wait until the call is live: End call,
+# Mute and the tutor's first transcript line.
+# Entry: Home (signed in). Preconditions: an account entitled to Phone Speak calls on dev (Subscription override Plus
+# on a pool account), microphone granted, `phone_speak_ui_revamp` = agent-transcript (PhoneSpeakCallScreen2).
+# LESSON_ID: a PHONE_SPEAK lesson, e.g. phone-speak_english-spanish on an English > Spanish account.
+# Exit: the call screen, call active. Selectors: transcript lines have no resource-id (any text inside
+# phone_speak_call_transcript).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: "phone_speak_call_end_call|phone_speak_intro_continue|ai_data_consent_alert"
+    timeout: 45000
+- tapOn:
+    id: phone_speak_intro_continue
+    optional: true
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call
+    timeout: 45000
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_mute
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      text: ".+"
+      childOf:
+        id: phone_speak_call_transcript
+    timeout: 30000

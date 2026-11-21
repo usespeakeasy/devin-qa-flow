@@ -1,0 +1,14 @@
+# Planning intro > Let's go! with `meet_the_tutor_enabled` off: the planning chat opens (agent message or input) and
+# no tutor intake call (phone_speak_call_screen) opens over it.
+# Entry: the planning intro (open-create-course-from-courses.yaml). Exit: the planning chat.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: tap-lets-go.yaml
+- extendedWaitUntil:
+    visible:
+      id: "custom_unit_planning_agent_message|custom_unit_planning_input_field|custom_unit_planning_suggestion"
+    timeout: 45000
+- assertNotVisible:
+    id: phone_speak_call_screen
