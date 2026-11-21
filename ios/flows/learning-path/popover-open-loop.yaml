@@ -19,12 +19,21 @@ env:
       notVisible:
         id: home.lesson.item.${FIRST_ID}
     commands:
+      # The loop can be below or above the screen (the path scrolls to the cursor).
       - scrollUntilVisible:
           element:
             id: home.loop.item.${LOOP_ID}
           direction: DOWN
           centerElement: true
-          timeout: 20000
+          timeout: 15000
+          optional: true
+      - scrollUntilVisible:
+          element:
+            id: home.loop.item.${LOOP_ID}
+          direction: UP
+          centerElement: true
+          timeout: 15000
+          optional: true
       - tapOn:
           id: home.loop.item.${LOOP_ID}
 # A tap on another loop while the current loop's popover is open only closes that popover.

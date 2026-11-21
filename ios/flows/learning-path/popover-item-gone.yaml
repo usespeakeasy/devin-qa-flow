@@ -1,0 +1,15 @@
+# Waits until activity LESSON_ID leaves the open popover (its list shrank) while the app stays on
+# the learning path with another activity OTHER_ID still shown.
+# Entry: after popover-debug-finish.yaml. Params (no defaults): LESSON_ID, OTHER_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- extendedWaitUntil:
+    notVisible:
+      id: home.lesson.item.${LESSON_ID}
+    timeout: 20000
+- assertVisible:
+    id: home.lesson.item.${OTHER_ID}
+- assertVisible:
+    id: home.learning-path.ready

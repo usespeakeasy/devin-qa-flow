@@ -1,0 +1,14 @@
+# Taps the debug Finish overlay of activity LESSON_ID in the open popover (Debug features on): the
+# app marks the lesson finished and reloads the course and personalized lessons info, the reload
+# path that can change the popover's activity list while it is open. Ends after the path settles.
+# Entry: popover-open-loop.yaml with LESSON_ID on screen. Params (no defaults): LESSON_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn:
+    id: debug.learningPath.finish.${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: home.learning-path.ready
+    timeout: 20000
