@@ -1,0 +1,17 @@
+# Lifecycle: kill the app process on the Tutor chat, cold launch, reopen Tutor, and check the thread's newest
+# message TEXT is on screen again.
+# Entry: Tutor chat. Exit: Tutor chat.
+# Preconditions: signed in, dev, TEXT is in the thread's newest page.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- stopApp
+- launchApp:
+    stopApp: false
+    arguments:
+      SPEAK_AUTOMATION_MARKERS: "1"
+- runFlow: open-tutor.yaml
+- extendedWaitUntil:
+    visible: ".*${TEXT}.*"
+    timeout: 30000

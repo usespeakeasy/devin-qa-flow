@@ -1,0 +1,31 @@
+# Tutor chat: tap the lesson card titled CARD (the card has no id), check the lesson player opens on that
+# lesson, close it, and land back on the Tutor chat.
+# Entry: Tutor chat with the card on screen. Exit: Tutor chat.
+# Preconditions: signed in, dev, a lesson card in the thread (ask the Tutor to make a lesson).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- tapOn: "^${CARD}$"
+- extendedWaitUntil:
+    visible:
+      id: "lesson.player.ready"
+    timeout: 30000
+- tapOn:
+    id: "lesson.series.action.close"
+- waitForAnimationToEnd
+# The quit confirmation sheet is not in the hierarchy; its confirm button sits at the bottom (ID ticket CLNT-2481).
+- runFlow:
+    when:
+      notVisible:
+        id: "tutor-chat.screen"
+    commands:
+      - tapOn:
+          point: 50%, 91%
+- extendedWaitUntil:
+    visible:
+      id: "tutor-chat.screen"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "^${CARD}$"
+    timeout: 15000
