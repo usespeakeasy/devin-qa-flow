@@ -1,0 +1,20 @@
+# Course link to one day (`speak-dev://course?id=COURSE_ID&day=DAY_ID`, DeepLinkRouter "course"): Home opens
+# and the path scrolls to that day's loop. The run script asserts whether a popover opened (none on a locked
+# Tutor plan day, speak-android#9645). Loop ids are unit id + day id, so LOOP_ID is UNIT_ID + DAY_ID.
+# Entry: signed in, app running. Exit: Home learning path with LOOP_ID on screen. Pass -e COURSE_ID, DAY_ID, LOOP_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SCHEME: ${SCHEME || "speak-dev"}
+---
+- openLink: ${SCHEME}://course?id=${COURSE_ID}&day=${DAY_ID}
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: learning_path_loop_${LOOP_ID}
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 3000

@@ -1,0 +1,56 @@
+# Debug Menu > Feature flag override: set one flag to a custom treatment (Custom… in the treatment picker).
+# Use when the picker lists no matching treatment (e.g. meet_the_tutor_enabled shows SERVER, control, off only).
+# Entry: any state (cold-starts the app). Exit: override list; relaunch so the next cold start reads it.
+# maestro test -e FLAG=meet_the_tutor_enabled -e VALUE=on set-feature-flag-custom.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
+---
+- launchApp:
+    stopApp: true
+- openLink: ${DEBUG_MENU_LINK}
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_feature_flag_override
+    timeout: 30000
+- tapOn:
+    id: debug_menu_feature_flag_override
+- tapOn:
+    id: debug_feature_flag_search
+- retry:
+    maxRetries: 2
+    commands:
+      - eraseText: 80
+      - inputText: ${FLAG}
+      - hideKeyboard
+      - extendedWaitUntil:
+          visible:
+            id: debug_feature_flag_value_${FLAG}
+            index: 0
+          timeout: 5000
+- tapOn:
+    id: debug_feature_flag_value_${FLAG}
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: debug_treatment_picker_dialog
+    timeout: 5000
+- tapOn:
+    id: debug_treatment_picker_custom
+- extendedWaitUntil:
+    visible:
+      id: debug_custom_treatment_input
+    timeout: 5000
+- tapOn:
+    id: debug_custom_treatment_input
+- eraseText: 40
+- inputText: ${VALUE}
+- tapOn:
+    id: debug_custom_treatment_submit
+- extendedWaitUntil:
+    visible:
+      id: debug_feature_flag_source_${FLAG}
+      text: "LOCAL · ${VALUE}"
+      index: 0
+    timeout: 5000

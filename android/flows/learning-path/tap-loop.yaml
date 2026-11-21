@@ -1,0 +1,18 @@
+# Home learning path: tap the loop LOOP_ID (`learning_path_loop_<id>`) and let the popover animation settle.
+# Toggles an open popover closed; on a locked Tutor plan loop (speak-android#9645) the tap opens nothing.
+# The run script asserts the result (popover ids present or absent), so the same flow runs on both builds.
+# Entry: Home, learning path showing LOOP_ID. Exit: Home learning path. Pass -e LOOP_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_loop_${LOOP_ID}
+    timeout: 15000
+- tapOn:
+    id: learning_path_loop_${LOOP_ID}
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: learning_path_ready

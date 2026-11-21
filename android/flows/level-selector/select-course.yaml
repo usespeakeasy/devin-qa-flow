@@ -1,0 +1,25 @@
+# Course Selector: scroll to the course card COURSE_ID (`level_selector_level_part_card_<id>`), tap it, and wait
+# for Home's learning path on that course (`learning_path_course_<id>`).
+# Entry: Course Selector open (open-course-selector). Exit: Home on COURSE_ID. Pass -e COURSE_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: level_selector_ready
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: level_selector_level_part_card_${COURSE_ID}
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- tapOn:
+    id: level_selector_level_part_card_${COURSE_ID}
+- extendedWaitUntil:
+    visible:
+      id: learning_path_course_${COURSE_ID}
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 3000
