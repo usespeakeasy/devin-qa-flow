@@ -1,0 +1,19 @@
+# Phone Speak: hang up an in-app call before 60 s (a short call: no survey or summary) and wait for Home's
+# learning path. Entry: the call screen with the call active (call-start-in-app.yaml); the call returns to Practice.
+# Exit: Home tab, path ready.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: phone_speak_call_end_call
+- extendedWaitUntil:
+    visible:
+      id: main_tab_home
+    timeout: 30000
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
