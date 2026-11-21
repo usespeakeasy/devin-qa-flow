@@ -1,0 +1,18 @@
+# On the tutor intake's error surface, still offline: Try again fails again and the error surface returns, then Close
+# leaves the flow (Run Closed with reason notOpened) back to the course selector.
+# Entry: intake-offline-failure.yaml (airplane mode ON). Exit: the course selector, airplane mode ON.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: custom_unit_planning_intake_retry_button
+- runFlow: intake-error-shown.yaml
+- tapOn:
+    id: custom_unit_planning_intake_cancel_button
+- extendedWaitUntil:
+    visible:
+      id: level_selector_ready
+    timeout: 30000
+- assertNotVisible:
+    id: custom_unit_planning_intake_error_dialog

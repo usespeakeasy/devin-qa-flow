@@ -1,0 +1,27 @@
+# On the tutor intake's error surface with the network back: Try again starts the intake, and the Phone Speak intake
+# call opens (`phone_speak_call_end_call`). Allows the AI data consent alert if shown. Taps Try again once more if the
+# first tap ran before the connection came back.
+# ARRIVAL: the screen the retry lands on, default the call (`phone_speak_call_end_call`). When dev's server serves no
+# intake handoff, the started intake hands back to the planning chat (`custom_unit_planning_agent_message`).
+# Entry: intake-offline-failure.yaml, then common/airplane-off.yaml. Exit: ARRIVAL.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ARRIVAL: ${ARRIVAL || "phone_speak_call_end_call"}
+---
+- retry:
+    maxRetries: 1
+    commands:
+      - tapOn:
+          id: custom_unit_planning_intake_retry_button
+      - extendedWaitUntil:
+          visible:
+            id: "${ARRIVAL}|ai_data_consent_alert"
+          timeout: 45000
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 45000

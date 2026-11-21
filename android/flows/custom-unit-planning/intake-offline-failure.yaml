@@ -1,0 +1,30 @@
+# Tutor intake start failure while offline: Home > Courses, airplane mode on, then "Create a course". With the intake on,
+# Create a course starts the intake before any intro, its init fails, and the error surface shows "Couldn't start the
+# call" with the offline message (a full screen after speak-android#9610, a dialog over the planning screen before it;
+# both carry `custom_unit_planning_intake_error_dialog`).
+# Entry: signed in, English > Spanish, Premium or Plus, meet_the_tutor_enabled on (dev Split serves control/off: Debug
+# Menu Custom "on" plus a QA-only patch that reads it as on, see LEARNINGS), network on.
+# Exit: the intake error surface, airplane mode ON. Turn it off in the caller.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- runFlow: ../../common/home-popups.yaml
+- tapOn:
+    id: home_course_selector
+- extendedWaitUntil:
+    visible:
+      id: level_selector_ready
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: level_selector_create_custom_course
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- runFlow: ../../common/airplane-on.yaml
+- tapOn:
+    id: level_selector_create_custom_course
+- runFlow: intake-error-shown.yaml

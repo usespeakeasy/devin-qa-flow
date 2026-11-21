@@ -1,0 +1,26 @@
+# The tutor intake's error surface is on screen: "Couldn't start the call", MESSAGE (default the offline message), and
+# Try again / Close. Allows the AI data consent alert first if it shows.
+# Entry: an intake attempt in progress or failed. Exit: the error surface.
+# Selectors: the title and message have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  MESSAGE: ${MESSAGE || ".*(offline|internet|connection).*"}
+---
+- extendedWaitUntil:
+    visible:
+      id: "custom_unit_planning_intake_error_dialog|ai_data_consent_alert"
+    timeout: 45000
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: custom_unit_planning_intake_error_dialog
+    timeout: 45000
+- assertVisible: "Couldn.t start the call"
+- assertVisible: ${MESSAGE}
+- assertVisible:
+    id: custom_unit_planning_intake_retry_button
+- assertVisible:
+    id: custom_unit_planning_intake_cancel_button
