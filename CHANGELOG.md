@@ -6,7 +6,7 @@ Documents active learner-only required schedules, client-header capability check
 learner entrypoint verification and paired navigation/cancellation cases. Prevents
 misdiagnosing missing client context as a rollout failure or treating setup as a
 mobile pass. Documents the existing provisioning helper header limitation.
-PR: PR_LINK.
+PR: https://github.com/usespeakeasy/devin-qa-flow/pull/30.
 
 
 ## 2026.11.20.2 — supported organization provisioning
