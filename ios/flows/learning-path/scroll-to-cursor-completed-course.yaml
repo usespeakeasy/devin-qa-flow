@@ -1,0 +1,70 @@
+# H: completed course; on cold launch, tab return and background return Home scrolls to the next-course section and shows no loop popover.
+# Precondition: signed in on a user who finished the course's last lesson (test_progress_set completed on the final assessment).
+# Entry: any state. Dev or prod; on dev make the user with test_user_create, then test_progress_set lessonState completed on the course's final assessment.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak-v2.dev
+---
+- launchApp:
+    stopApp: true
+- runFlow: ../../common/home-ready-launched.yaml
+- extendedWaitUntil:
+    visible:
+      id: course.next-course.action.start
+    timeout: 15000
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: "home\\.lesson\\.start\\..*"
+- takeScreenshot: h-cold-launch
+- swipe:
+    start: "50%,25%"
+    end: "50%,75%"
+    duration: 400
+- swipe:
+    start: "50%,25%"
+    end: "50%,75%"
+    duration: 400
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: course.next-course.action.start
+- takeScreenshot: h-scrolled-away
+- tapOn:
+    id: tab-bar.tab.practice
+- extendedWaitUntil:
+    notVisible:
+      id: home.root.ready
+    timeout: 10000
+- tapOn:
+    id: tab-bar.tab.learningPathCourseOnly
+- extendedWaitUntil:
+    visible:
+      id: course.next-course.action.start
+    timeout: 15000
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: "home\\.lesson\\.start\\..*"
+- takeScreenshot: h-tab-return
+- swipe:
+    start: "50%,25%"
+    end: "50%,75%"
+    duration: 400
+- swipe:
+    start: "50%,25%"
+    end: "50%,75%"
+    duration: 400
+- waitForAnimationToEnd
+- pressKey: home
+- extendedWaitUntil:
+    notVisible:
+      id: home.root.ready
+    timeout: 10000
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: course.next-course.action.start
+    timeout: 15000
+- waitForAnimationToEnd
+- assertNotVisible:
+    id: "home\\.lesson\\.start\\..*"
+- takeScreenshot: h-background-return
