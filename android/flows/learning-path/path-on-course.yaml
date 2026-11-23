@@ -1,0 +1,28 @@
+# Home's learning path shows course COURSE_ID (`learning_path_course_<id>`), waiting up to TIMEOUT ms (default 60000),
+# e.g. for a plan hold's poll to switch the path to its result course. With STAYS=true, it instead asserts the path
+# still shows COURSE_ID after a wait of TIMEOUT ms (no switch away).
+# Entry: Home tab (signed in). Exit: Home on COURSE_ID. Pass -e COURSE_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TIMEOUT: ${TIMEOUT || 60000}
+---
+- runFlow:
+    when:
+      true: ${STAYS != "true"}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: learning_path_course_${COURSE_ID}
+          timeout: ${TIMEOUT}
+- runFlow:
+    when:
+      true: ${STAYS == "true"}
+    commands:
+      - extendedWaitUntil:
+          notVisible:
+            id: learning_path_course_${COURSE_ID}
+          timeout: ${TIMEOUT}
+          optional: true
+      - assertVisible:
+          id: learning_path_course_${COURSE_ID}
