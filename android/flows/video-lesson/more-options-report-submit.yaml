@@ -1,0 +1,37 @@
+# Video lesson: More options > Content error > type DETAILS > Submit sends the report and closes the report screen.
+# Entry: video lesson on card CARD. Exit: video lesson, no report screen. Sends POST v1/users/report-content
+# (on prod it opens a real Intercom ticket, so DETAILS defaults to "TEST").
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD: ${CARD || "1 of \\d+"}
+  DETAILS: ${DETAILS || "TEST"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+- tapOn:
+    id: more_options
+- extendedWaitUntil:
+    visible:
+      id: lesson_more_options_list
+    timeout: 15000
+- tapOn:
+    id: lesson_more_options_report_problem_content_error
+- extendedWaitUntil:
+    visible:
+      id: report_screen
+    timeout: 15000
+- tapOn:
+    id: report_input
+- inputText: ${DETAILS}
+- hideKeyboard
+- takeScreenshot: ${SHOT || "report-submit"}-filled
+- tapOn:
+    id: report_submit_button
+- extendedWaitUntil:
+    notVisible:
+      id: report_screen
+    timeout: 20000
