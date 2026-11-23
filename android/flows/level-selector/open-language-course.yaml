@@ -1,0 +1,21 @@
+# Course Selector > Change language (level_selector_change_language) opens Language Course
+# (Destination.LanguageSettings) with the I am learning rows (language_settings_learning_option_PAIR) in the tree.
+# Entry: Course Selector with level_selector_ready (open-from-home.yaml). Exit: Language Course; flags may still be loading.
+# Preconditions: an English speaker (PAIR defaults to english-spanish). Dev or prod via APP_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  PAIR: ${PAIR || "english-spanish"}
+---
+- assertVisible:
+    id: level_selector_ready
+- tapOn:
+    id: level_selector_change_language
+- extendedWaitUntil:
+    visible:
+      id: language_settings_screen
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: language_settings_learning_option_${PAIR}
+    timeout: 60000
