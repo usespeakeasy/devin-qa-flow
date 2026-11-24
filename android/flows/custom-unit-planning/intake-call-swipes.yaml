@@ -1,0 +1,25 @@
+# Live Meet the Tutor intake call over the Course Selector: vertical swipes beside End call, along the
+# right edge and on the blank area above the buttons stay on the call (speak-android#9704 checks the
+# Course Selector underneath does not scroll; the run script compares its node bounds before and after).
+# Entry: open-intake-call-from-tutor-call-card.yaml (call live). Exit: same call, End call visible.
+# Selectors: points, because the targets are deliberately empty space (no node).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: phone_speak_call_end_call
+- swipe:
+    start: "75%,90%"
+    end: "75%,50%"
+    duration: 600
+- swipe:
+    start: "97%,85%"
+    end: "97%,25%"
+    duration: 600
+- swipe:
+    start: "50%,70%"
+    end: "50%,30%"
+    duration: 600
+- assertVisible:
+    id: phone_speak_call_end_call

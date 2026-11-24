@@ -1,0 +1,32 @@
+# Planning intro over the Course Selector: taps on empty parts of the intro that lie over Course Selector
+# controls (P1, P2, P3, absolute px from the run script's dump) and a swipe up from the P3 spot change
+# nothing: the intro stays with its CTA, the Course Selector stays underneath (speak-android#9704; before
+# it a tap could reach the control underneath).
+# Entry: planning intro (open-create-course-from-courses.yaml, meet_the_tutor_enabled OFF). Exit: same intro.
+# Selectors: points, because the targets are deliberately empty space (no node). The swipe uses fixed
+# percents because swipe start/end take no ${} variables; on 1080x2400 they match P3 and 700 px above it.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  P1: "50%,12%"
+  P2: "50%,40%"
+  P3: "50%,60%"
+---
+- assertVisible:
+    id: custom_unit_planning_intro_cta
+- tapOn:
+    point: ${P1}
+- tapOn:
+    point: ${P2}
+- tapOn:
+    point: ${P3}
+- swipe:
+    start: "50%,59%"
+    end: "50%,30%"
+    duration: 600
+- assertVisible:
+    id: custom_unit_planning_screen
+- assertVisible:
+    id: custom_unit_planning_intro_cta
+- assertVisible:
+    id: level_selector_ready

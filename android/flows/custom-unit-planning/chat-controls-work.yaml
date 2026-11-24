@@ -1,0 +1,30 @@
+# Planning chat suggestions and conversation still respond: the conversation scrolls, a suggestion sends and
+# the agent answers: the tapped suggestion leaves and an agent message (a follow-up question with new
+# suggestions) or the unit plan (a "Review plan" button, the generating state or the unit review) shows.
+# Entry: planning chat with its first agent message and suggestions (lets-go-opens-chat.yaml). Exit: the
+# agent's answer. Input field and Send: chat-input-send.yaml (suggestions hide while the keyboard is up, and
+# Back with the keyboard up closes the chat, so the two run from separate chats).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- swipe:
+    direction: DOWN
+    from:
+      id: custom_unit_planning_agent_message
+- assertVisible:
+    id: custom_unit_planning_suggestion
+- copyTextFrom:
+    id: custom_unit_planning_suggestion
+    index: 0
+- tapOn:
+    id: custom_unit_planning_suggestion
+    index: 0
+- extendedWaitUntil:
+    notVisible:
+      text: ${maestro.copiedText}
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: custom_unit_planning_agent_message|custom_unit_planning_review|custom_unit_planning_review_plan_button|custom_unit_planning_generating
+    timeout: 60000

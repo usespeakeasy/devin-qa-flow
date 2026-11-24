@@ -1,0 +1,28 @@
+# Planning chat over the Course Selector: a tap on the top bar between Close and the flag (TOP), a tap on
+# the composer between the mic and Send (COMPOSER) and a swipe up from the composer gap leave the chat in
+# place with the Course Selector underneath (speak-android#9704; before it the gaps reached it).
+# Entry: planning chat (lets-go-opens-chat.yaml, meet_the_tutor_enabled OFF). Exit: same chat.
+# Selectors: TOP and COMPOSER are points (absolute px from the run script's dump), deliberately empty space.
+# The swipe uses fixed percents because swipe start/end take no ${} variables; on 1080x2400 it starts at COMPOSER.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TOP: "50%,6%"
+  COMPOSER: "50%,94%"
+---
+- assertVisible:
+    id: custom_unit_planning_input_field
+- tapOn:
+    point: ${TOP}
+- tapOn:
+    point: ${COMPOSER}
+- swipe:
+    start: "50%,94%"
+    end: "50%,53%"
+    duration: 600
+- assertVisible:
+    id: custom_unit_planning_screen
+- assertVisible:
+    id: level_selector_ready
+- assertVisible:
+    id: custom_unit_planning_input_field

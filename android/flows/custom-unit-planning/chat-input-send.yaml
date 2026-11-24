@@ -1,0 +1,24 @@
+# Planning chat input field and Send still respond: the field takes focus and text, Send shows and sends, the
+# field clears and the agent answers: an agent message (a follow-up question) or the unit plan (a "Review
+# plan" button, the generating state or the unit review).
+# Entry: planning chat with its first agent message (lets-go-opens-chat.yaml). Exit: the agent's answer.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TEXT: Ordering food at a restaurant
+---
+- tapOn:
+    id: custom_unit_planning_input_field
+- inputText: ${TEXT}
+- assertVisible:
+    text: ${TEXT}
+- tapOn:
+    id: custom_unit_planning_send_button
+- extendedWaitUntil:
+    notVisible:
+      text: ${TEXT}
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: custom_unit_planning_agent_message|custom_unit_planning_review|custom_unit_planning_review_plan_button|custom_unit_planning_generating
+    timeout: 60000
