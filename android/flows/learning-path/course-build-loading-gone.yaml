@@ -1,0 +1,14 @@
+# Home > "Building your course" loading cover fades out once the build finishes and the built course opens.
+# Entry: the loading cover shows (`course-build-loading-shown.yaml`). Exit: the cover is gone and Home is ready.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    notVisible:
+      id: home_course_build_loading
+    timeout: 240000
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000

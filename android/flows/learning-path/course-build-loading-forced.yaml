@@ -1,0 +1,13 @@
+# Cold start to Home with the "Building your course" loading cover held on screen, for animation cases.
+# Entry: signed in, with the QA-only `debug.qa.course_build=1` system property seam in `LearningPathHomeContent` (it
+# keeps `isCourseBuildShown` true) on both builds. Exit: the loading cover (`home_course_build_loading`) shows.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: home_course_build_loading
+    timeout: 60000

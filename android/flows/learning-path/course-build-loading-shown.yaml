@@ -1,0 +1,14 @@
+# Home > "Building your course" loading cover over the learning path, after the Meet the Tutor intake call ends and
+# the course build starts.
+# Entry: the intake call just ended with a course build started (`custom-unit-planning/intake-call-end.yaml` with
+# QA-only `debug.qa.agent_end=1`). Exit: the loading cover (`home_course_build_loading`) shows on Home.
+# Preconditions: dev; tutor_experience, meet_the_tutor_enabled, ait_phone_speak_decisions_gate, ait_phone_speak_cascade
+# and user_memory_phone_speak_call_producer_enabled ON.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_course_build_loading
+    timeout: 60000
