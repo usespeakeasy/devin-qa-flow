@@ -1,0 +1,21 @@
+# Custom courses announcement sheet on Home: tap its CTA ("Get started"), which starts Create a course
+# (paywall when gated, else custom unit planning or the Meet the Tutor intake call).
+# Entry: Home with `custom_courses_announcement_sheet` up (home-announcement/reset-announcement.yaml, then
+# home-announcement/launch-home.yaml). Preconditions: dev, signed in. Exit: the sheet is gone.
+# Selectors: the CTA has no resource-id (text fallback "Get started" inside the sheet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: custom_courses_announcement_sheet
+    timeout: 30000
+- tapOn:
+    text: "Get started"
+    childOf:
+      id: custom_courses_announcement_sheet
+- extendedWaitUntil:
+    notVisible:
+      id: custom_courses_announcement_sheet
+    timeout: 20000
