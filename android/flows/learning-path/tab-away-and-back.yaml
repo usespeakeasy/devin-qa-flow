@@ -1,0 +1,18 @@
+# Home > Profile tab > Home tab: Home's learning path shows again (a returning Home visit reloads the path).
+# Entry: Home. Exit: Home (`learning_path_ready`).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_profile
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 15000
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000

@@ -1,0 +1,14 @@
+# Home's learning path shows language pair PAIR (`learning_path_language_pair_<pair>`) within TIMEOUT ms, with no
+# "An unexpected error occurred." dialog. Entry: Home loading or shown. Exit: Home.
+# Params: PAIR (e.g. english-japanese), TIMEOUT (ms, default 60000).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TIMEOUT: ${TIMEOUT || 60000}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_language_pair_${PAIR}
+    timeout: ${TIMEOUT}
+- assertNotVisible:
+    text: "An unexpected error occurred.*"

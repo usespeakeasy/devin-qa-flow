@@ -1,0 +1,13 @@
+# Cold start while the learning path's user fetch fails (QA-only `debug.qa.failuser=1` patch answers 500 to every
+# `v3/users/user` after the launch one): the error dialog shows; the run checks with `has` whether the path is under it.
+# Entry: signed in (force-stops the app). Exit: the error dialog, open.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      text: "An unexpected error occurred.*"
+    timeout: 60000

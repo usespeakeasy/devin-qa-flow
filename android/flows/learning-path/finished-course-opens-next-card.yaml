@@ -1,0 +1,33 @@
+# Cold start on a finished course: Home opens on the next-course card with the next level filled in
+# (`course_next_level_primary_button`), not on a loop. A real finished course works; on dev the QA-only
+# `log.tag.QA_FINISHED` patch in `isCompletedCourseCursor` makes any course read as finished (speak-android#9711).
+# Entry: signed in (force-stops the app). Exit: Home on the next-course card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: "course_next_level_primary_button|referral_welcome_dialog_later_button|app_assessment_popup"
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: app_assessment_popup
+    commands:
+      - back
+- runFlow:
+    when:
+      visible:
+        id: referral_welcome_dialog_later_button
+    commands:
+      - tapOn:
+          id: referral_welcome_dialog_later_button
+- extendedWaitUntil:
+    visible:
+      id: course_next_level_primary_button
+    timeout: 60000
+- assertVisible:
+    id: learning_path_ready

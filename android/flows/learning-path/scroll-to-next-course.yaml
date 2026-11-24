@@ -1,0 +1,22 @@
+# Home learning path: scroll down to the next-course card at the end of the path, then wait up to TIMEOUT ms for it to
+# show the next level (its primary button). The card can show before the next-course lookup answers
+# (speak-android#9711), so the scroll stops at any of the card's buttons.
+# Entry: Home (`learning_path_ready`), a course with a next level (EN_ES_A1-1). Exit: Home, next-course card in view.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TIMEOUT: ${TIMEOUT || 90000}
+---
+- assertVisible:
+    id: learning_path_ready
+- scrollUntilVisible:
+    element:
+      id: "course_next_level_primary_button|course_next_course_pick_button|course_next_course_select_button|course_create_custom_course_button|course_pick_elective_course_button"
+    direction: DOWN
+    timeout: 150000
+    speed: 80
+    visibilityPercentage: 50
+- extendedWaitUntil:
+    visible:
+      id: course_next_level_primary_button
+    timeout: ${TIMEOUT}

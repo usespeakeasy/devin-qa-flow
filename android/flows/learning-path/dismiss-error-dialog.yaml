@@ -1,0 +1,19 @@
+# Close the "An unexpected error occurred." dialog with OK, back on the Home tab (the path may or may not be under it).
+# Entry: the dialog over Home. Exit: Home tab (`main_tab_home`).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: "simple_dialog_positive_button|android:id/button1"
+    optional: true
+- runFlow:
+    when:
+      visible:
+        text: "An unexpected error occurred.*"
+    commands:
+      - tapOn: "^OK$"
+- extendedWaitUntil:
+    visible:
+      id: main_tab_home
+    timeout: 30000

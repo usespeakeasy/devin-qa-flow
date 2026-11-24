@@ -1,0 +1,18 @@
+# Cold start to Home's learning path (closing launch popups), then the path is still on screen after STAY ms with no
+# "An unexpected error occurred." dialog (speak-android#9711: the saved user's path shows before the user fetch answers).
+# Entry: signed in, any screen (force-stops the app). Exit: Home. Params: STAY (ms, default 5000).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  STAY: ${STAY || 5000}
+---
+- runFlow: ../../common/launch-home.yaml
+- extendedWaitUntil:
+    notVisible:
+      id: learning_path_ready
+    timeout: ${STAY}
+    optional: true
+- assertVisible:
+    id: learning_path_ready
+- assertNotVisible:
+    text: "An unexpected error occurred.*"
