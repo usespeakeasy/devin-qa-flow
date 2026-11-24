@@ -1,0 +1,29 @@
+# Live Meet the Tutor intake call overlay: taps on the "End call" and "Mute" labels (text under the buttons, not
+# the buttons) do nothing: the call stays, mute stays off (speak-android#9703). Before #9703 they reached the
+# screen underneath (over Home they switched the bottom tab); the run script compares the tree underneath.
+# Entry: the intake call is live (`intake-calling-tap-over-course-card.yaml` or `open-intake-call-from-tutor-call-card.yaml`).
+# Exit: same live call, unmuted. Selectors: label text anchored below its button's ID (the labels have no ID).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: phone_speak_call_mute
+    text: "Mute microphone"
+- tapOn:
+    text: "End call"
+    below:
+      id: phone_speak_call_end_call
+- assertVisible:
+    id: phone_speak_call_screen
+- assertVisible:
+    id: phone_speak_call_end_call
+- tapOn:
+    text: "Mute"
+    below:
+      id: phone_speak_call_mute
+- assertVisible:
+    id: phone_speak_call_screen
+- assertVisible:
+    id: phone_speak_call_mute
+    text: "Mute microphone"

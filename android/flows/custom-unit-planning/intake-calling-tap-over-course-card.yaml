@@ -1,0 +1,40 @@
+# Meet the Tutor intake call from the Course Selector's tutor call card: as soon as the call overlay is up (its
+# End call shows; the shimmering "Calling..." status is not in the tree, so the flow cannot gate on it),
+# a tap where the current course card's Continue sits below must not reach the Course Selector (speak-android#9703).
+# Before #9703 the tap selected the current course ("Course Selector Continue Tapped"), the selector exited to Home
+# and the `level_selector_ready` assert fails.
+# Entry: `level-selector/tutor-call-card-shown.yaml`. Exit: the call is live (`phone_speak_call_mute`) over the selector.
+# Preconditions: dev; tutor_experience, meet_the_tutor_enabled, ait_phone_speak_decisions_gate, ait_phone_speak_cascade,
+# user_memory_phone_speak_call_producer_enabled, dynamic_on_demand_unit_gen ON; account has no Tutor course yet.
+# Selectors: POINT, because the target is deliberately the screen under the overlay; default "179,2314" is the
+# current course card's "Continue" label on a 1080x2400 screen, clear of the centered Calling End call (about 540,2095).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  POINT: ${POINT || "179,2314"}
+---
+- assertVisible:
+    id: level_selector_ready
+- tapOn:
+    id: level_selector_start_tutor_call
+- extendedWaitUntil:
+    visible:
+      id: "phone_speak_call_end_call|ai_data_consent_alert"
+    timeout: 60000
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call
+    timeout: 45000
+- tapOn:
+    point: ${POINT}
+- assertVisible:
+    id: level_selector_ready
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_mute
+    timeout: 45000
+- assertVisible:
+    id: level_selector_ready
