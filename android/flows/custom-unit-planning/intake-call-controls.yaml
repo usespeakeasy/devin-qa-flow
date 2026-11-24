@@ -1,0 +1,41 @@
+# Live intake call: Mute twice and the Captions button still respond after speak-android#9703 wrapped the call screen in a tap catcher.
+# Entry: the intake call is live. Exit: the call is live, unmuted, captions as they started.
+# Preconditions: as `intake-call-connecting-tap.yaml`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: phone_speak_call_mute
+    text: "Mute microphone"
+- tapOn:
+    id: phone_speak_call_mute
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_mute
+      text: "Unmute microphone"
+    timeout: 5000
+- tapOn:
+    id: phone_speak_call_mute
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_mute
+      text: "Mute microphone"
+    timeout: 5000
+- assertVisible:
+    id: phone_speak_call_captions
+    text: "Turn captions off"
+- tapOn:
+    id: phone_speak_call_captions
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_captions
+      text: "Turn captions on"
+    timeout: 5000
+- tapOn:
+    id: phone_speak_call_captions
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_captions
+      text: "Turn captions off"
+    timeout: 5000

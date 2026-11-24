@@ -1,0 +1,26 @@
+# Course selector > Start call, then a tap on the bottom of the opening call screen, below its End call button, while the call connects.
+# The tap must stay on the call screen (speak-android#9703); on develop before it, it reached the Beginner Part card under it
+# ("Course Selector Continue Tapped") and the course selector moved to Home behind the call.
+# Entry: course selector ready (`level_selector_ready`) with the Tutor call card. Exit: the call is live.
+# Preconditions: dev; account with no Tutor course yet; tutor_experience, meet_the_tutor_enabled, ait_phone_speak_decisions_gate,
+# ait_phone_speak_cascade, user_memory_phone_speak_call_producer_enabled ON.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: level_selector_start_tutor_call
+- extendedWaitUntil:
+    visible:
+      id: "phone_speak_call_end_call|ai_data_consent_alert"
+    timeout: 45000
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+# Point: the label strip under the End call button has no ID, and the point is what reaches the card under it.
+- tapOn:
+    point: "50%,93%"
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call
+    timeout: 45000

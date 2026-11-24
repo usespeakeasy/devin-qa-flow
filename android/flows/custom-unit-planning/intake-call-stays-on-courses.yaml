@@ -1,0 +1,11 @@
+# After an intake call opened from the course selector ends early, the course selector is still the screen under it.
+# Fails on develop before speak-android#9703 when a tap on the call screen reached the course selector and it moved to Home.
+# Entry: the intake call just ended (`intake-call-end.yaml`). Preconditions: as `intake-call-connecting-tap.yaml`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: level_selector_ready
+    timeout: 15000

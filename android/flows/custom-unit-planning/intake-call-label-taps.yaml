@@ -1,0 +1,26 @@
+# Live intake call: taps on the "End call" and "Mute" labels under their buttons and on the empty top-left corner
+# stay on the call screen (speak-android#9703). On develop before it, the label taps reached Home's hidden bottom tabs
+# (Free Talk, Practice; "Bottom Tab Tapped") and the call's nodes left the tree, so this flow fails there.
+# Entry: the intake call is live (`intake-call-connecting-tap.yaml` or `open-intake-call-from-tutor-call-card.yaml`).
+# Exit: the call is still live. Preconditions: as `intake-call-connecting-tap.yaml`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    text: "End call"
+    below:
+      id: phone_speak_call_end_call
+- assertVisible:
+    id: phone_speak_call_end_call
+- tapOn:
+    text: "Mute"
+    below:
+      id: phone_speak_call_mute
+- assertVisible:
+    id: phone_speak_call_mute
+# Point: deliberately empty space on the call screen, over the Courses button or the course selector's Close under it.
+- tapOn:
+    point: "9%,8%"
+- assertVisible:
+    id: phone_speak_call_end_call

@@ -1,0 +1,22 @@
+# Live intake call: Home button, then back into the app; the call screen comes back and a tap on the "Mute" label under the
+# Mute button changes nothing (speak-android#9703; on develop before it the tap reached the course selector's Continue).
+# Entry: the intake call is live. Exit: the call is live, unmuted.
+# Preconditions: as `intake-call-connecting-tap.yaml`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- pressKey: Home
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call
+    timeout: 15000
+- tapOn:
+    text: "Mute"
+    below:
+      id: phone_speak_call_mute
+- assertVisible:
+    id: phone_speak_call_mute
+    text: "Mute microphone"

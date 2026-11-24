@@ -1,0 +1,36 @@
+# Live intake call turned to landscape: taps on the "End call" and "Mute" labels under their buttons stay on the call screen
+# (speak-android#9703), then back to portrait with the call still on. Saves SHOT (default `intake-call-landscape`) in landscape.
+# Entry: the intake call is live. Exit: the call is live, portrait. Preconditions: as `intake-call-connecting-tap.yaml`.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "intake-call-landscape"}
+---
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call
+    timeout: 15000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    text: "End call"
+    below:
+      id: phone_speak_call_end_call
+- assertVisible:
+    id: phone_speak_call_end_call
+- tapOn:
+    text: "Mute"
+    below:
+      id: phone_speak_call_mute
+- assertVisible:
+    id: phone_speak_call_mute
+    text: "Mute microphone"
+- setOrientation: PORTRAIT
+- waitForAnimationToEnd:
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call
+    timeout: 15000
