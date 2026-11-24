@@ -1,0 +1,46 @@
+# Free existing production learner outside the program. Real checkout, no purchase.
+# Superwall and Google Play own their checkout identifiers and text selectors.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak"}
+  SHOT: ${SHOT || "standard-play-smoke"}
+---
+- tapOn:
+    id: main_tab_profile
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_membership_option
+    timeout: 15000
+- tapOn:
+    id: settings_manage_membership_option
+- extendedWaitUntil:
+    visible: Unlock Speak Premium
+    timeout: 20000
+- tapOn:
+    text: Unlock Speak Premium
+    index: 0
+- scrollUntilVisible:
+    element:
+      text: View More Plans
+    direction: DOWN
+    timeout: 25000
+    centerElement: true
+- tapOn: View More Plans
+- extendedWaitUntil:
+    visible: Choose a plan
+    timeout: 15000
+- tapOn: Monthly
+- assertVisible: 'Premium Plus.*39\.99.*'
+- tapOn: 'Premium Plus.*39\.99.*'
+- tapOn:
+    text: ^Subscribe$
+    index: 0
+- extendedWaitUntil:
+    visible: Test card, always approves
+    timeout: 30000
+- assertVisible: '.*39\.99.*'
+- assertVisible: '.*You will not be charged.*'
+- takeScreenshot: ${SHOT}
+- back
