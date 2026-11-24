@@ -1,0 +1,46 @@
+# Drill lesson top bar sliders > Settings sheet (`TutorOptions` key, `TutorOptionsEntries` sheet): toggle Auto-advance,
+# close with Back, reopen, toggle Auto-advance back, close with Back. The lesson stays on screen.
+# Entry: drill lesson (tutor-lesson/open-fresh.yaml). Exit: the lesson, no sheet. Auto-advance ends as it started.
+# Selectors: the sheet and its rows have no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: drill_lesson_topbar_options
+- extendedWaitUntil:
+    visible: "^Report a problem$"
+    timeout: 15000
+- assertVisible: "^Auto-advance$"
+- takeScreenshot: tutor-options-open
+- tapOn: "^Auto-advance$"
+- waitForAnimationToEnd:
+    timeout: 2000
+- runFlow:
+    when:
+      visible: "^Report a problem$"
+    commands:
+      - back
+- extendedWaitUntil:
+    notVisible: "^Report a problem$"
+    timeout: 10000
+- assertVisible:
+    id: drill_lesson_topbar_options
+- tapOn:
+    id: drill_lesson_topbar_options
+- extendedWaitUntil:
+    visible: "^Report a problem$"
+    timeout: 15000
+- tapOn: "^Auto-advance$"
+- waitForAnimationToEnd:
+    timeout: 2000
+- runFlow:
+    when:
+      visible: "^Report a problem$"
+    commands:
+      - back
+- extendedWaitUntil:
+    notVisible: "^Report a problem$"
+    timeout: 10000
+- assertVisible:
+    id: drill_lesson_topbar_options

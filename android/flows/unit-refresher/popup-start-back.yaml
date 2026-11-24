@@ -1,0 +1,41 @@
+# Unit Refresher popup over Home (`UnitRefresher` key) > start replaces it with the review screen (`UnitRefresherReview`
+# key, fade); system Back lands on Home, not on the popup. Without refresher content on the account the review
+# shows its error dialog, and Back there dismisses the review too.
+# Entry: cold start with the popup owed (QA-only patch: `UnitRefresherLauncher.invoke` returns true while
+# `adb shell setprop debug.qa.ur 1`). Exit: Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: unit_refresher_popup
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ur-popup
+- tapOn:
+    id: unit_refresher_popup_start_button
+# A dev account with no refresher content gets the review screen's error dialog (unit_refresher_error_dialog);
+# its Back dismisses the review the same way as Back on the loaded review.
+- extendedWaitUntil:
+    visible:
+      id: "unit_refresher_review|unit_refresher_error_dialog"
+    timeout: 15000
+- assertNotVisible:
+    id: unit_refresher_popup
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: ur-review
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- assertNotVisible:
+    id: unit_refresher_review
+- assertNotVisible:
+    id: unit_refresher_popup
+- takeScreenshot: ur-home

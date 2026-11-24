@@ -1,0 +1,57 @@
+# Smart Review info button opens Details (`SmartReviewDetails` key); the X closes it, then info again and system Back
+# closes it. With KEEP_OPEN=true it stops on Details after the first open.
+# Entry: Home tab, account with at least one concept. Exit: Smart Review main, or Details with KEEP_OPEN=true.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  KEEP_OPEN: ${KEEP_OPEN || "false"}
+---
+- tapOn:
+    id: main_tab_practice
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_card_smart_review
+    timeout: 20000
+- tapOn:
+    id: practice_tab_card_smart_review
+- extendedWaitUntil:
+    visible:
+      id: smart_review_info_button
+    timeout: 20000
+- tapOn:
+    id: smart_review_info_button
+- extendedWaitUntil:
+    visible:
+      id: smart_review_details_screen
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: sr-details
+- runFlow:
+    when:
+      true: ${KEEP_OPEN != "true"}
+    commands:
+      - tapOn:
+          id: smart_review_details_close_button
+      - extendedWaitUntil:
+          notVisible:
+            id: smart_review_details_screen
+          timeout: 10000
+      - assertVisible:
+          id: smart_review_info_button
+      - tapOn:
+          id: smart_review_info_button
+      - extendedWaitUntil:
+          visible:
+            id: smart_review_details_screen
+          timeout: 10000
+      - waitForAnimationToEnd:
+          timeout: 2000
+      - back
+      - extendedWaitUntil:
+          notVisible:
+            id: smart_review_details_screen
+          timeout: 10000
+      - assertVisible:
+          id: smart_review_info_button
+      - takeScreenshot: sr-details-closed

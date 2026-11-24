@@ -1,0 +1,14 @@
+# Drill lesson top bar sliders > Settings sheet (`TutorOptions` key) opens and stays open.
+# Entry: drill lesson. Exit: the sheet ("Report a problem" showing).
+# Selectors: the sheet has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: drill_lesson_topbar_options
+- extendedWaitUntil:
+    visible: "^Report a problem$"
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 2000

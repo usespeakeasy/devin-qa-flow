@@ -1,0 +1,45 @@
+# Debug Menu > Dialog Bridges (`DebugDialogBridges` key) opens its list; with BACK=true system Back returns to the Debug Menu.
+# Entry: signed in, any state (deep links the Debug Menu). Exit: Debug Menu (BACK=true) or Dialog Bridges (BACK=false).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  DEBUG_MENU_LINK: ${DEBUG_MENU_LINK || "speak-dev://debug-menu"}
+  BACK: ${BACK || "true"}
+---
+- openLink: ${DEBUG_MENU_LINK}
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 15000
+- retry:
+    maxRetries: 2
+    commands:
+      - scrollUntilVisible:
+          element:
+            id: debug_menu_dialog_bridges
+          direction: DOWN
+          timeout: 20000
+          centerElement: true
+      - waitForAnimationToEnd:
+          timeout: 2000
+      - tapOn:
+          id: debug_menu_dialog_bridges
+      - extendedWaitUntil:
+          visible:
+            id: debug_dialog_bridges_screen
+          timeout: 5000
+- waitForAnimationToEnd:
+    timeout: 2000
+- takeScreenshot: dialog-bridges
+- runFlow:
+    when:
+      true: ${BACK == "true"}
+    commands:
+      - back
+      - extendedWaitUntil:
+          visible:
+            id: debug_menu_screen
+          timeout: 10000
+      - assertNotVisible:
+          id: debug_dialog_bridges_screen
+      - takeScreenshot: dialog-bridges-back
