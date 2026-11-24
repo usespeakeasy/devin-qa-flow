@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026.11.23.1 — run rows set `agent`
+
+`qa-request-mobile` run rows now set `agent` to `"devin"` in the JSON line loaded with `bq load`.
+The daily reconcile and Slack backfills set `agent = 'devin'` on rows they insert and never overwrite
+an existing `agent` in an `UPDATE`. Why: `devin_qa.qa_request_mobile_runs` gained an `agent STRING`
+column (existing rows backfilled to `devin`), and Indent QA runs write `agent = 'indent'` to the same
+table. PR: https://github.com/usespeakeasy/devin-qa-flow/pull/31.
+
 ## 2026.11.20.3 — required-assessment QA instructions
 
 Documents active learner-only required schedules, client-header capability checks,
