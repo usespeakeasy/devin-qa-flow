@@ -1,0 +1,30 @@
+# Home learning path: open loop LOOP_ID's popover, select its lesson LESSON_ID, tap the popover's main CTA
+# (Preview or Jump Ahead). The tap sends `Course Learning Loop CTA Tapped` for LESSON_ID; the run script reads it
+# from logcat (SegmentAnalyticsManager). A Jump Ahead tap opens the "Skipping lessons?" sheet, which this flow
+# leaves open for the arrival screenshot; the run script closes it.
+# Entry: Home right after a cold launch (another loop's popover open, LOOP_ID not open). Exit: the lesson opening or
+# the jump-ahead sheet (`learning_path_jump_ahead_root`). Pass -e LOOP_ID=<unit id + day id> -e LESSON_ID=<lesson id>.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_loop_${LOOP_ID}
+    timeout: 30000
+- tapOn:
+    id: learning_path_loop_${LOOP_ID}
+- extendedWaitUntil:
+    visible:
+      id: learning_path_lesson_item_${LESSON_ID}
+    timeout: 15000
+- tapOn:
+    id: learning_path_lesson_item_${LESSON_ID}
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: "learning_path_popover_(preview|jump_ahead)_button"
+- extendedWaitUntil:
+    visible:
+      id: "learning_path_jump_ahead_root|learning_path_popover_.*|ai_data_consent_alert"
+    timeout: 15000
