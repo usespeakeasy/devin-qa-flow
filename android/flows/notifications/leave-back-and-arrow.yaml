@@ -1,0 +1,28 @@
+# Leave Notifications by system back, reopen it from Settings, then leave by the toolbar arrow;
+# both return to Settings.
+# Entry: the Notifications screen (opened from Settings). Exit: Settings.
+# Selectors: the Settings row has no resource-id (text fallback, as settings/notifications-open.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 10000
+- assertNotVisible:
+    id: notifications_screen
+- tapOn: "^Notifications$"
+- extendedWaitUntil:
+    visible:
+      id: notifications_daily_reminder
+    timeout: 15000
+- tapOn:
+    id: toolbar
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 10000
+- assertNotVisible:
+    id: notifications_screen

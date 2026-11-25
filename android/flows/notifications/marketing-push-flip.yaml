@@ -1,0 +1,61 @@
+# Notifications > Marketing Communications: flip the Push switch twice (back to where it started),
+# then the toolbar arrow returns to Notifications.
+# Entry: the Notifications screen. Exit: the Notifications screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: notifications_marketing_channels
+- extendedWaitUntil:
+    visible:
+      id: notifications_marketing_push_toggle
+    timeout: 15000
+- runFlow:
+    when:
+      visible:
+        id: notifications_marketing_push_toggle
+        checked: true
+    commands:
+      - tapOn:
+          id: notifications_marketing_push_toggle
+      - extendedWaitUntil:
+          visible:
+            id: notifications_marketing_push_toggle
+            checked: false
+          timeout: 10000
+      - tapOn:
+          id: notifications_marketing_push_toggle
+      - extendedWaitUntil:
+          visible:
+            id: notifications_marketing_push_toggle
+            checked: true
+          timeout: 10000
+- runFlow:
+    when:
+      visible:
+        id: notifications_marketing_push_toggle
+        checked: false
+    commands:
+      - tapOn:
+          id: notifications_marketing_push_toggle
+      - extendedWaitUntil:
+          visible:
+            id: notifications_marketing_push_toggle
+            checked: true
+          timeout: 10000
+      - tapOn:
+          id: notifications_marketing_push_toggle
+      - extendedWaitUntil:
+          visible:
+            id: notifications_marketing_push_toggle
+            checked: false
+          timeout: 10000
+- tapOn:
+    id: notifications_marketing_channels_back_button
+- extendedWaitUntil:
+    visible:
+      id: notifications_marketing_channels
+    timeout: 10000
+- assertVisible:
+    id: notifications_screen

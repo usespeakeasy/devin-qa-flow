@@ -1,0 +1,14 @@
+# Notifications > Daily Reminders row opens the reminder screen.
+# Entry: the Notifications screen. Exit: the reminder screen (notifications_reminder_screen).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: notifications_daily_reminder
+- extendedWaitUntil:
+    visible:
+      id: notifications_reminder_time
+    timeout: 15000
+- assertVisible:
+    id: notifications_reminder_screen

@@ -1,0 +1,11 @@
+# After an app update (adb install -r over a running task) or a kill, the relaunch lands on the
+# reminder screen (restored) or on Home (fresh task); either is an arrival, a crash is not.
+# Entry: relaunched with the launcher intent. Exit: that screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: "(notifications_reminder_time|learning_path_ready|home_root_ready)"
+    timeout: 60000

@@ -1,0 +1,58 @@
+# Notifications: tap a topic switch (TOGGLE, default toggle_streak) twice; it flips each tap,
+# returns to where it started and no dialog shows (POST_NOTIFICATIONS granted).
+# Entry: the Notifications screen (settings/notifications-open.yaml). Exit: the same screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  TOGGLE: ${TOGGLE || "toggle_streak"}
+---
+- extendedWaitUntil:
+    visible:
+      id: ${TOGGLE}
+    timeout: 15000
+- runFlow:
+    when:
+      visible:
+        id: ${TOGGLE}
+        checked: true
+    commands:
+      - tapOn:
+          id: ${TOGGLE}
+      - extendedWaitUntil:
+          visible:
+            id: ${TOGGLE}
+            checked: false
+          timeout: 10000
+      - assertNotVisible:
+          id: button1
+      - tapOn:
+          id: ${TOGGLE}
+      - extendedWaitUntil:
+          visible:
+            id: ${TOGGLE}
+            checked: true
+          timeout: 10000
+- runFlow:
+    when:
+      visible:
+        id: ${TOGGLE}
+        checked: false
+    commands:
+      - tapOn:
+          id: ${TOGGLE}
+      - extendedWaitUntil:
+          visible:
+            id: ${TOGGLE}
+            checked: true
+          timeout: 10000
+      - assertNotVisible:
+          id: button1
+      - tapOn:
+          id: ${TOGGLE}
+      - extendedWaitUntil:
+          visible:
+            id: ${TOGGLE}
+            checked: false
+          timeout: 10000
+- assertVisible:
+    id: notifications_screen

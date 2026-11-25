@@ -1,0 +1,24 @@
+# After Home + am kill + relaunch on the reminder screen: the reminder screen is back, then system
+# back returns to Notifications once (the reminder screen does not reopen over it).
+# Entry: relaunched after process death. Exit: the Notifications screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: notifications_reminder_time
+    timeout: 60000
+- assertVisible:
+    id: notifications_reminder_screen
+- back
+- extendedWaitUntil:
+    visible:
+      id: notifications_daily_reminder
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible:
+    id: notifications_reminder_screen
+- assertVisible:
+    id: notifications_screen

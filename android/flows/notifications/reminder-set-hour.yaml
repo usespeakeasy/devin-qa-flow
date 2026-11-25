@@ -1,0 +1,62 @@
+# Reminder screen: turn Allow on and Smart Scheduling off when needed, open the time picker, pick
+# HOUR (12 h clock face) and keep the minute, OK; the time row shows HOUR. Toolbar back returns to
+# Notifications, whose Daily Reminders row shows the new hour.
+# Entry: the Notifications screen. Exit: the Notifications screen.
+# Selectors: the clock face numbers have no app IDs (MaterialTimePicker), so the hour is a text
+# inside material_clock_face.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  HOUR: ${HOUR || "7"}
+---
+- runFlow: open-reminder.yaml
+- runFlow:
+    when:
+      visible:
+        id: notifications_reminder_allow_toggle
+        checked: false
+    commands:
+      - tapOn:
+          id: notifications_reminder_allow_toggle
+      - extendedWaitUntil:
+          visible:
+            id: notifications_reminder_allow_toggle
+            checked: true
+          timeout: 10000
+- runFlow:
+    when:
+      visible:
+        id: notifications_reminder_smart_toggle
+        checked: true
+    commands:
+      - tapOn:
+          id: notifications_reminder_smart_toggle
+      - extendedWaitUntil:
+          visible:
+            id: notifications_reminder_smart_toggle
+            checked: false
+          timeout: 10000
+- tapOn:
+    id: notifications_reminder_time
+- extendedWaitUntil:
+    visible:
+      id: material_timepicker_ok_button
+    timeout: 10000
+- tapOn:
+    text: "^${HOUR}$"
+    childOf:
+      id: material_clock_face
+- tapOn:
+    id: material_timepicker_ok_button
+- extendedWaitUntil:
+    visible:
+      text: "^${HOUR}:[0-9][0-9].*"
+    timeout: 10000
+- tapOn:
+    id: notifications_reminder_back_button
+- extendedWaitUntil:
+    visible:
+      id: notifications_daily_reminder
+    timeout: 10000
+- assertVisible:
+    text: ".*\\b${HOUR}:[0-9][0-9].*"
