@@ -1,0 +1,28 @@
+# Unit Summaries open from Home: tap the book icon next to the current unit's title
+# (learning_path_unit_summary_button); the summary (Destination.UnitSummaries entry) loads its sections.
+# Entry: Home tab showing learning_path_ready, onboarded account with a started course (any pool account). Exit: Unit Summaries.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: learning_path_unit_summary_button
+    direction: DOWN
+    timeout: 60000
+- tapOn:
+    id: learning_path_unit_summary_button
+- extendedWaitUntil:
+    visible:
+      id: unit_summaries_screen
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: unit_summaries_conversation_audio
+    timeout: 30000
+- assertVisible:
+    id: unit_summaries_back_button

@@ -1,0 +1,13 @@
+# Unit Summaries back arrow to Home (no scroll). Entry: Unit Summaries. Exit: Home tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: unit_summaries_back_button
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- assertNotVisible:
+    id: unit_summaries_screen

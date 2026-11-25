@@ -1,0 +1,43 @@
+# Unit Summaries scroll and back: scroll the summary down and up (collapsing header), then BACK_MODE=arrow taps
+# unit_summaries_back_button, BACK_MODE=system presses system back; lands on Home.
+# Entry: Unit Summaries loaded. Exit: Home tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  BACK_MODE: ${BACK_MODE || "arrow"}
+---
+- extendedWaitUntil:
+    visible:
+      id: unit_summaries_conversation_audio
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: unit_summaries_vocabs_expand_row|unit_summaries_vocab
+    direction: DOWN
+    timeout: 15000
+- scroll
+- scrollUntilVisible:
+    element:
+      id: unit_summaries_back_button
+    direction: UP
+    timeout: 15000
+- runFlow:
+    when:
+      true: ${BACK_MODE == "arrow"}
+    commands:
+      - tapOn:
+          id: unit_summaries_back_button
+- runFlow:
+    when:
+      true: ${BACK_MODE == "system"}
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- assertVisible:
+    id: main_tab_home
+    selected: true
+- assertNotVisible:
+    id: unit_summaries_screen

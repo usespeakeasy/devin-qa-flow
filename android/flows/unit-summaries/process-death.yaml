@@ -1,0 +1,23 @@
+# Unit Summaries process death: Home key, the system kills the app (killApp), reopen the task: Unit Summaries
+# restores with its sections; back returns to Home.
+# Entry: Unit Summaries loaded. Exit: Home tab.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: unit_summaries_screen
+- pressKey: Home
+- killApp
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: unit_summaries_screen
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: unit_summaries_conversation_audio
+    timeout: 30000
+- assertNotVisible:
+    id: onboarding_storybook_sign_in_button

@@ -1,0 +1,21 @@
+# Unit Summaries key conversation audio: tap the first line's play icon, let it play, tap it again to stop.
+# The icon has no state in the tree; the run checks the UNIT_SUMMARIES_CONVERSATION_AUDIO_PLAY/STOP Track lines.
+# Entry: Unit Summaries loaded. Exit: Unit Summaries, audio stopped.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: unit_summaries_conversation_audio
+    timeout: 30000
+- tapOn:
+    id: unit_summaries_conversation_audio
+    index: 0
+- waitForAnimationToEnd:
+    timeout: 1500
+- tapOn:
+    id: unit_summaries_conversation_audio
+    index: 0
+- assertVisible:
+    id: unit_summaries_screen

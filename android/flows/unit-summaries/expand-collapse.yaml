@@ -1,0 +1,69 @@
+# Unit Summaries sections: key conversation and key vocab "See more" expand, "See less" collapses.
+# Entry: Unit Summaries with both sections expandable (EN_ES_A1-1 unit 1 on dev). Exit: Unit Summaries, sections collapsed, scrolled to the top.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: unit_summaries_conversation_audio
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: unit_summaries_conversations_expand_row
+    direction: DOWN
+    timeout: 15000
+- assertVisible:
+    text: "See more"
+    childOf:
+      id: unit_summaries_conversations_expand_row
+- tapOn:
+    id: unit_summaries_conversations_expand_row
+- scrollUntilVisible:
+    element:
+      text: "See less"
+      childOf:
+        id: unit_summaries_conversations_expand_row
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    id: unit_summaries_conversations_expand_row
+- scrollUntilVisible:
+    element:
+      text: "See more"
+      childOf:
+        id: unit_summaries_conversations_expand_row
+    direction: UP
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: unit_summaries_vocabs_expand_row
+    direction: DOWN
+    timeout: 15000
+- assertVisible:
+    text: "See more"
+    childOf:
+      id: unit_summaries_vocabs_expand_row
+- tapOn:
+    id: unit_summaries_vocabs_expand_row
+- scrollUntilVisible:
+    element:
+      text: "See less"
+      childOf:
+        id: unit_summaries_vocabs_expand_row
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    id: unit_summaries_vocabs_expand_row
+- scrollUntilVisible:
+    element:
+      text: "See more"
+      childOf:
+        id: unit_summaries_vocabs_expand_row
+    direction: UP
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: unit_summaries_back_button
+    direction: UP
+    timeout: 15000

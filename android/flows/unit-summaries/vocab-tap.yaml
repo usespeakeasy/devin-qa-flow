@@ -1,0 +1,31 @@
+# Unit Summaries vocab tap: tap the first key vocab chip (unit_summaries_vocab); the expression details sheet opens
+# (Destination.ExpressionDetails.FromPronunciationCoach). BACK=true (default) presses back and asserts Unit Summaries.
+# Entry: Unit Summaries loaded. Exit: Unit Summaries (BACK=true) or the expression details sheet (BACK=false).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  BACK: ${BACK || "true"}
+---
+- scrollUntilVisible:
+    element:
+      id: unit_summaries_vocab
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    id: unit_summaries_vocab
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: tutor_expression_details_content|tutor_expression_details_sheet
+    timeout: 20000
+- runFlow:
+    when:
+      true: ${BACK == "true"}
+    commands:
+      - back
+      - extendedWaitUntil:
+          visible:
+            id: unit_summaries_screen
+          timeout: 15000
+      - assertNotVisible:
+          id: tutor_expression_details_content
