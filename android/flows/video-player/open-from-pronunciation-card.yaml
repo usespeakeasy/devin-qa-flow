@@ -1,0 +1,20 @@
+# Feedback video (Destination.VideoPlayer, feature video-player) opened from the XML pronunciation card.
+# A real "Still struggling? Try this video" tip needs a scored recording, so this uses a QA-only patch:
+# a long press on the card's `word` calls PronunciationCardViewHost.openFeedbackVideo(debug.qa.video_url).
+# Set the prop first: adb shell setprop debug.qa.video_url <mp4 url>.
+# Entry: pronunciation card open (open-pronunciation-card.yaml), QA patch on the build.
+# Exit: player up (`exo_content_frame` under the media3 PlayerView), card gone.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: word
+- longPressOn:
+    id: word
+- extendedWaitUntil:
+    visible:
+      id: exo_content_frame
+    timeout: 15000
+- assertNotVisible:
+    id: translation_caption

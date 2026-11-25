@@ -1,0 +1,27 @@
+# Video player: the media3 controls show (a tap on the video when hidden); asserts the play/pause
+# button's description (STATE: Play while paused). While playing they auto-hide before Maestro can
+# read them, so use this on a paused player.
+# Entry: video player up (open-from-pronunciation-card.yaml). Exit: player with controls showing.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  STATE: ${STATE || "Pause|Play"}
+---
+- extendedWaitUntil:
+    visible:
+      id: exo_content_frame
+    timeout: 15000
+- runFlow:
+    when:
+      notVisible:
+        id: exo_play_pause
+    commands:
+      - tapOn:
+          id: exo_content_frame
+- extendedWaitUntil:
+    visible:
+      id: exo_play_pause
+    timeout: 5000
+- assertVisible:
+    id: exo_play_pause
+    text: ${STATE}

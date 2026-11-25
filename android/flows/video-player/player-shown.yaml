@@ -1,0 +1,11 @@
+# Video player (Destination.VideoPlayer) is up: the media3 PlayerView's content frame shows.
+# Use this, not harness `wait`: UiAutomator dumps often fail while the video plays.
+# Entry: any state after the player opens, rotates or restores. Exit: same screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: exo_content_frame
+    timeout: 30000

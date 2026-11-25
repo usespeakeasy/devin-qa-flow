@@ -1,0 +1,13 @@
+# Video player paused: show the controls if hidden and tap play. The runner checks playback with
+# `dumpsys audio` (the controls auto-hide while playing, faster than Maestro can assert them).
+# Entry: video player up and paused. Exit: player playing.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: controls-shown.yaml
+    env:
+      STATE: Play
+- tapOn:
+    id: exo_play_pause

@@ -1,0 +1,36 @@
+# Video lesson word tap opens the XML pronunciation card (Destination.PronunciationDialog) and leaves it open.
+# Words are spans inside `line` with no node, so the tap is a point on the first text row (POINT, default the second word of a one-row line on a 1080x2400 phone).
+# Entry: video lesson on card CARD (video-lesson/open-lesson.yaml), pronunciation onboarding tooltips already seen.
+# Exit: pronunciation card open (`word`, `translation_caption`).
+# Needs pronunciation_coach_multilingual_v2 off (the coach has no `translation_caption`).
+# maestro test -e CARD="1 of \\d+" open-pronunciation-card.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CARD: ${CARD || "1 of \\d+"}
+  POINT: ${POINT || "56%,30%"}
+---
+- extendedWaitUntil:
+    visible:
+      id: card_count
+      text: ${CARD}
+    timeout: 30000
+# The card's line shows while it listens or is paused; between those the lesson video plays and a
+# tap lands on nothing, so wait for either and retry the tap.
+- retry:
+    maxRetries: 3
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "listening_header|paused_header"
+          timeout: 60000
+      - tapOn:
+          point: ${POINT}
+      - extendedWaitUntil:
+          visible:
+            id: word
+          timeout: 8000
+- extendedWaitUntil:
+    visible:
+      id: translation_caption
+    timeout: 15000

@@ -1,0 +1,17 @@
+# Video player: system Back closes it and the pronunciation card it came from shows again.
+# Entry: video player up. Exit: pronunciation card (`word`, `translation_caption`).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: exo_content_frame
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: word
+    timeout: 10000
+- assertVisible:
+    id: translation_caption
