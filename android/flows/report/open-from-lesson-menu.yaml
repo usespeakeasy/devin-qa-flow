@@ -1,0 +1,42 @@
+# Home > learning path loop LOOP_ID > its popover's lesson menu (learning_path_popover_lesson_menu) > Report problem:
+# the report sheet (Destination.ReportContent, report_screen) replaces the lesson context menu over Home.
+# Entry: signed in, any state (cold starts). Exit: report_screen.
+# LOOP_ID: a loop whose lesson menu opens. On a new Spanish A1 dev account the current loop
+# ("[PROD-CLONE] Ask someone to take your picture") ignores the menu tap on develop and branches alike, so the
+# default is the second loop, "Make small talk".
+# Selectors: the context menu rows (SpeakBottomSheetItem) have no resource-id; "Report problem" is a text fallback.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LOOP_ID: ${LOOP_ID || "learning_path_loop_m2tmeffvyvusg65n1s4rzt77zk2zxhe6ooqqv10ysvnz39mn"}
+---
+- runFlow: ../../common/launch-home.yaml
+- scrollUntilVisible:
+    element:
+      id: ${LOOP_ID}
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    id: ${LOOP_ID}
+- extendedWaitUntil:
+    visible:
+      id: learning_path_popover_lesson_menu
+      below:
+        id: ${LOOP_ID}
+    timeout: 15000
+- tapOn:
+    id: learning_path_popover_lesson_menu
+    below:
+      id: ${LOOP_ID}
+- extendedWaitUntil:
+    visible: "^Report problem$"
+    timeout: 15000
+- tapOn: "^Report problem$"
+- extendedWaitUntil:
+    visible:
+      id: report_screen
+    timeout: 15000
+- assertVisible:
+    id: report_input
+- assertVisible:
+    id: report_submit_button

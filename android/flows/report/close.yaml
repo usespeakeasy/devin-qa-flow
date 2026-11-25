@@ -1,0 +1,22 @@
+# Report sheet (report_screen): the close button closes it without sending; EXIT_ID shows.
+# Entry: report_screen open. Exit: EXIT_ID.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  EXIT_ID: ${EXIT_ID || "learning_path_ready"}
+---
+- extendedWaitUntil:
+    visible:
+      id: report_screen
+    timeout: 15000
+- hideKeyboard
+- tapOn:
+    id: report_close_button
+- extendedWaitUntil:
+    notVisible:
+      id: report_screen
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: ${EXIT_ID}
+    timeout: 15000

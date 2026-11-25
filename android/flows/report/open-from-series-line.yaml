@@ -1,0 +1,21 @@
+# Series lesson line card > More options (more_options) > Content error: the report sheet (report_screen) opens over
+# the lesson. Entry: a series line card (series-dialogs/line-card.yaml, speak_now_header). Exit: report_screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  REASON: ${REASON || "content_error"}
+---
+- tapOn:
+    id: more_options
+- extendedWaitUntil:
+    visible:
+      id: lesson_more_options_report_problem_${REASON}
+    timeout: 15000
+- tapOn:
+    id: lesson_more_options_report_problem_${REASON}
+- extendedWaitUntil:
+    visible:
+      id: report_screen
+    timeout: 15000
+- assertVisible:
+    id: report_input

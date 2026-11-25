@@ -1,0 +1,26 @@
+# Report sheet (report_screen): type TEXT, Submit. The sheet closes and EXIT_ID shows (the screen that opened it).
+# Entry: report_screen open. Exit: EXIT_ID. The runner checks `Track 'Report Content Feedback Submitted'` in logcat.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TEXT: ${TEXT || "QA report test"}
+  EXIT_ID: ${EXIT_ID || "learning_path_ready"}
+---
+- extendedWaitUntil:
+    visible:
+      id: report_screen
+    timeout: 15000
+- tapOn:
+    id: report_input
+- inputText: ${TEXT}
+- hideKeyboard
+- tapOn:
+    id: report_submit_button
+- extendedWaitUntil:
+    notVisible:
+      id: report_screen
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: ${EXIT_ID}
+    timeout: 15000
