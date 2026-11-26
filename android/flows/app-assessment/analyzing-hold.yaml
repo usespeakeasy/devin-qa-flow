@@ -1,0 +1,21 @@
+# Analyzing screen (`app_assessment_analyzing`) stays up for about 15 s (waits for a result that should not come) and
+# is still there at the end; screenshots at the start (SHOT-0) and the end (SHOT-1) show the motion moving. Run it
+# twice for a 30 s hold: Maestro 2.12 returns a second optional wait in the same flow at once.
+# Entry: Analyzing on screen (a real attempt, or the QA-only `debug.qa.aa=analyzing` patch via deep-link-open with
+# SCREEN=app_assessment_analyzing). Exit: Analyzing. Saves SHOT-0.png and SHOT-1.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "analyzing-hold"}
+---
+- assertVisible:
+    id: app_assessment_analyzing
+- takeScreenshot: ${SHOT}-0
+- extendedWaitUntil:
+    visible:
+      id: app_assessment_result
+    timeout: 15000
+    optional: true
+- assertVisible:
+    id: app_assessment_analyzing
+- takeScreenshot: ${SHOT}-1
