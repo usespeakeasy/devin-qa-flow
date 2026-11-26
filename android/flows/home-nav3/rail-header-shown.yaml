@@ -1,0 +1,25 @@
+# Home's header: the course selector (home_course_selector) and the streak (home_streak) show on the Home tab.
+# On a phone they are in Home's top bar; on a large screen with the navigation rail they are in the rail's
+# header (CLNT-2867). The caller checks where with harness `dump` (bounds, and one copy only on the rail).
+# Entry: Home tab. Exit: Home tab. Saves SHOT.png.
+# maestro test -e SHOT=header rail-header-shown.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- assertVisible:
+    id: main_tab_home
+    selected: true
+- extendedWaitUntil:
+    visible:
+      id: home_course_selector
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: home_streak
+    timeout: 15000
+- takeScreenshot: ${SHOT}

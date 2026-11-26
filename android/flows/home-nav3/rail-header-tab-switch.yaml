@@ -1,0 +1,42 @@
+# Home header follows the Home tab: Home -> TAB -> Home. On TAB the course selector (home_course_selector) and
+# the streak (home_streak) are gone (on a large screen the rail header leaves with Home); back on Home they show again.
+# Entry: Home tab showing the header. Exit: Home tab. Saves SHOT-tab.png and SHOT.png.
+# maestro test -e TAB=main_tab_practice -e SHOT=rail-tab rail-header-tab-switch.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_course_selector
+    timeout: 30000
+- tapOn:
+    id: ${TAB}
+- extendedWaitUntil:
+    visible:
+      id: ${TAB}
+      selected: true
+    timeout: 15000
+- extendedWaitUntil:
+    notVisible:
+      id: learning_path_ready
+    timeout: 10000
+- assertNotVisible:
+    id: home_course_selector
+- assertNotVisible:
+    id: home_streak
+- takeScreenshot: ${SHOT}-tab
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: home_course_selector
+    timeout: 15000
+- assertVisible:
+    id: home_streak
+- takeScreenshot: ${SHOT}
+- runFlow: assert-nothing-reopened.yaml
