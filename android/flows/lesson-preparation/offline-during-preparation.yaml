@@ -1,0 +1,15 @@
+# Generation fails while the preparation screen is up: the error dialog waits for the screen's minimum, and
+# dismissing it returns to Home (speak-android#9762).
+# Entry: Home with the popover of LESSON_ID open. Preconditions: as rotate-during-preparation.yaml. The run cuts the
+# network (svc wifi/data disable) once the screen is up.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: learning_path_lesson_start_${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: targeted_practice_pre_lesson_preparation_screen
+    timeout: 10000
+- takeScreenshot: ${SHOT || "preparing"}

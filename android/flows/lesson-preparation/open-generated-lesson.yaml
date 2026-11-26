@@ -1,0 +1,21 @@
+# Home path popover Start on a lesson generated on start (launchMode generate-on-start): the preparation screen
+# shows while the lesson is written, then the lesson opens by itself (speak-android#9760, #9762).
+# Entry: Home with the popover of LESSON_ID open (`learning_path_lesson_start_<id>` visible).
+# Preconditions: dev, Tutor plan course (real Meet the Tutor intake), LESSON_ID never opened before (each open writes it).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: learning_path_lesson_start_${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: targeted_practice_pre_lesson_preparation_screen
+    timeout: 10000
+- takeScreenshot: ${SHOT || "preparing"}
+- extendedWaitUntil:
+    notVisible:
+      id: targeted_practice_pre_lesson_preparation_screen
+    timeout: 90000
+- assertNotVisible:
+    id: home_root_ready

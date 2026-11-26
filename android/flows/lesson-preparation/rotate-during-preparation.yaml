@@ -1,0 +1,29 @@
+# Preparation screen survives rotation to landscape and back: the card stays up (no plain loader, no restart) and
+# the lesson opens once (speak-android#9762).
+# Entry: Home with the popover of LESSON_ID open. Preconditions: as open-generated-lesson.yaml, plus a slow generation
+# (add latency, e.g. tc netem on the emulator) so the screen is still up after the rotation.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: learning_path_lesson_start_${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: targeted_practice_pre_lesson_preparation_screen
+    timeout: 10000
+- setOrientation: LANDSCAPE_LEFT
+- assertVisible:
+    id: targeted_practice_pre_lesson_preparation_screen
+- assertVisible:
+    id: targeted_practice_pre_lesson_preparation_back_button
+- takeScreenshot: ${SHOT || "preparing"}-landscape
+- setOrientation: PORTRAIT
+- assertVisible:
+    id: targeted_practice_pre_lesson_preparation_screen
+- extendedWaitUntil:
+    notVisible:
+      id: targeted_practice_pre_lesson_preparation_screen
+    timeout: 120000
+- assertNotVisible:
+    id: home_root_ready

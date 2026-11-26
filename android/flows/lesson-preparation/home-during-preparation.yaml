@@ -1,0 +1,17 @@
+# Leaves the app with Home while the preparation screen is up (speak-android#9762). The run waits out the
+# generation outside the app, then relaunches with resume-after-home.yaml.
+# Entry: Home with the popover of LESSON_ID open. Preconditions: as rotate-during-preparation.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: learning_path_lesson_start_${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: targeted_practice_pre_lesson_preparation_screen
+    timeout: 10000
+- takeScreenshot: ${SHOT || "preparing"}
+- pressKey: Home
+- assertNotVisible:
+    id: targeted_practice_pre_lesson_preparation_screen

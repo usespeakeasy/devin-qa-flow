@@ -1,0 +1,29 @@
+# Preparation screen Back: leaves for Home while the lesson is still being written, and the lesson does not open
+# later (speak-android#9762).
+# Entry: Home with the popover of LESSON_ID open. Preconditions: as open-generated-lesson.yaml, plus a generation slower
+# than the screen's own minimum (add latency, e.g. tc netem on the emulator), or the lesson opens before Back.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: learning_path_lesson_start_${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: targeted_practice_pre_lesson_preparation_screen
+    timeout: 10000
+- takeScreenshot: ${SHOT || "preparing"}
+- tapOn:
+    id: targeted_practice_pre_lesson_preparation_back_button
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 10000
+# Waits out the generation: fails if anything takes Home's place within 20 s.
+- extendedWaitUntil:
+    notVisible:
+      id: home_root_ready
+    timeout: 20000
+    optional: true
+- assertVisible:
+    id: home_root_ready
