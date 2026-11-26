@@ -1,0 +1,23 @@
+# Live Tutor check-in call: End check-in opens the "End the check-in?" sheet and the call stays up (speak-android#9766).
+# Before #9766 a check-in call ends at once, so this flow fails on the sheet wait there.
+# The sheet is a modal window, so phone_speak_call_screen is not in the tree while it is open; check the call staying up
+# by no 'Phone Speak Ended' in logcat and by the next flow (Keep talking / Back).
+# Entry: live check-in call (call-start-in-app on an account at a check-in point, or the QA-only CHECK_IN patch).
+# Preconditions: meet_the_tutor_enabled ON, phone_speak_ui_revamp=agent-transcript. Exit: the check-in sheet over the call.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: phone_speak_call_end_call
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call_sheet_end_call
+    timeout: 10000
+- assertVisible:
+    id: phone_speak_call_end_call_sheet_keep_talking
+- assertVisible: "End the check-in\\?"
+- assertVisible:
+    text: "End check-in"
+    childOf:
+      id: phone_speak_call_end_call_sheet_end_call

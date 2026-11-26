@@ -1,0 +1,18 @@
+# Tutor check-in sheet: End check-in in the sheet ends the call and returns to the caller (Practice for the call link), with no "Call complete!"
+# survey or end-of-lesson screen (speak-android#9766). Check one 'Phone Speak Ended' end_trigger=hangup_button in logcat.
+# Entry: the check-in sheet (check-in-call-end-asks), call opened by speak-dev://phone-speak?action=call. Exit: Practice.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: phone_speak_call_end_call_sheet_end_call
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_call_screen
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 20000
+- assertNotVisible: "Call complete!"
