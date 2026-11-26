@@ -1,0 +1,42 @@
+# Settings > Manage Account > Name: the single field editor opens holding the current name; system Back
+# without saving returns to Manage Account with the Name row still there.
+# Entry: Settings (settings_manage_account_option on screen). Exit: Manage Account.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "edit-name"}
+---
+- tapOn:
+    id: settings_manage_account_option
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 15000
+- assertVisible:
+    id: edit_name
+- assertVisible:
+    id: edit_email
+- tapOn:
+    id: edit_name
+- extendedWaitUntil:
+    visible:
+      id: single_field_input_screen
+    timeout: 15000
+- assertVisible:
+    id: input
+    text: ".+"
+- takeScreenshot: ${SHOT}
+- back
+- hideKeyboard
+- runFlow:
+    when:
+      visible:
+        id: single_field_input_screen
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 10000
+- assertVisible:
+    id: edit_name

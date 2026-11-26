@@ -1,0 +1,39 @@
+# Settings > About sheet > Open source licenses: the licenses screen replaces the sheet; system Back returns to
+# Settings with no About sheet.
+# Entry: Settings. Exit: Settings (scrolled to About).
+# Selectors: the Settings About row has no id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "about-licenses"}
+---
+- scrollUntilVisible:
+    element: "^About$"
+    direction: DOWN
+    timeout: 15000
+- tapOn: "^About$"
+- extendedWaitUntil:
+    visible:
+      id: about_sheet
+    timeout: 10000
+- assertVisible:
+    id: about_terms_of_service_option
+- assertVisible:
+    id: about_privacy_policy_option
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}_sheet
+- tapOn:
+    id: about_open_source_licenses_option
+- extendedWaitUntil:
+    visible:
+      id: open_source_licenses_screen
+    timeout: 15000
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible: "^About$"
+    timeout: 10000
+- assertNotVisible:
+    id: open_source_licenses_screen
+- assertNotVisible:
+    id: about_sheet

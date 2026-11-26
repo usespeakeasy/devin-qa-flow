@@ -1,0 +1,40 @@
+# After a rotation or process death: SCREEN_ID shows again, and STATE is checked: name (input holds NAME_TEXT)
+# or reason (option_too_expensive is still checked). KILL=true first does Home, killApp and a relaunch from the
+# task (launchApp stopApp false).
+# Entry: the screen left open by edit-name-typed.yaml or cancel-reason-selected.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SCREEN_ID: ${SCREEN_ID || "single_field_input_screen"}
+  STATE: ${STATE || "name"}
+  NAME_TEXT: ${NAME_TEXT || "QA Restore Name"}
+  KILL: ${KILL || "false"}
+  SHOT: ${SHOT || "restored"}
+---
+- runFlow:
+    when:
+      true: ${KILL == "true"}
+    commands:
+      - pressKey: Home
+      - killApp
+      - launchApp:
+          stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: ${SCREEN_ID}
+    timeout: 60000
+- runFlow:
+    when:
+      true: ${STATE == "name"}
+    commands:
+      - assertVisible:
+          id: input
+          text: ".*${NAME_TEXT}.*"
+- runFlow:
+    when:
+      true: ${STATE == "reason"}
+    commands:
+      - assertVisible:
+          id: option_too_expensive
+          checked: true
+- takeScreenshot: ${SHOT}

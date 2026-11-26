@@ -1,0 +1,56 @@
+# Manage Membership > Cancel Subscription > Too expensive > Continue > Yes: the cancellation offer shows, or, when the
+# offer can't load its RevenueCat data (no Play billing on the emulator), the offer entry closes itself and the web
+# cancellation page (webview_parent) opens. Back returns to the reasons screen, Back again to Manage Membership. Never taps the offer or Cancel Anyway.
+# Entry: Manage Membership. Exit: Manage Membership.
+# Precondition on dev: QA-only patch with debug.qa.sub=cancel (CTA) and debug.qa.offer=monthly (eligible monthly offer).
+# Selectors: the confirm dialog's Yes has no id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "cancel-membership"}
+---
+- extendedWaitUntil:
+    visible:
+      id: item_subscription_change_cta
+    timeout: 20000
+- tapOn:
+    id: item_subscription_change_cta
+- extendedWaitUntil:
+    visible:
+      id: cancel_membership_screen
+    timeout: 15000
+- assertVisible:
+    id: option_too_expensive
+- takeScreenshot: ${SHOT}_reasons
+- tapOn:
+    id: option_too_expensive
+- tapOn:
+    id: continue_button
+- extendedWaitUntil:
+    visible: "Are you sure you want to cancel your subscription\\?"
+    timeout: 15000
+- tapOn: "^Yes$"
+- extendedWaitUntil:
+    visible:
+      id: "cancellation_offer_screen|webview_parent"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: cancellation_offer_screen
+    commands:
+      - assertVisible:
+          id: primary_button
+      - assertVisible:
+          id: secondary_button
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: cancel_membership_screen
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible:
+      id: member_card
+    timeout: 15000

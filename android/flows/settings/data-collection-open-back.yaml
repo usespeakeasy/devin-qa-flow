@@ -1,0 +1,29 @@
+# Settings > "Improve Voice Recognition" > Data & Analytics: the screen shows its voice data switch and the privacy
+# policy text; the toolbar back arrow returns to Settings.
+# Entry: Settings. Exit: Settings.
+# Selectors: the Settings row has no id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "data-collection"}
+---
+- scrollUntilVisible:
+    element: "Improve Voice Recognition"
+    direction: DOWN
+    timeout: 15000
+- tapOn: "Improve Voice Recognition"
+- extendedWaitUntil:
+    visible:
+      id: data_collection_screen
+    timeout: 15000
+- assertVisible:
+    id: data_collection_voice_switch
+- assertVisible: ".*We do not share it w.*"
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: data_collection_back_button
+- extendedWaitUntil:
+    visible: "Improve Voice Recognition"
+    timeout: 10000
+- assertNotVisible:
+    id: data_collection_screen

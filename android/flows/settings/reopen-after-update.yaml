@@ -1,0 +1,17 @@
+# Reopen the app from its task after `adb install -r` over a running build (the case script installs while the app
+# sits in the background on Manage Account). Waits for whichever screen comes up: Manage Account (restored) or Home
+# (the task was ended by the install). The case script reads which one with harness `has`.
+# Entry: app in the background after an install. Exit: Manage Account or Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "reopen-after-update"}
+---
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: "manage_account_screen|learning_path_ready|home_root_ready|referral_welcome_dialog_later_button|app_assessment_popup"
+    timeout: 60000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}

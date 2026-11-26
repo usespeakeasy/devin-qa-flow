@@ -1,0 +1,26 @@
+# Profile tab > Settings gear: Settings arrives with the Manage Membership, Manage Account, certificate
+# ("Get Subscription History"), About and "Improve Voice Recognition" (Data & Analytics) rows.
+# Entry: Home tab, signed in. Exit: Settings, scrolled to its top.
+# Selectors: the certificate, About and Improve Voice Recognition rows have no id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "settings-rows"}
+---
+- runFlow: ../../common/open-settings.yaml
+- assertVisible:
+    id: settings_manage_membership_option
+- assertVisible:
+    id: settings_manage_account_option
+- assertVisible: "Get Subscription History"
+- takeScreenshot: ${SHOT}
+- scrollUntilVisible:
+    element: "^About$"
+    direction: DOWN
+    timeout: 15000
+- assertVisible: "Improve Voice Recognition"
+- scrollUntilVisible:
+    element:
+      id: settings_manage_membership_option
+    direction: UP
+    timeout: 15000

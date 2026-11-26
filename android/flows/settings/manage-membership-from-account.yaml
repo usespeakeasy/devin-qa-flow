@@ -1,0 +1,30 @@
+# Manage Account > Back to Settings > Manage Membership: the member card, See all subscriptions and Get Subscription
+# History rows show (Cancel Subscription too when the account has a cancellable subscription or the QA-only
+# debug.qa.sub=cancel patch).
+# Entry: Manage Account. Exit: Manage Membership.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "manage-membership"}
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: settings_manage_account_option
+    timeout: 10000
+- scrollUntilVisible:
+    element:
+      id: settings_manage_membership_option
+    direction: UP
+    timeout: 10000
+- tapOn:
+    id: settings_manage_membership_option
+- extendedWaitUntil:
+    visible:
+      id: item_see_all_subscriptions
+    timeout: 20000
+- assertVisible:
+    id: member_card
+- assertVisible:
+    id: item_request_certificate
+- takeScreenshot: ${SHOT}

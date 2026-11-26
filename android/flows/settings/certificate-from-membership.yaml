@@ -1,0 +1,34 @@
+# Manage Membership > Back to Settings > "Get Subscription History": the registration certificate dialog opens
+# (CanRequestCertificate true: paid premium, or the QA-only debug.qa.cert=1 patch); Cancel returns to Settings.
+# Entry: Manage Membership. Exit: Settings.
+# Selectors: the Settings certificate row has no id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "certificate"}
+---
+- back
+- extendedWaitUntil:
+    visible:
+      id: settings_clear_cache_option
+    timeout: 10000
+- tapOn: "Get Subscription History"
+- extendedWaitUntil:
+    visible:
+      id: request_certificate_submit_button
+    timeout: 15000
+- assertVisible:
+    id: request_certificate_dialog
+- assertVisible: "Where should we send your registration certificate\\?.*"
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: request_certificate_cancel_button
+- extendedWaitUntil:
+    notVisible:
+      id: request_certificate_dialog
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: settings_clear_cache_option
+    timeout: 10000

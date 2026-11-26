@@ -1,0 +1,26 @@
+# Home > Profile > Settings > Manage Membership > Cancel Subscription, select Too expensive and stay there, so the
+# case script can rotate or kill the process and check the selection comes back.
+# Entry: Home tab. Exit: cancel_membership_screen with option_too_expensive checked.
+# Precondition on dev: QA-only patch with debug.qa.sub=cancel.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn:
+    id: settings_manage_membership_option
+- extendedWaitUntil:
+    visible:
+      id: item_subscription_change_cta
+    timeout: 20000
+- tapOn:
+    id: item_subscription_change_cta
+- extendedWaitUntil:
+    visible:
+      id: cancel_membership_screen
+    timeout: 15000
+- tapOn:
+    id: option_too_expensive
+- assertVisible:
+    id: option_too_expensive
+    checked: true
