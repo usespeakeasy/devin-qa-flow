@@ -1,0 +1,24 @@
+# Post-conversion > the Certificate tip's action opens the registration certificate dialog of a user who may request
+# one (PostConversionViewModel.openCertificate: CanRequestCertificate true opens Destination.RequestCertificate).
+# Entry: post_conversion_screen, paid (not trial) premium tier. Exit: the open dialog.
+# Selectors: the dialog message has no id, so its copy is a text fallback.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: tip_Certificate
+    direction: DOWN
+    timeout: 15000
+    centerElement: true
+- tapOn:
+    id: action
+    childOf:
+      id: tip_Certificate
+- extendedWaitUntil:
+    visible:
+      id: request_certificate_submit_button
+    timeout: 15000
+- assertVisible: "Where should we send your registration certificate\\?.*"
+- waitForAnimationToEnd

@@ -1,0 +1,17 @@
+# The open registration certificate dialog: Cancel closes it and nothing is sent. Back to the caller after.
+# Entry: request_certificate_dialog open. Exit: the screen that opened it (UNDER_ID visible).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  UNDER_ID: ${UNDER_ID || "item_see_all_subscriptions"}
+---
+- tapOn:
+    id: request_certificate_cancel_button
+- extendedWaitUntil:
+    notVisible:
+      id: request_certificate_dialog
+    timeout: 5000
+- extendedWaitUntil:
+    visible:
+      id: ${UNDER_ID}
+    timeout: 10000

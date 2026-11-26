@@ -1,0 +1,17 @@
+# Data & Analytics ("Improve Voice Recognition"): the explanation is rendered HTML (String.asHtml), so its bold
+# sentence shows as plain text with no raw tags, and the "here" privacy link text shows.
+# Entry: data_collection_screen open. Exit: same screen.
+# Selectors: the explanation TextView has no id, so its copy is a text fallback.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: data_collection_screen
+- assertVisible: ".*We do not share it with anyone outside of Speak\\..*"
+- scrollUntilVisible:
+    element: ".*To learn more, see our privacy policy here\\..*"
+    direction: DOWN
+    timeout: 10000
+- assertNotVisible: ".*<b>.*"
+- assertNotVisible: ".*<a href.*"

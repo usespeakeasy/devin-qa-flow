@@ -1,0 +1,23 @@
+# Manage Membership > Get Subscription History opens the registration certificate dialog of a user who may request
+# one (CanRequestCertificate true): the "Where should we send your registration certificate?" copy and Request.
+# Entry: Manage Membership (member_card), paid (not trial) premium tier. Exit: the open dialog.
+# Selectors: the dialog message has no id, so its copy is a text fallback.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: item_request_certificate
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    id: item_request_certificate
+- extendedWaitUntil:
+    visible:
+      id: request_certificate_submit_button
+    timeout: 15000
+- assertVisible:
+    id: request_certificate_dialog
+- assertVisible: "Where should we send your registration certificate\\?.*"
+- waitForAnimationToEnd

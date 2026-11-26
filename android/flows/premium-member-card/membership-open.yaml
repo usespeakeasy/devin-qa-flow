@@ -1,0 +1,28 @@
+# Profile > Settings > Manage Membership: the premium member card shows with its "Member since" line.
+# Entry: Home tab, signed in with a premium tier (Debug Menu > Subscription override Premium or Plus).
+# Exit: Manage Membership with the card on screen (the case script takes the screenshot).
+# A Subscription override account has no RevenueCat data, so the card shows the email and no "Member since" line.
+# Selectors: the card's text views get generated ids (PremiumMemberCardView), so its title and email are text fallbacks.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_profile
+- tapOn:
+    id: action_settings
+- extendedWaitUntil:
+    visible:
+      id: settings_clear_cache_option
+    timeout: 15000
+- tapOn:
+    id: settings_manage_membership_option
+- extendedWaitUntil:
+    visible:
+      id: member_card
+    timeout: 20000
+- assertVisible:
+    id: item_see_all_subscriptions
+- assertVisible: "Speak Premium.*Member"
+- assertVisible: ".*@.*"
+- waitForAnimationToEnd

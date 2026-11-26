@@ -1,0 +1,21 @@
+# Post-conversion screen ("Welcome to your Speak Membership!") with its premium member card.
+# Real entry is a completed purchase, which a QA emulator can't make. A QA-only patch (both builds) makes Manage
+# Membership > See all subscriptions open Destination.PostConversionAfterTrial with a ConfirmTrialArgs.PostConversionArgs
+# card mode taken from `adb shell setprop debug.qa.pc <MONTHLY|ANNUAL|LIFETIME|CANCELLED>`.
+# Entry: Manage Membership (member_card), debug.qa.pc set. Exit: post_conversion_screen.
+# Selectors: the Compose card (an AndroidView) exposes no member_card id, so its "Speak Premium Member" title is a
+# text fallback.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: item_see_all_subscriptions
+- extendedWaitUntil:
+    visible:
+      id: post_conversion_screen
+    timeout: 15000
+- assertVisible: "Speak Premium Member"
+- assertVisible:
+    id: tips_list
+- waitForAnimationToEnd
