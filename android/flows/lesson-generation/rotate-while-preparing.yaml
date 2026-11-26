@@ -1,0 +1,20 @@
+# Rotates to landscape on the lesson preparation screen; the screen stays and the lesson still opens, then portrait.
+# Entry: Home (`learning_path_ready`). Exit: `drill_lesson_root` visible in portrait.
+# Precondition: see open-preparation.yaml (QA-only generate-on-start patch, 6 s generation).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-preparation.yaml
+- setOrientation: LANDSCAPE_LEFT
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: targeted_practice_pre_lesson_preparation_screen
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_root
+    timeout: 30000
+- setOrientation: PORTRAIT
+- assertVisible:
+    id: drill_lesson_root

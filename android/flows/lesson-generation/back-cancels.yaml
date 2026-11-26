@@ -1,0 +1,23 @@
+# Back on the lesson preparation screen returns Home, and the lesson does not open when generation finishes later.
+# Entry: Home (`learning_path_ready`). Exit: Home, no lesson, after the 6 s generation has had time to finish.
+# Precondition: see open-preparation.yaml (QA-only generate-on-start patch, 6 s generation).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-preparation.yaml
+- tapOn:
+    id: targeted_practice_pre_lesson_preparation_back_button
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_root
+    timeout: 10000
+    optional: true
+- assertNotVisible:
+    id: drill_lesson_root
+- assertVisible:
+    id: learning_path_ready

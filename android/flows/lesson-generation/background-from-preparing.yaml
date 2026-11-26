@@ -1,0 +1,9 @@
+# Leaves the app with Home on the lesson preparation screen (the run script then kills the process).
+# Entry: Home (`learning_path_ready`). Exit: launcher, app in the background.
+# Precondition: see open-preparation.yaml (QA-only generate-on-start patch, 6 s generation).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-preparation.yaml
+- pressKey: Home

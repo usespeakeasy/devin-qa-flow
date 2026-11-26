@@ -1,0 +1,14 @@
+# Lesson generation screen until the lesson opens: the preparation screen shows, then the lesson replaces it.
+# Entry: Home (`learning_path_ready`). Exit: `drill_lesson_root` visible, preparation screen gone.
+# Precondition: see open-preparation.yaml (QA-only generate-on-start patch, 6 s generation).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: open-preparation.yaml
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_root
+    timeout: 30000
+- assertNotVisible:
+    id: targeted_practice_pre_lesson_preparation_screen

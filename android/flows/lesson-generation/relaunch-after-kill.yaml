@@ -1,0 +1,17 @@
+# After process death on the lesson preparation screen: relaunch from the launcher (no stop) and wait for where the
+# app lands: the restored preparation screen then the lesson, or Home. Prints nothing itself; the run reads the dump.
+# Entry: process killed by the run script after background-from-preparing.yaml. Exit: lesson or Home visible.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: false
+- extendedWaitUntil:
+    visible:
+      id: "drill_lesson_root|learning_path_ready|targeted_practice_pre_lesson_preparation_screen"
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: "drill_lesson_root|learning_path_ready"
+    timeout: 30000

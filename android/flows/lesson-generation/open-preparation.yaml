@@ -1,0 +1,16 @@
+# Starts a generate-on-start lesson from the Home learning path and waits for the lesson preparation screen.
+# Entry: Home (`learning_path_ready`). Exit: `targeted_practice_pre_lesson_preparation_screen` visible.
+# Precondition: the tapped lesson is generate-on-start. On dev no path lesson is, so runs use a QA-only patch on both
+# builds: `LessonInfo.isGeneratedOnStart` is true for every lesson with no launchMode, `LaunchNavigation` routes it to
+# `TargetedPracticePreLesson`, and `TargetedPracticeRepository.generateLessonOnStart` waits 6 s and returns the lesson.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/start-path-lesson.yaml
+- extendedWaitUntil:
+    visible:
+      id: targeted_practice_pre_lesson_preparation_screen
+    timeout: 10000
+- assertVisible:
+    id: targeted_practice_pre_lesson_preparation_back_button

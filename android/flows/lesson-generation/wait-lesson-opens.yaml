@@ -1,0 +1,14 @@
+# On the lesson preparation screen: waits for generation to finish and the lesson to replace the screen.
+# Entry: `targeted_practice_pre_lesson_preparation_screen` (open-preparation.yaml). Exit: `drill_lesson_root` visible.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+# No arrival assert on the preparation screen: open-preparation.yaml made it, and a short generation can finish
+# before this flow starts.
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_root
+    timeout: 30000
+- assertNotVisible:
+    id: targeted_practice_pre_lesson_preparation_screen
