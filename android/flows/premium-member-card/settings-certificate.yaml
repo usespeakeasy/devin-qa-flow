@@ -1,0 +1,68 @@
+# Profile > Settings > "Get Subscription History" row (SettingsViewModel.onCertificateClicked, gated by
+# CanRequestCertificate). EXPECT=request: a paid (not trial) premium user gets the registration certificate dialog,
+# and Cancel returns to Settings. EXPECT=premium_only: a free user (Subscription override Free) gets
+# "Only available to Speak Premium Users", and OK returns to Settings.
+# Entry: Home tab, signed in. Exit: Settings (settings_clear_cache_option). The case script screenshots after the
+# arrival check, so the flow runs in two halves: PHASE=open stops on the dialog, PHASE=close dismisses it.
+# Selectors: the Settings row and the free-tier dialog copy have no id (text fallbacks).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  EXPECT: ${EXPECT || "request"}
+  PHASE: ${PHASE || "open"}
+---
+- runFlow:
+    when:
+      true: ${PHASE == "open"}
+    commands:
+      - tapOn:
+          id: main_tab_profile
+      - tapOn:
+          id: action_settings
+      - extendedWaitUntil:
+          visible:
+            id: settings_clear_cache_option
+          timeout: 15000
+      - tapOn: "Get Subscription History"
+      - runFlow:
+          when:
+            true: ${EXPECT == "request"}
+          commands:
+            - extendedWaitUntil:
+                visible:
+                  id: request_certificate_submit_button
+                timeout: 15000
+            - assertVisible: "Where should we send your registration certificate\\?.*"
+      - runFlow:
+          when:
+            true: ${EXPECT == "premium_only"}
+          commands:
+            - extendedWaitUntil:
+                visible: "Only available to Speak Premium Users"
+                timeout: 15000
+            - assertNotVisible:
+                id: request_certificate_submit_button
+      - waitForAnimationToEnd
+- runFlow:
+    when:
+      true: ${PHASE == "close"}
+    commands:
+      - runFlow:
+          when:
+            true: ${EXPECT == "request"}
+          commands:
+            - tapOn:
+                id: request_certificate_cancel_button
+      - runFlow:
+          when:
+            true: ${EXPECT == "premium_only"}
+          commands:
+            - tapOn:
+                id: "simple_dialog_positive_button|button1"
+      - extendedWaitUntil:
+          notVisible: "Only available to Speak Premium Users"
+          timeout: 5000
+      - extendedWaitUntil:
+          visible:
+            id: settings_clear_cache_option
+          timeout: 10000
