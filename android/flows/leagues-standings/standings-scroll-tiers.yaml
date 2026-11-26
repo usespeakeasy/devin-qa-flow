@@ -1,0 +1,48 @@
+# Leagues page for an account in this week's league: the standings show entrant rows (rank, name, xp);
+# scroll the list down and back up, then swipe the tier strip left and right.
+# Entry: Leagues page (open-leagues-page.yaml), account enrolled. Exit: Leagues page, list back at the top.
+# Saves SHOT.png after scrolling down (zones and lower ranks).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "standings-scrolled"}
+---
+- extendedWaitUntil:
+    visible:
+      id: rank
+    timeout: 20000
+- assertVisible:
+    id: xp
+- swipe:
+    from:
+      id: list
+    direction: UP
+- swipe:
+    from:
+      id: list
+    direction: UP
+- assertVisible:
+    id: rank
+- takeScreenshot: ${SHOT}
+- swipe:
+    from:
+      id: list
+    direction: DOWN
+- swipe:
+    from:
+      id: list
+    direction: DOWN
+- swipe:
+    from:
+      id: tier_list
+    direction: LEFT
+- assertVisible:
+    id: tier_list
+- swipe:
+    from:
+      id: tier_list
+    direction: RIGHT
+- assertVisible:
+    id: tier_list
+- assertVisible:
+    id: rank

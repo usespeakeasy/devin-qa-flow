@@ -1,0 +1,35 @@
+# Challenge tab > Leagues page: waits for ARRIVAL_ID and LIST_ID. Defaults: the tier strip (tier_list) and the
+# standings list (list), shown for an account in this week's league. For an account without Leagues pass
+# ARRIVAL_ID=placeholder_join_button LIST_ID=placeholder (locked page).
+# Entry: Home, signed in, Leagues on. Exit: Leagues page. Saves SHOT.png.
+# A one-time tier result (tier_reached_continue_button) is dismissed if shown.
+# Selectors: the "Leagues" header page has no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "leagues-page"}
+  ARRIVAL_ID: ${ARRIVAL_ID || "tier_list"}
+  LIST_ID: ${LIST_ID || "list"}
+---
+- tapOn:
+    id: main_tab_challenges
+- extendedWaitUntil:
+    visible: "Leagues"
+    timeout: 20000
+- tapOn: "Leagues"
+- runFlow:
+    when:
+      visible:
+        id: tier_reached_continue_button
+    commands:
+      - tapOn:
+          id: tier_reached_continue_button
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: ${LIST_ID}
+    timeout: 20000
+- takeScreenshot: ${SHOT}
