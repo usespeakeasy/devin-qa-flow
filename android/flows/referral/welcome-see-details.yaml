@@ -1,0 +1,27 @@
+# Cold start > Home referral welcome popup ("Invite friends and get ...") > See details > referral screen
+# (`Referral`). Entry: signed in, app stopped, the popup not yet shown on this install (pref
+# `referral_program_new_welcome_dialog_displayed` absent or false) and the referrals program active for the account.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: referral_welcome_dialog_see_details_button
+    timeout: 60000
+- assertVisible:
+    id: referral_welcome_dialog_root
+- tapOn:
+    id: referral_welcome_dialog_see_details_button
+- extendedWaitUntil:
+    visible:
+      id: referral_screen
+    timeout: 20000
+# The earnings section shows for every account. The share link and Share your link button show only when the
+# entitlement tier is paid when the screen loads (right after a cold start a Subscription override may not apply yet).
+- extendedWaitUntil:
+    visible:
+      text: "TOTAL EARNED"
+    timeout: 20000

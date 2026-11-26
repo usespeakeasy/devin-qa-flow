@@ -1,0 +1,15 @@
+# speak-dev://refer opens the referral screen (`Referral`) with the share link, and stays there.
+# Entry: Home tab, signed in, referrals program active for the account. Exit: referral screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- openLink: speak-dev://refer
+- extendedWaitUntil:
+    visible:
+      id: referral_screen
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: share_link
+    timeout: 20000

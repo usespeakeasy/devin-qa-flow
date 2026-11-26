@@ -1,0 +1,22 @@
+# Referral screen > "Share your link" > system share sheet (IntentResolver chooser) with the invite text and link.
+# Entry: referral screen on a Premium account (Debug Menu > Subscription override Premium; the share link and
+# button only show for paid users). Exit: chooser open; the caller presses Back to return to the referral screen.
+# Selectors: the share button has no testTag (text fallback "Share your link"); chooser ids are system ones.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: referral_screen
+- scrollUntilVisible:
+    element:
+      text: "Share your link"
+    direction: DOWN
+    timeout: 15000
+- tapOn: "Share your link"
+- extendedWaitUntil:
+    visible:
+      id: content_preview_text
+    timeout: 20000
+- assertVisible:
+    text: "(?s).*https://app\\.usespeak\\.dev/.*"

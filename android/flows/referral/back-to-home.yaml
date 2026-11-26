@@ -1,0 +1,15 @@
+# Referral screen > system back returns to Home (learning path).
+# Entry: referral screen opened over Home (welcome popup See details, or speak-dev://refer).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: referral_screen
+- back
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 20000
+- assertNotVisible:
+    id: referral_screen
