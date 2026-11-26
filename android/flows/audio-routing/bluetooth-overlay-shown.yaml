@@ -1,0 +1,22 @@
+# Bluetooth debug overlay (DebugBluetoothStatusOverlay, Debug Menu > Bluetooth debugging on, then a cold start):
+# the SCO status and Comm mode lines show over Home with a known value.
+# Entry: debug_switch_bluetooth_debugging on (debug-menu/set-switch.yaml), app force stopped. Exit: Home.
+# Selectors: the overlay is two plain debug TextViews with no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible: "SCO status: .*"
+    timeout: 60000
+- extendedWaitUntil:
+    visible: "Comm(unication)? mode: .*"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "SCO status: (?!Unknown).*"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "Comm mode: (?!Unknown).*"
+    timeout: 15000

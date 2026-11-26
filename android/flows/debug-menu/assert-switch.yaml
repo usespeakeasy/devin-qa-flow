@@ -1,0 +1,32 @@
+# Debug Menu: a switch row (by resource ID) reads CHECKED (true or false). Read-only; use after a
+# force stop to check the value persisted.
+# Entry: any state, signed in. Exit: on the Debug Menu.
+# maestro test -e ID=debug_switch_chucker -e CHECKED=false assert-switch.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CHECKED: ${CHECKED || "true"}
+---
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: ${ID}
+    timeout: 30000
+- runFlow:
+    when:
+      true: ${CHECKED == "true"}
+    commands:
+      - assertVisible:
+          id: ${ID}
+          checked: true
+- runFlow:
+    when:
+      true: ${CHECKED != "true"}
+    commands:
+      - assertVisible:
+          id: ${ID}
+          checked: false

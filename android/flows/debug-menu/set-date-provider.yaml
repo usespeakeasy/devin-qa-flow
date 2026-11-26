@@ -1,0 +1,26 @@
+# Debug Menu > Date Provider radio group: pick PROVIDER (Server, Device, Custom).
+# Entry: any state, signed in. Exit: on the Debug Menu with the Date Provider row on screen.
+# Check the stored value with run-as on shared_prefs/<pkg>.DebugDefaults.preferences.xml (key_date_time_provider*).
+# Selectors: the radio options have no resource-id (text fallback "Date Provider", "^PROVIDER$").
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  PROVIDER: ${PROVIDER || "Device"}
+---
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      text: "Date Provider"
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      text: "^${PROVIDER}$"
+    timeout: 10000
+- tapOn:
+    text: "^${PROVIDER}$"
+    below: "Date Provider"
+- assertVisible: "^${PROVIDER}$"

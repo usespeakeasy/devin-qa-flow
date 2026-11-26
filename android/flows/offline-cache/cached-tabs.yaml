@@ -1,0 +1,39 @@
+# Home (course cache), Practice and Challenge tabs show content. Run once online to fill the caches; then cold
+# start online to Home (common/launch-home.yaml), turn airplane mode on, and run it with LAUNCH=false so the first
+# Practice and Challenge reads in the new process come from the caches. (A cold start with airplane mode already on
+# stops at the "You're offline" screen, no_internet_root, on develop too.)
+# Entry: LAUNCH=true: app force stopped, signed in; LAUNCH=false: Home showing. Exit: Challenge tab.
+# Selectors: tab labels and the Practice "Review" / Challenge "Leagues" headers have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LAUNCH: ${LAUNCH || "true"}
+---
+- runFlow:
+    when:
+      true: ${LAUNCH == "true"}
+    commands:
+      - launchApp
+- extendedWaitUntil:
+    visible:
+      id: "learning_path_ready|referral_welcome_dialog_later_button|app_assessment_popup|no_internet_root"
+    timeout: 60000
+- tapOn:
+    id: referral_welcome_dialog_later_button
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- tapOn: "^Practice$"
+- extendedWaitUntil:
+    visible: "^Review$"
+    timeout: 30000
+- tapOn: "^Challenge$"
+- extendedWaitUntil:
+    visible: "^Leagues$"
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: "(placeholder_title|tier_list|placeholder_join_button)"
+    timeout: 30000

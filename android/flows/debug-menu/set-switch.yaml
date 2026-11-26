@@ -1,0 +1,48 @@
+# Debug Menu: set one switch row (by its resource ID, e.g. debug_switch_chucker,
+# debug_switch_bluetooth_debugging) to CHECKED (true or false). Leaves it alone when it already is.
+# Entry: any state, signed in. Exit: on the Debug Menu.
+# maestro test -e ID=debug_switch_chucker -e CHECKED=false set-switch.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  CHECKED: ${CHECKED || "true"}
+---
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_screen
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: ${ID}
+    timeout: 30000
+- runFlow:
+    when:
+      true: ${CHECKED == "true"}
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: ${ID}
+              checked: false
+          commands:
+            - tapOn:
+                id: ${ID}
+      - assertVisible:
+          id: ${ID}
+          checked: true
+- runFlow:
+    when:
+      true: ${CHECKED != "true"}
+    commands:
+      - runFlow:
+          when:
+            visible:
+              id: ${ID}
+              checked: true
+          commands:
+            - tapOn:
+                id: ${ID}
+      - assertVisible:
+          id: ${ID}
+          checked: false
