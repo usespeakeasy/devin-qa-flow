@@ -1,0 +1,20 @@
+# Lesson generation screen > back chevron: Home shows and the generation screen is gone.
+# Home popups ("Made for you" sheet, referral) that open over Home are closed by common/home-popups.yaml.
+# Entry: the generation screen. Exit: Home (`main_tab_home` or `learning_path_ready`; a deep-link cold start has no `home_root_ready`).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: targeted_practice_pre_lesson_preparation_back_button
+- extendedWaitUntil:
+    notVisible:
+      id: targeted_practice_pre_lesson_preparation_screen
+    timeout: 10000
+- runFlow: ../../common/home-popups.yaml
+- extendedWaitUntil:
+    visible:
+      id: "(main_tab_home|learning_path_ready|home_root_ready)"
+    timeout: 10000
+- assertNotVisible:
+    id: targeted_practice_pre_lesson_preparation_screen

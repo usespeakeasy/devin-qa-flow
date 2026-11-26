@@ -1,0 +1,23 @@
+# Lesson generation screen: generation ends and the drill lesson opens (a restore prompt is answered Start over).
+# Entry: the generation screen. Exit: the drill lesson (`drill_lesson_root`), no generation screen or tip.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: "(drill_lesson_root|simple_dialog_negative_button)"
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: simple_dialog_negative_button
+    commands:
+      - tapOn:
+          id: simple_dialog_negative_button
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_root
+    timeout: 15000
+- assertNotVisible:
+    id: targeted_practice_pre_lesson_preparation_screen

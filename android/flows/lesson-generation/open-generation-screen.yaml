@@ -1,0 +1,16 @@
+# Cold start from a `speak-dev://lesson?id=` deep link to a generate-on-start lesson: the plain loader, then the
+# lesson generation screen (panel 6k, speak-android#9762) once generation has taken 500 ms.
+# Entry: any signed-in state; the lesson must be `launchMode: generate-on-start` (or the QA-only patch with
+# `debug.qa.gos=1` and a slow generation via `debug.qa.gen_delay_ms`). Exit: the generation screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- stopApp
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: targeted_practice_pre_lesson_preparation_screen
+    timeout: 20000
+- assertVisible:
+    id: targeted_practice_pre_lesson_preparation_back_button
