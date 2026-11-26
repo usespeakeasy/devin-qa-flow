@@ -1,0 +1,33 @@
+# Running app tab deep link LINK (e.g. speak-dev://challenges, me, practice, course) selects TAB_ID and shows
+# ARRIVAL_ID (id regex), then the Home tab is tapped and Home shows again.
+# Entry: Home (learning_path_ready), signed in. Exit: Home tab. Saves SHOT.png at the tab.
+# maestro test -e LINK=speak-dev://challenges -e TAB_ID=main_tab_challenges -e ARRIVAL_ID="challenge_tab_screen|challenge_tab_root" -e SHOT=link deep-link-tab.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "deep-link-tab"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- openLink: ${LINK}
+- extendedWaitUntil:
+    visible:
+      id: ${TAB_ID}
+      selected: true
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- assertVisible:
+    id: main_tab_home
+    selected: true

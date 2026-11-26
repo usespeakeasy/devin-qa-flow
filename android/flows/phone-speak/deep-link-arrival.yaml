@@ -1,0 +1,21 @@
+# Running app Phone Speak deep link LINK (speak-dev://phone-speak, ...?action=schedule) routes through the Practice
+# tab into Phone Speak: the call screen, the intro, the AI data alert, the schedule screens or a paywall.
+# Entry: Home (learning_path_ready), signed in. Exit: the arrival screen (the case script reads which one with
+# harness dump, then runs leave-to-practice.yaml). Saves SHOT.png at the arrival.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "phone-speak-link"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- openLink: ${LINK}
+- extendedWaitUntil:
+    visible:
+      id: "phone_speak_call_screen|phone_speak_call_end_call|phone_speak_call_start_failed|phone_speak_intro_screen|ai_data_consent_alert|phone_speak_schedule_standalone_screen|phone_speak_schedule_standalone_loading|phone_speak_schedule_cta_screen|onboarding_premium_intro_ready|onboarding_premium_intro_error|main-editor-container"
+    timeout: 45000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}

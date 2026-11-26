@@ -1,0 +1,51 @@
+# Leave whatever a Phone Speak deep link opened (call: End call, retried while the call screen stays; intro: close;
+# AI data alert: Don't allow; schedule screens: Back) and land on Practice main with the Practice tab selected.
+# Back is never pressed on the call screen: it leaves the app there.
+# Entry: a screen deep-link-arrival.yaml reached. Exit: Practice main (practice_tab_list).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: ai_data_consent_alert_dont_allow
+    optional: true
+- repeat:
+    times: 3
+    while:
+      visible:
+        id: phone_speak_call_end_call
+    commands:
+      - tapOn:
+          id: phone_speak_call_end_call
+      - extendedWaitUntil:
+          notVisible:
+            id: phone_speak_call_end_call
+          timeout: 10000
+          optional: true
+- tapOn:
+    id: phone_speak_intro_close
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "practice_tab_list|phone_speak_schedule_cta_screen|phone_speak_schedule_standalone_screen"
+    timeout: 20000
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: "practice_tab_list|phone_speak_call_screen"
+    commands:
+      - back
+- runFlow:
+    when:
+      notVisible:
+        id: "practice_tab_list|phone_speak_call_screen"
+    commands:
+      - back
+- extendedWaitUntil:
+    visible:
+      id: practice_tab_list
+    timeout: 30000
+- assertVisible:
+    id: main_tab_practice
+    selected: true

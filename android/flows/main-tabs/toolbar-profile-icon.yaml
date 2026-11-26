@@ -1,0 +1,52 @@
+# Toolbar Profile icon on an account whose tab bar has no Profile tab: the Challenge tab profile_icon shows and opens
+# Profile, Back returns to Challenge; then the Free Talk tab loads (the case script reads whether its toolbar has
+# action_profile with harness `has`; the Compose Free Talk header on develop 602fa6e2b4 has none). Ends on Free Talk.
+# Entry: Home ready after a cold start with the QA-only `log.tag.QA_NOPROFILE DEBUG` patch (drops the Profile tab;
+# see INDEX). Saves SHOT-challenge.png and SHOT-free-talk.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "toolbar-profile"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 60000
+- assertNotVisible:
+    id: main_tab_profile
+- tapOn:
+    id: main_tab_challenges
+- extendedWaitUntil:
+    visible:
+      id: profile_icon
+    timeout: 20000
+- takeScreenshot: ${SHOT}-challenge
+- tapOn:
+    id: profile_icon
+- extendedWaitUntil:
+    visible:
+      id: "stat_streak_title|stat_sentences_title"
+    timeout: 30000
+- back
+- extendedWaitUntil:
+    visible:
+      id: profile_icon
+    timeout: 20000
+- assertVisible:
+    id: main_tab_challenges
+    selected: true
+- tapOn:
+    id: main_tab_free_talk
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_intro_dialog
+    timeout: 4000
+    optional: true
+- tapOn:
+    id: ai_tutor_intro_dialog_get_started_button
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: ai_tutor_history_button
+    timeout: 30000
+- takeScreenshot: ${SHOT}-free-talk
