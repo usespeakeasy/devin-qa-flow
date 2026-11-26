@@ -1,0 +1,43 @@
+# Debug Menu > Feature flag override, no search: scroll the list to the "Speak Flags" group and stop with its three
+# rows (cancellationOffers, pronunciationCoach, referrals) on screen. The case script reads their order from a harness
+# `dump` (y of `debug_feature_flag_value_<flag>`). Read-only. Checks the names FeatureFlagsProperties lists.
+# Entry: any state, signed in (the flow cold-starts the app; a search left in the field from an earlier run is cleared).
+# Exit: the override list scrolled to Speak Flags. Saves SHOT.png.
+# Selectors: the group header has no resource-id (text fallback `Speak Flags`).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "speak-flags-group"}
+---
+- launchApp:
+    stopApp: true
+- openLink: speak-dev://debug-menu
+- extendedWaitUntil:
+    visible:
+      id: debug_menu_feature_flag_override
+    timeout: 30000
+- tapOn:
+    id: debug_menu_feature_flag_override
+- extendedWaitUntil:
+    visible:
+      id: debug_feature_flag_search
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      text: "Speak Flags"
+    direction: DOWN
+    timeout: 60000
+    speed: 60
+- scrollUntilVisible:
+    element:
+      id: debug_feature_flag_value_referrals
+    direction: DOWN
+    timeout: 20000
+    speed: 20
+- assertVisible:
+    id: debug_feature_flag_value_cancellationOffers
+- assertVisible:
+    id: debug_feature_flag_value_pronunciationCoach
+- assertVisible:
+    id: debug_feature_flag_value_referrals
+- takeScreenshot: ${SHOT}

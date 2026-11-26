@@ -1,0 +1,34 @@
+# Sign-in options > "Continue with PROVIDER" (e.g. Naver, LINE, KakaoTalk) starts the provider's SDK and opens its
+# login page in a Chrome Custom Tab whose URL matches URL (e.g. ".*naver\\.com.*", ".*line\\.me.*"). Then system Back
+# closes the tab and the app shows the sign-in options or the signed-out storybook again (no crash).
+# Shows that the provider SDK loads and starts its auth flow; a completed sign-in needs a real provider account.
+# Entry: sign-in options sheet (`auth_options_screen`, after open-sign-in-options.yaml). Chrome first-run dismissed.
+# Exit: `auth_options_screen` or `onboarding_storybook_sign_in_button`. Saves SHOT.png on the provider page.
+# Selectors: the provider rows have no resource-id (text fallback); `url_bar` is Chrome's.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  PROVIDER: ${PROVIDER || "Naver"}
+  URL: ${URL || ".+"}
+  SHOT: ${SHOT || "provider-page"}
+---
+- tapOn: "Continue with ${PROVIDER}"
+- extendedWaitUntil:
+    visible:
+      id: url_bar
+      text: ${URL}
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- pressKey: Back
+- waitForAnimationToEnd:
+    timeout: 2000
+- runFlow:
+    when:
+      notVisible:
+        id: "auth_options_screen|onboarding_storybook_sign_in_button"
+    commands:
+      - pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: "auth_options_screen|onboarding_storybook_sign_in_button"
+    timeout: 20000
