@@ -1,0 +1,22 @@
+# Referral screen > "Don't miss your payout!" card > Add phone number (`payout_unclaimable_add_number`): the phone
+# number input (`PhoneNumberInput` entry, source Referral) opens.
+# Entry: referral screen on an account with no phone number (QA-only referral patch on dev pool accounts, any
+# mode that serves a referral status). Exit: referral_phone_number_input_screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: payout_unclaimable_add_number
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- tapOn:
+    id: payout_unclaimable_add_number
+- extendedWaitUntil:
+    visible:
+      id: referral_phone_number_input_screen
+    timeout: 15000
+- assertVisible:
+    id: phone_country_button

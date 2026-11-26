@@ -1,0 +1,18 @@
+# Referral Welcome popup already showing over Main: "Later" closes it to Main.
+# Entry: referral_welcome_dialog_root showing (clear `debug.qa.popup` first on QA builds). Exit: Main.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: referral_welcome_dialog_root
+- tapOn:
+    id: referral_welcome_dialog_later_button
+- extendedWaitUntil:
+    notVisible:
+      id: referral_welcome_dialog_root
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: main_tab_home
+    timeout: 20000

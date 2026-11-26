@@ -1,0 +1,44 @@
+# Referral > Add phone number > country selector, then back out step by step: the picker's back arrow
+# (`phone_country_back`) returns to the input with the country unchanged, the input's Cancel (`cancel_button`)
+# returns to the referral screen, and the referral screen's close (`exit`) returns to the screen under it.
+# Entry: referral screen, account with no phone number (QA-only referral patch on dev pool accounts).
+# Exit: the screen under the referral screen (UNDER_ID, e.g. action_settings for Profile).
+# maestro test -e UNDER_ID=action_settings -e COUNTRY_TEXT='.*United States \(\+1\)' phone-input-back-chain.yaml
+# COUNTRY_TEXT matches the selector's label (the account's default country) before and after the picker.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: add-phone-number.yaml
+- tapOn:
+    id: phone_country_button
+- extendedWaitUntil:
+    visible:
+      id: phone_country_picker
+    timeout: 10000
+- tapOn:
+    id: phone_country_back
+- extendedWaitUntil:
+    visible:
+      id: referral_phone_number_input_screen
+    timeout: 10000
+- assertNotVisible:
+    id: phone_country_picker
+- assertVisible:
+    text: ${COUNTRY_TEXT}
+- tapOn:
+    id: cancel_button
+- extendedWaitUntil:
+    visible:
+      id: referral_screen
+    timeout: 10000
+- assertNotVisible:
+    id: referral_phone_number_input_screen
+- tapOn:
+    id: exit
+- extendedWaitUntil:
+    visible:
+      id: ${UNDER_ID}
+    timeout: 15000
+- assertNotVisible:
+    id: referral_screen

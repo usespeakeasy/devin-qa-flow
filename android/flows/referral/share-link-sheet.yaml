@@ -1,0 +1,23 @@
+# Referral screen > Share your link: the system share sheet (com.android.intentresolver chooser) opens with the
+# invite text and the referral link. Stops on the sheet so the caller can screenshot it; share-link-pick.yaml
+# picks a target.
+# Entry: referral screen on a paid tier (the share button needs Premium or Plus; Subscription override works).
+# Exit: the share sheet. Selectors: "Share your link" (the share button has no resource-id), chooser ids
+# chooser_header, content_preview_text.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      text: "Share your link"
+    direction: DOWN
+    timeout: 15000
+- tapOn: "Share your link"
+- extendedWaitUntil:
+    visible:
+      id: chooser_header
+    timeout: 15000
+- assertVisible:
+    id: content_preview_text
+    text: ".*https://app\\.usespeak\\.dev/.*"

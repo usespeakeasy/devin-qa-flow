@@ -1,0 +1,20 @@
+# Phone number input: type NUMBER, move the cursor LEFT_N places left with the D-pad, type DIGIT. The input shows
+# EXPECT, so the digit landed where the cursor was, not at the end.
+# Entry: referral_phone_number_input_screen. Exit: the same screen, not saved.
+# maestro test -e NUMBER=2025550123 -e DIGIT=9 -e EXPECT='.*' phone-number-cursor.yaml (LEFT_N is 3: three key presses)
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: input
+- inputText: ${NUMBER}
+- pressKey: Remote Dpad Left
+- pressKey: Remote Dpad Left
+- pressKey: Remote Dpad Left
+- inputText: ${DIGIT}
+- extendedWaitUntil:
+    visible:
+      id: input
+      text: ${EXPECT}
+    timeout: 5000

@@ -1,0 +1,22 @@
+# speak-dev://refer opens the referral screen (`Referral` entry) over Main; system Back returns to Main.
+# Entry: Main, signed in, referral on (QA-only referral patch on dev pool accounts). Exit: Main (main_tab_home).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- openLink: speak-dev://refer
+- extendedWaitUntil:
+    visible:
+      id: referral_screen
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: share_link
+    timeout: 20000
+- back
+- extendedWaitUntil:
+    visible:
+      id: main_tab_home
+    timeout: 20000
+- assertNotVisible:
+    id: referral_screen

@@ -1,0 +1,28 @@
+# Referral screen > earnings section "?" (`button`): the earnings info dialog (`referral_earnings_info_dialog`,
+# `ReferralEarningsInfoDialog` entry) opens, and system Back closes it back to the referral screen.
+# Entry: referral screen (referral on: QA-only referral patch on dev pool accounts). Exit: referral screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- scrollUntilVisible:
+    element:
+      id: button
+    direction: DOWN
+    timeout: 20000
+    centerElement: true
+- tapOn:
+    id: button
+- extendedWaitUntil:
+    visible:
+      id: referral_earnings_info_dialog
+    timeout: 10000
+- waitForAnimationToEnd:
+    timeout: 2000
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: referral_earnings_info_dialog
+    timeout: 5000
+- assertVisible:
+    id: referral_screen

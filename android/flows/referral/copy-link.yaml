@@ -1,0 +1,19 @@
+# Referral screen > copy icon next to the share link (`share_link_copy_button`): the link is copied and the
+# referral screen stays. The caller checks `Track 'Referral Link Copied'` (with the url) in logcat.
+# Entry: referral screen (referral on: QA-only referral patch on dev pool accounts). Exit: referral screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: share_link
+    timeout: 20000
+- tapOn:
+    id: share_link_copy_button
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: referral_screen
+- assertVisible:
+    id: share_link

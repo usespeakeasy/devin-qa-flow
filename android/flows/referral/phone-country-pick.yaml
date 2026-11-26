@@ -1,0 +1,49 @@
+# Phone number input > country selector: Back from the picker keeps the country (no result), then searching
+# QUERY and tapping its row returns the country (`PhoneCountryPickerResult`) to the input.
+# Entry: referral_phone_number_input_screen. Exit: the same screen with REGION selected.
+# maestro test -e QUERY=Albania -e REGION=AL -e PICKED='.*Albania \(\+355\)' phone-country-pick.yaml
+# PICKED matches the selector's label text (a child of phone_country_button).
+# Selectors: phone_country_button, phone_country_picker, phone_country_back, phone_country_search,
+# phone_country_row_<REGION>.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: phone_country_button
+- extendedWaitUntil:
+    visible:
+      id: phone_country_picker
+    timeout: 10000
+- tapOn:
+    id: phone_country_back
+- extendedWaitUntil:
+    visible:
+      id: referral_phone_number_input_screen
+    timeout: 10000
+- assertNotVisible:
+    id: phone_country_picker
+- tapOn:
+    id: phone_country_button
+- extendedWaitUntil:
+    visible:
+      id: phone_country_picker
+    timeout: 10000
+- tapOn:
+    id: phone_country_search
+- inputText: ${QUERY}
+- extendedWaitUntil:
+    visible:
+      id: phone_country_row_${REGION}
+    timeout: 10000
+- hideKeyboard
+- tapOn:
+    id: phone_country_row_${REGION}
+- extendedWaitUntil:
+    visible:
+      id: referral_phone_number_input_screen
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      text: ${PICKED}
+    timeout: 5000

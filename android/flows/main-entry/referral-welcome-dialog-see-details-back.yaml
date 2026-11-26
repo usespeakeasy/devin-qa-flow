@@ -1,0 +1,27 @@
+# Referral Welcome popup already showing over Main: "See details" opens the referral screen (referral_screen),
+# then system Back returns to Main with no second popup.
+# Entry: referral_welcome_dialog_root showing. With the QA build's `debug.qa.popup referral`, clear the prop once the
+# dialog shows, or the popup chain shows it again when Main resumes. Exit: Main.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: referral_welcome_dialog_root
+- tapOn:
+    id: referral_welcome_dialog_see_details_button
+- extendedWaitUntil:
+    visible:
+      id: referral_screen
+    timeout: 20000
+- assertNotVisible:
+    id: referral_welcome_dialog_root
+- back
+- extendedWaitUntil:
+    visible:
+      id: main_tab_home
+    timeout: 20000
+- assertNotVisible:
+    id: referral_screen
+- assertNotVisible:
+    id: referral_welcome_dialog_root

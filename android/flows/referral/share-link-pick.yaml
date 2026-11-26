@@ -1,0 +1,28 @@
+# Share sheet from the referral screen: pick TARGET_TEXT (Drive on the API 36 google_apis emulator). The chooser reports the pick to ShareLinkBroadcastReceiver, and the caller checks
+# `Track 'referralShareAppOpened'` in logcat. Back on the referral screen.
+# Entry: the share sheet (share-link-sheet.yaml). Exit: referral screen.
+# maestro test -e 'TARGET_TEXT=^Drive$' share-link-pick.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn: ${TARGET_TEXT}
+# Drive has two share targets that swap places as the chooser re-ranks: "Copy to clipboard" returns at once, and
+# Upload asks to set up an account on an emulator with no Google account. Cancel that alert (android:id/button2).
+- extendedWaitUntil:
+    visible:
+      id: "referral_screen|button2"
+    timeout: 15000
+- runFlow:
+    when:
+      visible:
+        id: button2
+    commands:
+      - tapOn:
+          id: button2
+- extendedWaitUntil:
+    visible:
+      id: referral_screen
+    timeout: 15000
+- assertNotVisible:
+    id: chooser_header

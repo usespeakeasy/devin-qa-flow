@@ -1,0 +1,17 @@
+# speak-dev://refer with KakaoTalk reported available: the referral screen shows the KakaoTalk share button
+# (`share_kakao_talk_button`, global flavors bind `KakaoTalkSharer`). Back returns to Main.
+# Entry: Main, paid tier, referral on, and the QA-only `debug.qa.kakao on` patch in `KakaoTalkSharer.isAvailable()`
+# (no KakaoTalk app on the emulator); LINE not installed. Exit: Main.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- openLink: speak-dev://refer
+- extendedWaitUntil:
+    visible:
+      id: referral_screen
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: share_kakao_talk_button
+    timeout: 20000
