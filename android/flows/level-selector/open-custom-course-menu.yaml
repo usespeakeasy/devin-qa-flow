@@ -1,0 +1,30 @@
+# Course Selector: scroll to custom course COURSE_ID, tap its ⋯ (ellipsis) and wait for the manage sheet
+# (rename, delete). Exit: manage sheet open; Back closes it.
+# Entry: Course Selector open (open-course-selector), `dynamic_on_demand_unit_gen` ON. Pass -e COURSE_ID (a course in the
+# Custom courses section with personalizationType customUnitGeneration).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: level_selector_ready
+    timeout: 15000
+# Centering on the small ⋯ node can time out; center the card, then tap its ⋯.
+- scrollUntilVisible:
+    element:
+      id: level_selector_level_part_card_${COURSE_ID}
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- assertVisible:
+    id: level_selector_level_part_custom_course_ellipsis_${COURSE_ID}
+- tapOn:
+    id: level_selector_level_part_custom_course_ellipsis_${COURSE_ID}
+# The sheet's `custom_course_manage_sheet` testTag is not exported as a resource-id (the sheet window has no
+# testTagsAsResourceId), so its title is the fallback.
+- extendedWaitUntil:
+    visible: "Manage Course"
+    timeout: 15000
+- assertVisible: "Rename"
+- assertVisible: "Delete"

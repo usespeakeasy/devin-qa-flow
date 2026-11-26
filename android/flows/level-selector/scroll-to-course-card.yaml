@@ -1,0 +1,18 @@
+# Course Selector: scroll until the course card COURSE_ID (`level_selector_level_part_card_<id>`) is centered.
+# Entry: Course Selector open (open-course-selector). Pass -e COURSE_ID. Precondition: COURSE_ID is in the list.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: level_selector_ready
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: level_selector_level_part_card_${COURSE_ID}
+    direction: DOWN
+    centerElement: true
+    timeout: 30000
+- assertVisible:
+    id: level_selector_level_part_card_${COURSE_ID}

@@ -1,0 +1,14 @@
+# Course Selector Close (X, `level_selector_close`) returns to Home.
+# Entry: Course Selector open. Precondition: signed-in dev account. Exit: home_root_ready.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: level_selector_close
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- assertNotVisible:
+    id: level_selector_ready

@@ -1,0 +1,17 @@
+# Course Selector by deep link `speak-dev://course-selector` from Home, waiting on the loaded list.
+# Entry: Home tab (home_root_ready). Precondition: signed-in dev account. Exit: level_selector_ready.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- openLink: speak-dev://course-selector
+- extendedWaitUntil:
+    visible:
+      id: level_selector_ready
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 2000
