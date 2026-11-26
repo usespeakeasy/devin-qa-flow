@@ -1,0 +1,13 @@
+# Intake call end-call sheet: rotating back to portrait keeps the sheet open (speak-android#9765).
+# Entry: the end-call sheet in landscape (intake-call-end-sheet-landscape). Exit: the end-call sheet in portrait.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- setOrientation: PORTRAIT
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call_sheet_end_call
+    timeout: 10000
+- assertVisible:
+    id: phone_speak_call_end_call_sheet_keep_talking

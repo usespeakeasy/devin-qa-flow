@@ -1,0 +1,16 @@
+# Intake call end-call sheet: Keep talking closes the sheet and the call goes on (speak-android#9765).
+# Entry: the end-call sheet (intake-call-end-asks or intake-call-back-asks). Exit: the live call, no sheet.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: phone_speak_call_end_call_sheet_keep_talking
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_call_end_call_sheet_end_call
+    timeout: 10000
+- assertVisible:
+    id: phone_speak_call_end_call
+- assertVisible:
+    id: phone_speak_call_screen

@@ -1,0 +1,12 @@
+# Intake call end-call sheet: End call in the sheet ends the call (speak-android#9765).
+# Entry: the end-call sheet. Exit: the call screen is gone (follow with intake-call-stays-on-courses).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: phone_speak_call_end_call_sheet_end_call
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_call_screen
+    timeout: 20000

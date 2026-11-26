@@ -1,0 +1,15 @@
+# Phone Speak lesson call: End call ends the call at once, with no "End the call early?" sheet (speak-android#9765
+# asks only on the Meet the Tutor intake call). The call closes to "Call complete!" (and the survey) or the caller.
+# Entry: a live lesson call (lesson-call-open). Exit: call controls gone.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: phone_speak_call_end_call
+- extendedWaitUntil:
+    notVisible:
+      id: phone_speak_call_end_call
+    timeout: 15000
+- assertNotVisible:
+    id: phone_speak_call_end_call_sheet_end_call

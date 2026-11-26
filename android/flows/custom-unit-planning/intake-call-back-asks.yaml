@@ -1,0 +1,14 @@
+# Live Meet the Tutor intake call: system Back opens the "End the call early?" sheet and the call stays up (speak-android#9765).
+# On develop before #9765 Back ends the call, so this flow fails on the sheet wait there.
+# The sheet is a modal window, so phone_speak_call_screen is not in the tree while it is open; the call staying up
+# is checked by the next flow (Keep talking / Back) and by no 'Phone Speak Ended' in logcat.
+# Entry: live intake call, no sheet open. Exit: the end-call sheet over the live call.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- pressKey: Back
+- extendedWaitUntil:
+    visible:
+      id: phone_speak_call_end_call_sheet_end_call
+    timeout: 10000
