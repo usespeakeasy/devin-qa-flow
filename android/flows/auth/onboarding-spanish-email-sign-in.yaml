@@ -1,0 +1,12 @@
+# Onboarding route (Spanish) > sign-in options > Email > EMAIL and PASSWORD > Sign in > premium intro > Home.
+# Entry: app data cleared (`qa_android.py fresh`), `onboarding_storybook_screen` on screen.
+# Params (run time only): EMAIL, PASSWORD.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: onboarding-spanish-sign-in-options.yaml
+- tapOn:
+    id: button_email
+- runFlow: ../../common/submit-email-sign-in.yaml
+- runFlow: ../../common/dismiss-premium-intro.yaml

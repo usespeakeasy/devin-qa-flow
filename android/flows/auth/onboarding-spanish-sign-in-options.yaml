@@ -1,0 +1,11 @@
+# Onboarding route to sign-in: storybook > Get started > Spanish > sign-up options sheet > "Already have an
+# account? Log in" > sign-in options (`auth_options_screen`). The sign-in then carries the onboarding's
+# AuthRequest (english-spanish selected). Stops on the options so the run picks a provider.
+# Entry: app data cleared (`qa_android.py fresh`), `onboarding_storybook_screen` on screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../onboarding/storybook-get-started.yaml
+- runFlow: ../onboarding/pick-spanish-open-auth.yaml
+- runFlow: ../onboarding/auth-options-switch-to-sign-in.yaml
