@@ -1,0 +1,42 @@
+# Challenge tab: Leagues page, switch to Challenges, then back to Leagues. Both pages arrive each time.
+# Entry: any Main tab, signed in, Leagues on. Exit: the Leagues page on the Challenge tab.
+# LEAGUES_ID is the Leagues page node this account shows (placeholder_join_button when locked, tier_list when
+# joined); pass it with -e. Selectors: page tabs by text (their leagues_tab / challenges_tab test tags are not in the tree, CLNT-1280).
+# maestro test -e LEAGUES_ID=placeholder_join_button switch-pages-back.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_challenges
+- extendedWaitUntil:
+    visible:
+      id: challenge_tab_screen
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: ${LEAGUES_ID}
+    commands:
+      - tapOn:
+          text: "^Leagues$"
+- extendedWaitUntil:
+    visible:
+      id: ${LEAGUES_ID}
+    timeout: 30000
+- tapOn:
+    text: "^Challenges$"
+- extendedWaitUntil:
+    visible:
+      id: challenges_completed_button
+    timeout: 30000
+- assertNotVisible:
+    id: ${LEAGUES_ID}
+- tapOn:
+    text: "^Leagues$"
+- extendedWaitUntil:
+    visible:
+      id: ${LEAGUES_ID}
+    timeout: 30000
+- assertVisible:
+    id: challenge_tab_screen

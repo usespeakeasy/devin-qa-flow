@@ -1,19 +1,25 @@
-# Challenge tab with Leagues on, organization account: the header also shows Leaderboard and the page loads
-# ORG_NAME. Entry: any Main tab. Precondition: Leagues on, account in an organization. Exit: Leaderboard page.
-# Saves SHOT.png. Selectors: the Leaderboard page has no resource-id (text fallback).
+# Challenge tab > Leaderboard page: the organization leaderboard loads and shows ORG_NAME.
+# Entry: any Main tab. Precondition: Leagues on, account in an organization (or the QA-only
+# debug.qa.org_leaderboard=1 patch, organization "QA Org"). Exit: Leaderboard page.
+# Selectors: page tabs by text (their test tags are not in the tree, CLNT-1280); the Leaderboard page content has no resource-id (ORG_NAME text is the check).
 appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
   ORG_NAME: ${ORG_NAME || "QA Org"}
   SHOT: ${SHOT || "leaderboard-page"}
 ---
-- tapOn: "Challenge"
+- tapOn:
+    id: main_tab_challenges
 - extendedWaitUntil:
-    visible: "Leaderboard"
+    visible:
+      text: "^Leaderboard$"
     timeout: 20000
-- assertVisible: "Leagues"
-- assertVisible: "Challenges"
-- tapOn: "Leaderboard"
+- assertVisible:
+    text: "^Leagues$"
+- assertVisible:
+    text: "^Challenges$"
+- tapOn:
+    text: "^Leaderboard$"
 - extendedWaitUntil:
     visible: ".*${ORG_NAME}.*"
     timeout: 20000

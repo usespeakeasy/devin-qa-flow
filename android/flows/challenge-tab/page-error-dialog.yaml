@@ -1,0 +1,32 @@
+# Challenge tab: a page whose load fails shows the generic error dialog once; OK closes it and the tab stays.
+# PAGE is the page tab title (Leagues or Leaderboard). Pass it with -e. The page tabs are tapped by text
+# (their test tags are not in the tree, CLNT-1280).
+# Entry: any Main tab, signed in, with the page's load set to fail (airplane mode on a Premium account for
+# Leagues; the QA-only debug.qa.org_leaderboard=error patch for the Leaderboard). Exit: the same page, no dialog.
+# Selectors: the generic error text and OK have no resource-id on the Navigation 3 root (text fallback, CLNT-1361).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_challenges
+- waitForAnimationToEnd:
+    timeout: 3000
+# The page may be the tab's first page, whose error shows on its own; tap its tab only when no dialog shows yet.
+- runFlow:
+    when:
+      notVisible: "An unexpected error occurred\\."
+    commands:
+      - tapOn:
+          text: "^${PAGE}$"
+          optional: true
+- extendedWaitUntil:
+    visible: "An unexpected error occurred\\."
+    timeout: 30000
+- takeScreenshot: page-error-dialog
+- tapOn: "^OK$"
+- extendedWaitUntil:
+    notVisible: "An unexpected error occurred\\."
+    timeout: 10000
+- assertVisible:
+    id: challenge_tab_screen
