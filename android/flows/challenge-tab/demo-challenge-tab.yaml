@@ -1,0 +1,29 @@
+# Debug Menu demo "Challenge tab (Compose)" (DemoChallengeTabKey) by speak-dev://demos?id=challenge-tab:
+# opens on Leagues (LEAGUES_ID), shows no Leaderboard page tab, and Back returns to the Demos list.
+# Entry: signed in (cold starts). Pass LEAGUES_ID with -e (placeholder_join_button when Leagues is locked).
+# Exit: the Demos list. Selectors: page tabs and the Demos row title are text (no ids in the tree, CLNT-1280).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow:
+    file: ../debug-demos/nav-demo-link.yaml
+    env:
+      DEMO_ID: challenge-tab
+      ROOT_TEXT: "^Challenges$"
+- extendedWaitUntil:
+    visible:
+      id: ${LEAGUES_ID}
+    timeout: 30000
+- assertVisible: "^Leagues$"
+- assertNotVisible: "^Leaderboard$"
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: challenge_tab_screen
+    timeout: 15000
+# The Demos list comes back scrolled to the top, so scroll to the demo's row.
+- scrollUntilVisible:
+    element:
+      text: "^Challenge tab \\(Compose\\)$"
+    timeout: 30000
