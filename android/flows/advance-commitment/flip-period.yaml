@@ -1,0 +1,15 @@
+# Move a time picker by 12 hours: tap the AM or PM row (PERIOD) that is not selected. Picker rows are
+# selectable radio buttons; a tap scrolls the column to that row and picks it. The tree does not mark the
+# selected row, so the caller reads it from the row nearest the picker's centre and passes the other one.
+# Entry and exit: a screen with the picker. Params: PICKER (advance_commitment_schedule_time_picker or
+# advance_commitment_edit_time_picker), PERIOD (AM or PM, the row to pick).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    text: ^${PERIOD}$
+    childOf:
+      id: ${PICKER}
+- waitForAnimationToEnd:
+    timeout: 3000

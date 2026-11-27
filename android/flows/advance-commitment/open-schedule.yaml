@@ -1,0 +1,14 @@
+# Tap the Home button while nothing is scheduled and wait for the schedule screen ("Ready to make it a habit?").
+# Entry: Home with no commitment. Exit: schedule screen (advance_commitment_schedule_ready).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: advance_commitment_home_action_open
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_schedule_ready
+    timeout: 20000
+- assertVisible:
+    id: advance_commitment_schedule_action_commit

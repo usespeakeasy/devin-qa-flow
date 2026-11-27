@@ -1,0 +1,13 @@
+# Tap "I'm committed!" and wait up to TIMEOUT ms for "See you tomorrow!" (a slowed PUT needs more than schedule-commit.yaml waits).
+# Entry: schedule screen. Exit: confirmation (advance_commitment_confirmation_ready).
+# Params: TIMEOUT (ms to wait for the confirmation; a slowed PUT needs more).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: advance_commitment_schedule_action_commit
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_confirmation_ready
+    timeout: ${TIMEOUT}

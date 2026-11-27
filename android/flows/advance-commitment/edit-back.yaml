@@ -1,0 +1,11 @@
+# Press system back on the edit sheet and wait for it to close.
+# Entry: edit sheet. Exit: the screen under the sheet (confirmation or Home).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: advance_commitment_edit_ready
+    timeout: 10000

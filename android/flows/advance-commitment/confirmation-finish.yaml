@@ -1,0 +1,12 @@
+# Tap "I'll be back tomorrow!" on the confirmation and wait for Home.
+# Entry: confirmation. Exit: Home (home_root_ready).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: advance_commitment_confirmation_action_finish
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000

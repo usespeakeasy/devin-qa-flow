@@ -1,0 +1,8 @@
+# Tap the node with resource id ID and return at once (the case script checks what follows from the log).
+# Used to tap Save, Delete or "I'm committed!" while a slowed request is out. Params: ID (required).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: ${ID}

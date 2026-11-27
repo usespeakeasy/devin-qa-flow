@@ -1,0 +1,12 @@
+# The confirmation ("See you tomorrow!") shows TIME (a regex such as "9:00 AM").
+# Entry and exit: confirmation. Params: TIME (required).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_confirmation_ready
+    timeout: 20000
+- assertVisible:
+    text: ${TIME}

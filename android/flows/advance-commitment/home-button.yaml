@@ -1,0 +1,12 @@
+# Home shows the Advance Commitment button (advance_commitment_home_action_open). Its label and time are not
+# in the accessibility tree, so the case script reads the state from the node width (round button when
+# nothing is scheduled, wider pill with the time when scheduled) and the `Home Button Shown` event.
+# Entry: Home. Precondition: dev Split advance_commitment_android not off.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_home_action_open
+    timeout: 30000

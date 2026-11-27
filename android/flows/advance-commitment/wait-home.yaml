@@ -1,0 +1,14 @@
+# Wait for Home (home_root_ready) and the Advance Commitment button, for up to TIMEOUT ms.
+# Entry: any screen that returns to Home. Params: TIMEOUT (ms).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: ${TIMEOUT}
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_home_action_open
+    timeout: ${TIMEOUT}

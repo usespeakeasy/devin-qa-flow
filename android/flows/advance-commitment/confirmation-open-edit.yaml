@@ -1,0 +1,12 @@
+# From the confirmation tap the lesson time row and wait for the edit sheet.
+# Entry: confirmation. Exit: edit sheet (advance_commitment_edit_ready).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: advance_commitment_confirmation_action_edit
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_ready
+    timeout: 20000

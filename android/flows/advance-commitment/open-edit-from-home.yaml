@@ -1,0 +1,12 @@
+# Tap the Home pill while a lesson is scheduled and wait for the edit sheet.
+# Entry: Home with a commitment. Exit: edit sheet (advance_commitment_edit_ready).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: advance_commitment_home_action_open
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_ready
+    timeout: 20000
