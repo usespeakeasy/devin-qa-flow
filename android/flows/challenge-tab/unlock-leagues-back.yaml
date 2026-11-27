@@ -1,7 +1,8 @@
 # Challenge tab > Leagues (locked, no league yet) > Unlock Leagues: the premium intro opens over Main
 # (the dev emulator shows its "An unexpected error occurred." product error, closed with OK), Back returns
 # to the locked Leagues page on the Challenge tab. Saves SHOT.png (premium intro) and SHOT-back.png.
-# Entry: any Main tab, on an account without Leagues (the Leagues page shows `placeholder_join_button`).
+# Entry: any Main tab, on an account without Leagues (the Leagues page shows `placeholder_join_button`, or
+# `leagues_locked_join_button` with monetization_component_rebrand_ui on a variant: pass JOIN_ID).
 # Exit: the same Leagues page.
 # Selectors: the generic error text and OK button have no app resource-id (text fallback, CLNT-2155);
 # the Leagues page tab is tapped by text only when another page is selected (CLNT-1280).
@@ -9,6 +10,7 @@ appId: ${APP_ID}
 env:
   APP_ID: ${APP_ID || "com.selabs.speak.dev"}
   SHOT: ${SHOT || "unlock-leagues"}
+  JOIN_ID: ${JOIN_ID || "placeholder_join_button"}
 ---
 - tapOn:
     id: main_tab_challenges
@@ -19,16 +21,16 @@ env:
 - runFlow:
     when:
       notVisible:
-        id: placeholder_join_button
+        id: ${JOIN_ID}
     commands:
       - tapOn:
           text: "^Leagues$"
 - extendedWaitUntil:
     visible:
-      id: placeholder_join_button
+      id: ${JOIN_ID}
     timeout: 30000
 - tapOn:
-    id: placeholder_join_button
+    id: ${JOIN_ID}
 - extendedWaitUntil:
     visible:
       id: "onboarding_premium_intro_(ready|error)"
@@ -48,7 +50,7 @@ env:
 - back
 - extendedWaitUntil:
     visible:
-      id: placeholder_join_button
+      id: ${JOIN_ID}
     timeout: 15000
 - assertVisible:
     id: main_tab_challenges

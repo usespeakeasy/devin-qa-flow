@@ -1,0 +1,42 @@
+# Enrolled Leagues page: the standings list centers on the learner's row (NAME), the row is still there after
+# switching to another Main tab and back to the Challenge tab.
+# Entry: Leagues page with standings (open-leagues-page.yaml), account enrolled (no dev account is: QA-only
+# `debug.qa.leagues=enrolled` patch in LeaguesRepositoryImpl puts NAME at position 14 of 20, see QA speak-android#9793).
+# Exit: Leagues page. Saves SHOT.png after the return.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  NAME: ${NAME || "speaklearner"}
+  SHOT: ${SHOT || "leagues-centered-return"}
+---
+- extendedWaitUntil:
+    visible:
+      id: list
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: name
+      text: ${NAME}
+    timeout: 10000
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- assertNotVisible:
+    id: list
+- tapOn:
+    id: main_tab_challenges
+- extendedWaitUntil:
+    visible:
+      id: list
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: name
+      text: ${NAME}
+    timeout: 10000
+- assertVisible:
+    id: rank
+- takeScreenshot: ${SHOT}

@@ -1,0 +1,35 @@
+# Lesson end Leagues step with the username prompt: the Choose your username sheet opens over the step with NAME,
+# system Back closes it and the Leagues step stays (rank animation, Continue shows).
+# Entry: right after `qa_android.py bridge openLessonEnd flowFile=<LessonFinishedFlow JSON with order [leagues],
+# leagues.displayChangeUsernamePrompt=true and an active entrant NAME>` (fixture android/fixtures/leagues-username-lesson-end.json, adb push it to /data/local/tmp).
+# Exit: the lesson end Leagues step with Continue enabled.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  NAME: ${NAME || "speaklearner"}
+---
+- extendedWaitUntil:
+    visible:
+      id: leagues_username_input_screen
+    timeout: 30000
+- assertVisible:
+    id: username_input
+    text: ".*${NAME}.*"
+- takeScreenshot: lesson-end-username-sheet
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: leagues_username_input_screen
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: rank
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: primary_button
+      enabled: true
+    timeout: 30000
+- assertVisible:
+    id: name
+    text: ${NAME}
