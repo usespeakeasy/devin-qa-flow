@@ -7,11 +7,22 @@ env:
 - launchApp:
     stopApp: true
 # A signed-in cold start can show the referral promo or the "Find your English level" sheet
-# (app_assessment_popup) over Home; close them so learning_path_ready shows.
+# (app_assessment_popup) over Home, or the Made for you custom course sheet
+# (custom_courses_announcement_sheet, seen on Magic onboarding sign-ups); close them so learning_path_ready shows.
 - extendedWaitUntil:
     visible:
-      id: "learning_path_ready|referral_welcome_dialog_later_button|app_assessment_popup"
+      id: "learning_path_ready|referral_welcome_dialog_later_button|app_assessment_popup|custom_courses_announcement_sheet"
     timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: custom_courses_announcement_sheet
+    commands:
+      - back
+      - extendedWaitUntil:
+          visible:
+            id: "learning_path_ready|referral_welcome_dialog_later_button|app_assessment_popup"
+          timeout: 15000
 - runFlow:
     when:
       visible:

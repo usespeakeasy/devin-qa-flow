@@ -1,0 +1,34 @@
+# Failed save: airplane mode on, Home button, I'm committed! fails (the schedule screen stays and shows "Couldn't save your time."), close it, airplane mode off.
+# Entry: Home with the round button (no time saved). Exit: Home (home_root_ready), airplane mode off.
+# Selectors: the save error message has no id (text fallback). Closing offline can show generic_error_dialog over Home.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  SHOT: ${SHOT || "save-failed"}
+---
+- runFlow: ../../common/airplane-on.yaml
+- runFlow: home-button-open-schedule.yaml
+- tapOn:
+    id: advance_commitment_schedule_action_commit
+- extendedWaitUntil:
+    visible: "Couldn't save your time\\."
+    timeout: 30000
+- assertVisible:
+    id: advance_commitment_schedule_ready
+- assertNotVisible:
+    id: advance_commitment_confirmation_ready
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: advance_commitment_schedule_action_close
+- runFlow: ../../common/airplane-off.yaml
+- runFlow:
+    when:
+      visible:
+        id: generic_error_dialog
+    commands:
+      - tapOn:
+          id: generic_error_dialog_positive_button
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000

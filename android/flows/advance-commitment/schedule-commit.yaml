@@ -1,0 +1,13 @@
+# Schedule screen: I'm committed! saves the shown time and opens the confirmation (changes server state: the account now has a time).
+# Entry: the schedule screen (Home button or lesson end). Exit: the confirmation.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: advance_commitment_schedule_action_commit
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_confirmation_ready
+    timeout: 20000
+- assertVisible: ".*\\d:\\d\\d (AM|PM)"

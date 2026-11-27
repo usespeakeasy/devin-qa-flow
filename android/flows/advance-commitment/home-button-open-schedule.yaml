@@ -1,0 +1,16 @@
+# Home calendar button (round, no time saved) opens the Advance Commitment schedule screen.
+# Entry: Home with the round button (no time saved). Exit: the schedule screen.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_home_action_open
+    timeout: 15000
+- tapOn:
+    id: advance_commitment_home_action_open
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_schedule_ready
+    timeout: 15000

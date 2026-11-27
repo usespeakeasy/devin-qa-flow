@@ -1,0 +1,12 @@
+# Confirmation: I'll be back tomorrow! closes the flow and lands on Home.
+# Entry: the confirmation. Exit: Home (home_root_ready).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: advance_commitment_confirmation_action_finish
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000

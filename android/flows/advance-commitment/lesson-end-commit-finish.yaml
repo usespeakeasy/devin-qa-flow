@@ -1,0 +1,14 @@
+# Lesson end ADVANCE_COMMITMENT step (bridge openLessonEnd components=ADVANCE_COMMITMENT): I'm committed!, then I'll be back tomorrow! lands on Home.
+# Entry: right after the bridge command, account with no time saved. Exit: Home (home_root_ready).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_schedule_ready
+    timeout: 30000
+- assertVisible:
+    id: advance_commitment_schedule_action_skip
+- runFlow: schedule-commit.yaml
+- runFlow: confirmation-finish-home.yaml

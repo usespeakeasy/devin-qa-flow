@@ -1,0 +1,34 @@
+# Settings > Notifications > Daily Reminders: the Next lesson card's sheet deletes the saved time; the card reads Schedule next lesson; back to the Home tab.
+# Entry: Home, account with a time saved. Exit: Home (home_root_ready).
+# Selectors: Settings' Notifications row and the card's unscheduled title have no id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn: "^Notifications$"
+- runFlow: ../notifications/open-reminder.yaml
+- extendedWaitUntil:
+    visible:
+      id: notifications_reminder_next_lesson
+    timeout: 15000
+- tapOn:
+    id: notifications_reminder_next_lesson
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_action_delete
+    timeout: 15000
+- tapOn:
+    id: advance_commitment_edit_action_delete
+- extendedWaitUntil:
+    visible: "Schedule next lesson"
+    timeout: 15000
+- back
+- back
+- back
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 15000

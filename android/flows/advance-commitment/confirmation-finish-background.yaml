@@ -1,0 +1,9 @@
+# Confirmation: I'll be back tomorrow!, then the Home key right away (backgrounds the app during the Home button's rest).
+# Entry: the confirmation. Exit: the launcher.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: advance_commitment_confirmation_action_finish
+- pressKey: Home

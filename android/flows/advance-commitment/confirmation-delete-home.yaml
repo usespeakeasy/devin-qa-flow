@@ -1,0 +1,18 @@
+# Confirmation: edit, Delete removes the saved time and closes the flow to Home.
+# Entry: the confirmation. Exit: Home (home_root_ready).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- tapOn:
+    id: advance_commitment_confirmation_action_edit
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_ready
+    timeout: 15000
+- tapOn:
+    id: advance_commitment_edit_action_delete
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000

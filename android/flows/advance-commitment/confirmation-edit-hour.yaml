@@ -1,0 +1,26 @@
+# Confirmation: edit the saved time to HOUR (an hour row shown on the wheel, normally the saved hour + 1), Save; the confirmation shows HOUR.
+# Entry: the confirmation. Exit: the confirmation with the new time.
+# Selectors: the wheel's hour rows have no id (text fallback, first match is the hour column).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+  HOUR: "11"
+---
+- tapOn:
+    id: advance_commitment_confirmation_action_edit
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_ready
+    timeout: 15000
+- tapOn:
+    text: "^${HOUR}$"
+    index: 0
+- tapOn:
+    id: advance_commitment_edit_action_save
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_confirmation_ready
+    timeout: 20000
+- extendedWaitUntil:
+    visible: "^${HOUR}:\\d\\d (AM|PM)$"
+    timeout: 10000

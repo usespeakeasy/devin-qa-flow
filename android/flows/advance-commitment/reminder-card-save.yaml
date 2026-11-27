@@ -1,0 +1,35 @@
+# Settings > Notifications > Daily Reminders: the unscheduled Next lesson card's sheet saves a first time; the card shows it; back to the Home tab.
+# Entry: Home, account with no time saved. Exit: Home (home_root_ready).
+# Selectors: Settings' Notifications row has no id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn: "^Notifications$"
+- runFlow: ../notifications/open-reminder.yaml
+- extendedWaitUntil:
+    visible:
+      id: notifications_reminder_next_lesson
+    timeout: 15000
+- assertVisible: "Schedule next lesson"
+- tapOn:
+    id: notifications_reminder_next_lesson
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_action_save
+    timeout: 15000
+- tapOn:
+    id: advance_commitment_edit_action_save
+- extendedWaitUntil:
+    visible: "^\\d+:\\d\\d (AM|PM)$"
+    timeout: 15000
+- back
+- back
+- back
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 15000
