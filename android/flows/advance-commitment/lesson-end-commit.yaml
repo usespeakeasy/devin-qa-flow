@@ -1,0 +1,144 @@
+# Finish a path lesson (opened from the learning path so the server has its context; a lesson deep link gets a 404
+# from /v9/users/end-of-lesson-flow and no server steps), skipping every card, and walk its lesson end to the Advance Commitment step
+# ("Ready to make it a habit?", create mode), move the hour wheel, save, finish the confirmation, then walk the
+# remaining steps to Home and check the pill "Next lesson, <time>".
+# Entry: Home (EN_ES_A1-1; LOOP_ID "Make small talk" holds LESSON_ID, a drill part visible in the loop row on a new
+# account and after the loop's first lessons), signed in, Subscription override Premium (a free account hits Preview Finished), no time saved,
+# first lesson end of this app session today (the app shows the step once per session).
+# Exit: Home with the scheduled pill.
+# Selectors: the widget prompt has no resource-id (text fallback "Maybe later", as in common/finish-lesson-end.yaml).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EGG34_sections-a8b73e76e8fa_EN_ES_A1-1_qna_EN_ES_A1-1_quetal_SP_DL_IC_P2"}
+  LOOP_ID: ${LOOP_ID || "m2tmeffvyvusg65n1s4rzt77zk2zxhe6ooqqv10ysvnz39mn"}
+---
+- runFlow: ../../common/home-popups.yaml
+- scrollUntilVisible:
+    element:
+      id: learning_path_loop_${LOOP_ID}
+    direction: DOWN
+    timeout: 15000
+- waitForAnimationToEnd:
+    timeout: 2000
+- runFlow:
+    when:
+      notVisible:
+        id: learning_path_lesson_item_${LESSON_ID}
+    commands:
+      - tapOn:
+          id: learning_path_loop_${LOOP_ID}
+- extendedWaitUntil:
+    visible:
+      id: learning_path_lesson_item_${LESSON_ID}
+    timeout: 10000
+- tapOn:
+    id: learning_path_lesson_item_${LESSON_ID}
+- waitForAnimationToEnd:
+    timeout: 3000
+# Start (current lesson), Replay (finished) or Jump ahead (not reached yet, opens the "Skipping lessons?" sheet).
+- tapOn:
+    id: "learning_path_lesson_(start|replay)_.*|learning_path_popover_jump_ahead_button"
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: learning_path_jump_ahead_continue
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "(drill_lesson_skip|ai_data_consent_alert)"
+    timeout: 60000
+- tapOn:
+    id: ai_data_consent_alert_allow
+    optional: true
+- repeat:
+    while:
+      notVisible:
+        id: "lesson_end_.*|ask_for_review_.*dialog|parentPanel"
+    times: 60
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*|ask_for_review_.*dialog|parentPanel"
+    timeout: 30000
+- repeat:
+    while:
+      notVisible:
+        id: "advance_commitment_schedule_ready|home_root_ready"
+    times: 12
+    commands:
+      - tapOn:
+          id: lesson_end_reskin_continue_button
+          optional: true
+      - tapOn:
+          id: lesson_end_streak_progress_continue_button
+          optional: true
+      - tapOn:
+          id: lesson_end_streak_freeze_got_it_button
+          optional: true
+      - tapOn:
+          id: lesson_end_takeaways_primary_button
+          optional: true
+      - tapOn:
+          id: lesson_end_takeaways_generated_lesson_save_for_later_button
+          optional: true
+      - tapOn:
+          id: goal_7days
+          optional: true
+      - runFlow:
+          when:
+            notVisible:
+              id: advance_commitment_schedule_ready
+          commands:
+            - tapOn:
+                id: primary_button
+                optional: true
+            - tapOn:
+                text: "Maybe later"
+                optional: true
+      - tapOn:
+          id: ask_for_review_dialog_no
+          optional: true
+      - tapOn:
+          id: ask_for_review_negative_dialog_no
+          optional: true
+      - tapOn:
+          id: ask_for_review_positive_dialog_no
+          optional: true
+- assertVisible:
+    id: advance_commitment_schedule_ready
+- swipe:
+    from:
+      id: advance_commitment_schedule_time_picker
+    direction: UP
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: advance_commitment_schedule_action_commit
+- tapOn:
+    id: com.android.permissioncontroller:id/permission_allow_button
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_confirmation_ready
+    timeout: 30000
+- tapOn:
+    id: advance_commitment_confirmation_action_finish
+- runFlow:
+    when:
+      notVisible:
+        id: home_root_ready
+    commands:
+      - runFlow: ../../common/finish-lesson-end.yaml
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      text: "Next lesson, .*"
+    timeout: 20000

@@ -1,0 +1,15 @@
+# Assert the Home button shows a saved time ("Next lesson, <time>") or the round unscheduled button.
+# Entry: Home. Param STATE: "Next lesson, .*" (default) or "Schedule next lesson".
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  STATE: ${STATE || "Next lesson, .*"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      text: ${STATE}
+    timeout: 30000

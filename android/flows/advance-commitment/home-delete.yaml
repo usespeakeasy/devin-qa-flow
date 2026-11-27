@@ -1,0 +1,31 @@
+# Home pill with a saved time: open the edit sheet, delete the time, land on Home with the round
+# "Schedule next lesson" button again.
+# Entry: Home with the "Next lesson, <time>" pill. Exit: Home with the unscheduled button.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      text: "Next lesson, .*"
+    timeout: 30000
+- tapOn:
+    id: advance_commitment_home_action_open
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_ready
+    timeout: 20000
+- tapOn:
+    id: advance_commitment_edit_action_delete
+- extendedWaitUntil:
+    notVisible:
+      id: advance_commitment_edit_ready
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      text: "Schedule next lesson"
+    timeout: 20000

@@ -1,0 +1,46 @@
+# Home button with no time saved: open the schedule screen, move the hour wheel, save, finish the confirmation
+# and land on Home with the pill "Next lesson, <time>".
+# Entry: Home (home_root_ready) with the round "Schedule next lesson" button (account eligible, no time saved).
+# Exit: Home with the scheduled pill. Notification permission already granted (harness fresh/login grant it).
+# Selectors: the Home button's state is the content description of a child of advance_commitment_home_action_open
+# ("Schedule next lesson" or "Next lesson, <time>"), so it is matched by text; taps use the id.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      text: "Schedule next lesson"
+    timeout: 30000
+- tapOn:
+    id: advance_commitment_home_action_open
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_schedule_ready
+    timeout: 20000
+- swipe:
+    from:
+      id: advance_commitment_schedule_time_picker
+    direction: UP
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: advance_commitment_schedule_action_commit
+- tapOn:
+    id: com.android.permissioncontroller:id/permission_allow_button
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_confirmation_ready
+    timeout: 30000
+- tapOn:
+    id: advance_commitment_confirmation_action_finish
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      text: "Next lesson, .*"
+    timeout: 20000
