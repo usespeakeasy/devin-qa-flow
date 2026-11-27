@@ -1,0 +1,27 @@
+# Home learning path > loop LOOP_TEXT > popover CTA (Preview, Start or Jump Ahead) > "Skipping lessons?" Let's go if shown > drill lesson opens.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LOOP_TEXT: ${LOOP_TEXT || "Make small talk"}
+  SHOT: ${SHOT || "c7"}
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn: ${LOOP_TEXT}
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: "learning_path_popover_(preview|jump_ahead)_button|learning_path_lesson_start_.*"
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: learning_path_jump_ahead_continue
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- assertVisible:
+    id: drill_lesson_root
+- assertNotVisible:
+    id: learning_path_ready
+- takeScreenshot: ${SHOT}

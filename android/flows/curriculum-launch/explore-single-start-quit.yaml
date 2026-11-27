@@ -1,0 +1,16 @@
+# Profile > Explore > LESSON card > Start opens the single lesson; Back > Quit (premium intro closed if shown) > Explore.
+# Needs a korean-english account and learning_path_explore ON.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON: ${LESSON || "옷 종류 영어로 제대로 표현하기"}
+  SHOT: ${SHOT || "c1"}
+---
+- runFlow: ../../common/launch-home.yaml
+- runFlow: ../singles/open-explore.yaml
+- runFlow:
+    file: ../lesson-launch/singles-start.yaml
+    env:
+      LESSON: ${LESSON}
+      SHOT: ${SHOT}
+- runFlow: ../lesson-launch/singles-quit.yaml

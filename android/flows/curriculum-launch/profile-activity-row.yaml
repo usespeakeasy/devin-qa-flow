@@ -1,0 +1,43 @@
+# Needs an activity row: a fresh account gets one only after a lesson with a card done (free-preview-finished.yaml).
+# Profile tab > Your activity log > row ROW opens the lesson (drill_lesson_root); Back > Quit returns to Profile.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ROW: ${ROW || "Make small talk"}
+  SHOT: ${SHOT || "c3"}
+---
+- runFlow: ../../common/launch-home.yaml
+- tapOn:
+    id: main_tab_profile
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 20000
+- scrollUntilVisible:
+    element: "Your activity log"
+    direction: DOWN
+    timeout: 20000
+- scrollUntilVisible:
+    element: ${ROW}
+    direction: DOWN
+    timeout: 20000
+- tapOn: ${ROW}
+- extendedWaitUntil:
+    visible:
+      id: drill_lesson_skip
+    timeout: 60000
+- assertVisible:
+    id: drill_lesson_root
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 5000
+    optional: true
+- tapOn:
+    text: "^Quit$"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: action_settings
+    timeout: 30000

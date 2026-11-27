@@ -1,0 +1,29 @@
+# Free account: path lesson (path-cta-lesson.yaml), skip every card; a free user ends on Preview Finished (preview_finished_screen), Return home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "c5"}
+---
+- runFlow:
+    file: path-cta-lesson.yaml
+    env:
+      SHOT: ${SHOT}-lesson
+- runFlow: skip-to-end.yaml
+- extendedWaitUntil:
+    visible:
+      id: "preview_finished_screen|lesson_end_.*"
+    timeout: 30000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: preview_finished_return_home_button
+    optional: true
+- runFlow:
+    when:
+      notVisible:
+        id: home_root_ready
+    commands:
+      - runFlow: ../../common/finish-lesson-end.yaml
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000

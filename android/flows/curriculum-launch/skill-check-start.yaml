@@ -1,0 +1,66 @@
+# Home > "Skill check" loop > popover CTA > Let's go if shown > Show what you know (skill_check_intro) > Start skill check;
+# waits for what follows (premium intro, AI lesson or another screen) as SHOT-after, then back out to Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "c9"}
+---
+- runFlow: ../../common/launch-home.yaml
+- scrollUntilVisible:
+    element: "Skill check"
+    direction: DOWN
+    timeout: 20000
+- tapOn: "Skill check"
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: "learning_path_popover_(preview|jump_ahead)_button|learning_path_lesson_start_.*"
+- waitForAnimationToEnd:
+    timeout: 2000
+- tapOn:
+    id: learning_path_jump_ahead_continue
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: skill_check_start
+    timeout: 45000
+- assertVisible:
+    id: skill_check_intro
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: skill_check_start
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_premium_intro_(ready|error)|ai_lesson_.*|drill_lesson_root|ai_data_consent_alert"
+    timeout: 45000
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}-after
+- repeat:
+    while:
+      notVisible:
+        id: home_root_ready
+    times: 8
+    commands:
+      - tapOn:
+          id: generic_error_dialog_positive_button
+          optional: true
+      - tapOn:
+          id: ai_lesson_quit_confirm
+          optional: true
+      - tapOn:
+          id: exit
+          optional: true
+      - tapOn:
+          text: "^Quit$"
+          optional: true
+      - runFlow:
+          when:
+            notVisible:
+              id: "home_root_ready|ai_lesson_quit_confirm|generic_error_dialog_positive_button"
+          commands:
+            - back
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000

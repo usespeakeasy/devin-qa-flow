@@ -1,0 +1,18 @@
+# Premium account: on the first lesson end step (lesson_end_reskin_root) after skip-to-end.yaml; screenshot, summary, then walk the steps to Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "c6"}
+---
+- extendedWaitUntil:
+    visible:
+      id: "lesson_end_.*|preview_finished_screen"
+    timeout: 30000
+- assertVisible:
+    id: "lesson_end_reskin_root"
+- takeScreenshot: ${SHOT}
+- runFlow: ../../common/finish-lesson-end.yaml
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000

@@ -1,0 +1,16 @@
+# Drill or tutor lesson: tap Skip until the lesson ends (lesson end step, Preview Finished, a premium intro or a dialog).
+# Entry: a drill lesson (drill_lesson_skip). Exit: the first screen after the last card. A full premium lesson takes about 3.5 min.
+# Used for the curriculum launch no-diff run (QA speak-android#9809).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- repeat:
+    while:
+      notVisible:
+        id: "lesson_end_.*|ask_for_review_.*dialog|parentPanel|onboarding_premium_intro_.*|simple_dialog_message|home_root_ready|preview_finished.*"
+    times: 80
+    commands:
+      - tapOn:
+          id: drill_lesson_skip
+          optional: true
