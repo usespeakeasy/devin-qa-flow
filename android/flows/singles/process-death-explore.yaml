@@ -1,6 +1,8 @@
 # Process death on Explore: Home key, killApp (am kill), relaunch from recents restores Explore on CATEGORY.
 # Entry: Explore on the CATEGORY tab. Exit: Explore restored on CATEGORY. Saves SHOT.png.
 # maestro test -e CATEGORY="일상" -e SHOT=process-death process-death-explore.yaml
+# Check the kill: on the API 36 image Maestro killApp can leave the process alive (same pid, no `instance state restored.`).
+# When it does, kill with `adb shell run-as <pkg> kill -9 <pid>` instead and run explore-loaded.yaml (speak-android#9810 QA).
 # Selectors: singles_explore_screen; explore-loaded.yaml for the arrival.
 appId: ${APP_ID}
 env:

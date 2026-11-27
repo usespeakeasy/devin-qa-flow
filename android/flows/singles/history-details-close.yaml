@@ -1,0 +1,26 @@
+# Singles History: tap the LESSON row, the lesson details sheet opens; system back closes it and the
+# history list shows again.
+# Entry: Singles History with rows (open-history.yaml). Exit: Singles History.
+# maestro test -e LESSON="집에서 넷플릭스 보기" history-details-close.yaml
+# Selectors: single_title (picked by its text), singles_details_dialog, title, single_timestamp.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: single_title
+    text: ${LESSON}
+- extendedWaitUntil:
+    visible:
+      id: singles_details_dialog
+    timeout: 15000
+- assertVisible:
+    id: title
+    text: ${LESSON}
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: singles_details_dialog
+    timeout: 10000
+- assertVisible:
+    id: single_timestamp

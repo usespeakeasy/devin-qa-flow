@@ -1,0 +1,26 @@
+# Pack: the lesson rows show their PREVIEW chips (PREVIEW=true, free account) or none (PREVIEW=false,
+# Premium, for example Debug Menu > Subscription override).
+# Entry: pack screen (open-pack.yaml), rows visible. Exit: same.
+# maestro test -e PREVIEW=false pack-preview-badges.yaml
+# Selectors: single_title, badge_preview.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  PREVIEW: ${PREVIEW || "true"}
+---
+- extendedWaitUntil:
+    visible:
+      id: single_title
+    timeout: 30000
+- runFlow:
+    when:
+      true: ${PREVIEW == 'true'}
+    commands:
+      - assertVisible:
+          id: badge_preview
+- runFlow:
+    when:
+      true: ${PREVIEW != 'true'}
+    commands:
+      - assertNotVisible:
+          id: badge_preview
