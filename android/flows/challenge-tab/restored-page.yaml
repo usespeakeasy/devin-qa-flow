@@ -1,0 +1,22 @@
+# After process death on the Challenge tab (the case script presses Home, runs `am kill` until pidof is empty and
+# relaunches SpeakActivity with the launcher intent): the Challenge tab is selected again and ARRIVAL_ID shows
+# (default challenge_overview_card, the Challenges page). Entry: app relaunching. Exit: restored page. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ARRIVAL_ID: ${ARRIVAL_ID || "challenge_overview_card"}
+  SHOT: ${SHOT || "restored-page"}
+---
+- extendedWaitUntil:
+    visible:
+      id: main_tab_challenges
+      selected: true
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL_ID}
+    timeout: 30000
+- assertNotVisible:
+    id: onboarding_storybook_sign_in_button
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}

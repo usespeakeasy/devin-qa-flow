@@ -1,0 +1,39 @@
+# speak-dev://challenges?id=ID from Home: the Challenge tab is selected and Challenge Details opens for ID with
+# TITLE; system Back returns to the Challenge tab on the Challenges page (embedded overview).
+# Entry: any Main tab. Exit: Challenge tab, Challenges page. Saves SHOT.png on the details.
+# ID and TITLE default to the QA-only patch challenge of QA speak-android#9795.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ID: ${ID || "qa_9795_active"}
+  TITLE: ${TITLE || "QA 9795 Challenge"}
+  SHOT: ${SHOT || "deep-link-details"}
+---
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- openLink: speak-dev://challenges?id=${ID}
+- extendedWaitUntil:
+    visible:
+      id: challenge_details_screen
+    timeout: 20000
+- extendedWaitUntil:
+    visible: ${TITLE}
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: challenge_details_screen
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: challenges_active_button
+    timeout: 15000
+- assertVisible:
+    id: main_tab_challenges
+    selected: true

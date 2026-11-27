@@ -1,0 +1,19 @@
+# Challenge Details > system Back: the Challenges page (embedded overview) shows again.
+# Entry: Challenge Details opened from the Challenges page. Exit: Challenges page.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: challenge_details_screen
+- back
+- extendedWaitUntil:
+    notVisible:
+      id: challenge_details_screen
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: challenges_active_button
+    timeout: 15000
+- assertVisible:
+    id: challenge_tab_screen

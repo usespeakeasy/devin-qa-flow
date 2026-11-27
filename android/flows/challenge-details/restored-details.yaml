@@ -1,0 +1,26 @@
+# After process death on Challenge Details (Home, `am kill` until pidof is empty, launcher relaunch, done by the
+# case script): Challenge Details comes back with TITLE, and Back returns to the Challenges page.
+# Entry: app relaunching. Exit: Challenges page. Saves SHOT.png on the restored details.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TITLE: ${TITLE || "QA 9795 Challenge"}
+  SHOT: ${SHOT || "restored-details"}
+---
+- extendedWaitUntil:
+    visible:
+      id: challenge_details_screen
+    timeout: 60000
+- extendedWaitUntil:
+    visible: ${TITLE}
+    timeout: 20000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: challenges_active_button
+    timeout: 20000
+- assertVisible:
+    id: main_tab_challenges
+    selected: true

@@ -1,0 +1,48 @@
+# Challenge Prizes footer: tap the "settings" link in the disclaimer (header_subtitle), Manage account opens;
+# Back returns to Prizes, Back again returns to Challenge Details.
+# Entry: Challenge Prizes (open-prizes.yaml). Exit: Challenge Details. Saves SHOT.png on Manage account.
+# Selectors: the link is a span inside the header_subtitle text with no node of its own, so the flow scrolls the
+# prizes list to its end and taps a point on "settings" (start of the footer's third line on a 1080x2400 screen,
+# the speak AVD). An ID for the link is asked for in the ID PR of QA speak-android#9795.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "prizes-manage-account"}
+---
+- extendedWaitUntil:
+    visible:
+      id: challenge_prizes_screen
+    timeout: 15000
+- scrollUntilVisible:
+    element:
+      id: header_subtitle
+    direction: DOWN
+    timeout: 20000
+- swipe:
+    from:
+      id: list
+    direction: UP
+- waitForAnimationToEnd
+- assertVisible:
+    id: header_subtitle
+    text: ".*valid in settings\\.$"
+- tapOn:
+    point: "15%,91%"
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 15000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: challenge_prizes_screen
+    timeout: 15000
+- back
+- extendedWaitUntil:
+    visible:
+      id: challenge_details_screen
+    timeout: 15000
+- assertNotVisible:
+    id: challenge_prizes_screen

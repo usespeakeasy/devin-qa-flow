@@ -1,0 +1,27 @@
+# Challenges page > Active > first card: Challenge Details (`ChallengeDetails` entry) opens at the top with the
+# challenge TITLE. Entry: Challenges page or list. Exit: Challenge Details, not scrolled. Saves SHOT.png.
+# TITLE defaults to the QA-only patch challenge of QA speak-android#9795.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  TITLE: ${TITLE || "QA 9795 Challenge"}
+  SHOT: ${SHOT || "challenge-details"}
+---
+- tapOn:
+    id: challenges_active_button
+- extendedWaitUntil:
+    visible:
+      id: challenge_overview_card
+    timeout: 20000
+- tapOn:
+    id: challenge_overview_card
+    index: 0
+- extendedWaitUntil:
+    visible:
+      id: challenge_details_screen
+    timeout: 15000
+- extendedWaitUntil:
+    visible: ${TITLE}
+    timeout: 10000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}

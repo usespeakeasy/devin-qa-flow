@@ -1,0 +1,23 @@
+# Challenge tab > Challenges page: the embedded challenge overview shows the Active list with at least one card
+# and the Completed (previous challenges) button. Entry: Challenge tab on any page. Precondition: an active
+# challenge (on dev, the QA-only ChallengeRepositoryImpl patch, QA of speak-android#9795). Exit: Challenges page.
+# Selectors: the Challenges page tab is text (CLNT-1280).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "challenges-page"}
+---
+- tapOn:
+    text: "^Challenges$"
+- extendedWaitUntil:
+    visible:
+      id: challenges_active_button
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: challenge_overview_card
+    timeout: 30000
+- assertVisible:
+    id: challenges_completed_button
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}

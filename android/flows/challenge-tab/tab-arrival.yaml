@@ -1,0 +1,25 @@
+# Bottom bar Challenge tab: the Challenge tab (`ChallengeTab` entry) opens on the Leagues page with its page
+# header and the profile icon. Entry: any Main tab, Leagues on. Precondition: an account without a Profile tab
+# (or a QA-only patch that drops it), so the tab shows profile_icon. Exit: Leagues page. Saves SHOT.png.
+# Selectors: the Leagues page tab is text (page tab test tags are not in the tree, CLNT-1280).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "challenge-tab-arrival"}
+---
+- tapOn:
+    id: main_tab_challenges
+- extendedWaitUntil:
+    visible:
+      id: challenge_tab_screen
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: profile_icon
+    timeout: 20000
+- assertVisible:
+    text: "^Leagues$"
+- assertVisible:
+    text: "^Challenges$"
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}

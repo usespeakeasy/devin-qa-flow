@@ -1,0 +1,30 @@
+# Challenge tab profile_icon opens Profile; system Back returns to the Challenge tab with profile_icon.
+# Entry: any Main tab. Precondition: no Profile tab (account without one, or a QA-only patch that drops it).
+# Exit: Challenge tab. Saves SHOT.png on Profile.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "profile-icon-profile"}
+---
+- tapOn:
+    id: main_tab_challenges
+- extendedWaitUntil:
+    visible:
+      id: profile_icon
+    timeout: 20000
+- tapOn:
+    id: profile_icon
+- extendedWaitUntil:
+    visible:
+      id: "stat_streak_title|stat_sentences_title"
+    timeout: 30000
+- waitForAnimationToEnd
+- takeScreenshot: ${SHOT}
+- back
+- extendedWaitUntil:
+    visible:
+      id: profile_icon
+    timeout: 20000
+- assertVisible:
+    id: main_tab_challenges
+    selected: true
