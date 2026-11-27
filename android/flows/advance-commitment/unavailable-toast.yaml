@@ -1,0 +1,14 @@
+# Assert the refused-account toast "Advance Commitment isn't available for this account." (speak-android#9778) shows
+# over the screen that sent the request, and that screen stays open.
+# Entry: right after Save or Delete in the edit sheet. Param SCREEN: id of the screen that stays (default the edit sheet).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SCREEN: ${SCREEN || "advance_commitment_edit_ready"}
+---
+- extendedWaitUntil:
+    visible:
+      text: "Advance Commitment isn.t available for this account\\."
+    timeout: 15000
+- assertVisible:
+    id: ${SCREEN}

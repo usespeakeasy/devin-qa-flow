@@ -1,0 +1,39 @@
+# After bridge `openLessonEnd components=ADVANCE_COMMITMENT` (create mode, once per app process): EXPECT=shown waits for
+# the schedule screen and leaves it with Skip (or X) back to Home; EXPECT=skipped waits WAIT ms and checks the schedule screen
+# never showed and Home is there.
+# Entry: Home, right after the bridge command. Params: EXPECT (shown|skipped), WAIT (ms, default 8000).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WAIT: ${WAIT || "8000"}
+---
+- runFlow:
+    when:
+      true: ${EXPECT == 'shown'}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: advance_commitment_schedule_ready
+          timeout: 20000
+      # From a lesson end the screen offers Skip; from Home it offers X.
+      - tapOn:
+          id: "advance_commitment_schedule_action_(skip|close)"
+      - extendedWaitUntil:
+          visible:
+            id: home_root_ready
+          timeout: 20000
+- runFlow:
+    when:
+      true: ${EXPECT == 'skipped'}
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: advance_commitment_schedule_ready
+          timeout: ${WAIT}
+          optional: true
+      - assertNotVisible:
+          id: advance_commitment_schedule_ready
+      - extendedWaitUntil:
+          visible:
+            id: home_root_ready
+          timeout: 20000

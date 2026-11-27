@@ -1,0 +1,18 @@
+# Assert Home shows no Advance Commitment button (no round button, no pill), e.g. after the server refused the account.
+# Entry: Home. Param WAIT: ms to let the first load answer before the check (default 6000).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WAIT: ${WAIT || "6000"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_home_action_open
+    timeout: ${WAIT}
+    optional: true
+- assertNotVisible:
+    id: advance_commitment_home_action_open
