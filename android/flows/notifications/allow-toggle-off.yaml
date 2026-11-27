@@ -1,0 +1,22 @@
+# Daily Reminders: turn Allow Daily Reminders off (taps only when on).
+# Entry and exit: the Daily Reminders screen. Changes server state.
+appId: ${APP_ID}
+env:
+  APP_ID: com.selabs.speak.dev
+---
+- runFlow:
+    when:
+      visible:
+        id: notifications_reminder_allow_toggle
+        checked: true
+    commands:
+      - tapOn:
+          id: notifications_reminder_allow_toggle
+      - extendedWaitUntil:
+          visible:
+            id: notifications_reminder_allow_toggle
+            checked: false
+          timeout: 10000
+- assertVisible:
+    id: notifications_reminder_allow_toggle
+    checked: false
