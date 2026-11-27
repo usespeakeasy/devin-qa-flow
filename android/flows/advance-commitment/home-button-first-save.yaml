@@ -1,0 +1,16 @@
+# Advance Commitment Home button first save: tap the Home calendar button, then commit-and-finish.yaml ("I'm
+# committed!", "I'll be back tomorrow!", Home with the button gone; it fades in place before speak-android#9789 and
+# flies into the Profile item after).
+# Entry: Home with the round button showing (account eligible for Advance Commitment, no time saved; delete a time
+# first with delete-time.yaml). Dev or prod. Exit: Home with no Advance Commitment button.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_home_action_open
+    timeout: 30000
+- tapOn:
+    id: advance_commitment_home_action_open
+- runFlow: commit-and-finish.yaml

@@ -1,0 +1,18 @@
+# Advance Commitment schedule screen: "I'm committed!" with the default time, then the confirmation shows.
+# Entry: advance_commitment_schedule_ready (from the Home calendar button, or the lesson end step opened with
+# bridge openLessonEnd components=ADVANCE_COMMITMENT). Dev or prod. Exit: advance_commitment_confirmation_ready,
+# with "I'll be back tomorrow!" not tapped yet, so a caller can time what follows.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_schedule_ready
+    timeout: 20000
+- tapOn:
+    id: advance_commitment_schedule_action_commit
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_confirmation_ready
+    timeout: 20000

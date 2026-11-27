@@ -1,0 +1,22 @@
+# Advance Commitment first save, from the schedule screen: "I'm committed!", then "I'll be back tomorrow!" on the
+# confirmation, then Home shows again and the Home calendar button leaves (it fades in place before
+# speak-android#9789, flies into the Profile item after). Asserts the button is gone and the Profile tab is there.
+# Entry: advance_commitment_schedule_ready, on an account eligible for Advance Commitment with no time saved (Home
+# button or lesson end step). Dev or prod. Exit: Home with no Advance Commitment button.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: commit-to-confirmation.yaml
+- tapOn:
+    id: advance_commitment_confirmation_action_finish
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 20000
+- extendedWaitUntil:
+    notVisible:
+      id: advance_commitment_home_action_open
+    timeout: 10000
+- assertVisible:
+    id: main_tab_profile

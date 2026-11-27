@@ -1,0 +1,23 @@
+# Advance Commitment edit sheet: Delete removes the saved time, the sheet closes and Home shows the round button
+# again (cleanup so the next case can make a first save). Opened by the caller with the debug bridge command
+# openAdvanceCommitmentEdit (developDebug only).
+# Entry: the edit sheet opening over Home on an account with a time saved. Dev. Exit: Home with
+# advance_commitment_home_action_open.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_ready
+    timeout: 20000
+- tapOn:
+    id: advance_commitment_edit_action_delete
+- extendedWaitUntil:
+    notVisible:
+      id: advance_commitment_edit_ready
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_home_action_open
+    timeout: 30000

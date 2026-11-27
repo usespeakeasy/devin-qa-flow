@@ -1,0 +1,15 @@
+# Advance Commitment Home button to the confirmation: tap the Home calendar button and "I'm committed!", stop on
+# the confirmation so the caller can tap "I'll be back tomorrow!" itself and time a tap or key during the button's exit.
+# Entry: Home with the round button showing (eligible account, no time saved). Dev or prod.
+# Exit: advance_commitment_confirmation_ready.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_home_action_open
+    timeout: 30000
+- tapOn:
+    id: advance_commitment_home_action_open
+- runFlow: commit-to-confirmation.yaml

@@ -1,0 +1,17 @@
+# System Settings > Developer options > Force RTL layout direction: tap the row once to flip it.
+# `adb shell settings put global debug.force_rtl 1` plus `setprop debug.force_rtl 1` alone leave apps in LTR on
+# the API 36 image (the system configuration is not recomputed), so the switch is flipped in Settings.
+# Entry: Developer options open (enable-developer-options.yaml once, then
+# `adb shell am start -a android.settings.APPLICATION_DEVELOPMENT_SETTINGS`). The caller checks the result with
+# `adb shell settings get global debug.force_rtl` and force-stops and relaunches the app.
+# Selectors: system Settings rows have no app resource-id (text fallback).
+appId: com.android.settings
+---
+- scrollUntilVisible:
+    element:
+      text: "Force RTL layout direction"
+    direction: DOWN
+    timeout: 150000
+    visibilityPercentage: 50
+- tapOn:
+    text: "Force RTL layout direction"
