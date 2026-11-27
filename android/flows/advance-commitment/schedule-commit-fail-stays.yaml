@@ -1,0 +1,27 @@
+# Schedule screen: "I'm committed!" while the save fails (airplane mode or a forced error answer). The screen stays
+# with the commit button enabled and no confirmation opens.
+# Entry: advance_commitment_schedule_ready (Home calendar button or the lesson end step). Params: WAIT (ms to let the
+# request fail, default 4000). Exit: the schedule screen.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  WAIT: ${WAIT || 4000}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_schedule_ready
+    timeout: 20000
+- tapOn:
+    id: advance_commitment_schedule_action_commit
+- extendedWaitUntil:
+    visible:
+      id: no_such_node_qa_wait
+    timeout: ${WAIT}
+    optional: true
+- assertVisible:
+    id: advance_commitment_schedule_ready
+- assertVisible:
+    id: advance_commitment_schedule_action_commit
+    enabled: true
+- assertNotVisible:
+    id: advance_commitment_confirmation_ready
