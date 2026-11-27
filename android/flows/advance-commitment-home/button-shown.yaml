@@ -1,0 +1,15 @@
+# Advance Commitment Home button (round calendar button, bottom start of the learning path) is on Home.
+# Entry: app on Home (cold start or after sign-in). Preconditions: signed-in onboarded dev account, dev Split
+# `advance_commitment_android` not off (the server answers the commitment GET for Android). The red dot has no ID;
+# a run checks it with a pixel read of the button's top end corner.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/home-popups.yaml
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_home_action_open
+    timeout: 30000
+- waitForAnimationToEnd:
+    timeout: 3000

@@ -1,0 +1,23 @@
+# Tap the Advance Commitment Home button while no time is saved: the schedule screen opens; close it with its X
+# without saving and land back on Home with the button still there.
+# Entry: Home with `advance_commitment_home_action_open` visible (button-shown.yaml). Preconditions: no time saved.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: advance_commitment_home_action_open
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_schedule_ready
+    timeout: 20000
+- tapOn:
+    id: advance_commitment_schedule_action_close
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_home_action_open
+    timeout: 20000
+- assertNotVisible:
+    id: advance_commitment_schedule_ready
+- waitForAnimationToEnd:
+    timeout: 3000
