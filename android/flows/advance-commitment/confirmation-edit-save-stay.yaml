@@ -1,0 +1,16 @@
+# Edit sheet over the confirmation: Save closes it back onto the confirmation.
+# Entry: edit sheet opened from the confirmation. Exit: confirmation (advance_commitment_confirmation_ready).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: advance_commitment_edit_action_save
+- extendedWaitUntil:
+    notVisible:
+      id: advance_commitment_edit_ready
+    timeout: 20000
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_confirmation_ready
+    timeout: 10000

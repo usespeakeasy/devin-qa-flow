@@ -1,0 +1,19 @@
+# Edit sheet still open after a configuration change or process death, with Save and Delete and the edit title.
+# Entry: app relaunched or recreated with the edit sheet open.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_ready
+    timeout: 30000
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_action_save
+      enabled: true
+    timeout: 20000
+- assertVisible:
+    id: advance_commitment_edit_action_delete
+- assertNotVisible:
+    text: "Schedule next lesson"

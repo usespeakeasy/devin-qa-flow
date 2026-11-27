@@ -1,0 +1,19 @@
+# Confirmation's lesson row opens the edit sheet (origin Confirmation) with Save and Delete.
+# Entry: confirmation (advance_commitment_confirmation_ready). Exit: edit sheet over the confirmation.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: advance_commitment_confirmation_action_edit
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_ready
+    timeout: 20000
+- assertVisible:
+    id: advance_commitment_edit_action_save
+    enabled: true
+- assertVisible:
+    id: advance_commitment_edit_action_delete
+- assertNotVisible:
+    text: "Schedule next lesson"

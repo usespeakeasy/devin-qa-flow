@@ -1,0 +1,25 @@
+# Home's Advance Commitment pill opens the edit sheet (AdvanceCommitmentEdit, origin Home) with Save and Delete and
+# the edit title, not the first-lesson title "Schedule next lesson".
+# Entry: Home (learning_path_ready). Preconditions: signed in, dev account eligible for Advance Commitment, a lesson
+# already scheduled (without one the sheet closes at once).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_home_action_open
+    timeout: 30000
+- tapOn:
+    id: advance_commitment_home_action_open
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_ready
+    timeout: 20000
+- assertVisible:
+    id: advance_commitment_edit_action_save
+    enabled: true
+- assertVisible:
+    id: advance_commitment_edit_action_delete
+- assertNotVisible:
+    text: "Schedule next lesson"

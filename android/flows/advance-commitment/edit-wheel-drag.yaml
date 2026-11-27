@@ -1,0 +1,17 @@
+# Edit sheet: drag the time wheel up by a few rows so the chosen time differs from the scheduled one.
+# Entry: edit sheet (advance_commitment_edit_ready).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: advance_commitment_edit_time_picker
+- swipe:
+    from:
+      id: advance_commitment_edit_time_picker
+    direction: UP
+    duration: 600
+- waitForAnimationToEnd:
+    timeout: 3000
+- assertVisible:
+    id: advance_commitment_edit_ready
