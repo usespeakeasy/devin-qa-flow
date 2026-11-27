@@ -1,0 +1,33 @@
+# Manage Account > Delete Account > confirm > "Your account is connected with Email code" dialog > Delete:
+# opens the one-time code reauthentication (`Destination.OtpReauthentication`, `otp_sign_in_*` screens).
+# Stops there; nothing is deleted until a code is verified. Entry: `home_root_ready`, account signed in with
+# an email code (Speak session, provider email_otp).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- runFlow: ../../common/open-settings.yaml
+- tapOn:
+    id: settings_manage_account_option
+- extendedWaitUntil:
+    visible:
+      id: manage_account_screen
+    timeout: 15000
+- tapOn:
+    id: edit_delete_account
+- extendedWaitUntil:
+    visible:
+      id: simple_dialog
+    timeout: 10000
+- tapOn:
+    id: simple_dialog_positive_button
+- extendedWaitUntil:
+    visible:
+      text: ".*connected with Email code.*"
+    timeout: 15000
+- tapOn:
+    id: simple_dialog_positive_button
+- extendedWaitUntil:
+    visible:
+      id: (otp_sign_in_entry_screen|otp_sign_in_code_screen)
+    timeout: 20000
