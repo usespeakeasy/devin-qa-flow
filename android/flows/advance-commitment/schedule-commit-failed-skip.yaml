@@ -1,0 +1,32 @@
+# Schedule screen save that fails (QA-only patch answers 500): after the failure "I'm committed!" is enabled with its
+# label, the screen stays, then EXIT_ID (Skip at a lesson end, close from Home) leaves it.
+# Entry: schedule screen. Exit: the screen is gone. Params: EXIT_ID, WAIT (ms for the failure), SHOT.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_schedule_ready
+    timeout: 20000
+- tapOn:
+    id: advance_commitment_schedule_action_commit
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_schedule_action_commit
+      enabled: true
+    timeout: ${WAIT}
+- assertVisible: "I'm committed!"
+- assertNotVisible: "Loading"
+- assertVisible:
+    id: ${EXIT_ID}
+    enabled: true
+- assertNotVisible:
+    id: advance_commitment_confirmation_ready
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: ${EXIT_ID}
+- extendedWaitUntil:
+    notVisible:
+      id: advance_commitment_schedule_ready
+    timeout: 10000

@@ -1,0 +1,68 @@
+# Edit sheet while a Save or Delete is out: tap ACTION_ID with a slowed request, check the buttons, then try a swipe
+# down, a tap outside and back (each only while the sheet is still open), and wait TIMEOUT ms for the sheet to close.
+# EXPECT=spinner (from speak-android#9772: "Loading" on the tapped button, the other disabled, all three exits ignored)
+# or EXPECT=plain (before #9772: both disabled with labels, no lock; the case script reads where the exits landed).
+# Entry: edit sheet (advance_commitment_edit_ready), request slowed (QA-only patch). Exit: sheet closed.
+# Params: ACTION_ID, OTHER_ID, EXPECT (spinner|plain), TIMEOUT (ms), SHOT (screenshot name while waiting).
+# Selectors: the outside tap is a point above the sheet (the scrim has no id).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_ready
+    timeout: 20000
+- tapOn:
+    id: ${ACTION_ID}
+- runFlow:
+    when:
+      true: ${EXPECT == 'spinner'}
+    commands:
+      - assertVisible: "Loading"
+      - assertVisible:
+          id: ${OTHER_ID}
+          enabled: false
+- runFlow:
+    when:
+      true: ${EXPECT == 'plain'}
+    commands:
+      - assertVisible:
+          id: ${OTHER_ID}
+          enabled: false
+      - assertNotVisible: "Loading"
+- takeScreenshot: ${SHOT}
+# Drag the sheet down from its title area (a drag on a button is too short to close it).
+- swipe:
+    start: "50%,44%"
+    end: "50%,98%"
+    duration: 400
+- extendedWaitUntil:
+    notVisible:
+      id: advance_commitment_edit_ready
+    timeout: 1500
+    optional: true
+- runFlow:
+    when:
+      visible:
+        id: advance_commitment_edit_ready
+    commands:
+      - tapOn:
+          point: "50%,12%"
+- runFlow:
+    when:
+      visible:
+        id: advance_commitment_edit_ready
+    commands:
+      - pressKey: back
+- runFlow:
+    when:
+      true: ${EXPECT == 'spinner'}
+    commands:
+      - assertVisible:
+          id: advance_commitment_edit_ready
+      - assertVisible: "Loading"
+- extendedWaitUntil:
+    notVisible:
+      id: advance_commitment_edit_ready
+    timeout: ${TIMEOUT}

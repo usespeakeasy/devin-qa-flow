@@ -1,0 +1,35 @@
+# Edit sheet Save that fails (QA-only patch answers 500): after the failure Save and Delete are enabled with their
+# labels and the sheet is still open; then a swipe down closes it.
+# Entry: edit sheet (advance_commitment_edit_ready). Exit: sheet closed. Params: WAIT (ms for the failure), SHOT.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_ready
+    timeout: 20000
+- tapOn:
+    id: advance_commitment_edit_action_save
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_edit_action_save
+      enabled: true
+    timeout: ${WAIT}
+- assertVisible:
+    id: advance_commitment_edit_ready
+- assertVisible:
+    id: advance_commitment_edit_action_delete
+    enabled: true
+- assertVisible: "Save"
+- assertNotVisible: "Loading"
+- takeScreenshot: ${SHOT}
+# Drag the sheet down from its title area (a drag on a button is too short to close it).
+- swipe:
+    start: "50%,44%"
+    end: "50%,98%"
+    duration: 400
+- extendedWaitUntil:
+    notVisible:
+      id: advance_commitment_edit_ready
+    timeout: 10000

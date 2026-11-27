@@ -1,0 +1,49 @@
+# Schedule screen while the save is out: tap "I'm committed!" with a slowed PUT, check the button and exit state,
+# press back and tap EXIT_ID (close from Home, Skip at a lesson end), check the screen stayed, then wait for the
+# confirmation. EXPECT=spinner (from speak-android#9772: spinner with "Loading", no label, exit disabled) or
+# EXPECT=label (before #9772: disabled button keeps its label, exit enabled but ignored).
+# Entry: schedule screen (advance_commitment_schedule_ready), PUT slowed (QA-only patch). Exit: confirmation.
+# Params: EXPECT (spinner|label), EXIT_ID, TIMEOUT (ms for the confirmation), SHOT (screenshot name while waiting).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_schedule_ready
+    timeout: 20000
+- tapOn:
+    id: advance_commitment_schedule_action_commit
+- runFlow:
+    when:
+      true: ${EXPECT == 'spinner'}
+    commands:
+      - assertVisible: "Loading"
+      - assertNotVisible: "I'm committed!"
+      - assertVisible:
+          id: ${EXIT_ID}
+          enabled: false
+- runFlow:
+    when:
+      true: ${EXPECT == 'label'}
+    commands:
+      - assertVisible: "I'm committed!"
+      - assertVisible:
+          id: advance_commitment_schedule_action_commit
+          enabled: false
+      - assertNotVisible: "Loading"
+- takeScreenshot: ${SHOT}
+- pressKey: back
+- tapOn:
+    id: ${EXIT_ID}
+- assertVisible:
+    id: advance_commitment_schedule_ready
+- runFlow:
+    when:
+      true: ${EXPECT == 'spinner'}
+    commands:
+      - assertVisible: "Loading"
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_confirmation_ready
+    timeout: ${TIMEOUT}

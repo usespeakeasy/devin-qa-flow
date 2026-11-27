@@ -1,0 +1,39 @@
+# First commit while the notification permission was never answered: tap "I'm committed!", the system prompt opens,
+# check the button under it (disabled, label shown, no spinner), Allow, then check the wait state and wait for the
+# confirmation. EXPECT=spinner (from speak-android#9772) or EXPECT=label (before it).
+# Entry: schedule screen, POST_NOTIFICATIONS revoked and not user-fixed, PUT slowed. Exit: confirmation.
+# Params: EXPECT (spinner|label), TIMEOUT (ms), SHOT (prompt open), SHOT2 (after Allow).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_schedule_ready
+    timeout: 20000
+- tapOn:
+    id: advance_commitment_schedule_action_commit
+- extendedWaitUntil:
+    visible:
+      id: com.android.permissioncontroller:id/permission_allow_button
+    timeout: 10000
+- takeScreenshot: ${SHOT}
+- tapOn:
+    id: com.android.permissioncontroller:id/permission_allow_button
+- runFlow:
+    when:
+      true: ${EXPECT == 'spinner'}
+    commands:
+      - assertVisible: "Loading"
+      - assertNotVisible: "I'm committed!"
+- runFlow:
+    when:
+      true: ${EXPECT == 'label'}
+    commands:
+      - assertVisible: "I'm committed!"
+      - assertNotVisible: "Loading"
+- takeScreenshot: ${SHOT2}
+- extendedWaitUntil:
+    visible:
+      id: advance_commitment_confirmation_ready
+    timeout: ${TIMEOUT}
