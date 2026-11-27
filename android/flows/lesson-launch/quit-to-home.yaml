@@ -1,0 +1,36 @@
+# Any lesson: system Back, Quit on the "Are you sure you want to quit this lesson?" sheet when it shows, a difficulty
+# check-in (Just right) or the premium intro when they show, then Home (learning_path_ready) with no lesson left.
+# Entry: a lesson opened from Home. Exit: Home tab.
+# Selectors: the quit sheet has no resource-ids (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- back
+- extendedWaitUntil:
+    visible: "Are you sure you want to quit this lesson\\?"
+    timeout: 5000
+    optional: true
+- runFlow:
+    when:
+      visible: "Are you sure you want to quit this lesson\\?"
+    commands:
+      - tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: "custom_units_difficulty_check_in_just_right|home_root_ready|onboarding_premium_intro_(ready|error)"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: custom_units_difficulty_check_in_just_right
+    commands:
+      - tapOn:
+          id: custom_units_difficulty_check_in_just_right
+- runFlow: ../../common/dismiss-premium-intro.yaml
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- assertNotVisible:
+    id: "series_list|drill_lesson_root"

@@ -1,0 +1,42 @@
+# Profile > See all activities > the row with ROW text (title or subtitle) opens; waits for ARRIVAL and saves SHOT.
+# Entry: main tabs. Exit: ARRIVAL (TutorLesson drill_lesson_root, or ai_lesson_pre_lesson_screen for a Free Talk row).
+# Selectors: rows are picked by their text (row ids carry per-account activity ids); "See all activities" has a generic id.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ROW: ${ROW || "Make small talk"}
+  ARRIVAL: ${ARRIVAL || "drill_lesson_root"}
+  SHOT: ${SHOT || "activity-row"}
+---
+- runFlow:
+    when:
+      notVisible:
+        id: activity_log_screen
+    commands:
+      - tapOn:
+          id: main_tab_profile
+      - extendedWaitUntil:
+          visible:
+            id: action_settings
+          timeout: 30000
+      - scrollUntilVisible:
+          element: "See all activities"
+          direction: DOWN
+          timeout: 20000
+      - tapOn: "See all activities"
+      - extendedWaitUntil:
+          visible:
+            id: activity_log_screen
+          timeout: 20000
+- scrollUntilVisible:
+    element: ${ROW}
+    direction: DOWN
+    timeout: 30000
+- tapOn: ${ROW}
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 45000
+- assertNotVisible:
+    id: activity_log_screen
+- takeScreenshot: ${SHOT}

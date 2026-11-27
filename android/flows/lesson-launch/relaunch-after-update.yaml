@@ -1,0 +1,17 @@
+# After `adb install -r` replaced the app while a lesson was open in the background, the launcher relaunch reaches a
+# stable screen: the restored lesson (series_list) or Home (learning_path_ready; on API 36 the package replace drops
+# the task, so Home is expected), with no crash dialog. The caller checks the crash buffer and AndroidRuntime lines.
+# Entry: launcher relaunch right after the install. Exit: lesson or Home.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "relaunch-after-update"}
+---
+- extendedWaitUntil:
+    visible:
+      id: "series_list|learning_path_ready"
+    timeout: 60000
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertNotVisible: ".*(keeps stopping|has stopped).*"
+- takeScreenshot: ${SHOT}

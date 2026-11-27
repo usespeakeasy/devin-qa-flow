@@ -1,0 +1,30 @@
+# Explore (singles) carousel: tap LESSON's card, details sheet, Start (Start over on a resume prompt); the lesson opens
+# (video lesson video_progress_seekbar, cant_speak_now_toggle or debug_skip_lesson) with the sheet gone. Saves SHOT.
+# Entry: Explore open on a category (singles/open-explore.yaml, ko-en or ja-en pair, learning_path_explore ON). Exit: lesson.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "singles-start"}
+---
+- runFlow:
+    file: ../singles/details-open-card.yaml
+    env:
+      LESSON: ${LESSON}
+- tapOn:
+    id: button
+- repeat:
+    times: 10
+    while:
+      notVisible:
+        id: "cant_speak_now_toggle|video_progress_seekbar|debug_skip_lesson"
+    commands:
+      - tapOn:
+          text: "Start over"
+          optional: true
+- extendedWaitUntil:
+    visible:
+      id: "cant_speak_now_toggle|video_progress_seekbar|debug_skip_lesson"
+    timeout: 60000
+- assertNotVisible:
+    id: singles_details_dialog
+- takeScreenshot: ${SHOT}

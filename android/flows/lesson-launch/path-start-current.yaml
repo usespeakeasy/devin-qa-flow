@@ -1,0 +1,36 @@
+# Home learning path: tap Start in the open lesson popover (opening the current loop first when no Start shows); the lesson
+# (ARRIVAL, default a drill's drill_lesson_root) opens and plays (PLAYING id shows). Stops on the lesson for the caller's checks.
+# Entry: Home tab showing learning_path_ready. Exit: the lesson. Used for LessonConfiguration launch checks (speak-android#9799).
+# maestro test -e SHOT=c1 path-start-current.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  ARRIVAL: ${ARRIVAL || "drill_lesson_root"}
+  PLAYING: ${PLAYING || "drill_lesson_play_pause"}
+  SHOT: ${SHOT || "path-start-current"}
+---
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible:
+        id: "learning_path_lesson_start_.*"
+    commands:
+      - tapOn:
+          id: "learning_path_loop_.*"
+          index: 0
+- tapOn:
+    id: "learning_path_lesson_start_.*"
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 45000
+- extendedWaitUntil:
+    visible:
+      id: ${PLAYING}
+    timeout: 30000
+- assertNotVisible:
+    id: learning_path_ready
+- takeScreenshot: ${SHOT}

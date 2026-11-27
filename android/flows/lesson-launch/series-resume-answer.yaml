@@ -1,0 +1,56 @@
+# Series lesson by deep link with saved progress: the resume prompt (simple_dialog "Continue where you left off?") shows;
+# ANSWER=continue taps Continue and the lesson shows the card with line LINE; ANSWER=restart taps Start over and the
+# lesson shows its first card (intro title TITLE, no line card).
+# Entry: Home, the lesson has saved progress (series-progress-quit.yaml). Exit: series card.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  LESSON_ID: ${LESSON_ID || "EN_ES_A1-1_quetal_SP"}
+  ANSWER: ${ANSWER || "continue"}
+  LINE: ${LINE || ".+"}
+  TITLE: ${TITLE || ".+"}
+  SHOT: ${SHOT || "series-resume"}
+---
+- extendedWaitUntil:
+    visible:
+      id: home_root_ready
+    timeout: 30000
+- openLink: speak-dev://lesson?id=${LESSON_ID}
+- extendedWaitUntil:
+    visible:
+      id: simple_dialog_message
+      text: "Continue where you left off\\?"
+    timeout: 60000
+- takeScreenshot: ${SHOT}-prompt
+- runFlow:
+    when:
+      true: ${ANSWER == 'continue'}
+    commands:
+      - tapOn:
+          id: simple_dialog_positive_button
+      - extendedWaitUntil:
+          visible:
+            id: line
+            text: ${LINE}
+          timeout: 60000
+- runFlow:
+    when:
+      true: ${ANSWER == 'restart'}
+    commands:
+      - tapOn:
+          id: simple_dialog_negative_button
+      - extendedWaitUntil:
+          visible:
+            id: tap_to_continue
+          timeout: 60000
+      - assertVisible:
+          id: title
+          text: ${TITLE}
+          index: 0
+      - assertNotVisible:
+          id: line
+- assertNotVisible:
+    id: simple_dialog_message
+- assertVisible:
+    id: series_list
+- takeScreenshot: ${SHOT}

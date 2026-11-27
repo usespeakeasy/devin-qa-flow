@@ -1,0 +1,32 @@
+# Lesson opened from Explore: Back > Quit > premium intro if shown > Explore (action_history), lesson gone.
+# Entry: lesson from singles-start.yaml. Exit: Explore.
+# Selectors: "Quit" and "OK" have no resource-id (text fallback).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- back
+- tapOn: "^Quit$"
+- extendedWaitUntil:
+    visible:
+      id: "onboarding_premium_intro_(ready|error)|action_history"
+    timeout: 20000
+- runFlow:
+    when:
+      visible:
+        id: onboarding_premium_intro_error
+    commands:
+      - tapOn: "^OK$"
+- runFlow:
+    when:
+      visible:
+        id: onboarding_premium_intro_ready
+    commands:
+      - tapOn:
+          id: exit
+- extendedWaitUntil:
+    visible:
+      id: action_history
+    timeout: 20000
+- assertNotVisible:
+    id: "cant_speak_now_toggle|video_progress_seekbar|debug_skip_lesson"
