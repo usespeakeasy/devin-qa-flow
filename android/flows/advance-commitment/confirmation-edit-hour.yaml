@@ -4,7 +4,7 @@
 appId: ${APP_ID}
 env:
   APP_ID: com.selabs.speak.dev
-  HOUR: "11"
+  HOUR: ${HOUR || "11"}
 ---
 - tapOn:
     id: advance_commitment_confirmation_action_edit
