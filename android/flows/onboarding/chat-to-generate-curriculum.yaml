@@ -22,8 +22,16 @@ env:
     commands:
       - extendedWaitUntil:
           visible:
-            id: "onboarding_magic_(user_turn_ready|action_continue|action_generate_curriculum)"
+            id: "onboarding_magic_(user_turn_ready|action_continue|action_generate_curriculum)|permission_allow_button"
           timeout: 60000
+      # The notification step asks for POST_NOTIFICATIONS when it is not granted (`qa_android.py fresh --no-grant`).
+      - runFlow:
+          when:
+            visible:
+              id: permission_allow_button
+          commands:
+            - tapOn:
+                id: permission_allow_button
       - runFlow:
           when:
             visible:

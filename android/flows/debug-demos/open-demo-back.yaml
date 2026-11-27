@@ -1,0 +1,33 @@
+# speak-dev://demos?id=DEMO_ID opens a demo (e.g. the onboarding demos next-level-date, next-level-date-reveal,
+# next-level-date-notification, next-level-date-curriculum, onboarding-summary); SHOT is taken on the demo, then
+# system Back returns to the Demos list (ROW, the demo's list title, visible). The run script checks the demo's
+# `<Key> appearing.` / `disappearing.` EntryBreadcrumbs lines, since these demo screens export no IDs.
+# Entry: signed in, app in front on Home or the Demos list (no relaunch: cold starts are slow on the
+# software-rendered emulator). Exit: the Demos list showing ROW.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "demo"}
+---
+- openLink: speak-dev://demos?id=${DEMO_ID}
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertNotVisible:
+    id: home_root_ready
+- takeScreenshot: ${SHOT}
+- pressKey: Back
+- runFlow:
+    when:
+      notVisible: "^${ROW}$"
+    commands:
+      - waitForAnimationToEnd:
+          timeout: 2000
+- runFlow:
+    when:
+      notVisible: "^${ROW}$"
+    commands:
+      - pressKey: Back
+- scrollUntilVisible:
+    element:
+      text: "^${ROW}$"
+    timeout: 30000
