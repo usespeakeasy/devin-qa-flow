@@ -1,0 +1,27 @@
+# Profile App Assessment card: scroll down to the end of the list so the card leaves the screen
+# (screenshot `${SHOT}-away`), then scroll back up until its button is centred again.
+# The run script counts `Speaking Assessment Card Viewed` between marks; it must not fire a second time.
+# Note: off screen the card's Compose node stays in the tree (bounds under the toolbar), so the flow
+# proves "away" with the screenshot, not with assertNotVisible.
+# Entry: profile-card-scroll.yaml (card on screen). Exit: Profile with the card centred. Saves SHOT.png.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "profile-card-away-back"}
+---
+- repeat:
+    times: 3
+    commands:
+      - scroll
+      - waitForAnimationToEnd:
+          timeout: 2000
+- takeScreenshot: ${SHOT}-away
+- scrollUntilVisible:
+    element:
+      id: app_assessment_entry_card_(unlock|start)_button
+    direction: UP
+    timeout: 30000
+    centerElement: true
+- waitForAnimationToEnd:
+    timeout: 3000
+- takeScreenshot: ${SHOT}
