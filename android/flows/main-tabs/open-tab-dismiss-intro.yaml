@@ -1,0 +1,35 @@
+# Tap main tab TAB (bottom bar on a phone, navigation rail on a large screen), pass the Free Talk
+# first-run intro if it shows (open-tab.yaml expects it closed already), wait for ARRIVAL (resource-id regex) and take screenshot SHOT.
+# Entry: any main tab, signed in. Exit: TAB selected.
+# Arrivals seen on develop: main_tab_home -> learning_path_ready, main_tab_free_talk ->
+# "ai_tutor_history_button|ai_tutor_overview_root|ai_tutor_catalog_feed", main_tab_practice ->
+# "practice_tab_screen|practice_tab_list", main_tab_challenges ->
+# "challenge_tab_screen|challenge_tab_root", main_tab_profile -> action_settings.
+# maestro test -e TAB=main_tab_profile -e ARRIVAL=action_settings -e SHOT=profile open-tab-dismiss-intro.yaml
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "open-tab"}
+---
+- extendedWaitUntil:
+    visible:
+      id: ${TAB}
+    timeout: 30000
+- tapOn:
+    id: ${TAB}
+- extendedWaitUntil:
+    visible:
+      id: "${ARRIVAL}|ai_tutor_intro_dialog_get_started_button"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_intro_dialog_get_started_button
+    commands:
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
+- extendedWaitUntil:
+    visible:
+      id: ${ARRIVAL}
+    timeout: 30000
+- takeScreenshot: ${SHOT}
