@@ -1,0 +1,30 @@
+# Tap the Free Talk tab (clears the Free Talk refresh badge; the case script checks
+# Tab Badge Hidden in SegmentAnalyticsManager), pass the first-run intro, then back to the Home tab.
+# Entry: Home tab with the bottom bar.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: main_tab_free_talk
+- extendedWaitUntil:
+    visible:
+      id: "ai_tutor_intro_dialog_get_started_button|ai_tutor_history_button|ai_tutor_overview_root|ai_tutor_catalog_feed"
+    timeout: 30000
+- runFlow:
+    when:
+      visible:
+        id: ai_tutor_intro_dialog_get_started_button
+    commands:
+      - tapOn:
+          id: ai_tutor_intro_dialog_get_started_button
+- extendedWaitUntil:
+    visible:
+      id: "ai_tutor_history_button|ai_tutor_overview_root|ai_tutor_catalog_feed"
+    timeout: 30000
+- tapOn:
+    id: main_tab_home
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000

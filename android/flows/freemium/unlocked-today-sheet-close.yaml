@@ -1,0 +1,18 @@
+# "Unlocked today" sheet: the close button dismisses it to Home's learning path.
+# Entry: unlocked-today-sheet-shows.yaml.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- tapOn:
+    id: learning_path_unlocked_today_sheet_close
+- extendedWaitUntil:
+    notVisible:
+      id: learning_path_unlocked_today_sheet_root
+    timeout: 10000
+- extendedWaitUntil:
+    visible:
+      id: learning_path_ready
+    timeout: 30000
+- assertVisible:
+    id: main_tab_free_talk

@@ -1,0 +1,22 @@
+# Cold start outside the freemium-2_2 cohort (treatment SERVER/off, or full curriculum access):
+# Home shows the learning path and no "Unlocked today" sheet within 8 s.
+# Entry: signed in; QA_UNLOCKED patch may be on (the cohort check runs before the fetch).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: "learning_path_ready|learning_path_unlocked_today_sheet_root"
+    timeout: 60000
+- extendedWaitUntil:
+    visible:
+      id: learning_path_unlocked_today_sheet_root
+    timeout: 8000
+    optional: true
+- assertNotVisible:
+    id: learning_path_unlocked_today_sheet_root
+- assertVisible:
+    id: learning_path_ready

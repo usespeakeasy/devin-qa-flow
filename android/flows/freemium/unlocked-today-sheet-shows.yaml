@@ -1,0 +1,37 @@
+# Freemium 2.2 "Unlocked today" sheet over Home after a cold start (UnlockedTodaySheetCoordinator -> GetFreemiumUnlockedToday).
+# Entry: signed in, Debug Menu > Subscription override Free, freemium_curriculum_access = freemium-2_2
+# (debug-menu/set-treatment.yaml), the sheet not acknowledged today (user prefs key
+# freemium_22_unlocked_today_shown_date absent), and the server reporting an unlock. Dev only unlocks
+# Free Talk the day after signup or on the first day of the week, so runs stub the response with the
+# QA-only QA_UNLOCKED patch in SuspendAiTutorApi.getFreemiumUnlockedToday (setprop log.tag.QA_UNLOCKED DEBUG).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- launchApp:
+    stopApp: true
+- extendedWaitUntil:
+    visible:
+      id: "learning_path_unlocked_today_sheet_root|referral_welcome_dialog_later_button|app_assessment_popup"
+    timeout: 60000
+- runFlow:
+    when:
+      visible:
+        id: app_assessment_popup
+    commands:
+      - back
+- runFlow:
+    when:
+      visible:
+        id: referral_welcome_dialog_later_button
+    commands:
+      - tapOn:
+          id: referral_welcome_dialog_later_button
+- extendedWaitUntil:
+    visible:
+      id: learning_path_unlocked_today_sheet_root
+    timeout: 30000
+- assertVisible:
+    id: learning_path_unlocked_today_sheet_close
+- assertVisible:
+    id: learning_path_unlocked_today_sheet_cta
