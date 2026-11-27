@@ -1,0 +1,37 @@
+# Explore carousel: swipe the "Popular" carousel sideways once; cards stay laid out with their image,
+# gradient and non-empty title (singles_carousel_item from :library:singles).
+# Entry: Explore loaded on a category (explore-loaded.yaml), carousel on screen. Exit: same, carousel moved.
+# maestro test carousel-swipe.yaml
+# Selectors: singles_carousel_item, image, image_gradient, title, category_list. The swipe is a point
+# drag across the carousel row (24% to 50% of the screen height on a 1080x2400 emulator): a Maestro
+# `swipe: from: {id: singles_carousel_item}` or from a card title COMPLETED but did not move the carousel.
+# Compare the card titles from harness `dump` before and after to see that it moved.
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+---
+- assertVisible:
+    id: singles_carousel_item
+- swipe:
+    start: 85%, 36%
+    end: 20%, 36%
+    duration: 400
+- waitForAnimationToEnd:
+    timeout: 2000
+- assertVisible:
+    id: singles_carousel_item
+- assertVisible:
+    id: image
+    childOf:
+      id: singles_carousel_item
+- assertVisible:
+    id: image_gradient
+    childOf:
+      id: singles_carousel_item
+- assertVisible:
+    id: title
+    text: ".+"
+    childOf:
+      id: singles_carousel_item
+- assertVisible:
+    id: category_list
