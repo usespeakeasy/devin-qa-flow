@@ -1,0 +1,23 @@
+# Profile tab > "Gift a year of Speak" row (`PROFILE_OPTION_GIFT`, ProfileClicks.onGiftClicked): the gift page opens
+# outside the app (browser, chooser or web view). The caller checks the resumed activity and presses Back.
+# Entry: main tabs. Exit: the browser (Profile hidden). Precondition: Debug Menu `profile_show_gift_cta` = ON.
+# Selectors: the gift row has no resource-id (text fallback "Gift a year of Speak").
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "gift-open"}
+---
+- runFlow: open-tab.yaml
+- scrollUntilVisible:
+    element: "^Gift a year of Speak$"
+    direction: DOWN
+    timeout: 30000
+    centerElement: true
+- takeScreenshot: ${SHOT}-row
+- tapOn: "^Gift a year of Speak$"
+- extendedWaitUntil:
+    notVisible:
+      id: action_settings
+    timeout: 20000
+- waitForAnimationToEnd:
+    timeout: 3000

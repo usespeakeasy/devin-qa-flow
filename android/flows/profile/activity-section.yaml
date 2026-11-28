@@ -1,0 +1,19 @@
+# Profile tab: header and stats show, then scroll down to the activity section ("See all activities").
+# Entry: main tabs (Home). Exit: Profile scrolled to the activity section. Saves SHOT.png.
+# Precondition: the account has at least one activity row (a lesson with a card done).
+# Selectors: "See all activities" has a generic `button` id (text fallback, CLNT-1395).
+appId: ${APP_ID}
+env:
+  APP_ID: ${APP_ID || "com.selabs.speak.dev"}
+  SHOT: ${SHOT || "activity-section"}
+---
+- runFlow: open-tab.yaml
+- takeScreenshot: ${SHOT}-header
+- scrollUntilVisible:
+    element: "^See all activities$"
+    direction: DOWN
+    timeout: 30000
+    centerElement: true
+- assertVisible:
+    id: action_settings
+- takeScreenshot: ${SHOT}
